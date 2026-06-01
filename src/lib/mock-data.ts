@@ -1,5 +1,128 @@
 // Demo mock data — no database required
 
+// ── Analytics ──────────────────────────────────────────────────────────────
+
+export const DEMO_HEADCOUNT_TREND = [
+  { month: "Led", year: 2024, count: 18 },
+  { month: "Úno", year: 2024, count: 19 },
+  { month: "Bře", year: 2024, count: 21 },
+  { month: "Dub", year: 2024, count: 21 },
+  { month: "Kvě", year: 2024, count: 23 },
+  { month: "Čvn", year: 2024, count: 22 },
+  { month: "Čvc", year: 2024, count: 22 },
+  { month: "Srp", year: 2024, count: 24 },
+  { month: "Zář", year: 2024, count: 25 },
+  { month: "Říj", year: 2024, count: 26 },
+  { month: "Lis", year: 2024, count: 26 },
+  { month: "Pro", year: 2024, count: 27 },
+]
+
+export const DEMO_FLUCTUATION = [
+  { month: "Led", nastupy: 2, odchody: 1 },
+  { month: "Úno", nastupy: 1, odchody: 0 },
+  { month: "Bře", nastupy: 3, odchody: 1 },
+  { month: "Dub", nastupy: 1, odchody: 1 },
+  { month: "Kvě", nastupy: 2, odchody: 0 },
+  { month: "Čvn", nastupy: 0, odchody: 1 },
+  { month: "Čvc", nastupy: 1, odchody: 1 },
+  { month: "Srp", nastupy: 3, odchody: 1 },
+  { month: "Zář", nastupy: 2, odchody: 1 },
+  { month: "Říj", nastupy: 2, odchody: 1 },
+  { month: "Lis", nastupy: 1, odchody: 1 },
+  { month: "Pro", nastupy: 2, odchody: 1 },
+]
+
+export const DEMO_DEPARTMENT_HEADCOUNT = [
+  { department: "Vývoj", count: 8 },
+  { department: "Marketing", count: 4 },
+  { department: "Obchod", count: 6 },
+  { department: "HR", count: 2 },
+  { department: "Finance", count: 3 },
+  { department: "Operace", count: 4 },
+]
+
+export const DEMO_EMPLOYEE_PERFORMANCE = [
+  {
+    id: "demo-employee-1",
+    name: "Jan Novák",
+    department: "Vývoj",
+    position: "Frontend Developer",
+    employmentType: "HPP",
+    onboardingProgress: 40,
+    leaveUsedPercent: 25,
+    tasksCompleted: 12,
+    tasksTotal: 15,
+    attendanceRate: 96,
+    performanceScore: 88,
+    lastReview: new Date("2024-09-01"),
+    tenure: 11, // months
+  },
+  {
+    id: "demo-employee-2",
+    name: "Marie Svobodová",
+    department: "Marketing",
+    position: "Marketing Specialist",
+    employmentType: "DPP",
+    onboardingProgress: 100,
+    leaveUsedPercent: 40,
+    tasksCompleted: 28,
+    tasksTotal: 30,
+    attendanceRate: 99,
+    performanceScore: 94,
+    lastReview: new Date("2024-10-15"),
+    tenure: 18,
+  },
+  {
+    id: "demo-employee-3",
+    name: "Tomáš Dvořák",
+    department: "Obchod",
+    position: "Sales Manager",
+    employmentType: "ICO",
+    onboardingProgress: 100,
+    leaveUsedPercent: 60,
+    tasksCompleted: 45,
+    tasksTotal: 50,
+    attendanceRate: 91,
+    performanceScore: 79,
+    lastReview: new Date("2024-08-01"),
+    tenure: 27,
+  },
+  {
+    id: "demo-employee-4",
+    name: "Lucie Kratochvílová",
+    department: "Finance",
+    position: "Finanční analytik",
+    employmentType: "HPP",
+    onboardingProgress: 100,
+    leaveUsedPercent: 50,
+    tasksCompleted: 33,
+    tasksTotal: 35,
+    attendanceRate: 98,
+    performanceScore: 91,
+    lastReview: new Date("2024-11-01"),
+    tenure: 14,
+  },
+  {
+    id: "demo-employee-5",
+    name: "Ondřej Pospíšil",
+    department: "Vývoj",
+    position: "Backend Developer",
+    employmentType: "HPP",
+    onboardingProgress: 80,
+    leaveUsedPercent: 15,
+    tasksCompleted: 8,
+    tasksTotal: 12,
+    attendanceRate: 94,
+    performanceScore: 82,
+    lastReview: null,
+    tenure: 4,
+  },
+]
+
+export const DEMO_TURNOVER_RATE = 8.3 // % za rok 2024
+export const DEMO_AVG_TENURE = 16.2 // měsíce
+export const DEMO_OPEN_POSITIONS = 3
+
 export const ASSET_TYPES = [
   { value: "NOTEBOOK", label: "Notebook" },
   { value: "TELEFON", label: "Telefon" },

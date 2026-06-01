@@ -15,6 +15,7 @@ import {
   Users,
   CheckSquare,
   Laptop,
+  BarChart2,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -34,6 +35,7 @@ const adminItems = [
   { label: 'Zaměstnanci', href: '/admin/employees', icon: Users },
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
   { label: 'Majetek', href: '/admin/assets', icon: Laptop },
+  { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },
 ]
 
 interface SidebarProps {
