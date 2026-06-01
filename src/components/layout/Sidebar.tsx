@@ -16,6 +16,7 @@ import {
   CheckSquare,
   Laptop,
   BarChart2,
+  CalendarRange,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -33,6 +34,7 @@ const navItems = [
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: ShieldCheck },
   { label: 'Zaměstnanci', href: '/admin/employees', icon: Users },
+  { label: 'Kalendář dovolených', href: '/admin/leave-calendar', icon: CalendarRange },
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
   { label: 'Majetek', href: '/admin/assets', icon: Laptop },
   { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },

@@ -1,12 +1,6 @@
 import type { Metadata } from 'next'
-import { Raleway, Roboto } from 'next/font/google'
+import { Roboto } from 'next/font/google'
 import './globals.css'
-
-const raleway = Raleway({
-  subsets: ['latin'],
-  variable: '--font-headline',
-  weight: ['300', '500', '600', '700'],
-})
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -26,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="cs">
-      <body className={`${raleway.variable} ${roboto.variable} font-sans antialiased`}>
+      <body className={`${roboto.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

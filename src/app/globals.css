@@ -1,4 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Regular.otf') format('opentype');
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;

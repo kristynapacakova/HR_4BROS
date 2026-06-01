@@ -78,7 +78,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        headline: ["Raleway", ...fontFamily.sans],
+        headline: ["Serenity", ...fontFamily.sans],
         sans: ["Roboto", ...fontFamily.sans],
       },
       lineHeight: {

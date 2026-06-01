@@ -1,5 +1,23 @@
 // Demo mock data — no database required
 
+// ── Team Leave Calendar ────────────────────────────────────────────────────
+
+export const DEMO_TEAM_LEAVES = [
+  // 2026 – current year leaves
+  { id: "tl1", userName: "Jan Novák", department: "Vývoj", type: "ANNUAL", startDate: new Date("2026-05-26"), endDate: new Date("2026-05-30"), status: "APPROVED" },
+  { id: "tl2", userName: "Marie Svobodová", department: "Marketing", type: "ANNUAL", startDate: new Date("2026-06-09"), endDate: new Date("2026-06-20"), status: "APPROVED" },
+  { id: "tl3", userName: "Tomáš Dvořák", department: "Obchod", type: "ANNUAL", startDate: new Date("2026-06-15"), endDate: new Date("2026-06-19"), status: "APPROVED" },
+  { id: "tl4", userName: "Lucie Kratochvílová", department: "Finance", type: "SICK", startDate: new Date("2026-06-02"), endDate: new Date("2026-06-03"), status: "APPROVED" },
+  { id: "tl5", userName: "Ondřej Pospíšil", department: "Vývoj", type: "ANNUAL", startDate: new Date("2026-07-07"), endDate: new Date("2026-07-18"), status: "APPROVED" },
+  { id: "tl6", userName: "Jan Novák", department: "Vývoj", type: "ANNUAL", startDate: new Date("2026-07-21"), endDate: new Date("2026-08-01"), status: "PENDING" },
+  { id: "tl7", userName: "Marie Svobodová", department: "Marketing", type: "ANNUAL", startDate: new Date("2026-08-10"), endDate: new Date("2026-08-21"), status: "APPROVED" },
+  { id: "tl8", userName: "Tomáš Dvořák", department: "Obchod", type: "PERSONAL", startDate: new Date("2026-05-12"), endDate: new Date("2026-05-12"), status: "APPROVED" },
+  { id: "tl9", userName: "Lucie Kratochvílová", department: "Finance", type: "ANNUAL", startDate: new Date("2026-09-01"), endDate: new Date("2026-09-12"), status: "PENDING" },
+  { id: "tl10", userName: "Ondřej Pospíšil", department: "Vývoj", type: "SICK", startDate: new Date("2026-05-05"), endDate: new Date("2026-05-06"), status: "APPROVED" },
+  { id: "tl11", userName: "Jan Novák", department: "Vývoj", type: "ANNUAL", startDate: new Date("2025-12-22"), endDate: new Date("2025-12-31"), status: "APPROVED" },
+  { id: "tl12", userName: "Marie Svobodová", department: "Marketing", type: "ANNUAL", startDate: new Date("2025-12-27"), endDate: new Date("2025-12-31"), status: "APPROVED" },
+]
+
 // ── Analytics ──────────────────────────────────────────────────────────────
 
 export const DEMO_HEADCOUNT_TREND = [
