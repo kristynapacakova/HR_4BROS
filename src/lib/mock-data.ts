@@ -137,9 +137,39 @@ export const DEMO_EMPLOYEE_PERFORMANCE = [
   },
 ]
 
-export const DEMO_TURNOVER_RATE = 8.3 // % za rok 2024
-export const DEMO_AVG_TENURE = 16.2 // měsíce
+export const DEMO_TURNOVER_RATE = 8.3
+export const DEMO_AVG_TENURE = 16.2
 export const DEMO_OPEN_POSITIONS = 3
+
+// ── General Tasks (all employees) ─────────────────────────────────────────
+
+export const DEMO_TASKS = [
+  { id: "task1", title: "Vyplnit osobní údaje", category: "ONBOARDING", completed: true,  dueDate: null },
+  { id: "task2", title: "Podepsat pracovní smlouvu", category: "ONBOARDING", completed: true,  dueDate: null },
+  { id: "task3", title: "Nahrát kopii občanského průkazu", category: "ONBOARDING", completed: false, dueDate: new Date("2026-06-15") },
+  { id: "task4", title: "Nastavit bankovní účet pro výplatu", category: "ONBOARDING", completed: false, dueDate: new Date("2026-06-15") },
+  { id: "task5", title: "Absolvovat BOZP školení", category: "ONBOARDING", completed: false, dueDate: new Date("2026-06-30") },
+  { id: "task6", title: "Vyplnit roční hodnotící formulář", category: "HR", completed: false, dueDate: new Date("2026-06-20") },
+  { id: "task7", title: "Aktualizovat nouzový kontakt", category: "HR", completed: false, dueDate: null },
+]
+
+// ── Expense / Reimbursement Requests ──────────────────────────────────────
+
+export const DEMO_EXPENSE_REQUESTS = [
+  { id: "exp1", title: "Taxi na klientské jednání", amount: 350,  currency: "CZK", submittedAt: new Date("2026-05-28"), status: "PENDING",  category: "CESTOVNÉ" },
+  { id: "exp2", title: "Oběd s klientem",           amount: 890,  currency: "CZK", submittedAt: new Date("2026-05-20"), status: "APPROVED", category: "REPREZENTACE" },
+  { id: "exp3", title: "Nákup knih – školení",       amount: 1250, currency: "CZK", submittedAt: new Date("2026-05-10"), status: "APPROVED", category: "VZDĚLÁVÁNÍ" },
+]
+
+// ── Salary Raise Info ─────────────────────────────────────────────────────
+
+export const DEMO_SALARY_INFO = {
+  currentSalary: 65000,
+  currency: "CZK",
+  nextRaiseDate: new Date("2026-10-01"),
+  nextRaiseAmount: 5000,
+  lastRaiseDate: new Date("2025-10-01"),
+}
 
 export const ASSET_TYPES = [
   { value: "NOTEBOOK", label: "Notebook" },
