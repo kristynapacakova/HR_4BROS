@@ -1,6 +1,5 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate, formatCurrency, getLeaveTypeCz } from '@/lib/utils'
 import {
@@ -12,32 +11,27 @@ import {
   Clock,
   TrendingUp,
 } from 'lucide-react'
+import {
+  DEMO_USER,
+  DEMO_ADMIN,
+  DEMO_ONBOARDING_TASKS,
+  DEMO_LEAVE_BALANCE,
+  DEMO_LEAVE_REQUESTS,
+  DEMO_PAYSLIPS,
+} from '@/lib/mock-data'
 
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const userId = session.user.id
   const isAdmin = session.user.role === 'ADMIN'
 
-  // Fetch data
-  const [user, onboardingTasks, leaveBalance, recentLeaveRequests, latestPayslip] =
-    await Promise.all([
-      db.user.findUnique({ where: { id: userId } }),
-      db.onboardingTask.findMany({ where: { userId }, orderBy: { order: 'asc' } }),
-      db.leaveBalance.findFirst({
-        where: { userId, year: new Date().getFullYear() },
-      }),
-      db.leaveRequest.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
-        take: 3,
-      }),
-      db.payslip.findFirst({
-        where: { userId },
-        orderBy: [{ year: 'desc' }, { month: 'desc' }],
-      }),
-    ])
+  // Use mock data
+  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
+  const onboardingTasks = DEMO_ONBOARDING_TASKS
+  const leaveBalance = DEMO_LEAVE_BALANCE
+  const recentLeaveRequests = DEMO_LEAVE_REQUESTS.slice(0, 3)
+  const latestPayslip = DEMO_PAYSLIPS[0]
 
   const completedTasks = onboardingTasks.filter((t) => t.completed).length
   const pendingTasks = onboardingTasks.filter((t) => !t.completed).length
@@ -83,8 +77,8 @@ export default async function DashboardPage() {
         />
         <StatCard
           title="Zbývající dovolená"
-          value={`${leaveBalance ? leaveBalance.annualTotal - leaveBalance.annualUsed : 20} dní`}
-          subtitle={`z ${leaveBalance?.annualTotal ?? 20} celkem`}
+          value={`${leaveBalance.annualTotal - leaveBalance.annualUsed} dní`}
+          subtitle={`z ${leaveBalance.annualTotal} celkem`}
           icon={<CalendarDays className="w-5 h-5" />}
           color="green"
         />
@@ -97,8 +91,8 @@ export default async function DashboardPage() {
         />
         <StatCard
           title="Poslední výplata"
-          value={latestPayslip ? formatCurrency(latestPayslip.netAmount, latestPayslip.currency) : '—'}
-          subtitle={latestPayslip ? `${monthNames[latestPayslip.month - 1]} ${latestPayslip.year}` : 'Žádná výplata'}
+          value={formatCurrency(latestPayslip.netAmount, latestPayslip.currency)}
+          subtitle={`${monthNames[latestPayslip.month - 1]} ${latestPayslip.year}`}
           icon={<Banknote className="w-5 h-5" />}
           color="blue"
         />

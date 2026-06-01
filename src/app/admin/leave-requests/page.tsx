@@ -1,20 +1,17 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate, getLeaveTypeCz, getDaysBetween } from '@/lib/utils'
 import { CalendarDays } from 'lucide-react'
 import { LeaveActionButtons } from './LeaveActionButtons'
+import { DEMO_ALL_LEAVE_REQUESTS } from '@/lib/mock-data'
 
 export default async function AdminLeaveRequestsPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
   if (session.user.role !== 'ADMIN') redirect('/dashboard')
 
-  const leaveRequests = await db.leaveRequest.findMany({
-    include: { user: { select: { name: true, email: true, department: true } } },
-    orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
-  })
+  const leaveRequests = DEMO_ALL_LEAVE_REQUESTS
 
   const pending = leaveRequests.filter((r) => r.status === 'PENDING')
   const processed = leaveRequests.filter((r) => r.status !== 'PENDING')

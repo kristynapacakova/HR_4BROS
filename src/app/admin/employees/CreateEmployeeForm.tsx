@@ -22,33 +22,19 @@ export function CreateEmployeeForm() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    try {
-      const res = await fetch('/api/admin/employees', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setError(data.error || 'Nastala chyba')
-      } else {
-        setSuccess(true)
-        setForm({ name: '', email: '', department: '', position: '', startDate: '' })
-        setTimeout(() => {
-          setSuccess(false)
-          router.refresh()
-        }, 2000)
-      }
-    } finally {
-      setLoading(false)
-    }
+    // Demo: simulate creation
+    await new Promise((r) => setTimeout(r, 600))
+    setLoading(false)
+    setSuccess(true)
+    setForm({ name: '', email: '', department: '', position: '', startDate: '' })
+    setTimeout(() => setSuccess(false), 3000)
   }
 
   if (success) {
     return (
       <div className="text-center py-4">
         <p className="text-green-700 font-medium">✓ Zaměstnanec byl vytvořen!</p>
-        <p className="text-sm text-slate-400 mt-1">Může se přihlásit pomocí magic linku na svůj firemní email.</p>
+        <p className="text-sm text-amber-600 mt-1">Demo verze — změny se neukládají.</p>
       </div>
     )
   }

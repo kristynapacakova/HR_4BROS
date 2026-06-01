@@ -21,26 +21,12 @@ export function LeaveRequestForm() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    try {
-      const res = await fetch('/api/time-off', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      if (!res.ok) {
-        const data = await res.json()
-        setError(data.error || 'Nastala chyba')
-      } else {
-        setSuccess(true)
-        setForm({ type: 'ANNUAL', startDate: '', endDate: '', reason: '' })
-        setTimeout(() => {
-          setSuccess(false)
-          router.refresh()
-        }, 2000)
-      }
-    } finally {
-      setLoading(false)
-    }
+    // Demo: simulate submission
+    await new Promise((r) => setTimeout(r, 600))
+    setLoading(false)
+    setSuccess(true)
+    setForm({ type: 'ANNUAL', startDate: '', endDate: '', reason: '' })
+    setTimeout(() => setSuccess(false), 3000)
   }
 
   if (success) {
@@ -52,7 +38,7 @@ export function LeaveRequestForm() {
           </svg>
         </div>
         <p className="text-green-700 font-medium">Žádost byla odeslána!</p>
-        <p className="text-sm text-slate-400 mt-1">HR oddělení ji brzy zkontroluje.</p>
+        <p className="text-sm text-amber-600 mt-1">Demo verze — změny se neukládají.</p>
       </div>
     )
   }

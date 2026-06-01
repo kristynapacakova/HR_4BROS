@@ -1,21 +1,19 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
 import { AppShell } from '@/components/layout/AppShell'
 import Link from 'next/link'
 import { Users, CalendarDays, FileText, Banknote, ShieldCheck, ArrowRight } from 'lucide-react'
+import { DEMO_EMPLOYEES, DEMO_ALL_LEAVE_REQUESTS, DEMO_DOCUMENTS, DEMO_PAYSLIPS } from '@/lib/mock-data'
 
 export default async function AdminPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
   if (session.user.role !== 'ADMIN') redirect('/dashboard')
 
-  const [employeeCount, pendingLeaves, documentCount, payslipCount] = await Promise.all([
-    db.user.count({ where: { role: 'EMPLOYEE' } }),
-    db.leaveRequest.count({ where: { status: 'PENDING' } }),
-    db.document.count(),
-    db.payslip.count(),
-  ])
+  const employeeCount = DEMO_EMPLOYEES.length
+  const pendingLeaves = DEMO_ALL_LEAVE_REQUESTS.filter((r) => r.status === 'PENDING').length
+  const documentCount = DEMO_DOCUMENTS.length
+  const payslipCount = DEMO_PAYSLIPS.length
 
   return (
     <AppShell

@@ -1,23 +1,27 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Check, X } from 'lucide-react'
 
 export function LeaveActionButtons({ requestId }: { requestId: string }) {
-  const router = useRouter()
   const [loading, setLoading] = useState<'approve' | 'reject' | null>(null)
-  const [note, setNote] = useState('')
+  const [done, setDone] = useState<'approve' | 'reject' | null>(null)
 
   const handle = async (action: 'approve' | 'reject') => {
     setLoading(action)
-    await fetch(`/api/admin/leave-requests/${requestId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, note }),
-    })
+    // Demo: simulate action
+    await new Promise((r) => setTimeout(r, 500))
     setLoading(null)
-    router.refresh()
+    setDone(action)
+    setTimeout(() => setDone(null), 2500)
+  }
+
+  if (done) {
+    return (
+      <p className="text-xs text-amber-600 flex-shrink-0">
+        Demo verze — změny se neukládají
+      </p>
+    )
   }
 
   return (

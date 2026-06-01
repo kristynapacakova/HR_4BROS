@@ -1,14 +1,24 @@
 'use client'
 
 import { useState } from 'react'
-import type { User, EmergencyContact } from '@prisma/client'
 
-interface ProfileFormProps {
-  user: User
-  emergencyContact: EmergencyContact | null
+interface UserData {
+  name: string
+  email: string
+  phone: string | null
+  address: string | null
+  city: string | null
+  bankAccount: string | null
+  department: string | null
+  position: string | null
+  country: string | null
 }
 
-export function ProfileForm({ user, emergencyContact }: ProfileFormProps) {
+interface ProfileFormProps {
+  user: UserData
+}
+
+export function ProfileForm({ user }: ProfileFormProps) {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [formData, setFormData] = useState({
@@ -17,9 +27,9 @@ export function ProfileForm({ user, emergencyContact }: ProfileFormProps) {
     address: user.address || '',
     city: user.city || '',
     bankAccount: user.bankAccount || '',
-    ecName: emergencyContact?.name || '',
-    ecPhone: emergencyContact?.phone || '',
-    ecRelationship: emergencyContact?.relationship || '',
+    ecName: '',
+    ecPhone: '',
+    ecRelationship: '',
   })
 
   const update = (key: string, value: string) => setFormData((p) => ({ ...p, [key]: value }))
@@ -27,23 +37,20 @@ export function ProfileForm({ user, emergencyContact }: ProfileFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    try {
-      const res = await fetch('/api/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-      if (res.ok) {
-        setSaved(true)
-        setTimeout(() => setSaved(false), 3000)
-      }
-    } finally {
-      setSaving(false)
-    }
+    // Demo: simulate save delay then show demo notice
+    await new Promise((r) => setTimeout(r, 600))
+    setSaving(false)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Demo notice */}
+      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+        <p className="text-amber-800 text-xs">Demo verze — změny se neukládají</p>
+      </div>
+
       {/* Personal info */}
       <Section title="Osobní údaje">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -84,7 +91,7 @@ export function ProfileForm({ user, emergencyContact }: ProfileFormProps) {
         >
           {saving ? 'Ukládám...' : 'Uložit změny'}
         </button>
-        {saved && <p className="text-green-600 text-sm">✓ Uloženo</p>}
+        {saved && <p className="text-amber-600 text-sm">Demo verze — změny se neukládají</p>}
       </div>
     </form>
   )

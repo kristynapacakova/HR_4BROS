@@ -1,22 +1,17 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
 import { OnboardingTaskItem } from './OnboardingTaskItem'
 import { CheckCircle2 } from 'lucide-react'
+import { DEMO_ONBOARDING_TASKS } from '@/lib/mock-data'
 
 export default async function OnboardingPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const userId = session.user.id
   const isAdmin = session.user.role === 'ADMIN'
-
-  const tasks = await db.onboardingTask.findMany({
-    where: { userId },
-    orderBy: { order: 'asc' },
-  })
+  const tasks = DEMO_ONBOARDING_TASKS
 
   const completedCount = tasks.filter((t) => t.completed).length
   const progress = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0
@@ -57,17 +52,11 @@ export default async function OnboardingPage() {
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Úkoly k dokončení</h3>
           </div>
-          {tasks.length === 0 ? (
-            <div className="px-6 py-12 text-center">
-              <p className="text-slate-400">Žádné onboardingové úkoly nebyly přiřazeny.</p>
-            </div>
-          ) : (
-            <ul className="divide-y divide-slate-50">
-              {tasks.map((task) => (
-                <OnboardingTaskItem key={task.id} task={task} />
-              ))}
-            </ul>
-          )}
+          <ul className="divide-y divide-slate-50">
+            {tasks.map((task) => (
+              <OnboardingTaskItem key={task.id} task={task} />
+            ))}
+          </ul>
         </div>
       </div>
     </AppShell>

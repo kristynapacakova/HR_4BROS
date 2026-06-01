@@ -1,23 +1,16 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
 import { ProfileForm } from './ProfileForm'
+import { DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
 
 export default async function ProfilePage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const userId = session.user.id
   const isAdmin = session.user.role === 'ADMIN'
-
-  const [user, emergencyContact] = await Promise.all([
-    db.user.findUnique({ where: { id: userId } }),
-    db.emergencyContact.findUnique({ where: { userId } }),
-  ])
-
-  if (!user) redirect('/login')
+  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
 
   return (
     <AppShell
@@ -47,7 +40,7 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        <ProfileForm user={user} emergencyContact={emergencyContact} />
+        <ProfileForm user={user} />
       </div>
     </AppShell>
   )

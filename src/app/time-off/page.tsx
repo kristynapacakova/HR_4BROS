@@ -1,29 +1,21 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate, getLeaveTypeCz, getStatusCz, getDaysBetween } from '@/lib/utils'
 import { CalendarDays, Plus } from 'lucide-react'
 import { LeaveRequestForm } from './LeaveRequestForm'
+import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
 
 export default async function TimeOffPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const userId = session.user.id
   const isAdmin = session.user.role === 'ADMIN'
-  const currentYear = new Date().getFullYear()
+  const leaveBalance = DEMO_LEAVE_BALANCE
+  const leaveRequests = DEMO_LEAVE_REQUESTS
 
-  const [leaveBalance, leaveRequests] = await Promise.all([
-    db.leaveBalance.findFirst({ where: { userId, year: currentYear } }),
-    db.leaveRequest.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' },
-    }),
-  ])
-
-  const annualRemaining = leaveBalance ? leaveBalance.annualTotal - leaveBalance.annualUsed : 20
-  const sickRemaining = leaveBalance ? leaveBalance.sickTotal - leaveBalance.sickUsed : 10
+  const annualRemaining = leaveBalance.annualTotal - leaveBalance.annualUsed
+  const sickRemaining = leaveBalance.sickTotal - leaveBalance.sickUsed
 
   return (
     <AppShell
@@ -37,15 +29,15 @@ export default async function TimeOffPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <BalanceCard
             title="Řádná dovolená"
-            used={leaveBalance?.annualUsed ?? 0}
-            total={leaveBalance?.annualTotal ?? 20}
+            used={leaveBalance.annualUsed}
+            total={leaveBalance.annualTotal}
             remaining={annualRemaining}
             color="violet"
           />
           <BalanceCard
             title="Nemocenská"
-            used={leaveBalance?.sickUsed ?? 0}
-            total={leaveBalance?.sickTotal ?? 10}
+            used={leaveBalance.sickUsed}
+            total={leaveBalance.sickTotal}
             remaining={sickRemaining}
             color="blue"
           />

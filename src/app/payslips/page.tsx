@@ -1,22 +1,16 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatCurrency, formatMonth } from '@/lib/utils'
-import { Banknote, Download, TrendingUp } from 'lucide-react'
+import { Banknote, Download } from 'lucide-react'
+import { DEMO_PAYSLIPS } from '@/lib/mock-data'
 
 export default async function PayslipsPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
-  const userId = session.user.id
   const isAdmin = session.user.role === 'ADMIN'
-
-  const payslips = await db.payslip.findMany({
-    where: { userId },
-    orderBy: [{ year: 'desc' }, { month: 'desc' }],
-  })
-
+  const payslips = DEMO_PAYSLIPS
   const latestPayslip = payslips[0]
 
   return (
@@ -49,47 +43,29 @@ export default async function PayslipsPage() {
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Přehled výplat</h3>
           </div>
-          {payslips.length === 0 ? (
-            <div className="px-6 py-12 text-center">
-              <Banknote className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-              <p className="text-slate-400 text-sm">Zatím nebyly přidány žádné výplatní pásky</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-slate-50">
-              {payslips.map((payslip) => (
-                <div key={payslip.id} className="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
-                  <div className="p-2.5 bg-[#EFF6FF] rounded-lg">
-                    <Banknote className="w-5 h-5 text-navy-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-navy capitalize">
-                      {formatMonth(payslip.month, payslip.year)}
-                    </p>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Hrubá: {formatCurrency(payslip.grossAmount, payslip.currency)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-navy">
-                      {formatCurrency(payslip.netAmount, payslip.currency)}
-                    </p>
-                    <p className="text-xs text-slate-400">čistá mzda</p>
-                  </div>
-                  {payslip.fileUrl && (
-                    <a
-                      href={payslip.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 text-slate-400 hover:text-navy hover:bg-slate-100 rounded-lg transition-colors"
-                      title="Stáhnout výplatní pásku"
-                    >
-                      <Download className="w-4 h-4" />
-                    </a>
-                  )}
+          <div className="divide-y divide-slate-50">
+            {payslips.map((payslip) => (
+              <div key={payslip.id} className="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
+                <div className="p-2.5 bg-[#EFF6FF] rounded-lg">
+                  <Banknote className="w-5 h-5 text-navy-600" />
                 </div>
-              ))}
-            </div>
-          )}
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-navy capitalize">
+                    {formatMonth(payslip.month, payslip.year)}
+                  </p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Hrubá: {formatCurrency(payslip.grossAmount, payslip.currency)}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-navy">
+                    {formatCurrency(payslip.netAmount, payslip.currency)}
+                  </p>
+                  <p className="text-xs text-slate-400">čistá mzda</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </AppShell>
