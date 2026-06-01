@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Roboto } from 'next/font/google'
+import { Raleway, Roboto } from 'next/font/google'
 import './globals.css'
 
-const playfairDisplay = Playfair_Display({
+const raleway = Raleway({
   subsets: ['latin'],
   variable: '--font-headline',
-  weight: ['400', '600', '700'],
+  weight: ['300', '500', '600', '700'],
 })
 
 const roboto = Roboto({
@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="cs">
-      <body className={`${playfairDisplay.variable} ${roboto.variable} font-sans antialiased`}>
+      <body className={`${raleway.variable} ${roboto.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

@@ -1,5 +1,36 @@
 // Demo mock data — no database required
 
+export const ASSET_TYPES = [
+  { value: "NOTEBOOK", label: "Notebook" },
+  { value: "TELEFON", label: "Telefon" },
+  { value: "MYS", label: "Myš" },
+  { value: "KLAVESNICE", label: "Klávesnice" },
+  { value: "MONITOR", label: "Monitor" },
+  { value: "NABIJEC", label: "Nabíječka" },
+  { value: "SLUCHATKA", label: "Sluchátka" },
+  { value: "JINE", label: "Jiné" },
+]
+
+export const ASSET_CONDITIONS = [
+  { value: "NOVY", label: "Nový" },
+  { value: "DOBRY", label: "Dobrý" },
+  { value: "OPOTREBOVANY", label: "Opotřebovaný" },
+  { value: "POSKOZENY", label: "Poškozený" },
+]
+
+export const DEMO_ASSETS = [
+  { id: "a1", name: "MacBook Pro 14\"", type: "NOTEBOOK", brand: "Apple", model: "MacBook Pro M3", serialNumber: "C02X1234", assignedTo: "demo-employee-1", assignedAt: new Date("2024-01-15"), condition: "DOBRY", notes: null },
+  { id: "a2", name: "iPhone 14 Pro", type: "TELEFON", brand: "Apple", model: "iPhone 14 Pro 256GB", serialNumber: "DNPXYZ123", assignedTo: "demo-employee-1", assignedAt: new Date("2024-01-15"), condition: "DOBRY", notes: null },
+  { id: "a3", name: "Magic Mouse", type: "MYS", brand: "Apple", model: "Magic Mouse 3", serialNumber: null, assignedTo: "demo-employee-1", assignedAt: new Date("2024-01-15"), condition: "DOBRY", notes: null },
+  { id: "a4", name: "LG UltraWide 27\"", type: "MONITOR", brand: "LG", model: "27UK850-W", serialNumber: "LG2024001", assignedTo: "demo-employee-1", assignedAt: new Date("2024-02-01"), condition: "DOBRY", notes: "Druhý monitor" },
+  { id: "a5", name: "Dell XPS 15", type: "NOTEBOOK", brand: "Dell", model: "XPS 15 9530", serialNumber: "DXPS123456", assignedTo: "demo-employee-2", assignedAt: new Date("2023-06-01"), condition: "DOBRY", notes: null },
+  { id: "a6", name: "Samsung Galaxy S23", type: "TELEFON", brand: "Samsung", model: "Galaxy S23", serialNumber: "R5CR123456", assignedTo: "demo-employee-2", assignedAt: new Date("2023-06-01"), condition: "DOBRY", notes: null },
+  { id: "a7", name: "ThinkPad X1 Carbon", type: "NOTEBOOK", brand: "Lenovo", model: "ThinkPad X1 Carbon Gen 11", serialNumber: "PF3ABC123", assignedTo: "demo-employee-3", assignedAt: new Date("2022-03-15"), condition: "DOBRY", notes: null },
+  { id: "a8", name: "Logitech MX Keys", type: "KLAVESNICE", brand: "Logitech", model: "MX Keys Advanced", serialNumber: null, assignedTo: null, assignedAt: null, condition: "NOVY", notes: "Skladem" },
+  { id: "a9", name: "Dell Monitor 24\"", type: "MONITOR", brand: "Dell", model: "P2422H", serialNumber: "CN123456", assignedTo: null, assignedAt: null, condition: "NOVY", notes: "Skladem" },
+  { id: "a10", name: "Sony WH-1000XM5", type: "SLUCHATKA", brand: "Sony", model: "WH-1000XM5", serialNumber: null, assignedTo: null, assignedAt: null, condition: "NOVY", notes: "Skladem" },
+]
+
 export const EMPLOYMENT_TYPES = [
   { value: "HPP", label: "HPP – Hlavní pracovní poměr" },
   { value: "DPP", label: "DPP – Dohoda o provedení práce" },

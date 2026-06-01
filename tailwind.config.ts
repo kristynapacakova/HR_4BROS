@@ -78,7 +78,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        headline: ["Playfair Display", ...fontFamily.serif],
+        headline: ["Raleway", ...fontFamily.sans],
         sans: ["Roboto", ...fontFamily.sans],
       },
       lineHeight: {

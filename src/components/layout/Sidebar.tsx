@@ -14,6 +14,7 @@ import {
   LogOut,
   Users,
   CheckSquare,
+  Laptop,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -25,12 +26,14 @@ const navItems = [
   { label: 'Dokumenty', href: '/documents', icon: FileText },
   { label: 'Dovolená', href: '/time-off', icon: CalendarDays },
   { label: 'Výplatní pásky', href: '/payslips', icon: Banknote },
+  { label: 'Můj majetek', href: '/assets', icon: Laptop },
 ]
 
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: ShieldCheck },
   { label: 'Zaměstnanci', href: '/admin/employees', icon: Users },
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
+  { label: 'Majetek', href: '/admin/assets', icon: Laptop },
 ]
 
 interface SidebarProps {
