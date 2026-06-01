@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { EMPLOYMENT_TYPES } from '@/lib/mock-data'
 
 interface UserData {
   name: string
@@ -12,6 +13,7 @@ interface UserData {
   department: string | null
   position: string | null
   country: string | null
+  employmentType?: string | null
 }
 
 interface ProfileFormProps {
@@ -59,6 +61,11 @@ export function ProfileForm({ user }: ProfileFormProps) {
           <Field label="Telefon" value={formData.phone} onChange={(v) => update('phone', v)} type="tel" />
           <Field label="Oddělení" value={user.department || ''} readOnly />
           <Field label="Pozice" value={user.position || ''} readOnly />
+          <Field
+            label="Typ spolupráce"
+            value={EMPLOYMENT_TYPES.find((t) => t.value === user.employmentType)?.label || user.employmentType || '—'}
+            readOnly
+          />
           <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
         </div>
       </Section>

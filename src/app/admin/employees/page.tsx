@@ -4,7 +4,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
 import { Users } from 'lucide-react'
 import { CreateEmployeeForm } from './CreateEmployeeForm'
-import { DEMO_EMPLOYEES } from '@/lib/mock-data'
+import { DEMO_EMPLOYEES, EMPLOYMENT_TYPES } from '@/lib/mock-data'
 
 export default async function AdminEmployeesPage() {
   const session = await auth()
@@ -38,6 +38,7 @@ export default async function AdminEmployeesPage() {
                 <tr className="bg-slate-50 border-b border-slate-100">
                   <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Zaměstnanec</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Oddělení</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Typ spolupráce</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Nástup</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Dovolená</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Onboarding</th>
@@ -66,6 +67,19 @@ export default async function AdminEmployeesPage() {
                       <td className="px-6 py-4">
                         <p className="text-navy">{emp.department || '—'}</p>
                         <p className="text-xs text-slate-400">{emp.position || '—'}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        {emp.employmentType ? (
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                            emp.employmentType === 'HPP' ? 'bg-green-50 text-green-700' :
+                            emp.employmentType === 'DPP' ? 'bg-blue-50 text-blue-700' :
+                            emp.employmentType === 'DPC' ? 'bg-sky-50 text-sky-700' :
+                            emp.employmentType === 'ICO' ? 'bg-orange-50 text-orange-700' :
+                            'bg-purple-50 text-purple-700'
+                          }`}>
+                            {EMPLOYMENT_TYPES.find((t) => t.value === emp.employmentType)?.value || emp.employmentType}
+                          </span>
+                        ) : '—'}
                       </td>
                       <td className="px-6 py-4 text-slate-600">{formatDate(emp.startDate)}</td>
                       <td className="px-6 py-4">

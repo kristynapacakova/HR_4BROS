@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { EMPLOYMENT_TYPES } from '@/lib/mock-data'
 
 export function CreateEmployeeForm() {
   const router = useRouter()
@@ -10,6 +11,7 @@ export function CreateEmployeeForm() {
     email: '',
     department: '',
     position: '',
+    employmentType: '',
     startDate: '',
   })
   const [loading, setLoading] = useState(false)
@@ -26,7 +28,7 @@ export function CreateEmployeeForm() {
     await new Promise((r) => setTimeout(r, 600))
     setLoading(false)
     setSuccess(true)
-    setForm({ name: '', email: '', department: '', position: '', startDate: '' })
+    setForm({ name: '', email: '', department: '', position: '', employmentType: '', startDate: '' })
     setTimeout(() => setSuccess(false), 3000)
   }
 
@@ -66,6 +68,19 @@ export function CreateEmployeeForm() {
             />
           </div>
         ))}
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Typ spolupráce</label>
+          <select
+            value={form.employmentType}
+            onChange={(e) => update('employmentType', e.target.value)}
+            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+          >
+            <option value="">— Vyberte typ —</option>
+            {EMPLOYMENT_TYPES.map((t) => (
+              <option key={t.value} value={t.value}>{t.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <button
         type="submit"

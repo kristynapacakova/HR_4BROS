@@ -1,5 +1,13 @@
 // Demo mock data — no database required
 
+export const EMPLOYMENT_TYPES = [
+  { value: "HPP", label: "HPP – Hlavní pracovní poměr" },
+  { value: "DPP", label: "DPP – Dohoda o provedení práce" },
+  { value: "DPC", label: "DPČ – Dohoda o pracovní činnosti" },
+  { value: "ICO", label: "IČO – Spolupráce na živnostenský list" },
+  { value: "STAZ", label: "Stáž" },
+]
+
 export const DEMO_USER = {
   id: "demo-employee-1",
   email: "jan.novak@fourbros.cz",
@@ -7,6 +15,7 @@ export const DEMO_USER = {
   role: "EMPLOYEE",
   department: "Vývoj",
   position: "Frontend Developer",
+  employmentType: "HPP",
   startDate: new Date("2024-01-15"),
   phone: "+420 777 123 456",
   address: "Náměstí Míru 1",
@@ -24,6 +33,7 @@ export const DEMO_ADMIN = {
   role: "ADMIN",
   department: "HR",
   position: "HR Manager",
+  employmentType: "HPP",
   startDate: new Date("2022-01-01"),
   phone: "+420 777 999 000",
   address: "Vinohradská 10",
@@ -76,6 +86,7 @@ export const DEMO_EMPLOYEES = [
     email: "jan.novak@fourbros.cz",
     department: "Vývoj",
     position: "Frontend Developer",
+    employmentType: "HPP",
     startDate: new Date("2024-01-15"),
     leaveBalances: [{ annualTotal: 20, annualUsed: 5 }],
     onboardingTasks: DEMO_ONBOARDING_TASKS,
@@ -86,6 +97,7 @@ export const DEMO_EMPLOYEES = [
     email: "marie.svobodova@fourbros.cz",
     department: "Marketing",
     position: "Marketing Specialist",
+    employmentType: "DPP",
     startDate: new Date("2023-06-01"),
     leaveBalances: [{ annualTotal: 20, annualUsed: 8 }],
     onboardingTasks: [
@@ -101,6 +113,7 @@ export const DEMO_EMPLOYEES = [
     email: "tomas.dvorak@fourbros.cz",
     department: "Obchod",
     position: "Sales Manager",
+    employmentType: "ICO",
     startDate: new Date("2022-03-15"),
     leaveBalances: [{ annualTotal: 20, annualUsed: 12 }],
     onboardingTasks: [
