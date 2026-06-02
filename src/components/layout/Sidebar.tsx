@@ -18,26 +18,28 @@ import {
   BarChart2,
   CalendarRange,
   MessageSquareHeart,
+  BookOpen,
+  Coins,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const navItems = [
+const staticNavItems = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Profil', href: '/profile', icon: User },
+  { label: 'Můj účet', href: '/profile', icon: User },
   { label: 'Onboarding', href: '/onboarding', icon: ClipboardList },
   { label: 'Dokumenty', href: '/documents', icon: FileText },
-  { label: 'Dovolená', href: '/time-off', icon: CalendarDays },
-  { label: 'Výplatní pásky', href: '/payslips', icon: Banknote },
-  { label: 'Můj majetek', href: '/assets', icon: Laptop },
+  { label: 'Moje docházka', href: '/time-off', icon: CalendarDays },
+  { label: 'Pravidla', href: '/pravidla', icon: BookOpen },
   { label: 'Schránka důvěry', href: '/feedback', icon: MessageSquareHeart },
 ]
 
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: ShieldCheck },
-  { label: 'Zaměstnanci', href: '/admin/employees', icon: Users },
-  { label: 'Kalendář dovolených', href: '/admin/leave-calendar', icon: CalendarRange },
+  { label: 'Uživatelé', href: '/admin/employees', icon: Users },
+  { label: 'Přehled docházky', href: '/admin/leave-calendar', icon: CalendarRange },
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
+  { label: 'Přehled odměn', href: '/admin/odmeny', icon: Coins },
   { label: 'Majetek', href: '/admin/assets', icon: Laptop },
   { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Schránka důvěry', href: '/admin/feedback', icon: MessageSquareHeart },
@@ -47,11 +49,20 @@ interface SidebarProps {
   isAdmin: boolean
   userName?: string | null
   userEmail?: string | null
+  employmentType?: string | null
   onClose?: () => void
 }
 
-export function Sidebar({ isAdmin, userName, userEmail, onClose }: SidebarProps) {
+export function Sidebar({ isAdmin, userName, userEmail, employmentType, onClose }: SidebarProps) {
   const pathname = usePathname()
+
+  const payslipItem = {
+    label: employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata',
+    href: '/payslips',
+    icon: Banknote,
+  }
+
+  const navItems = [...staticNavItems, payslipItem]
 
   return (
     <div className="flex flex-col h-full bg-navy text-white">

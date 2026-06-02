@@ -10,9 +10,10 @@ interface AppShellProps {
   isAdmin: boolean
   userName?: string | null
   userEmail?: string | null
+  employmentType?: string | null
 }
 
-export function AppShell({ children, title, isAdmin, userName, userEmail }: AppShellProps) {
+export function AppShell({ children, title, isAdmin, userName, userEmail, employmentType }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -35,6 +36,7 @@ export function AppShell({ children, title, isAdmin, userName, userEmail }: AppS
           isAdmin={isAdmin}
           userName={userName}
           userEmail={userEmail}
+          employmentType={employmentType}
           onClose={() => setSidebarOpen(false)}
         />
       </aside>

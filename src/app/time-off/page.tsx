@@ -19,7 +19,7 @@ export default async function TimeOffPage() {
 
   return (
     <AppShell
-      title="Dovolená"
+      title="Moje docházka"
       isAdmin={isAdmin}
       userName={session.user.name}
       userEmail={session.user.email}

@@ -17,7 +17,7 @@ export default async function LeaveCalendarPage() {
 
   return (
     <AppShell
-      title="Kalendář dovolených"
+      title="Přehled docházky"
       isAdmin={true}
       userName={session.user.name}
       userEmail={session.user.email}

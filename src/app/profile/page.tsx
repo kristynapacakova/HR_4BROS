@@ -2,8 +2,8 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
-import { ProfileForm } from './ProfileForm'
-import { DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS } from '@/lib/mock-data'
+import { ProfileTabs } from './ProfileTabs'
 
 export default async function ProfilePage() {
   const session = await auth()
@@ -12,12 +12,16 @@ export default async function ProfilePage() {
   const isAdmin = session.user.role === 'ADMIN'
   const user = isAdmin ? DEMO_ADMIN : DEMO_USER
 
+  const userId = isAdmin ? 'demo-admin-1' : 'demo-employee-1'
+  const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === userId)
+
   return (
     <AppShell
-      title="Profil"
+      title="Můj účet"
       isAdmin={isAdmin}
       userName={session.user.name}
       userEmail={session.user.email}
+      employmentType={user.employmentType}
     >
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Profile header */}
@@ -40,7 +44,12 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        <ProfileForm user={user} />
+        <ProfileTabs
+          user={user}
+          assets={myAssets}
+          assetTypes={ASSET_TYPES}
+          assetConditions={ASSET_CONDITIONS}
+        />
       </div>
     </AppShell>
   )

@@ -12,6 +12,7 @@ import {
   DEMO_EXPENSE_REQUESTS,
   DEMO_PAYSLIPS,
   DEMO_SALARY_INFO,
+  DEMO_TEAM_LEAVES,
 } from '@/lib/mock-data'
 import { DashboardGreeting } from './DashboardGreeting'
 
@@ -56,8 +57,25 @@ export default async function DashboardPage() {
   const startDate = user.startDate || new Date('2024-01-15')
   const tenure = tenureText(startDate)
 
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const todayAbsences = DEMO_TEAM_LEAVES.filter((l) => {
+    const start = new Date(l.startDate)
+    start.setHours(0, 0, 0, 0)
+    const end = new Date(l.endDate)
+    end.setHours(0, 0, 0, 0)
+    return today >= start && today <= end && (l.status === 'APPROVED' || l.status === 'PENDING')
+  })
+
+  const LEAVE_TYPE_CZ: Record<string, string> = {
+    ANNUAL: 'Dovolená',
+    SICK: 'Nemoc',
+    PERSONAL: 'Osobní volno',
+    HOMEOFFICE: 'Home office',
+  }
+
   return (
-    <AppShell title="Dashboard" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email}>
+    <AppShell title="Dashboard" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
       <div className="max-w-5xl mx-auto space-y-5">
 
         {/* Hero greeting */}
@@ -127,6 +145,34 @@ export default async function DashboardPage() {
               <p className="text-2xl font-headline text-navy">{tenure}</p>
               <p className="text-xs font-medium text-slate-500 mt-0.5">ve firmě</p>
               <p className="text-[10px] text-slate-400 mt-1">od {startDate.getDate()}. {CZ_MONTHS[startDate.getMonth()]} {startDate.getFullYear()}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Dnes mimo kancelář */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+          <h3 className="font-headline text-navy mb-3 text-sm">Dnes mimo kancelář</h3>
+          {todayAbsences.length === 0 ? (
+            <p className="text-sm text-slate-500">Všichni jsou dnes v kanceláři 🎉</p>
+          ) : (
+            <div className="flex flex-wrap gap-3 overflow-x-auto">
+              {todayAbsences.map((absence) => (
+                <div key={absence.id} className="flex items-center gap-2 flex-shrink-0">
+                  <div className="w-8 h-8 bg-navy rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white text-xs font-semibold">{absence.userName[0]}</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-navy leading-tight">{absence.userName}</p>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                      absence.type === 'SICK' ? 'bg-red-50 text-red-600' :
+                      absence.type === 'ANNUAL' ? 'bg-green-50 text-green-700' :
+                      'bg-blue-50 text-blue-700'
+                    }`}>
+                      {LEAVE_TYPE_CZ[absence.type] || absence.type}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

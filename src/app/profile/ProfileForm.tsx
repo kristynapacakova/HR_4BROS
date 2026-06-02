@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { EMPLOYMENT_TYPES } from '@/lib/mock-data'
 
 interface UserData {
-  name: string
+  name: string | null
   email: string
   phone: string | null
   address: string | null

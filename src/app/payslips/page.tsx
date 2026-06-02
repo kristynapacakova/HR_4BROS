@@ -3,22 +3,25 @@ import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatCurrency, formatMonth } from '@/lib/utils'
 import { Banknote, Download } from 'lucide-react'
-import { DEMO_PAYSLIPS } from '@/lib/mock-data'
+import { DEMO_PAYSLIPS, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
 
 export default async function PayslipsPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
   const payslips = DEMO_PAYSLIPS
   const latestPayslip = payslips[0]
+  const pageTitle = user.employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata'
 
   return (
     <AppShell
-      title="Výplatní pásky"
+      title={pageTitle}
       isAdmin={isAdmin}
       userName={session.user.name}
       userEmail={session.user.email}
+      employmentType={user.employmentType}
     >
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Summary */}

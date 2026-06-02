@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
 import { FileText, Download, Upload, FileCheck } from 'lucide-react'
-import { DEMO_DOCUMENTS } from '@/lib/mock-data'
+import { DEMO_DOCUMENTS, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
 
 const docTypeLabels: Record<string, string> = {
   CONTRACT: 'Smlouva',
@@ -24,6 +24,7 @@ export default async function DocumentsPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
   const documents = DEMO_DOCUMENTS
 
   return (
@@ -32,6 +33,7 @@ export default async function DocumentsPage() {
       isAdmin={isAdmin}
       userName={session.user.name}
       userEmail={session.user.email}
+      employmentType={user.employmentType}
     >
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Upload section */}

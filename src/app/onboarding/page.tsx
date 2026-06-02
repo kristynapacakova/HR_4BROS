@@ -4,13 +4,14 @@ import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
 import { OnboardingTaskItem } from './OnboardingTaskItem'
 import { CheckCircle2 } from 'lucide-react'
-import { DEMO_ONBOARDING_TASKS } from '@/lib/mock-data'
+import { DEMO_ONBOARDING_TASKS, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
 
 export default async function OnboardingPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
   const tasks = DEMO_ONBOARDING_TASKS
 
   const completedCount = tasks.filter((t) => t.completed).length
@@ -22,6 +23,7 @@ export default async function OnboardingPage() {
       isAdmin={isAdmin}
       userName={session.user.name}
       userEmail={session.user.email}
+      employmentType={user.employmentType}
     >
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Progress card */}

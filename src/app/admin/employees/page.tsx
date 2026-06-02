@@ -15,7 +15,7 @@ export default async function AdminEmployeesPage() {
 
   return (
     <AppShell
-      title="Zaměstnanci"
+      title="Uživatelé"
       isAdmin={true}
       userName={session.user.name}
       userEmail={session.user.email}
@@ -23,14 +23,14 @@ export default async function AdminEmployeesPage() {
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Create employee */}
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-headline font-semibold text-navy mb-4">Přidat zaměstnance</h3>
+          <h3 className="font-headline font-semibold text-navy mb-4">Přidat uživatele</h3>
           <CreateEmployeeForm />
         </div>
 
         {/* Employees table */}
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 className="font-headline font-semibold text-navy">Přehled zaměstnanců ({employees.length})</h3>
+            <h3 className="font-headline font-semibold text-navy">Přehled uživatelů ({employees.length})</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

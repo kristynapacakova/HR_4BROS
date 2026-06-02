@@ -13,7 +13,7 @@ export default async function FeedbackPage() {
   const user = isAdmin ? DEMO_ADMIN : DEMO_USER
 
   return (
-    <AppShell title="Schránka důvěry" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email}>
+    <AppShell title="Schránka důvěry" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
       <div className="max-w-2xl mx-auto space-y-6">
 
         {/* Hero */}
