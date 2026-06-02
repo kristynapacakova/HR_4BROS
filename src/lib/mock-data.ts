@@ -282,6 +282,7 @@ export const DEMO_USER = {
   birthDate: new Date("1990-05-20"),
   bankAccount: "1234567890/0800",
   taxId: "123456789",
+  offboardingUnlocked: false,
 }
 
 export const DEMO_ADMIN = {
@@ -308,6 +309,16 @@ export const DEMO_ONBOARDING_TASKS = [
   { id: "3", title: "Nahrát kopii občanského průkazu", description: "Nahrajte scan nebo foto vašeho OP", completed: false, completedAt: null, order: 3 },
   { id: "4", title: "Nastavit bankovní účet pro výplatu", description: "Doplňte bankovní účet v sekci Profil", completed: false, completedAt: null, order: 4 },
   { id: "5", title: "Absolvovat BOZP školení", description: "Dokončete online školení bezpečnosti práce", completed: false, completedAt: null, order: 5 },
+]
+
+export const DEMO_OFFBOARDING_TASKS = [
+  { id: "off-1", title: "Vrátit firemní vybavení", description: "Notebook, telefon, klíče a veškeré firemní vybavení předejte osobně na HR.", completed: false, completedAt: null, order: 1 },
+  { id: "off-2", title: "Předat přístupy a hesla", description: "Předejte správci IT všechna hesla, přístupy a API klíče, ke kterým máte přístup.", completed: false, completedAt: null, order: 2 },
+  { id: "off-3", title: "Dokončit předávací protokol klientů", description: "Předejte klienty a projekty určenému kolegovi dle pokynů teamleadera.", completed: false, completedAt: null, order: 3 },
+  { id: "off-4", title: "Podepsat výstupní dokumenty", description: "Přečtěte a podepište výstupní dokumenty (dohoda o ukončení, NDA apod.).", completed: false, completedAt: null, order: 4 },
+  { id: "off-5", title: "Smazat firemní data z osobních zařízení", description: "Odstraňte veškeré firemní aplikace, dokumenty a přístupy ze svých osobních zařízení.", completed: false, completedAt: null, order: 5 },
+  { id: "off-6", title: "Poslední výplatní páska / faktura", description: "Zkontrolujte závěrečné vyúčtování a potvrďte správnost poslední výplaty nebo faktury.", completed: false, completedAt: null, order: 6 },
+  { id: "off-7", title: "Exit interview s HR", description: "Absolvujte závěrečný rozhovor s HR. Vaše zpětná vazba je pro nás cenná.", completed: false, completedAt: null, order: 7 },
 ]
 
 export const DEMO_DOCUMENTS = [

@@ -21,17 +21,17 @@ import {
   BookOpen,
   Coins,
   X,
+  Lock,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const staticNavItems = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Můj účet', href: '/profile', icon: User },
-  { label: 'Onboarding', href: '/onboarding', icon: ClipboardList },
-  { label: 'Dokumenty', href: '/documents', icon: FileText },
-  { label: 'Moje docházka', href: '/time-off', icon: CalendarDays },
   { label: 'Pravidla', href: '/pravidla', icon: BookOpen },
+  { label: 'Můj účet', href: '/profile', icon: User },
+  { label: 'Moje docházka', href: '/time-off', icon: CalendarDays },
   { label: 'Schránka důvěry', href: '/feedback', icon: MessageSquareHeart },
+  { label: 'Dokumenty a smlouvy', href: '/documents', icon: FileText },
 ]
 
 const adminItems = [
@@ -50,10 +50,11 @@ interface SidebarProps {
   userName?: string | null
   userEmail?: string | null
   employmentType?: string | null
+  offboardingUnlocked?: boolean
   onClose?: () => void
 }
 
-export function Sidebar({ isAdmin, userName, userEmail, employmentType, onClose }: SidebarProps) {
+export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboardingUnlocked, onClose }: SidebarProps) {
   const pathname = usePathname()
 
   const payslipItem = {
@@ -107,6 +108,35 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, onClose 
             </Link>
           )
         })}
+
+        {/* Onboarding | Offboarding */}
+        <div>
+          <Link
+            href="/onboarding"
+            onClick={onClose}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
+              pathname === '/onboarding'
+                ? 'bg-navy-800 text-white border-l-4 border-violet pl-2'
+                : 'text-navy-200 hover:bg-navy-800 hover:text-white'
+            )}
+          >
+            <ClipboardList className="w-4 h-4 flex-shrink-0" />
+            <span className="flex-1">Onboarding</span>
+            <span className="text-navy-400 text-xs font-normal">|</span>
+            <span className={cn(
+              'flex items-center gap-1 text-xs',
+              offboardingUnlocked ? 'text-green-400' : 'text-navy-400'
+            )}>
+              {offboardingUnlocked ? 'Offboarding' : (
+                <>
+                  <Lock className="w-3 h-3" />
+                  <span>Offboarding</span>
+                </>
+              )}
+            </span>
+          </Link>
+        </div>
 
         {isAdmin && (
           <>
