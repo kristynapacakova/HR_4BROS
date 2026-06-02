@@ -25,11 +25,14 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const staticNavItems = [
+const staticNavItemsBefore = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { label: 'Pravidla', href: '/pravidla', icon: BookOpen },
   { label: 'Můj účet', href: '/profile', icon: User },
   { label: 'Moje docházka', href: '/time-off', icon: CalendarDays },
+]
+
+const staticNavItemsAfter = [
   { label: 'Schránka důvěry', href: '/feedback', icon: MessageSquareHeart },
   { label: 'Dokumenty a smlouvy', href: '/documents', icon: FileText },
 ]
@@ -63,7 +66,7 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
     icon: Banknote,
   }
 
-  const navItems = [...staticNavItems, payslipItem]
+  const navItems = [...staticNavItemsBefore, payslipItem, ...staticNavItemsAfter]
 
   return (
     <div className="flex flex-col h-full bg-navy text-white">
