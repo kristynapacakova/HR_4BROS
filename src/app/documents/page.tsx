@@ -1,13 +1,10 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { FileText, Download, FileCheck, FileSignature, ShieldCheck, Eye, FileKey } from 'lucide-react'
+import { FileText, Download, FileCheck, FileSignature, ShieldCheck, FileKey } from 'lucide-react'
 import { DEMO_DOCUMENTS, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
+import { PayslipYearPicker } from './PayslipYearPicker'
 
-const MONTH_NAMES = [
-  'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
-  'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec',
-]
 
 const TAG_CONFIG: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
   SMLOUVA: { label: 'Smlouva',  color: 'bg-blue-50 text-blue-700',   Icon: FileSignature },
@@ -45,25 +42,6 @@ function ContractRow({ doc }: { doc: Doc }) {
   )
 }
 
-function PayslipRow({ doc }: { doc: Doc & { month?: number; year?: number } }) {
-  const month = doc.month ?? 1
-  const year = doc.year ?? 2024
-  return (
-    <div className="px-6 py-3 flex items-center gap-4 hover:bg-slate-50 transition-colors">
-      <div className="w-14 text-center flex-shrink-0 bg-alice rounded-lg py-1.5">
-        <p className="text-[10px] font-medium text-navy/50 uppercase tracking-wide">{year}</p>
-        <p className="text-sm font-headline font-bold text-navy leading-tight">{MONTH_NAMES[month - 1]}</p>
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-navy">{MONTH_NAMES[month - 1]} {year}</p>
-        <p className="text-xs text-slate-400">Výplatní páska</p>
-      </div>
-      <button className="flex-shrink-0 p-2 text-slate-300 hover:text-navy rounded-lg transition-colors" title="Stáhnout (demo)">
-        <Download className="w-4 h-4" />
-      </button>
-    </div>
-  )
-}
 
 export default async function DocumentsPage() {
   const session = await auth()
@@ -136,18 +114,12 @@ export default async function DocumentsPage() {
           <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100">
               <h3 className="font-headline font-semibold text-navy">Výplatní pásky</h3>
-              <p className="text-xs text-slate-400 mt-0.5">{payslips.length} dokumentů · řazeno dle měsíce</p>
+              <p className="text-xs text-slate-400 mt-0.5">{payslips.length} dokumentů</p>
             </div>
-            {payslipYears.map(year => (
-              <div key={year}>
-                <div className="px-6 py-2 bg-slate-50 border-b border-slate-100">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{year}</p>
-                </div>
-                <div className="divide-y divide-slate-50">
-                  {payslipsByYear[year].map(doc => <PayslipRow key={doc.id} doc={doc as typeof doc & { month?: number; year?: number }} />)}
-                </div>
-              </div>
-            ))}
+            <PayslipYearPicker
+              payslipsByYear={payslipsByYear as Record<number, { id: string; name: string; month?: number; year?: number }[]>}
+              years={payslipYears}
+            />
           </div>
         )}
 
