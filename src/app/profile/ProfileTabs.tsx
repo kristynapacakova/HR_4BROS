@@ -65,7 +65,7 @@ export function ProfileTabs({
   const tabs = [
     { id: 'udaje', label: 'Osobní údaje' },
     { id: 'majetek', label: 'Zapůjčený majetek' },
-    ...(isAdmin ? [{ id: 'hr', label: 'HR údaje' }] : []),
+    { id: 'hr', label: 'HR údaje' },
   ] as const
   type TabId = typeof tabs[number]['id']
   const [tab, setTab] = useState<TabId>('udaje')
@@ -142,8 +142,8 @@ export function ProfileTabs({
         </div>
       )}
 
-      {/* HR údaje — admin only */}
-      {tab === 'hr' && isAdmin && (
+      {/* HR údaje — visible to all, editable only by admin */}
+      {tab === 'hr' && (
         <div className="space-y-4">
           {/* Summary row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -164,38 +164,44 @@ export function ProfileTabs({
           <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="font-headline font-semibold text-navy">HR údaje</h3>
-              <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-medium">Demo — nelze uložit</span>
+              {isAdmin
+                ? <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-medium">Demo — nelze uložit</span>
+                : <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-medium flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    Pouze HR může upravovat
+                  </span>
+              }
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <Field label="Pozice">
-                <input defaultValue={user.position ?? ''} className="input" />
+                <input defaultValue={user.position ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
               </Field>
               <Field label="Seniorita">
-                <select defaultValue={hrData?.seniority ?? ''} className="input">
+                <select defaultValue={hrData?.seniority ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`}>
                   <option value="">— vyberte —</option>
                   {seniorityLevels?.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
               </Field>
               <Field label="Oddělení / Tým">
-                <input defaultValue={user.department ?? ''} className="input" />
+                <input defaultValue={user.department ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
               </Field>
               <Field label="Typ spolupráce">
-                <select defaultValue={user.employmentType ?? ''} className="input">
+                <select defaultValue={user.employmentType ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`}>
                   <option value="">— vyberte —</option>
                   {employmentTypes?.map(e => <option key={e.value} value={e.value}>{e.value} — {e.label.split('–')[1]?.trim() ?? e.label}</option>)}
                 </select>
               </Field>
               <Field label="Úvazek (h/měs)">
-                <input type="number" defaultValue={hrData?.monthlyHours ?? ''} className="input" />
+                <input type="number" defaultValue={hrData?.monthlyHours ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
               </Field>
               <Field label="Klientské hodiny (h/měs)">
-                <input type="number" defaultValue={hrData?.clientHours ?? ''} className="input" />
+                <input type="number" defaultValue={hrData?.clientHours ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
               </Field>
               <Field label="Mzda / měsíc (Kč)">
-                <input type="number" defaultValue={hrData?.monthlySalary ?? ''} placeholder="pro HPP/DPP/DPČ" className="input" />
+                <input type="number" defaultValue={hrData?.monthlySalary ?? ''} disabled={!isAdmin} placeholder="pro HPP/DPP/DPČ" className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
               </Field>
               <Field label="Hodinová sazba (Kč/h)">
-                <input type="number" defaultValue={hrData?.hourlyRate ?? ''} placeholder="pro IČO" className="input" />
+                <input type="number" defaultValue={hrData?.hourlyRate ?? ''} disabled={!isAdmin} placeholder="pro IČO" className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
               </Field>
             </div>
             {/* Derived stats */}
