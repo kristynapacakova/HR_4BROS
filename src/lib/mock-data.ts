@@ -20,6 +20,39 @@ export const DEMO_TEAM_LEAVES = [
 
 // ── Analytics ──────────────────────────────────────────────────────────────
 
+// ── HR Dashboard Stats ─────────────────────────────────────────────────────
+
+export const DEMO_HR_STATS = {
+  activePeople: 27,
+  paidPeople: 24,          // placení (HPP + IČO + DPP/DPČ)
+  monthlyCost: 1123115,    // Kč
+  annualCost: 13477380,    // Kč
+  avgCostPerPerson: 46796, // Kč (z placených)
+  totalHoursPerMonth: 3132,
+  clientHoursPerMonth: 1527,
+  efficiency: 49,          // %
+  costPerClientHour: 736,  // Kč
+  contractTypes: [
+    { label: 'HPP',  count: 4,  percent: 15 },
+    { label: 'IČO',  count: 21, percent: 78 },
+    { label: 'DPP',  count: 2,  percent: 7  },
+  ],
+  seniority: [
+    { label: 'Junior', count: 9,  percent: 33 },
+    { label: 'Medior', count: 10, percent: 37 },
+    { label: 'Senior', count: 5,  percent: 19 },
+    { label: 'Lead',   count: 0,  percent: 0  },
+  ],
+  departments: [
+    { label: 'Creative',    count: 10, percent: 37 },
+    { label: 'Performance', count: 8,  percent: 30 },
+    { label: 'Account',     count: 3,  percent: 11 },
+    { label: 'Sales',       count: 3,  percent: 11 },
+    { label: 'Backoffice',  count: 2,  percent: 7  },
+    { label: 'HR',          count: 1,  percent: 4  },
+  ],
+}
+
 export const DEMO_HEADCOUNT_TREND = [
   { month: "Led", year: 2024, count: 18 },
   { month: "Úno", year: 2024, count: 19 },
