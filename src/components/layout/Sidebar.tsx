@@ -29,6 +29,9 @@ const staticNavItemsBefore = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { label: 'Pravidla', href: '/pravidla', icon: BookOpen },
   { label: 'Můj účet', href: '/profile', icon: User },
+]
+
+const staticNavItemsMid = [
   { label: 'Moje docházka', href: '/time-off', icon: CalendarDays },
 ]
 
@@ -66,7 +69,7 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
     icon: Banknote,
   }
 
-  const navItems = [...staticNavItemsBefore, payslipItem, ...staticNavItemsAfter]
+  const navItems = [...staticNavItemsBefore, payslipItem, ...staticNavItemsMid, ...staticNavItemsAfter]
 
   return (
     <div className="flex flex-col h-full bg-navy text-white">
