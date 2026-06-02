@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   LogOut,
   Users,
+  Users2,
   CheckSquare,
   Laptop,
   BarChart2,
@@ -37,6 +38,7 @@ const staticNavItemsMid = [
 const staticNavItemsAfter = [
   { label: 'Schránka důvěry', href: '/feedback', icon: MessageSquareHeart },
   { label: 'Dokumenty a smlouvy', href: '/documents', icon: FileText },
+  { label: 'Tým Four Bros', href: '/team', icon: Users2 },
 ]
 
 const adminItems = [
