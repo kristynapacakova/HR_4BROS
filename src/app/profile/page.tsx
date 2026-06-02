@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
-import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES } from '@/lib/mock-data'
 import { ProfileTabs } from './ProfileTabs'
 
 export default async function ProfilePage() {
@@ -49,6 +49,16 @@ export default async function ProfilePage() {
           assets={myAssets}
           assetTypes={ASSET_TYPES}
           assetConditions={ASSET_CONDITIONS}
+          isAdmin={isAdmin}
+          hrData={{
+            seniority: (user as typeof DEMO_USER).seniority ?? null,
+            monthlyHours: (user as typeof DEMO_USER).monthlyHours ?? null,
+            clientHours: (user as typeof DEMO_USER).clientHours ?? null,
+            monthlySalary: (user as typeof DEMO_USER).monthlySalary ?? null,
+            hourlyRate: (user as typeof DEMO_USER).hourlyRate ?? null,
+          }}
+          seniorityLevels={SENIORITY_LEVELS}
+          employmentTypes={EMPLOYMENT_TYPES}
         />
       </div>
     </AppShell>

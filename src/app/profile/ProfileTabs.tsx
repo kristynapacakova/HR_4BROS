@@ -28,32 +28,64 @@ interface User {
   city: string | null; bankAccount: string | null; department: string | null
   position: string | null; country: string | null; employmentType?: string | null
 }
+interface HRData {
+  seniority: string | null
+  monthlyHours: number | null
+  clientHours: number | null
+  monthlySalary: number | null
+  hourlyRate: number | null
+}
+
+function fmt(n: number) {
+  return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
+}
+
+function tenure(startDate?: Date | null): string {
+  if (!startDate) return '—'
+  const now = new Date()
+  const months = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth())
+  if (months < 12) return `${months} měs.`
+  const years = Math.floor(months / 12)
+  const rem = months % 12
+  return rem > 0 ? `${years} r. ${rem} měs.` : `${years} r.`
+}
 
 export function ProfileTabs({
-  user, assets, assetTypes, assetConditions,
+  user, assets, assetTypes, assetConditions, isAdmin, hrData, seniorityLevels, employmentTypes,
 }: {
-  user: User
+  user: User & { startDate?: Date | null }
   assets: Asset[]
   assetTypes: AssetType[]
   assetConditions: AssetCondition[]
+  isAdmin?: boolean
+  hrData?: HRData
+  seniorityLevels?: { value: string; label: string }[]
+  employmentTypes?: { value: string; label: string }[]
 }) {
-  const [tab, setTab] = useState<'udaje' | 'majetek'>('udaje')
+  const tabs = [
+    { id: 'udaje', label: 'Osobní údaje' },
+    { id: 'majetek', label: 'Zapůjčený majetek' },
+    ...(isAdmin ? [{ id: 'hr', label: 'HR údaje' }] : []),
+  ] as const
+  type TabId = typeof tabs[number]['id']
+  const [tab, setTab] = useState<TabId>('udaje')
+
+  const efficiency = hrData?.monthlyHours && hrData.clientHours
+    ? Math.round((hrData.clientHours / hrData.monthlyHours) * 100)
+    : null
+
+  const seniorityLabel = seniorityLevels?.find(s => s.value === hrData?.seniority)?.label ?? hrData?.seniority ?? '—'
 
   return (
     <div>
       {/* Tab bar */}
       <div className="flex gap-1 bg-white rounded-xl border border-slate-100 shadow-sm p-1 mb-5">
-        {([
-          { id: 'udaje',   label: 'Osobní údaje' },
-          { id: 'majetek', label: 'Zapůjčený majetek' },
-        ] as const).map(t => (
+        {tabs.map(t => (
           <button
             key={t.id}
-            onClick={() => setTab(t.id)}
+            onClick={() => setTab(t.id as TabId)}
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-              tab === t.id
-                ? 'bg-navy text-white shadow-sm'
-                : 'text-slate-500 hover:text-navy'
+              tab === t.id ? 'bg-navy text-white shadow-sm' : 'text-slate-500 hover:text-navy'
             }`}
           >
             {t.label}
@@ -61,9 +93,10 @@ export function ProfileTabs({
         ))}
       </div>
 
-      {/* Tab content */}
+      {/* Osobní údaje */}
       {tab === 'udaje' && <ProfileForm user={user} />}
 
+      {/* Zapůjčený majetek */}
       {tab === 'majetek' && (
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
@@ -108,6 +141,89 @@ export function ProfileTabs({
           )}
         </div>
       )}
+
+      {/* HR údaje — admin only */}
+      {tab === 'hr' && isAdmin && (
+        <div className="space-y-4">
+          {/* Summary row */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { label: 'Seniorita', value: seniorityLabel },
+              { label: 'Ve firmě', value: tenure((user as { startDate?: Date | null }).startDate) },
+              { label: 'Úvazek', value: hrData?.monthlyHours ? `${hrData.monthlyHours} h/měs` : '—' },
+              { label: 'Efektivita', value: efficiency ? `${efficiency} %` : '—', highlight: true },
+            ].map(c => (
+              <div key={c.label} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+                <p className="text-xs text-slate-400 mb-1">{c.label}</p>
+                <p className={`text-xl font-headline font-bold ${c.highlight ? 'text-violet' : 'text-navy'}`}>{c.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Detail form */}
+          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-headline font-semibold text-navy">HR údaje</h3>
+              <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-medium">Demo — nelze uložit</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <Field label="Pozice">
+                <input defaultValue={user.position ?? ''} className="input" />
+              </Field>
+              <Field label="Seniorita">
+                <select defaultValue={hrData?.seniority ?? ''} className="input">
+                  <option value="">— vyberte —</option>
+                  {seniorityLevels?.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                </select>
+              </Field>
+              <Field label="Oddělení / Tým">
+                <input defaultValue={user.department ?? ''} className="input" />
+              </Field>
+              <Field label="Typ spolupráce">
+                <select defaultValue={user.employmentType ?? ''} className="input">
+                  <option value="">— vyberte —</option>
+                  {employmentTypes?.map(e => <option key={e.value} value={e.value}>{e.value} — {e.label.split('–')[1]?.trim() ?? e.label}</option>)}
+                </select>
+              </Field>
+              <Field label="Úvazek (h/měs)">
+                <input type="number" defaultValue={hrData?.monthlyHours ?? ''} className="input" />
+              </Field>
+              <Field label="Klientské hodiny (h/měs)">
+                <input type="number" defaultValue={hrData?.clientHours ?? ''} className="input" />
+              </Field>
+              <Field label="Mzda / měsíc (Kč)">
+                <input type="number" defaultValue={hrData?.monthlySalary ?? ''} placeholder="pro HPP/DPP/DPČ" className="input" />
+              </Field>
+              <Field label="Hodinová sazba (Kč/h)">
+                <input type="number" defaultValue={hrData?.hourlyRate ?? ''} placeholder="pro IČO" className="input" />
+              </Field>
+            </div>
+            {/* Derived stats */}
+            {(hrData?.monthlyHours || hrData?.monthlySalary || hrData?.hourlyRate) && (
+              <div className="mt-5 pt-5 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                {efficiency !== null && (
+                  <div><p className="text-xs text-slate-400">Efektivita</p><p className="font-semibold text-violet">{efficiency} %</p></div>
+                )}
+                {hrData.monthlySalary && hrData.clientHours && (
+                  <div><p className="text-xs text-slate-400">Náklad / kl. hodinu</p><p className="font-semibold text-navy">{fmt(Math.round(hrData.monthlySalary / hrData.clientHours))}</p></div>
+                )}
+                {hrData.hourlyRate && hrData.clientHours && (
+                  <div><p className="text-xs text-slate-400">Měs. fakturace (odhad)</p><p className="font-semibold text-navy">{fmt(hrData.hourlyRate * hrData.clientHours)}</p></div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-slate-500 mb-1">{label}</label>
+      {children}
     </div>
   )
 }

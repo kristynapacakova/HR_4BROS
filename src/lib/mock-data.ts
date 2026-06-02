@@ -299,6 +299,13 @@ export const EMPLOYMENT_TYPES = [
   { value: "STAZ", label: "Stáž" },
 ]
 
+export const SENIORITY_LEVELS = [
+  { value: 'JUNIOR', label: 'Junior' },
+  { value: 'MEDIOR', label: 'Medior' },
+  { value: 'SENIOR', label: 'Senior' },
+  { value: 'LEAD',   label: 'Lead' },
+]
+
 export const DEMO_USER = {
   id: "demo-employee-1",
   email: "jan.novak@fourbros.cz",
@@ -316,6 +323,12 @@ export const DEMO_USER = {
   bankAccount: "1234567890/0800",
   taxId: "123456789",
   offboardingUnlocked: false,
+  // HR fields
+  seniority: "MEDIOR",
+  monthlyHours: 168,
+  clientHours: 120,
+  monthlySalary: 65000,
+  hourlyRate: null as number | null,
 }
 
 export const DEMO_ADMIN = {
@@ -462,10 +475,15 @@ export const DEMO_EMPLOYEES = [
     id: "demo-employee-1",
     name: "Jan Novák",
     email: "jan.novak@fourbros.cz",
-    department: "Vývoj",
+    department: "Creative",
     position: "Frontend Developer",
     employmentType: "HPP",
     startDate: new Date("2024-01-15"),
+    seniority: "MEDIOR",
+    monthlyHours: 168,
+    clientHours: 120,
+    monthlySalary: 65000,
+    hourlyRate: null as number | null,
     leaveBalances: [{ annualTotal: 20, annualUsed: 5 }],
     onboardingTasks: DEMO_ONBOARDING_TASKS,
   },
@@ -473,10 +491,15 @@ export const DEMO_EMPLOYEES = [
     id: "demo-employee-2",
     name: "Marie Svobodová",
     email: "marie.svobodova@fourbros.cz",
-    department: "Marketing",
+    department: "Performance",
     position: "Marketing Specialist",
     employmentType: "DPP",
     startDate: new Date("2023-06-01"),
+    seniority: "JUNIOR",
+    monthlyHours: 80,
+    clientHours: 60,
+    monthlySalary: 28000,
+    hourlyRate: null as number | null,
     leaveBalances: [{ annualTotal: 20, annualUsed: 8 }],
     onboardingTasks: [
       { id: "6", title: "Vyplnit osobní údaje", completed: true, completedAt: new Date("2023-06-02"), order: 1 },
@@ -489,10 +512,15 @@ export const DEMO_EMPLOYEES = [
     id: "demo-employee-3",
     name: "Tomáš Dvořák",
     email: "tomas.dvorak@fourbros.cz",
-    department: "Obchod",
-    position: "Sales Manager",
+    department: "Account",
+    position: "Account Manager",
     employmentType: "ICO",
     startDate: new Date("2022-03-15"),
+    seniority: "SENIOR",
+    monthlyHours: 140,
+    clientHours: 110,
+    monthlySalary: null as number | null,
+    hourlyRate: 1200,
     leaveBalances: [{ annualTotal: 20, annualUsed: 12 }],
     onboardingTasks: [
       { id: "10", title: "Vyplnit osobní údaje", completed: true, completedAt: new Date("2022-03-16"), order: 1 },
