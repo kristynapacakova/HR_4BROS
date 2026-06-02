@@ -27,7 +27,6 @@ import { cn } from '@/lib/utils'
 
 const staticNavItemsBefore = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Pravidla', href: '/pravidla', icon: BookOpen },
   { label: 'Můj účet', href: '/profile', icon: User },
 ]
 

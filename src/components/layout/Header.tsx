@@ -1,6 +1,7 @@
 'use client'
 
-import { Menu, Bell } from 'lucide-react'
+import { Menu, Bell, BookOpen } from 'lucide-react'
+import Link from 'next/link'
 
 interface HeaderProps {
   title: string
@@ -21,6 +22,13 @@ export function Header({ title, onMenuClick, userName }: HeaderProps) {
         <h1 className="text-xl font-headline font-semibold text-navy">{title}</h1>
       </div>
       <div className="flex items-center gap-3">
+        <Link
+          href="/pravidla"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-colors"
+        >
+          <BookOpen className="w-4 h-4" />
+          Pravidla
+        </Link>
         <button className="relative p-2 text-slate-400 hover:text-navy rounded-full hover:bg-slate-100 transition-colors">
           <Bell className="w-5 h-5" />
         </button>
