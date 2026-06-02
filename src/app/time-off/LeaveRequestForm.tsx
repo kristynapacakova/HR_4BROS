@@ -1,121 +1,123 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { CalendarX, Info } from 'lucide-react'
+import { CalendarX, Info, ExternalLink, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
 
-function getCzechHolidays(year: number): Date[] {
-  const a = year % 19
-  const b = Math.floor(year / 100)
-  const c = year % 100
-  const d = Math.floor(b / 4)
-  const e = b % 4
-  const f = Math.floor((b + 8) / 25)
+// ── Czech holiday helpers ────────────────────────────────────────────────────
+
+function getCzechHolidayDates(year: number): Date[] {
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100
+  const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25)
   const g = Math.floor((b - f + 1) / 3)
   const h = (19 * a + b - d - g + 15) % 30
-  const i = Math.floor(c / 4)
-  const k = c % 4
+  const i = Math.floor(c / 4), k = c % 4
   const l = (32 + 2 * e + 2 * i - h - k) % 7
   const m = Math.floor((a + 11 * h + 22 * l) / 451)
   const month = Math.floor((h + l - 7 * m + 114) / 31)
   const day = ((h + l - 7 * m + 114) % 31) + 1
   const easter = new Date(year, month - 1, day)
-  const goodFriday = new Date(easter); goodFriday.setDate(easter.getDate() - 2)
-  const easterMon = new Date(easter); easterMon.setDate(easter.getDate() + 1)
+  const gf = new Date(easter); gf.setDate(easter.getDate() - 2)
+  const em = new Date(easter); em.setDate(easter.getDate() + 1)
 
   return [
-    new Date(year, 0, 1),
-    goodFriday,
-    easterMon,
-    new Date(year, 4, 1),
-    new Date(year, 4, 8),
-    new Date(year, 6, 5),
-    new Date(year, 6, 6),
-    new Date(year, 8, 28),
-    new Date(year, 9, 28),
-    new Date(year, 10, 17),
-    new Date(year, 11, 24),
-    new Date(year, 11, 25),
-    new Date(year, 11, 26),
+    new Date(year, 0, 1), gf, em,
+    new Date(year, 4, 1), new Date(year, 4, 8),
+    new Date(year, 6, 5), new Date(year, 6, 6),
+    new Date(year, 8, 28), new Date(year, 9, 28), new Date(year, 10, 17),
+    new Date(year, 11, 24), new Date(year, 11, 25), new Date(year, 11, 26),
   ]
 }
 
-const HOLIDAY_NAMES: Record<string, string> = {
-  '01-01': 'Nový rok',
-  '05-01': 'Svátek práce',
-  '05-08': 'Den vítězství',
-  '07-05': 'Cyril a Metoděj',
-  '07-06': 'Jan Hus',
-  '09-28': 'Den české státnosti',
-  '10-28': 'Vznik ČSR',
-  '11-17': 'Den svobody a demokracie',
-  '12-24': 'Štědrý den',
-  '12-25': '1. vánoční svátek',
-  '12-26': '2. vánoční svátek',
+const FIXED_NAMES: Record<string, string> = {
+  '01-01': 'Nový rok', '05-01': 'Svátek práce', '05-08': 'Den vítězství',
+  '07-05': 'Cyril a Metoděj', '07-06': 'Den Jana Husa', '09-28': 'Den české státnosti',
+  '10-28': 'Den vzniku ČSR', '11-17': 'Den svobody a demokracie',
+  '12-24': 'Štědrý den', '12-25': '1. vánoční svátek', '12-26': '2. vánoční svátek',
 }
+
+function toKey(d: Date) { return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}` }
 
 function getHolidayName(date: Date, year: number): string {
   const mm = String(date.getMonth() + 1).padStart(2, '0')
   const dd = String(date.getDate()).padStart(2, '0')
-  const key = `${mm}-${dd}`
-  if (HOLIDAY_NAMES[key]) return HOLIDAY_NAMES[key]
-  // Easter-based — derive from year
-  const holidays = getCzechHolidays(year)
-  const gf = holidays[1] // good friday
-  const em = holidays[2] // easter monday
-  if (date.toDateString() === gf.toDateString()) return 'Velký pátek'
-  if (date.toDateString() === em.toDateString()) return 'Velikonoční pondělí'
+  if (FIXED_NAMES[`${mm}-${dd}`]) return FIXED_NAMES[`${mm}-${dd}`]
+  const dates = getCzechHolidayDates(year)
+  if (date.toDateString() === dates[1].toDateString()) return 'Velký pátek'
+  if (date.toDateString() === dates[2].toDateString()) return 'Velikonoční pondělí'
   return 'Státní svátek'
 }
 
-function toKey(d: Date) {
-  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
-}
-
-function calcWorkdays(start: Date, end: Date): { workdays: number; holidays: Date[] } {
-  const yearsSet = new Set<number>()
-  const cur = new Date(start)
-  while (cur <= end) { yearsSet.add(cur.getFullYear()); cur.setDate(cur.getDate() + 1) }
-  const years = Array.from(yearsSet)
+function calcWorkdays(start: Date, end: Date) {
+  const yearsArr = Array.from(new Set<number>(
+    (() => { const ys: number[] = []; const c = new Date(start); while (c <= end) { ys.push(c.getFullYear()); c.setDate(c.getDate() + 1) } return ys })()
+  ))
   const holidaySet = new Set<string>()
-  const holidayDates: Date[] = []
-  for (const y of years) {
-    for (const h of getCzechHolidays(y)) {
-      const key = toKey(h)
-      if (!holidaySet.has(key)) { holidaySet.add(key); holidayDates.push(h) }
+  const holidayMap = new Map<string, Date>()
+  for (const y of yearsArr) {
+    for (const h of getCzechHolidayDates(y)) {
+      const k = toKey(h)
+      if (!holidaySet.has(k)) { holidaySet.add(k); holidayMap.set(k, h) }
     }
   }
-
   let workdays = 0
   const hitHolidays: Date[] = []
   const d = new Date(start)
   while (d <= end) {
     const dow = d.getDay()
     if (dow !== 0 && dow !== 6) {
-      if (holidaySet.has(toKey(d))) {
-        hitHolidays.push(new Date(d))
-      } else {
-        workdays++
-      }
+      const k = toKey(d)
+      if (holidaySet.has(k)) hitHolidays.push(new Date(d))
+      else workdays++
     }
     d.setDate(d.getDate() + 1)
   }
   return { workdays, holidays: hitHolidays }
 }
 
+// ── Leave types ───────────────────────────────────────────────────────────────
+
+const LEAVE_TYPES = [
+  { value: 'DOVOLENA',       label: 'Dovolená',        deductsBalance: true },
+  { value: 'HOMEOFFICE',     label: 'Homeoffice',      deductsBalance: false },
+  { value: 'NEMOC',          label: 'Nemoc',           deductsBalance: false },
+  { value: 'POHREB',         label: 'Pohřeb',          deductsBalance: false },
+  { value: 'NEPLACENE_VOLNO',label: 'Neplacené volno', deductsBalance: false },
+  { value: 'PLACENE_VOLNO',  label: 'Placené volno',   deductsBalance: false },
+]
+
+// ── Component ─────────────────────────────────────────────────────────────────
+
 export function LeaveRequestForm() {
-  const [form, setForm] = useState({ type: 'ANNUAL', startDate: '', endDate: '', reason: '' })
+  const [form, setForm] = useState({
+    type: 'DOVOLENA',
+    startDate: '',
+    endDate: '',
+    halfDay: false,
+    reason: '',
+  })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  const update = (k: string, v: string) => setForm((p) => ({ ...p, [k]: v }))
+  const update = (k: string, v: string | boolean) => setForm((p) => ({ ...p, [k]: v }))
+
+  const selectedType = LEAVE_TYPES.find(t => t.value === form.type)!
+  const isSick = form.type === 'NEMOC'
+  const isFuneral = form.type === 'POHREB'
+  const isHomeoffice = form.type === 'HOMEOFFICE'
+
+  // For half-day, force start === end
+  const effectiveEnd = form.halfDay ? form.startDate : form.endDate
 
   const calc = useMemo(() => {
-    if (!form.startDate || !form.endDate) return null
+    if (!form.startDate) return null
+    if (form.halfDay) return { workdays: 0.5, holidays: [] }
+    if (!form.endDate) return null
     const start = new Date(form.startDate)
-    const end = new Date(form.endDate)
+    const end = new Date(effectiveEnd)
     if (end < start) return null
     return calcWorkdays(start, end)
-  }, [form.startDate, form.endDate])
+  }, [form.startDate, form.endDate, form.halfDay, effectiveEnd])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -123,7 +125,7 @@ export function LeaveRequestForm() {
     await new Promise((r) => setTimeout(r, 600))
     setLoading(false)
     setSuccess(true)
-    setForm({ type: 'ANNUAL', startDate: '', endDate: '', reason: '' })
+    setForm({ type: 'DOVOLENA', startDate: '', endDate: '', halfDay: false, reason: '' })
     setTimeout(() => setSuccess(false), 3000)
   }
 
@@ -143,32 +145,59 @@ export function LeaveRequestForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+
+      {/* Type */}
+      <div>
+        <label className="block text-xs font-medium text-slate-500 mb-1.5">Typ</label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {LEAVE_TYPES.map(t => (
+            <button
+              key={t.value}
+              type="button"
+              onClick={() => update('type', t.value)}
+              className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all text-left ${
+                form.type === t.value
+                  ? 'bg-navy text-white border-navy'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-navy hover:text-navy'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Sick note */}
+      {isSick && (
+        <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+          <AlertCircle className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-blue-800 leading-relaxed">
+            Nevíš, jak postupovat při nemoci?{' '}
+            <Link href="/pravidla" className="font-semibold underline hover:no-underline inline-flex items-center gap-0.5">
+              Přečti si pravidla <ExternalLink className="w-3 h-3" />
+            </Link>
+            {' '}— najdeš tam postup, neschopenku i kontakt na HR.
+          </p>
+        </div>
+      )}
+
+      {/* Funeral note */}
+      {isFuneral && (
+        <div className="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+          <Info className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-slate-600 leading-relaxed">
+            Do důvodu zadej <strong>pohřeb</strong>.{' '}
+            <Link href="/pravidla" className="text-violet underline hover:no-underline inline-flex items-center gap-0.5">
+              Pravidla pro pohřeb <ExternalLink className="w-3 h-3" />
+            </Link>
+          </p>
+        </div>
+      )}
+
+      {/* Dates */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Typ dovolené</label>
-          <select
-            value={form.type}
-            onChange={(e) => update('type', e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-          >
-            <option value="ANNUAL">Řádná dovolená</option>
-            <option value="SICK">Nemocenská</option>
-            <option value="PERSONAL">Osobní volno</option>
-            <option value="UNPAID">Neplacené volno</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Důvod (nepovinné)</label>
-          <input
-            type="text"
-            value={form.reason}
-            onChange={(e) => update('reason', e.target.value)}
-            placeholder="Např. letní dovolená"
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Od</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1">{form.halfDay ? 'Datum' : 'Od'}</label>
           <input
             type="date"
             value={form.startDate}
@@ -177,27 +206,70 @@ export function LeaveRequestForm() {
             className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
-        <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Do</label>
-          <input
-            type="date"
-            value={form.endDate}
-            onChange={(e) => update('endDate', e.target.value)}
-            required
-            min={form.startDate}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-          />
+        {!form.halfDay && (
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1">Do</label>
+            <input
+              type="date"
+              value={form.endDate}
+              onChange={(e) => update('endDate', e.target.value)}
+              required
+              min={form.startDate}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Half day toggle */}
+      <label className="flex items-center gap-2.5 cursor-pointer w-fit">
+        <div
+          onClick={() => update('halfDay', !form.halfDay)}
+          className={`w-10 h-6 rounded-full transition-colors flex-shrink-0 ${form.halfDay ? 'bg-violet' : 'bg-slate-200'}`}
+        >
+          <div className={`w-4 h-4 bg-white rounded-full shadow mt-1 transition-transform ${form.halfDay ? 'translate-x-5' : 'translate-x-1'}`} />
         </div>
+        <span className="text-sm text-slate-600">Pouze půlden</span>
+      </label>
+
+      {/* Reason — required */}
+      <div>
+        <label className="block text-xs font-medium text-slate-500 mb-1">
+          Důvod <span className="text-red-400">*</span>
+        </label>
+        <input
+          type="text"
+          value={form.reason}
+          onChange={(e) => update('reason', e.target.value)}
+          required
+          placeholder={
+            isSick ? 'Např. nachlazení' :
+            isFuneral ? 'Pohřeb' :
+            isHomeoffice ? 'Např. práce z domova' :
+            'Např. letní dovolená'
+          }
+          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+        />
       </div>
 
       {/* Live calculation */}
       {calc && (
         <div className="rounded-xl border border-slate-100 bg-slate-50 px-5 py-4 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-600">Pracovní dny k čerpání dovolené</span>
-            <span className="text-lg font-headline font-bold text-navy">{calc.workdays} dní</span>
+            <span className="text-sm text-slate-600">
+              {selectedType.deductsBalance ? 'Pracovní dny k čerpání dovolené' : 'Délka absence'}
+            </span>
+            <span className="text-lg font-headline font-bold text-navy">
+              {calc.workdays === 0.5 ? 'půl dne' : `${calc.workdays} ${calc.workdays === 1 ? 'den' : 'dní'}`}
+            </span>
           </div>
-          {calc.holidays.length > 0 && (
+          {!selectedType.deductsBalance && (
+            <p className="text-xs text-slate-400 flex items-center gap-1">
+              <Info className="w-3.5 h-3.5" />
+              Tento typ absence se neodečítá ze zůstatku dovolené
+            </p>
+          )}
+          {calc.holidays.length > 0 && selectedType.deductsBalance && (
             <div className="space-y-1.5 pt-1 border-t border-slate-200">
               <div className="flex items-center gap-1.5 text-xs text-violet font-medium">
                 <CalendarX className="w-3.5 h-3.5" />
@@ -210,12 +282,6 @@ export function LeaveRequestForm() {
                   <span>— {getHolidayName(h, h.getFullYear())}</span>
                 </div>
               ))}
-            </div>
-          )}
-          {calc.holidays.length === 0 && (
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 pt-1 border-t border-slate-200">
-              <Info className="w-3.5 h-3.5" />
-              V tomto období nejsou žádné státní svátky
             </div>
           )}
         </div>

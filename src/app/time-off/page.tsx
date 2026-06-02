@@ -1,10 +1,16 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { formatDate, getLeaveTypeCz, getDaysBetween } from '@/lib/utils'
+import { formatDate, getDaysBetween } from '@/lib/utils'
 import { CalendarDays, Plus } from 'lucide-react'
 import { LeaveRequestForm } from './LeaveRequestForm'
 import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
+
+const LEAVE_LABEL: Record<string, string> = {
+  DOVOLENA: 'Dovolená', HOMEOFFICE: 'Homeoffice', NEMOC: 'Nemoc',
+  POHREB: 'Pohřeb', NEPLACENE_VOLNO: 'Neplacené volno', PLACENE_VOLNO: 'Placené volno',
+  ANNUAL: 'Dovolená', SICK: 'Nemoc', PERSONAL: 'Osobní volno', UNPAID: 'Neplacené volno',
+}
 
 function getCzechHolidays(year: number) {
   const a = year % 19, b = Math.floor(year / 100), c = year % 100
@@ -67,7 +73,11 @@ export default async function TimeOffPage() {
         {/* Balance cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <BalanceCard title="Řádná dovolená" used={leaveBalance.annualUsed} total={leaveBalance.annualTotal} remaining={annualRemaining} color="violet" />
-          <BalanceCard title="Nemocenská" used={leaveBalance.sickUsed} total={leaveBalance.sickTotal} remaining={sickRemaining} color="blue" />
+          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
+            <p className="text-xs font-medium text-slate-500 mb-1">Nemoc / absence</p>
+            <p className="text-2xl font-headline font-bold text-navy">{leaveBalance.sickUsed} dní</p>
+            <p className="text-xs text-slate-400 mt-1">čerpáno letos · bez limitu</p>
+          </div>
         </div>
 
         {/* New request — holidays auto-calculated inside form */}
@@ -101,7 +111,7 @@ export default async function TimeOffPage() {
                 <div key={req.id} className="px-6 py-4 flex items-center gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="text-sm font-medium text-navy">{getLeaveTypeCz(req.type)}</p>
+                      <p className="text-sm font-medium text-navy">{LEAVE_LABEL[req.type] ?? req.type}</p>
                       <StatusBadge status={req.status} />
                     </div>
                     <p className="text-xs text-slate-400 mt-1">
