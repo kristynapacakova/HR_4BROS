@@ -58,8 +58,6 @@ export default async function TimeOffPage() {
   const today = new Date()
   const currentYear = today.getFullYear()
   const thisYearHolidays = getCzechHolidays(currentYear)
-  const nextYearHolidays = getCzechHolidays(currentYear + 1)
-
   return (
     <AppShell
       title="Moje docházka"
@@ -76,7 +74,7 @@ export default async function TimeOffPage() {
           <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
             <p className="text-xs font-medium text-slate-500 mb-1">Nemoc / absence</p>
             <p className="text-2xl font-headline font-bold text-navy">{leaveBalance.sickUsed} dní</p>
-            <p className="text-xs text-slate-400 mt-1">čerpáno letos · bez limitu</p>
+            <p className="text-xs text-slate-400 mt-1">čerpáno letos</p>
           </div>
         </div>
 
@@ -91,9 +89,6 @@ export default async function TimeOffPage() {
 
         {/* Holidays this year */}
         <HolidayTable year={currentYear} holidays={thisYearHolidays} today={today} />
-
-        {/* Holidays next year */}
-        <HolidayTable year={currentYear + 1} holidays={nextYearHolidays} today={today} />
 
         {/* History */}
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">

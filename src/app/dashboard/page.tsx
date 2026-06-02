@@ -149,9 +149,9 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* Dnes mimo kancelář */}
+        {/* Dnes mimo office */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-          <h3 className="font-headline text-navy mb-3 text-sm">Dnes mimo kancelář</h3>
+          <h3 className="font-headline text-navy mb-3 text-sm">Dnes mimo office</h3>
           {todayAbsences.length === 0 ? (
             <p className="text-sm text-slate-500">Všichni jsou dnes v kanceláři 🎉</p>
           ) : (

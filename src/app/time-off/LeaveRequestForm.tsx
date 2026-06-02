@@ -148,23 +148,16 @@ export function LeaveRequestForm() {
 
       {/* Type */}
       <div>
-        <label className="block text-xs font-medium text-slate-500 mb-1.5">Typ</label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <label className="block text-xs font-medium text-slate-500 mb-1">Typ absence</label>
+        <select
+          value={form.type}
+          onChange={(e) => update('type', e.target.value)}
+          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+        >
           {LEAVE_TYPES.map(t => (
-            <button
-              key={t.value}
-              type="button"
-              onClick={() => update('type', t.value)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all text-left ${
-                form.type === t.value
-                  ? 'bg-navy text-white border-navy'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-navy hover:text-navy'
-              }`}
-            >
-              {t.label}
-            </button>
+            <option key={t.value} value={t.value}>{t.label}</option>
           ))}
-        </div>
+        </select>
       </div>
 
       {/* Sick note */}
