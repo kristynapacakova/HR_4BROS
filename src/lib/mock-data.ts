@@ -171,6 +171,62 @@ export const DEMO_SALARY_INFO = {
   lastRaiseDate: new Date("2025-10-01"),
 }
 
+// ── Trust Mailbox ──────────────────────────────────────────────────────────
+
+export const FEEDBACK_CATEGORIES = [
+  { value: "PRACOVNI_PODMINKY", label: "Pracovní podmínky" },
+  { value: "VZTAHY",            label: "Vztahy na pracovišti" },
+  { value: "ODMENOVÁNÍ",        label: "Odměňování a benefity" },
+  { value: "VEDENI",            label: "Vedení a management" },
+  { value: "PROCESY",           label: "Procesy a organizace" },
+  { value: "NAVRH",             label: "Návrh na zlepšení" },
+  { value: "POCHVALA",          label: "Pochvala" },
+  { value: "JINE",              label: "Jiné" },
+]
+
+export const DEMO_FEEDBACK = [
+  {
+    id: "fb1",
+    anonymous: true,
+    authorName: null,
+    category: "PRACOVNI_PODMINKY",
+    message: "Bylo by fajn mít v kanceláři lepší klimatizaci. V létě je tam nesnesitelné vedro a produktivita opravdu trpí.",
+    status: "NEW",
+    submittedAt: new Date("2026-05-28"),
+    adminNote: null,
+  },
+  {
+    id: "fb2",
+    anonymous: false,
+    authorName: "Jan Novák",
+    category: "NAVRH",
+    message: "Navrhuji zavést týdenní stand-up napříč odděleními, abychom věděli co dělají ostatní týmy. Pomohlo by to spolupráci.",
+    status: "READ",
+    submittedAt: new Date("2026-05-15"),
+    adminNote: "Díky za podnět, probereme na příštím all-hands meetingu.",
+  },
+  {
+    id: "fb3",
+    anonymous: true,
+    authorName: null,
+    category: "VEDENI",
+    message: "Někdy chybí zpětná vazba od vedení na odvedenou práci. Bylo by motivující slyšet, jak si vedu.",
+    status: "NEW",
+    submittedAt: new Date("2026-06-01"),
+    adminNote: null,
+  },
+  {
+    id: "fb4",
+    anonymous: false,
+    authorName: "Marie Svobodová",
+    category: "POCHVALA",
+    message: "Chci pochválit HR tým za skvělé zvládnutí onboardingu nových kolegů. Bylo to opravdu profesionální!",
+    status: "RESOLVED",
+    submittedAt: new Date("2026-04-20"),
+    adminNote: "Moc děkujeme! 😊",
+  },
+]
+
 export const ASSET_TYPES = [
   { value: "NOTEBOOK", label: "Notebook" },
   { value: "TELEFON", label: "Telefon" },

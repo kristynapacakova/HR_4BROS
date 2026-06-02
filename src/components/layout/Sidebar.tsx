@@ -17,6 +17,7 @@ import {
   Laptop,
   BarChart2,
   CalendarRange,
+  MessageSquareHeart,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -29,6 +30,7 @@ const navItems = [
   { label: 'Dovolená', href: '/time-off', icon: CalendarDays },
   { label: 'Výplatní pásky', href: '/payslips', icon: Banknote },
   { label: 'Můj majetek', href: '/assets', icon: Laptop },
+  { label: 'Schránka důvěry', href: '/feedback', icon: MessageSquareHeart },
 ]
 
 const adminItems = [
@@ -38,6 +40,7 @@ const adminItems = [
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
   { label: 'Majetek', href: '/admin/assets', icon: Laptop },
   { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },
+  { label: 'Schránka důvěry', href: '/admin/feedback', icon: MessageSquareHeart },
 ]
 
 interface SidebarProps {
