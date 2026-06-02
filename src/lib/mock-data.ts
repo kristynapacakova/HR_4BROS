@@ -321,10 +321,39 @@ export const DEMO_OFFBOARDING_TASKS = [
   { id: "off-7", title: "Exit interview s HR", description: "Absolvujte závěrečný rozhovor s HR. Vaše zpětná vazba je pro nás cenná.", completed: false, completedAt: null, order: 7 },
 ]
 
+// tag: SMLOUVA | DODATEK | GDPR | NDA  (for contracts section)
+// type: CONTRACT | PAYSLIP
 export const DEMO_DOCUMENTS = [
-  { id: "1", name: "Pracovní smlouva 2024", type: "CONTRACT", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
-  { id: "2", name: "GDPR souhlas", type: "OTHER", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: null, url: "#" },
-  { id: "3", name: "Výplatní páska Leden 2024", type: "PAYSLIP", createdAt: new Date("2024-02-01"), uploadedAt: new Date("2024-02-01"), signedAt: null, url: "#" },
+  // Smlouvy
+  { id: "c1", name: "Pracovní smlouva", type: "CONTRACT", tag: "SMLOUVA", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
+  { id: "c2", name: "Dodatek č. 1 — změna pozice", type: "CONTRACT", tag: "DODATEK", createdAt: new Date("2024-06-01"), uploadedAt: new Date("2024-06-01"), signedAt: new Date("2024-06-03"), url: "#" },
+  { id: "c3", name: "GDPR souhlas se zpracováním osobních údajů", type: "CONTRACT", tag: "GDPR", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
+  { id: "c4", name: "NDA — dohoda o mlčenlivosti", type: "CONTRACT", tag: "NDA", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
+  // Výplatní pásky (HPP only)
+  { id: "p1",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 12, year: 2025, createdAt: new Date("2026-01-05"), uploadedAt: new Date("2026-01-05"), signedAt: null, url: "#" },
+  { id: "p2",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 11, year: 2025, createdAt: new Date("2025-12-05"), uploadedAt: new Date("2025-12-05"), signedAt: null, url: "#" },
+  { id: "p3",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 10, year: 2025, createdAt: new Date("2025-11-05"), uploadedAt: new Date("2025-11-05"), signedAt: null, url: "#" },
+  { id: "p4",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 9,  year: 2025, createdAt: new Date("2025-10-05"), uploadedAt: new Date("2025-10-05"), signedAt: null, url: "#" },
+  { id: "p5",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 8,  year: 2025, createdAt: new Date("2025-09-05"), uploadedAt: new Date("2025-09-05"), signedAt: null, url: "#" },
+  { id: "p6",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 7,  year: 2025, createdAt: new Date("2025-08-05"), uploadedAt: new Date("2025-08-05"), signedAt: null, url: "#" },
+  { id: "p7",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 6,  year: 2025, createdAt: new Date("2025-07-05"), uploadedAt: new Date("2025-07-05"), signedAt: null, url: "#" },
+  { id: "p8",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 5,  year: 2025, createdAt: new Date("2025-06-05"), uploadedAt: new Date("2025-06-05"), signedAt: null, url: "#" },
+  { id: "p9",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 4,  year: 2025, createdAt: new Date("2025-05-05"), uploadedAt: new Date("2025-05-05"), signedAt: null, url: "#" },
+  { id: "p10", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 3,  year: 2025, createdAt: new Date("2025-04-05"), uploadedAt: new Date("2025-04-05"), signedAt: null, url: "#" },
+  { id: "p11", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 2,  year: 2025, createdAt: new Date("2025-03-05"), uploadedAt: new Date("2025-03-05"), signedAt: null, url: "#" },
+  { id: "p12", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 1,  year: 2025, createdAt: new Date("2025-02-05"), uploadedAt: new Date("2025-02-05"), signedAt: null, url: "#" },
+  { id: "p13", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 12, year: 2024, createdAt: new Date("2025-01-05"), uploadedAt: new Date("2025-01-05"), signedAt: null, url: "#" },
+  { id: "p14", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 11, year: 2024, createdAt: new Date("2024-12-05"), uploadedAt: new Date("2024-12-05"), signedAt: null, url: "#" },
+  { id: "p15", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 10, year: 2024, createdAt: new Date("2024-11-05"), uploadedAt: new Date("2024-11-05"), signedAt: null, url: "#" },
+  { id: "p16", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 9,  year: 2024, createdAt: new Date("2024-10-05"), uploadedAt: new Date("2024-10-05"), signedAt: null, url: "#" },
+  { id: "p17", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 8,  year: 2024, createdAt: new Date("2024-09-05"), uploadedAt: new Date("2024-09-05"), signedAt: null, url: "#" },
+  { id: "p18", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 7,  year: 2024, createdAt: new Date("2024-08-05"), uploadedAt: new Date("2024-08-05"), signedAt: null, url: "#" },
+  { id: "p19", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 6,  year: 2024, createdAt: new Date("2024-07-05"), uploadedAt: new Date("2024-07-05"), signedAt: null, url: "#" },
+  { id: "p20", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 5,  year: 2024, createdAt: new Date("2024-06-05"), uploadedAt: new Date("2024-06-05"), signedAt: null, url: "#" },
+  { id: "p21", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 4,  year: 2024, createdAt: new Date("2024-05-05"), uploadedAt: new Date("2024-05-05"), signedAt: null, url: "#" },
+  { id: "p22", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 3,  year: 2024, createdAt: new Date("2024-04-05"), uploadedAt: new Date("2024-04-05"), signedAt: null, url: "#" },
+  { id: "p23", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 2,  year: 2024, createdAt: new Date("2024-03-05"), uploadedAt: new Date("2024-03-05"), signedAt: null, url: "#" },
+  { id: "p24", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 1,  year: 2024, createdAt: new Date("2024-02-05"), uploadedAt: new Date("2024-02-05"), signedAt: null, url: "#" },
 ]
 
 export const DEMO_LEAVE_BALANCE = {
