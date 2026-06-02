@@ -66,12 +66,7 @@ export default async function OdmenyPage() {
       userEmail={session.user.email}
     >
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
-          <h2 className="font-headline font-bold text-navy text-xl mb-1">Přehled odměn</h2>
-          <p className="text-sm text-slate-500">Výplaty zaměstnanců (HPP/DPP/DPČ) a faktury externích spolupracovníků (IČO).</p>
-        </div>
-
+        <p className="text-sm text-slate-500">Výplaty zaměstnanců (HPP/DPP/DPČ) a faktury externích spolupracovníků (IČO).</p>
         <OdmenyTabs payslips={payslipRows} invoices={invoiceRows} />
       </div>
     </AppShell>
