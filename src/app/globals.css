@@ -69,7 +69,7 @@
   }
 
   body {
-    @apply bg-[#F5F7FA] text-navy font-sans;
+    @apply bg-[#F2F2F7] text-navy font-sans;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
@@ -89,7 +89,7 @@
 
 @layer components {
   .card {
-    @apply bg-white rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6;
+    @apply bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-6;
   }
 
   .input {
