@@ -832,3 +832,259 @@ export const DEMO_CONTRACTS: Contract[] = [
     notes: null,
   },
 ]
+
+// ── Interní směrnice ────────────────────────────────────────────────────────
+
+export type DirectiveTheme = 'STANDARD' | 'IMPORTANT' | 'GDPR' | 'BOZP' | 'BENEFIT' | 'WELCOME'
+
+export interface DirectiveTemplate {
+  id: string
+  name: string
+  category: string
+  theme: DirectiveTheme
+  description: string
+  body: string
+  placeholders: string[]
+  createdAt: Date
+}
+
+export interface DirectiveAcknowledgement {
+  employeeId: string
+  employeeName: string
+  acknowledgedAt: Date
+}
+
+export interface Directive {
+  id: string
+  templateId: string
+  title: string
+  category: string
+  theme: DirectiveTheme
+  body: string
+  publishedAt: Date
+  validFrom: Date
+  mustAcknowledge: boolean
+  acknowledgements: DirectiveAcknowledgement[]
+  createdBy: string
+}
+
+export const DIRECTIVE_TEMPLATES: DirectiveTemplate[] = [
+  {
+    id: 'dtpl-1',
+    name: 'Obecná interní směrnice',
+    category: 'Obecné',
+    theme: 'STANDARD',
+    description: 'Universální šablona pro interní firemní směrnice a pravidla.',
+    placeholders: ['NAZEV', 'CISLO', 'DATUM', 'OBSAH', 'PLATNOST_OD'],
+    createdAt: new Date('2024-01-01'),
+    body: `<h2>Interní směrnice č. {{CISLO}} — {{NAZEV}}</h2>
+<p><strong>Datum vydání:</strong> {{DATUM}}</p>
+<h3>1. Účel a předmět směrnice</h3>
+<p>Tato směrnice stanovuje závazná pravidla a postupy platné pro všechny zaměstnance společnosti Four Bros s.r.o. Jejím cílem je zajistit jednotný postup při řešení situací popsaných v tomto dokumentu a přispět k efektivnímu fungování celé organizace.</p>
+<h3>2. Obsah směrnice</h3>
+{{OBSAH}}
+<h3>3. Závěrečná ustanovení</h3>
+<p>Tato směrnice nabývá účinnosti dnem <strong>{{PLATNOST_OD}}</strong>. Všichni zaměstnanci jsou povinni se s touto směrnicí seznámit a řídit se jejími ustanoveními. Porušení směrnice může být považováno za porušení pracovní kázně.</p>
+<p>Směrnici vydává a za její aktualizaci odpovídá oddělení HR ve spolupráci s vedením společnosti.</p>`,
+  },
+  {
+    id: 'dtpl-2',
+    name: 'Směrnice GDPR / ochrana dat',
+    category: 'GDPR',
+    theme: 'GDPR',
+    description: 'Šablona pro směrnice týkající se ochrany osobních údajů dle GDPR.',
+    placeholders: ['CISLO', 'DATUM', 'OBSAH_ZPRACOVANI', 'DOBA_ULOZENI', 'PLATNOST_OD'],
+    createdAt: new Date('2024-01-01'),
+    body: `<h2>Směrnice GDPR č. {{CISLO}} — Ochrana osobních údajů</h2>
+<p><strong>Datum vydání:</strong> {{DATUM}}</p>
+<h3>1. Účel a právní základ</h3>
+<p>Tato směrnice upravuje pravidla zpracování osobních údajů ve společnosti Four Bros s.r.o. v souladu s nařízením Evropského parlamentu a Rady (EU) 2016/679 (GDPR) a zákonem č. 110/2019 Sb., o zpracování osobních údajů.</p>
+<h3>2. Rozsah zpracování osobních údajů</h3>
+{{OBSAH_ZPRACOVANI}}
+<h3>3. Doba uložení dat</h3>
+<p>{{DOBA_ULOZENI}}</p>
+<h3>4. Práva subjektů údajů</h3>
+<p>Každý zaměstnanec má právo na přístup ke svým osobním údajům, jejich opravu, výmaz nebo omezení zpracování. Žádosti je třeba podávat prostřednictvím oddělení HR. Na všechny žádosti bude odpovězeno nejpozději do 30 dnů od jejich doručení.</p>
+<h3>5. Účinnost</h3>
+<p>Tato směrnice nabývá účinnosti dnem <strong>{{PLATNOST_OD}}</strong> a ruší veškerá předchozí ustanovení týkající se ochrany osobních údajů.</p>`,
+  },
+  {
+    id: 'dtpl-3',
+    name: 'Bezpečnost a ochrana zdraví (BOZP)',
+    category: 'BOZP',
+    theme: 'BOZP',
+    description: 'Šablona pro směrnice o bezpečnosti práce a ochraně zdraví při práci.',
+    placeholders: ['CISLO', 'DATUM', 'POPIS_RIZIK', 'OCHRANA_OPATRENI', 'PLATNOST_OD'],
+    createdAt: new Date('2024-01-01'),
+    body: `<h2>Směrnice BOZP č. {{CISLO}} — Bezpečnost a ochrana zdraví při práci</h2>
+<p><strong>Datum vydání:</strong> {{DATUM}}</p>
+<h3>1. Úvod a účel</h3>
+<p>Bezpečnost a ochrana zdraví při práci jsou pro společnost Four Bros s.r.o. prioritou. Tato směrnice vymezuje povinnosti zaměstnanců i zaměstnavatele v oblasti BOZP v souladu se zákonem č. 262/2006 Sb. (zákoník práce) a zákonem č. 309/2006 Sb.</p>
+<h3>2. Identifikace rizik</h3>
+{{POPIS_RIZIK}}
+<h3>3. Ochranná opatření</h3>
+{{OCHRANA_OPATRENI}}
+<h3>4. Povinnosti zaměstnanců</h3>
+<ul>
+<li>Absolvovat vstupní a periodická školení BOZP</li>
+<li>Používat přidělené osobní ochranné pracovní prostředky</li>
+<li>Neprodleně hlásit pracovní úrazy a nebezpečné situace</li>
+<li>Dodržovat technologické postupy a bezpečnostní předpisy</li>
+</ul>
+<h3>5. Účinnost</h3>
+<p>Tato směrnice nabývá účinnosti dnem <strong>{{PLATNOST_OD}}</strong>. Školení BOZP musí absolvovat každý zaměstnanec nejpozději do 30 dnů od tohoto data.</p>`,
+  },
+  {
+    id: 'dtpl-4',
+    name: 'Benefity a odměňování',
+    category: 'Odměňování',
+    theme: 'BENEFIT',
+    description: 'Šablona pro směrnice upravující zaměstnanecké benefity a systém odměňování.',
+    placeholders: ['CISLO', 'DATUM', 'BENEFITY', 'PODMINKY', 'PLATNOST_OD'],
+    createdAt: new Date('2024-01-01'),
+    body: `<h2>Směrnice č. {{CISLO}} — Zaměstnanecké benefity a odměňování</h2>
+<p><strong>Datum vydání:</strong> {{DATUM}}</p>
+<h3>1. Úvod</h3>
+<p>Společnost Four Bros s.r.o. si váží každého svého zaměstnance a usiluje o vytváření příjemného a motivujícího pracovního prostředí. Tato směrnice popisuje systém benefitů a dalšího odměňování, na které mají zaměstnanci nárok.</p>
+<h3>2. Přehled benefitů</h3>
+{{BENEFITY}}
+<h3>3. Podmínky čerpání</h3>
+{{PODMINKY}}
+<h3>4. Účinnost</h3>
+<p>Tato směrnice nabývá účinnosti dnem <strong>{{PLATNOST_OD}}</strong>. Změny v oblasti benefitů budou zaměstnancům oznamovány s předstihem minimálně 30 dnů.</p>`,
+  },
+  {
+    id: 'dtpl-5',
+    name: 'Onboardingová příručka / uvítání',
+    category: 'Onboarding',
+    theme: 'WELCOME',
+    description: 'Uvítací příručka pro nové zaměstnance — vše, co potřebují vědět od prvního dne.',
+    placeholders: ['CISLO', 'DATUM', 'VITEJTE_TEXT', 'KONTAKTY', 'PLATNOST_OD'],
+    createdAt: new Date('2024-01-01'),
+    body: `<h2>Příručka č. {{CISLO}} — Vítejte v Four Bros</h2>
+<p><strong>Datum vydání:</strong> {{DATUM}}</p>
+<h3>Uvítání od vedení</h3>
+{{VITEJTE_TEXT}}
+<h3>Důležité kontakty a informace</h3>
+{{KONTAKTY}}
+<h3>Vaše první kroky</h3>
+<ol>
+<li>Podepište pracovní smlouvu a předejte potřebné dokumenty oddělení HR</li>
+<li>Vyplňte svůj profil v HR portálu a zkontrolujte osobní údaje</li>
+<li>Absolvujte vstupní školení BOZP a seznamte se s prostory kanceláře</li>
+<li>Připojte se na firemní Slack a představte se v kanálu #general</li>
+<li>Naplánujte si úvodní schůzku s přímým nadřízeným</li>
+</ol>
+<h3>Platnost</h3>
+<p>Tato příručka nabývá účinnosti dnem <strong>{{PLATNOST_OD}}</strong> a bude pravidelně aktualizována dle aktuálního dění ve společnosti.</p>`,
+  },
+]
+
+export const DEMO_DIRECTIVES: Directive[] = [
+  {
+    id: 'dir-1',
+    templateId: 'dtpl-5',
+    title: 'Uvítací příručka Four Bros',
+    category: 'Onboarding',
+    theme: 'WELCOME',
+    publishedAt: new Date('2024-01-01'),
+    validFrom: new Date('2024-01-01'),
+    mustAcknowledge: true,
+    createdBy: 'Petra Nováková',
+    acknowledgements: [
+      {
+        employeeId: 'demo-employee-1',
+        employeeName: 'Jan Novák',
+        acknowledgedAt: new Date('2024-01-16'),
+      },
+    ],
+    body: `<h2>Příručka č. 1/2024 — Vítejte v Four Bros</h2>
+<p><strong>Datum vydání:</strong> 1. 1. 2024</p>
+<h3>Uvítání od vedení</h3>
+<p>Vítejte v rodině Four Bros! Jsme nadšeni, že se k nám přidáváte, a těšíme se na společnou práci. Naše agentura je dynamické místo plné kreativních lidí, kteří každý den pracují na tom, aby přinášeli klientům měřitelné výsledky.</p>
+<p>Věříme ve vzájemnou úctu, otevřenou komunikaci a profesionální růst každého člena týmu. Zde najdete vše, co potřebujete vědět pro hladký začátek vašeho působení u nás.</p>
+<h3>Důležité kontakty a informace</h3>
+<ul>
+<li><strong>HR oddělení:</strong> Petra Nováková — petra.novakova@fourbros.cz</li>
+<li><strong>IT podpora:</strong> it@fourbros.cz</li>
+<li><strong>Finanční oddělení:</strong> finance@fourbros.cz</li>
+<li><strong>Kancelář:</strong> Vinohradská 10, Praha 2</li>
+</ul>
+<h3>Vaše první kroky</h3>
+<ol>
+<li>Podepište pracovní smlouvu a předejte potřebné dokumenty oddělení HR</li>
+<li>Vyplňte svůj profil v HR portálu a zkontrolujte osobní údaje</li>
+<li>Absolvujte vstupní školení BOZP a seznamte se s prostory kanceláře</li>
+<li>Připojte se na firemní Slack a představte se v kanálu #general</li>
+<li>Naplánujte si úvodní schůzku s přímým nadřízeným</li>
+</ol>
+<h3>Platnost</h3>
+<p>Tato příručka nabývá účinnosti dnem <strong>1. 1. 2024</strong> a bude pravidelně aktualizována dle aktuálního dění ve společnosti.</p>`,
+  },
+  {
+    id: 'dir-2',
+    templateId: 'dtpl-1',
+    title: 'Směrnice č. 2/2025 — Pravidla homeoffice',
+    category: 'Obecné',
+    theme: 'STANDARD',
+    publishedAt: new Date('2025-03-01'),
+    validFrom: new Date('2025-03-01'),
+    mustAcknowledge: true,
+    createdBy: 'Petra Nováková',
+    acknowledgements: [
+      {
+        employeeId: 'demo-employee-1',
+        employeeName: 'Jan Novák',
+        acknowledgedAt: new Date('2025-03-05'),
+      },
+    ],
+    body: `<h2>Interní směrnice č. 2/2025 — Pravidla homeoffice</h2>
+<p><strong>Datum vydání:</strong> 1. 3. 2025</p>
+<h3>1. Účel a předmět směrnice</h3>
+<p>Tato směrnice stanovuje závazná pravidla a postupy platné pro všechny zaměstnance společnosti Four Bros s.r.o. při výkonu práce z domova (homeoffice). Jejím cílem je zajistit jednotný postup a efektivní fungování celé organizace i v podmínkách vzdálené práce.</p>
+<h3>2. Obsah směrnice</h3>
+<p>Zaměstnanci jsou oprávněni pracovat z domova na základě písemné dohody s přímým nadřízeným. Homeoffice je možné čerpat maximálně 3 dny v týdnu. Zaměstnanec je povinen být dostupný v pracovní době od 9:00 do 17:00 a reagovat na komunikaci do 30 minut.</p>
+<ul>
+<li>Pracovní místo musí splňovat požadavky BOZP</li>
+<li>Zaměstnanec odpovídá za zabezpečení firemních dat a zařízení</li>
+<li>Čerpání homeoffice je nutné hlásit v HR systému předem</li>
+</ul>
+<h3>3. Závěrečná ustanovení</h3>
+<p>Tato směrnice nabývá účinnosti dnem <strong>1. 3. 2025</strong>. Všichni zaměstnanci jsou povinni se s touto směrnicí seznámit a řídit se jejími ustanoveními. Porušení směrnice může být považováno za porušení pracovní kázně.</p>
+<p>Směrnici vydává a za její aktualizaci odpovídá oddělení HR ve spolupráci s vedením společnosti.</p>`,
+  },
+  {
+    id: 'dir-3',
+    templateId: 'dtpl-3',
+    title: 'Směrnice č. 1/2026 — BOZP školení',
+    category: 'BOZP',
+    theme: 'BOZP',
+    publishedAt: new Date('2026-05-01'),
+    validFrom: new Date('2026-06-01'),
+    mustAcknowledge: true,
+    createdBy: 'Petra Nováková',
+    acknowledgements: [],
+    body: `<h2>Směrnice BOZP č. 1/2026 — Bezpečnost a ochrana zdraví při práci</h2>
+<p><strong>Datum vydání:</strong> 1. 5. 2026</p>
+<h3>1. Úvod a účel</h3>
+<p>Bezpečnost a ochrana zdraví při práci jsou pro společnost Four Bros s.r.o. prioritou. Tato směrnice vymezuje povinnosti zaměstnanců i zaměstnavatele v oblasti BOZP v souladu se zákonem č. 262/2006 Sb. (zákoník práce) a zákonem č. 309/2006 Sb.</p>
+<h3>2. Identifikace rizik</h3>
+<p>Ve společnosti Four Bros s.r.o. jsou identifikována následující pracovní rizika: ergonomická rizika při práci s počítačem (přetížení zraku, bolesti zad a kloubů), rizika při pohybu v kancelářských prostorách a rizika vyplývající z práce v kancelářském prostředí (požár, únik plynu).</p>
+<h3>3. Ochranná opatření</h3>
+<ul>
+<li>Pravidelné přestávky při práci s monitorem (min. 10 minut každé 2 hodiny)</li>
+<li>Ergonomické vybavení pracovního místa (nastavitelná výška stolu a monitoru)</li>
+<li>Pravidelná školení první pomoci a evakuačních postupů</li>
+<li>Funkční hasicí přístroje a lékárnička na každém patře</li>
+</ul>
+<h3>4. Povinnosti zaměstnanců</h3>
+<ul>
+<li>Absolvovat vstupní a periodická školení BOZP</li>
+<li>Používat přidělené osobní ochranné pracovní prostředky</li>
+<li>Neprodleně hlásit pracovní úrazy a nebezpečné situace</li>
+<li>Dodržovat technologické postupy a bezpečnostní předpisy</li>
+</ul>
+<h3>5. Účinnost</h3>
+<p>Tato směrnice nabývá účinnosti dnem <strong>1. 6. 2026</strong>. Školení BOZP musí absolvovat každý zaměstnanec nejpozději do 30 dnů od tohoto data.</p>`,
+  },
+]

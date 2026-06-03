@@ -39,6 +39,7 @@ const staticNavItemsMid = [
 const staticNavItemsAfter = [
   { label: 'Schránka důvěry', href: '/feedback', icon: MessageSquareHeart },
   { label: 'Dokumenty a smlouvy', href: '/documents', icon: FileText },
+  { label: 'Interní směrnice', href: '/smernice', icon: BookOpen },
   { label: 'Tým Four Bros', href: '/team', icon: Users2 },
 ]
 
@@ -52,6 +53,7 @@ const adminItems = [
   { label: 'Majetek', href: '/admin/assets', icon: Laptop },
   { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Schránka důvěry', href: '/admin/feedback', icon: MessageSquareHeart },
+  { label: 'Interní směrnice', href: '/admin/smernice', icon: BookOpen },
 ]
 
 interface SidebarProps {
