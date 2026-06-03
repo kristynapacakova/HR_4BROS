@@ -2,8 +2,9 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { FileText, Download, FileCheck, FileSignature, ShieldCheck, FileKey } from 'lucide-react'
-import { DEMO_DOCUMENTS, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
+import { DEMO_DOCUMENTS, DEMO_USER, DEMO_ADMIN, DEMO_CONTRACTS, CONTRACT_TEMPLATES } from '@/lib/mock-data'
 import { PayslipYearPicker } from './PayslipYearPicker'
+import { DocumentsSigningClient } from './DocumentsSigningClient'
 
 
 const TAG_CONFIG: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
@@ -83,6 +84,12 @@ export default async function DocumentsPage() {
       employmentType={user.employmentType}
     >
       <div className="max-w-3xl mx-auto space-y-6">
+
+        {/* Smlouvy čekající na podpis zaměstnance */}
+        <DocumentsSigningClient
+          contracts={DEMO_CONTRACTS.filter(c => c.status === 'PENDING_EMPLOYEE' || c.status === 'SIGNED')}
+          templates={CONTRACT_TEMPLATES}
+        />
 
         {/* Smlouvy */}
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">

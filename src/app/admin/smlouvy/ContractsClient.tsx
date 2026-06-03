@@ -256,10 +256,14 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                             </button>
                           )}
                           {c.status === 'PENDING_EMPLOYEE' && (
-                            <span className="flex items-center gap-1.5 px-2.5 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">
-                              <Clock className="w-3 h-3" />
-                              Čeká
-                            </span>
+                            <button
+                              onClick={() => advance(c.id)}
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors"
+                              title="Simulovat podpis zaměstnance (demo)"
+                            >
+                              <Pen className="w-3 h-3" />
+                              Podepsat (zaměstnanec)
+                            </button>
                           )}
                           {c.status === 'SIGNED' && (
                             <button
