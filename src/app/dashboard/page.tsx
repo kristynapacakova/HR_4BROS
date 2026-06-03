@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatCurrency } from '@/lib/utils'
-import { CalendarDays, Clock, Banknote, CheckCircle2, Circle, TrendingUp, Briefcase, ArrowRight, Receipt } from 'lucide-react'
+import { CalendarDays, Clock, Banknote, CheckCircle2, Circle, TrendingUp, Briefcase, ArrowRight, Receipt, Cake, Star, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import {
   DEMO_USER, DEMO_ADMIN,
@@ -13,6 +13,8 @@ import {
   DEMO_PAYSLIPS,
   DEMO_SALARY_INFO,
   DEMO_TEAM_LEAVES,
+  DEMO_TEAM,
+  DEMO_EMPLOYEES,
 } from '@/lib/mock-data'
 import { DashboardGreeting } from './DashboardGreeting'
 
@@ -72,6 +74,48 @@ export default async function DashboardPage() {
     SICK: 'Nemoc',
     PERSONAL: 'Osobní volno',
     HOMEOFFICE: 'Home office',
+  }
+
+  // HR alerts — upcoming events in next 60 days (admin only)
+  type HRAlert = { type: 'birthday' | 'anniversary' | 'trial'; name: string; label: string; days: number }
+  const hrAlerts: HRAlert[] = []
+  if (isAdmin) {
+    const now2 = new Date(); now2.setHours(0,0,0,0)
+    const HORIZON = 60
+
+    // Birthdays from DEMO_TEAM
+    for (const member of DEMO_TEAM) {
+      if (!member.birthday) continue
+      const [, bm, bd] = member.birthday.split('-').map(Number)
+      let next = new Date(now2.getFullYear(), bm - 1, bd)
+      if (next < now2) next = new Date(now2.getFullYear() + 1, bm - 1, bd)
+      const days = Math.round((next.getTime() - now2.getTime()) / 86400000)
+      if (days <= HORIZON) hrAlerts.push({ type: 'birthday', name: member.name, label: `Narozeniny (${next.getDate()}. ${['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'][bm-1]})`, days })
+    }
+
+    // Work anniversaries from DEMO_EMPLOYEES
+    for (const emp of DEMO_EMPLOYEES) {
+      if (!emp.startDate) continue
+      const sd = new Date(emp.startDate)
+      const years = now2.getFullYear() - sd.getFullYear()
+      if (years <= 0) continue
+      let anniv = new Date(now2.getFullYear(), sd.getMonth(), sd.getDate())
+      if (anniv < now2) anniv = new Date(now2.getFullYear() + 1, sd.getMonth(), sd.getDate())
+      const days = Math.round((anniv.getTime() - now2.getTime()) / 86400000)
+      const yrs = anniv.getFullYear() - sd.getFullYear()
+      if (days <= HORIZON) hrAlerts.push({ type: 'anniversary', name: emp.name ?? emp.email, label: `Výročí ${yrs} ${yrs === 1 ? 'rok' : yrs < 5 ? 'roky' : 'let'} ve firmě`, days })
+    }
+
+    // Trial periods ending (3 months from startDate, show if ending within 60 days)
+    for (const emp of DEMO_EMPLOYEES) {
+      if (!emp.startDate) continue
+      const sd = new Date(emp.startDate)
+      const trialEnd = new Date(sd.getFullYear(), sd.getMonth() + 3, sd.getDate())
+      const days = Math.round((trialEnd.getTime() - now2.getTime()) / 86400000)
+      if (days >= 0 && days <= HORIZON) hrAlerts.push({ type: 'trial', name: emp.name ?? emp.email, label: `Konec zkušební doby (${trialEnd.getDate()}. ${['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'][trialEnd.getMonth()]})`, days })
+    }
+
+    hrAlerts.sort((a, b) => a.days - b.days)
   }
 
   return (
@@ -176,6 +220,37 @@ export default async function DashboardPage() {
             </div>
           )}
         </div>
+
+        {/* HR Alerts — admin only */}
+        {isAdmin && hrAlerts.length > 0 && (
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <AlertCircle className="w-4 h-4 text-violet" />
+              <h3 className="font-headline text-navy text-sm">Nadcházející události</h3>
+              <span className="ml-auto text-xs bg-violet/10 text-violet px-2 py-0.5 rounded-full font-medium">{hrAlerts.length}</span>
+            </div>
+            <div className="space-y-2">
+              {hrAlerts.map((alert, i) => {
+                const Icon = alert.type === 'birthday' ? Cake : alert.type === 'anniversary' ? Star : Clock
+                const urgent = alert.days <= 7
+                return (
+                  <div key={i} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${urgent ? 'bg-violet/5 border border-violet/20' : 'hover:bg-slate-50'} transition-colors`}>
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${urgent ? 'bg-violet/10' : 'bg-slate-100'}`}>
+                      <Icon className={`w-3.5 h-3.5 ${urgent ? 'text-violet' : 'text-slate-400'}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-navy truncate">{alert.name}</p>
+                      <p className="text-xs text-slate-400">{alert.label}</p>
+                    </div>
+                    <span className={`text-xs font-semibold flex-shrink-0 ${urgent ? 'text-violet' : 'text-slate-400'}`}>
+                      {alert.days === 0 ? 'Dnes!' : `za ${alert.days} dní`}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Main grid */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">

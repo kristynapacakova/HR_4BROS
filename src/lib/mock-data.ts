@@ -376,6 +376,8 @@ export const DEMO_TEAM: {
   { id: "t14", name: "Radek Pospíšil",     position: "Business Developer",   department: "Sales",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼" },
   { id: "t15", name: "Tereza Müllerová",   position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧" },
 ]
+
+export const DEMO_ONBOARDING_TASKS = [
   { id: "1", title: "Vyplnit osobní údaje", description: "Doplňte všechny osobní údaje v profilu", completed: true, completedAt: new Date("2024-01-16"), order: 1 },
   { id: "2", title: "Podepsat pracovní smlouvu", description: "Přečtěte a podepište svoji pracovní smlouvu", completed: true, completedAt: new Date("2024-01-17"), order: 2 },
   { id: "3", title: "Nahrát kopii občanského průkazu", description: "Nahrajte scan nebo foto vašeho OP", completed: false, completedAt: null, order: 3 },
@@ -611,5 +613,222 @@ export const DEMO_ALL_LEAVE_REQUESTS = [
     note: "Příliš krátká doba pro schválení",
     createdAt: new Date("2024-08-28"),
     user: { name: "Tomáš Dvořák", email: "tomas.dvorak@fourbros.cz", department: "Obchod" },
+  },
+]
+
+// ── Contract Management ─────────────────────────────────────────────────────
+
+export type ContractStatus = 'DRAFT' | 'PENDING_MANAGEMENT' | 'PENDING_EMPLOYEE' | 'SIGNED'
+
+export interface ContractTemplate {
+  id: string
+  name: string
+  type: string
+  description: string
+  body: string
+  placeholders: string[]
+  createdAt: Date
+}
+
+export interface Contract {
+  id: string
+  templateId: string
+  templateName: string
+  employeeId: string
+  employeeName: string
+  status: ContractStatus
+  createdAt: Date
+  sentToManagementAt: Date | null
+  managementSignedAt: Date | null
+  managementSignedBy: string | null
+  sentToEmployeeAt: Date | null
+  employeeSignedAt: Date | null
+  values: Record<string, string>
+  notes: string | null
+}
+
+export const CONTRACT_TEMPLATES: ContractTemplate[] = [
+  {
+    id: "tpl-1",
+    name: "HPP Pracovní smlouva",
+    type: "HPP",
+    description: "Standardní pracovní smlouva pro zaměstnance na hlavní pracovní poměr (HPP).",
+    body: `<h2>PRACOVNÍ SMLOUVA</h2>
+<p>uzavřená podle § 33 zákona č. 262/2006 Sb., zákoníku práce, v platném znění</p>
+
+<h3>Smluvní strany</h3>
+<p><strong>Zaměstnavatel:</strong> Four Bros s.r.o., IČO: 12345678, se sídlem Náměstí Míru 5, Praha 2</p>
+<p><strong>Zaměstnanec:</strong> {{JMENO}}</p>
+
+<h3>Předmět smlouvy</h3>
+<p>Zaměstnavatel přijímá zaměstnance na pozici <strong>{{POZICE}}</strong> s místem výkonu práce Praha.</p>
+
+<h3>Základní mzdové podmínky</h3>
+<p>Zaměstnanci náleží základní měsíční mzda ve výši <strong>{{MZDA}} Kč</strong> hrubého.</p>
+
+<h3>Nástup do práce</h3>
+<p>Zaměstnanec nastupuje do práce dne <strong>{{DATUM_NASTUPU}}</strong>.</p>
+
+<h3>Zkušební doba</h3>
+<p>Sjednává se zkušební doba v délce 3 měsíců od nástupu do práce.</p>
+
+<h3>Pracovní doba</h3>
+<p>Týdenní pracovní doba činí {{TYDENNI_UVAZEK}} hodin.</p>
+
+<p>V Praze dne {{DATUM_PODPISU}}</p>`,
+    placeholders: ["JMENO", "POZICE", "MZDA", "DATUM_NASTUPU", "TYDENNI_UVAZEK", "DATUM_PODPISU"],
+    createdAt: new Date("2024-01-01"),
+  },
+  {
+    id: "tpl-2",
+    name: "DPP Dohoda o provedení práce",
+    type: "DPP",
+    description: "Dohoda o provedení práce pro spolupráci na konkrétních projektech nebo úkolech.",
+    body: `<h2>DOHODA O PROVEDENÍ PRÁCE</h2>
+<p>uzavřená podle § 75 zákona č. 262/2006 Sb., zákoníku práce, v platném znění</p>
+
+<h3>Smluvní strany</h3>
+<p><strong>Zaměstnavatel:</strong> Four Bros s.r.o., IČO: 12345678, se sídlem Náměstí Míru 5, Praha 2</p>
+<p><strong>Zaměstnanec:</strong> {{JMENO}}</p>
+
+<h3>Sjednaná práce</h3>
+<p>Předmětem dohody je výkon práce na pozici <strong>{{POZICE}}</strong>.</p>
+
+<h3>Odměna</h3>
+<p>Za provedenou práci přísluší zaměstnanci odměna ve výši <strong>{{HODINOVA_SAZBA}} Kč/hod</strong>.</p>
+
+<h3>Rozsah práce</h3>
+<p>Rozsah práce nepřesáhne {{MAX_HODIN}} hodin za rok.</p>
+
+<h3>Doba trvání dohody</h3>
+<p>Dohoda se sjednává od {{DATUM_NASTUPU}} do {{DATUM_UKONCENI}}.</p>
+
+<p>V Praze dne {{DATUM_PODPISU}}</p>`,
+    placeholders: ["JMENO", "POZICE", "HODINOVA_SAZBA", "MAX_HODIN", "DATUM_NASTUPU", "DATUM_UKONCENI", "DATUM_PODPISU"],
+    createdAt: new Date("2024-01-01"),
+  },
+  {
+    id: "tpl-3",
+    name: "Dodatek ke smlouvě",
+    type: "OBECNA",
+    description: "Obecný dodatek ke stávající pracovní smlouvě pro změny podmínek, navýšení mzdy apod.",
+    body: `<h2>DODATEK KE SMLOUVĚ</h2>
+<p>č. {{CISLO_DODATKU}}</p>
+
+<h3>Smluvní strany</h3>
+<p><strong>Zaměstnavatel:</strong> Four Bros s.r.o., IČO: 12345678, se sídlem Náměstí Míru 5, Praha 2</p>
+<p><strong>Zaměstnanec:</strong> {{JMENO}}</p>
+
+<h3>Předmět dodatku</h3>
+<p>Smluvní strany se dohodly na následující změně pracovní smlouvy ze dne {{DATUM_PUVODNI_SMLOUVY}}:</p>
+
+<h3>Změna podmínek</h3>
+<p>{{POPIS_ZMENY}}</p>
+
+<h3>Nová mzda</h3>
+<p>S účinností od <strong>{{DATUM_UCINNOSTI}}</strong> se mzda stanovuje na <strong>{{NOVA_MZDA}} Kč</strong> hrubého měsíčně.</p>
+
+<p>Ostatní podmínky pracovní smlouvy zůstávají v platnosti.</p>
+
+<p>V Praze dne {{DATUM_PODPISU}}</p>`,
+    placeholders: ["CISLO_DODATKU", "JMENO", "DATUM_PUVODNI_SMLOUVY", "POPIS_ZMENY", "DATUM_UCINNOSTI", "NOVA_MZDA", "DATUM_PODPISU"],
+    createdAt: new Date("2024-01-01"),
+  },
+]
+
+export const DEMO_CONTRACTS: Contract[] = [
+  {
+    id: "c1",
+    templateId: "tpl-1",
+    templateName: "HPP Pracovní smlouva",
+    employeeId: "demo-employee-1",
+    employeeName: "Jan Novák",
+    status: "DRAFT",
+    createdAt: new Date("2026-05-20"),
+    sentToManagementAt: null,
+    managementSignedAt: null,
+    managementSignedBy: null,
+    sentToEmployeeAt: null,
+    employeeSignedAt: null,
+    values: {
+      JMENO: "Jan Novák",
+      POZICE: "Frontend Developer",
+      MZDA: "70 000",
+      DATUM_NASTUPU: "1. 6. 2026",
+      TYDENNI_UVAZEK: "40",
+      DATUM_PODPISU: "20. 5. 2026",
+    },
+    notes: "Navýšení mzdy po uplynutí zkušební doby.",
+  },
+  {
+    id: "c2",
+    templateId: "tpl-2",
+    templateName: "DPP Dohoda o provedení práce",
+    employeeId: "demo-employee-2",
+    employeeName: "Marie Svobodová",
+    status: "PENDING_MANAGEMENT",
+    createdAt: new Date("2026-05-15"),
+    sentToManagementAt: new Date("2026-05-16"),
+    managementSignedAt: null,
+    managementSignedBy: null,
+    sentToEmployeeAt: null,
+    employeeSignedAt: null,
+    values: {
+      JMENO: "Marie Svobodová",
+      POZICE: "Social Media Specialist",
+      HODINOVA_SAZBA: "350",
+      MAX_HODIN: "300",
+      DATUM_NASTUPU: "1. 6. 2026",
+      DATUM_UKONCENI: "31. 12. 2026",
+      DATUM_PODPISU: "15. 5. 2026",
+    },
+    notes: null,
+  },
+  {
+    id: "c3",
+    templateId: "tpl-3",
+    templateName: "Dodatek ke smlouvě",
+    employeeId: "demo-employee-1",
+    employeeName: "Jan Novák",
+    status: "PENDING_EMPLOYEE",
+    createdAt: new Date("2026-04-01"),
+    sentToManagementAt: new Date("2026-04-02"),
+    managementSignedAt: new Date("2026-04-05"),
+    managementSignedBy: "Petra Nováková",
+    sentToEmployeeAt: new Date("2026-04-06"),
+    employeeSignedAt: null,
+    values: {
+      CISLO_DODATKU: "1",
+      JMENO: "Jan Novák",
+      DATUM_PUVODNI_SMLOUVY: "15. 1. 2024",
+      POPIS_ZMENY: "Změna pracovní pozice na Senior Frontend Developer.",
+      DATUM_UCINNOSTI: "1. 5. 2026",
+      NOVA_MZDA: "75 000",
+      DATUM_PODPISU: "1. 4. 2026",
+    },
+    notes: "Povýšení po vyhodnocení výkonu Q1 2026.",
+  },
+  {
+    id: "c4",
+    templateId: "tpl-1",
+    templateName: "HPP Pracovní smlouva",
+    employeeId: "demo-employee-3",
+    employeeName: "Tomáš Dvořák",
+    status: "SIGNED",
+    createdAt: new Date("2026-01-10"),
+    sentToManagementAt: new Date("2026-01-11"),
+    managementSignedAt: new Date("2026-01-15"),
+    managementSignedBy: "Petra Nováková",
+    sentToEmployeeAt: new Date("2026-01-16"),
+    employeeSignedAt: new Date("2026-01-20"),
+    values: {
+      JMENO: "Tomáš Dvořák",
+      POZICE: "Account Manager",
+      MZDA: "85 000",
+      DATUM_NASTUPU: "1. 2. 2026",
+      TYDENNI_UVAZEK: "40",
+      DATUM_PODPISU: "10. 1. 2026",
+    },
+    notes: null,
   },
 ]

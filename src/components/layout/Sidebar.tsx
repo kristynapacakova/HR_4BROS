@@ -21,6 +21,7 @@ import {
   MessageSquareHeart,
   BookOpen,
   Coins,
+  FilePen,
   X,
   Lock,
 } from 'lucide-react'
@@ -47,6 +48,7 @@ const adminItems = [
   { label: 'Přehled docházky', href: '/admin/leave-calendar', icon: CalendarRange },
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
   { label: 'Přehled odměn', href: '/admin/odmeny', icon: Coins },
+  { label: 'Smlouvy', href: '/admin/smlouvy', icon: FilePen },
   { label: 'Majetek', href: '/admin/assets', icon: Laptop },
   { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Schránka důvěry', href: '/admin/feedback', icon: MessageSquareHeart },
