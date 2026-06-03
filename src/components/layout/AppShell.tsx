@@ -18,7 +18,7 @@ export function AppShell({ children, title, isAdmin, userName, userEmail, employ
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F4F4F4]">
+    <div className="flex h-screen overflow-hidden bg-[#F2F2F7]">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -50,7 +50,7 @@ export function AppShell({ children, title, isAdmin, userName, userEmail, employ
           onMenuClick={() => setSidebarOpen(true)}
           userName={userName}
         />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-5 lg:p-7">
           {children}
         </main>
       </div>

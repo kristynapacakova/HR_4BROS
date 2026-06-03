@@ -76,124 +76,100 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
 
   const navItems = [...staticNavItemsBefore, payslipItem, ...staticNavItemsMid, ...staticNavItemsAfter]
 
+  const navLink = (href: string, label: string, Icon: React.ComponentType<{ className?: string }>, extra?: React.ReactNode) => {
+    const isActive = pathname === href
+    return (
+      <Link
+        key={href}
+        href={href}
+        onClick={onClose}
+        className={cn(
+          'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+          isActive
+            ? 'bg-white/15 text-white'
+            : 'text-navy-300 hover:bg-white/[0.08] hover:text-white'
+        )}
+      >
+        <Icon className={cn('w-4 h-4 flex-shrink-0 transition-colors', isActive ? 'text-violet-light' : '')} />
+        <span className="flex-1">{label}</span>
+        {extra}
+        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-violet-light flex-shrink-0" />}
+      </Link>
+    )
+  }
+
   return (
     <div className="flex flex-col h-full bg-navy text-white">
       {/* Logo header */}
-      <div className="flex items-center justify-between px-6 py-5 border-b border-navy-800">
+      <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.07]">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-violet rounded-lg flex items-center justify-center shadow-md flex-shrink-0">
+          <div className="w-9 h-9 bg-violet rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
             <span className="text-white font-headline font-bold text-sm">4B</span>
           </div>
           <div>
             <p className="font-headline font-semibold text-white text-base leading-tight">Four Bros</p>
-            <p className="text-navy-200 text-xs">HR Portál</p>
+            <p className="text-navy-400 text-[11px] tracking-wide">HR Portál</p>
           </div>
         </div>
         {onClose && (
-          <button onClick={onClose} className="lg:hidden text-navy-300 hover:text-white p-1">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} className="lg:hidden text-navy-400 hover:text-white p-1.5 rounded-lg transition-colors">
+            <X className="w-4 h-4" />
           </button>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
-        <p className="px-3 text-xs font-medium text-navy-400 uppercase tracking-wider mb-3">Navigace</p>
-        {navItems.map((item) => {
-          const Icon = item.icon
-          const isActive = pathname === item.href
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
-                isActive
-                  ? 'bg-navy-800 text-white border-l-4 border-violet pl-2'
-                  : 'text-navy-200 hover:bg-navy-800 hover:text-white'
-              )}
-            >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              <span>{item.label}</span>
-            </Link>
-          )
-        })}
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        <p className="px-3 text-[10px] font-semibold text-navy-400 uppercase tracking-widest mb-2 mt-1">Navigace</p>
+
+        {navItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
 
         {/* Onboarding | Offboarding */}
-        <div>
-          <Link
-            href="/onboarding"
-            onClick={onClose}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
-              pathname === '/onboarding'
-                ? 'bg-navy-800 text-white border-l-4 border-violet pl-2'
-                : 'text-navy-200 hover:bg-navy-800 hover:text-white'
-            )}
-          >
-            <ClipboardList className="w-4 h-4 flex-shrink-0" />
-            <span className="flex-1">Onboarding</span>
-            <span className="text-navy-400 text-xs font-normal">|</span>
-            <span className={cn(
-              'flex items-center gap-1 text-xs',
-              offboardingUnlocked ? 'text-green-400' : 'text-navy-400'
-            )}>
-              {offboardingUnlocked ? 'Offboarding' : (
-                <>
-                  <Lock className="w-3 h-3" />
-                  <span>Offboarding</span>
-                </>
-              )}
-            </span>
-          </Link>
-        </div>
+        <Link
+          href="/onboarding"
+          onClick={onClose}
+          className={cn(
+            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+            pathname === '/onboarding'
+              ? 'bg-white/15 text-white'
+              : 'text-navy-300 hover:bg-white/[0.08] hover:text-white'
+          )}
+        >
+          <ClipboardList className={cn('w-4 h-4 flex-shrink-0', pathname === '/onboarding' ? 'text-violet-light' : '')} />
+          <span className="flex-1">Onboarding</span>
+          <span className="text-navy-500 text-xs mx-0.5">·</span>
+          <span className={cn('flex items-center gap-1 text-xs', offboardingUnlocked ? 'text-green-400' : 'text-navy-500')}>
+            {offboardingUnlocked ? 'Offboarding' : <><Lock className="w-2.5 h-2.5" /><span>Offboarding</span></>}
+          </span>
+          {pathname === '/onboarding' && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-violet-light flex-shrink-0" />}
+        </Link>
 
         {isAdmin && (
           <>
-            <div className="pt-4 pb-2">
-              <p className="px-3 text-xs font-medium text-navy-400 uppercase tracking-wider">Administrace</p>
+            <div className="pt-5 pb-2">
+              <p className="px-3 text-[10px] font-semibold text-navy-400 uppercase tracking-widest">Administrace</p>
             </div>
-            {adminItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
-                    isActive
-                      ? 'bg-navy-800 text-white border-l-4 border-violet pl-2'
-                      : 'text-navy-200 hover:bg-navy-800 hover:text-white'
-                  )}
-                >
-                  <Icon className="w-4 h-4 flex-shrink-0" />
-                  <span>{item.label}</span>
-                </Link>
-              )
-            })}
+            {adminItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
           </>
         )}
       </nav>
 
       {/* User footer */}
-      <div className="px-3 py-4 border-t border-navy-800">
-        <div className="flex items-center gap-3 px-3 py-2 mb-2">
-          <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center flex-shrink-0">
+      <div className="px-3 py-3 border-t border-white/[0.07]">
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5">
+          <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-white/20">
             <span className="text-white text-xs font-semibold">
               {userName?.[0]?.toUpperCase() || userEmail?.[0]?.toUpperCase() || '?'}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">{userName || 'Uživatel'}</p>
-            <p className="text-xs text-navy-300 truncate">{userEmail}</p>
+            <p className="text-sm font-medium text-white truncate leading-tight">{userName || 'Uživatel'}</p>
+            <p className="text-[11px] text-navy-400 truncate">{userEmail}</p>
           </div>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-navy-200 hover:bg-navy-800 hover:text-white transition-all"
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-navy-400 hover:bg-white/[0.08] hover:text-white transition-all duration-150"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
           <span>Odhlásit se</span>

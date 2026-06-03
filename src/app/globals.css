@@ -42,7 +42,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 96%;
+    --background: 240 5% 96%;
     --foreground: 210 40% 14%;
     --card: 0 0% 100%;
     --card-foreground: 210 40% 14%;
@@ -61,7 +61,7 @@
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 272 80% 49%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   * {
@@ -69,13 +69,15 @@
   }
 
   body {
-    @apply bg-[#F4F4F4] text-navy font-sans;
+    @apply bg-[#F2F2F7] text-navy font-sans;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4 {
     @apply font-headline;
     font-weight: 500;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -87,11 +89,12 @@
 
 @layer components {
   .card {
-    @apply bg-white rounded-lg shadow-sm border border-slate-100 p-6;
+    @apply bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-6;
   }
 
   .input {
-    @apply w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent;
+    @apply w-full px-4 py-2.5 bg-slate-100 rounded-xl text-sm text-navy placeholder:text-slate-400
+           focus:outline-none focus:ring-2 focus:ring-violet/40 focus:bg-white transition-all duration-150;
   }
 
   .badge-pending {
@@ -107,10 +110,10 @@
   }
 
   .nav-item {
-    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-navy-100 hover:bg-navy-800 hover:text-white transition-colors text-sm font-medium;
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-navy-200 hover:bg-white/10 hover:text-white transition-all duration-150 text-sm font-medium;
   }
 
   .nav-item.active {
-    @apply bg-navy-800 text-white border-l-4 border-violet;
+    @apply bg-white/15 text-white;
   }
 }
