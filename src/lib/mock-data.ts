@@ -734,7 +734,61 @@ export const CONTRACT_TEMPLATES: ContractTemplate[] = [
   },
 ]
 
-export const DEMO_CONTRACTS: Contract[] = []
+export const DEMO_CONTRACTS: Contract[] = [
+  {
+    id: "c-demo-1",
+    templateId: "tpl-1",
+    templateName: "HPP Pracovní smlouva",
+    employeeId: "demo",
+    employeeName: "Ukázkový zaměstnanec",
+    status: "SIGNED",
+    createdAt: new Date("2026-01-10"),
+    sentToManagementAt: new Date("2026-01-11"),
+    managementSignedAt: new Date("2026-01-13"),
+    managementSignedBy: "Kristýna Pacáková",
+    sentToEmployeeAt: new Date("2026-01-14"),
+    employeeSignedAt: new Date("2026-01-15"),
+    values: {
+      ZAMESTNAVATEL: "Four Bros s.r.o., IČO: xxxxxxxx, se sídlem xxxxxxxxxx",
+      JMENO: "Ukázkový zaměstnanec",
+      POZICE: "Pracovní pozice",
+      MISTO_VYKONU: "Praha",
+      MZDA: "XX 000 Kč",
+      DATUM_NASTUPU: "1. 1. 2026",
+      ZKUSEBNI_DOBA: "Sjednává se zkušební doba v délce 3 měsíců od nástupu do práce.",
+      TYDENNI_UVAZEK: "40",
+      MISTO_PODPISU: "Praha",
+      DATUM_PODPISU: "10. 1. 2026",
+    },
+    notes: "Ukázková smlouva — slouží jen pro náhled vizuálu.",
+  },
+  {
+    id: "c-demo-2",
+    templateId: "tpl-2",
+    templateName: "DPP Dohoda o provedení práce",
+    employeeId: "demo",
+    employeeName: "Ukázkový spolupracovník",
+    status: "PENDING_MANAGEMENT",
+    createdAt: new Date("2026-05-01"),
+    sentToManagementAt: new Date("2026-05-02"),
+    managementSignedAt: null,
+    managementSignedBy: null,
+    sentToEmployeeAt: null,
+    employeeSignedAt: null,
+    values: {
+      ZAMESTNAVATEL: "Four Bros s.r.o., IČO: xxxxxxxx, se sídlem xxxxxxxxxx",
+      JMENO: "Ukázkový spolupracovník",
+      POZICE: "Pracovní pozice",
+      HODINOVA_SAZBA: "XXX Kč/hod",
+      MAX_HODIN: "300",
+      DATUM_NASTUPU: "1. 6. 2026",
+      DATUM_UKONCENI: "31. 12. 2026",
+      MISTO_PODPISU: "Praha",
+      DATUM_PODPISU: "1. 5. 2026",
+    },
+    notes: "Ukázková smlouva — slouží jen pro náhled vizuálu.",
+  },
+]
 
 // ── Interní směrnice ────────────────────────────────────────────────────────
 
