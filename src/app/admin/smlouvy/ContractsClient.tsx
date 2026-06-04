@@ -3,8 +3,9 @@
 import { useState, useRef } from 'react'
 import { Contract, ContractTemplate, ContractStatus, DEMO_TEAM } from '@/lib/mock-data'
 import { ContractDetailModal } from './ContractDetailModal'
+import { ContractDesignerClient } from './ContractDesignerClient'
 import { printContract } from '@/lib/print-contract'
-import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft, Upload, Archive, ExternalLink, Trash2 } from 'lucide-react'
+import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft, Upload, Archive, ExternalLink, Trash2, Palette } from 'lucide-react'
 
 interface ArchivedContract {
   id: string
@@ -77,7 +78,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
   templates: ContractTemplate[]
   contracts: Contract[]
 }) {
-  const [tab, setTab] = useState<'sablony' | 'smlouvy' | 'archiv'>('smlouvy')
+  const [tab, setTab] = useState<'sablony' | 'smlouvy' | 'archiv' | 'vizual'>('smlouvy')
   const [contracts, setContracts] = useState<Contract[]>(initialContracts)
   const [filter, setFilter] = useState<ContractStatus | 'ALL'>('ALL')
   const [selected, setSelected] = useState<Contract | null>(null)
@@ -189,7 +190,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
     <div className="space-y-5">
       {/* Tab bar */}
       <div className="flex gap-1 bg-white rounded-xl border border-slate-100 shadow-sm p-1">
-        {([['smlouvy', 'Smlouvy'], ['sablony', 'Šablony'], ['archiv', 'Archiv PDF']] as const).map(([id, label]) => (
+        {([['smlouvy', 'Smlouvy'], ['sablony', 'Šablony'], ['archiv', 'Archiv PDF'], ['vizual', 'Vizuál PDF']] as const).map(([id, label]) => (
           <button
             key={id}
             onClick={() => { setTab(id); setCreateStep(null) }}
@@ -491,6 +492,9 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
           </div>
         </div>
       )}
+
+      {/* Vizuál PDF */}
+      {tab === 'vizual' && <ContractDesignerClient />}
 
       {/* Archiv PDF */}
       {tab === 'archiv' && (

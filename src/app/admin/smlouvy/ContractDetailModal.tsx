@@ -2,7 +2,10 @@
 
 import { Contract, ContractStatus, ContractTemplate } from '@/lib/mock-data'
 import { printContract } from '@/lib/print-contract'
+import { loadDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
 import { X, CheckCircle2, User, Building2, Download, Pen } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
   DRAFT: 'Návrh',
@@ -59,6 +62,14 @@ const LogoLockup = () => (
 
 export function ContractDetailModal({ contract, template, onClose, onSign }: Props) {
   const filledBody = fillPlaceholders(template?.body ?? '', contract.values)
+  const [design, setDesign] = useState<ContractDesign | null>(null)
+  useEffect(() => { setDesign(loadDesign()) }, [])
+  const d = design
+  const pc = d?.primaryColor ?? '#0E2337'
+  const ac = d?.accentColor  ?? '#7e17e0'
+  const ff = d?.fontFamily === 'georgia' ? "Georgia, serif"
+           : d?.fontFamily === 'roboto'  ? "Roboto, sans-serif"
+           : "Serenity, sans-serif"
 
   const timeline = [
     { label: 'Vytvořeno', date: contract.createdAt, done: true, icon: Building2 },
@@ -122,11 +133,18 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
           <div className="p-6">
             <div className="bg-white rounded-xl shadow-[0_2px_20px_rgba(0,0,0,0.08)] overflow-hidden">
 
-              {/* Document header with logo + blob */}
+              {/* Document header with logo + decoration */}
               <div className="relative px-10 pt-8 pb-6 border-b border-slate-100 overflow-hidden">
-                <WatercolorBlob />
+                {/* Custom decoration image or fallback blob */}
+                {d?.decorDataUrl
+                  ? <img src={d.decorDataUrl} alt="" className="absolute top-0 right-0 h-32 object-contain pointer-events-none select-none opacity-80 z-0" />
+                  : <WatercolorBlob />
+                }
                 <div className="relative z-10 flex items-start justify-between">
-                  <LogoLockup />
+                  {d?.logoDataUrl
+                    ? <img src={d.logoDataUrl} alt="Logo" className="h-10 object-contain" />
+                    : <LogoLockup />
+                  }
                   <div className="text-right">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Interní dokument</p>
                     <p className="text-[10px] text-slate-300 mt-0.5">{contract.createdAt.toLocaleDateString('cs-CZ')}</p>
@@ -135,14 +153,14 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
                 {/* Doc title */}
                 <div className="relative z-10 mt-10 mb-1">
-                  <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 22, fontWeight: 700, color: '#0E2337', letterSpacing: '-0.3px', lineHeight: 1.3 }}>
+                  <h1 style={{ fontFamily: ff, fontSize: 22, fontWeight: 700, color: pc, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
                     {contract.templateName}
                   </h1>
                 </div>
                 <div className="relative z-10 mt-3 flex gap-4 text-xs text-slate-500">
-                  <span>Připraveno pro: <strong className="text-navy">{contract.employeeName}</strong></span>
+                  <span>Připraveno pro: <strong style={{ color: pc }}>{contract.employeeName}</strong></span>
                   <span>·</span>
-                  <span>Připraveno kým: <strong className="text-navy">Four Bros s.r.o.</strong></span>
+                  <span>Připraveno kým: <strong style={{ color: pc }}>{d?.companyName ?? 'Four Bros s.r.o.'}</strong></span>
                 </div>
               </div>
 
@@ -217,25 +235,25 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
       <style>{`
         .contract-body h2 {
-          font-family: Georgia, serif;
+          font-family: ${ff};
           font-size: 12px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          color: #0E2337;
+          color: ${pc};
           margin-top: 28px;
           margin-bottom: 10px;
           padding-bottom: 8px;
-          border-bottom: 1.5px solid #0E2337;
+          border-bottom: 1.5px solid ${pc};
         }
         .contract-body h3 {
           font-size: 13px;
           font-weight: 600;
-          color: #7e17e0;
+          color: ${ac};
           margin-top: 16px;
           margin-bottom: 6px;
           padding-left: 10px;
-          border-left: 3px solid #7e17e0;
+          border-left: 3px solid ${ac};
         }
         .contract-body p { margin-bottom: 10px; }
         .contract-body ul, .contract-body ol { padding-left: 20px; margin-bottom: 10px; }
