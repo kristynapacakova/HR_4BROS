@@ -1,10 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Contract, ContractTemplate, ContractStatus, DEMO_TEAM } from '@/lib/mock-data'
 import { ContractDetailModal } from './ContractDetailModal'
 import { printContract } from '@/lib/print-contract'
-import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft } from 'lucide-react'
+import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft, Upload, Archive, ExternalLink, Trash2 } from 'lucide-react'
+
+interface ArchivedContract {
+  id: string
+  name: string
+  employeeName: string
+  contractType: string
+  notes: string
+  uploadedAt: Date
+  fileUrl: string
+  fileName: string
+}
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
   DRAFT: 'Návrh',
@@ -56,14 +67,63 @@ const PLACEHOLDER_LABELS: Record<string, string> = {
 // Step 1: pick template, Step 2: fill form
 type CreateStep = 'pick-template' | 'fill-form'
 
+const CONTRACT_TYPES = ['HPP', 'DPP', 'DPC', 'ICO', 'Dodatek', 'Jiné']
+
 export function ContractsClient({ templates, contracts: initialContracts }: {
   templates: ContractTemplate[]
   contracts: Contract[]
 }) {
-  const [tab, setTab] = useState<'sablony' | 'smlouvy'>('smlouvy')
+  const [tab, setTab] = useState<'sablony' | 'smlouvy' | 'archiv'>('smlouvy')
   const [contracts, setContracts] = useState<Contract[]>(initialContracts)
   const [filter, setFilter] = useState<ContractStatus | 'ALL'>('ALL')
   const [selected, setSelected] = useState<Contract | null>(null)
+
+  // Archive
+  const [archived, setArchived] = useState<ArchivedContract[]>([])
+  const [showUpload, setShowUpload] = useState(false)
+  const [uploadName, setUploadName] = useState('')
+  const [uploadEmployee, setUploadEmployee] = useState('')
+  const [uploadType, setUploadType] = useState('HPP')
+  const [uploadNotes, setUploadNotes] = useState('')
+  const [uploadFile, setUploadFile] = useState<File | null>(null)
+  const [uploadDrag, setUploadDrag] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function handleFileDrop(e: React.DragEvent) {
+    e.preventDefault()
+    setUploadDrag(false)
+    const f = e.dataTransfer.files[0]
+    if (f?.type === 'application/pdf') setUploadFile(f)
+  }
+
+  function submitUpload() {
+    if (!uploadFile || !uploadName || !uploadEmployee) return
+    const fileUrl = URL.createObjectURL(uploadFile)
+    setArchived(prev => [{
+      id: `arch-${Date.now()}`,
+      name: uploadName,
+      employeeName: uploadEmployee,
+      contractType: uploadType,
+      notes: uploadNotes,
+      uploadedAt: new Date(),
+      fileUrl,
+      fileName: uploadFile.name,
+    }, ...prev])
+    setShowUpload(false)
+    setUploadName('')
+    setUploadEmployee('')
+    setUploadType('HPP')
+    setUploadNotes('')
+    setUploadFile(null)
+  }
+
+  function deleteArchived(id: string) {
+    setArchived(prev => {
+      const item = prev.find(a => a.id === id)
+      if (item) URL.revokeObjectURL(item.fileUrl)
+      return prev.filter(a => a.id !== id)
+    })
+  }
 
   // Create flow
   const [createStep, setCreateStep] = useState<CreateStep | null>(null)
@@ -125,7 +185,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
     <div className="space-y-5">
       {/* Tab bar */}
       <div className="flex gap-1 bg-white rounded-xl border border-slate-100 shadow-sm p-1">
-        {([['smlouvy', 'Smlouvy'], ['sablony', 'Šablony']] as const).map(([id, label]) => (
+        {([['smlouvy', 'Smlouvy'], ['sablony', 'Šablony'], ['archiv', 'Archiv PDF']] as const).map(([id, label]) => (
           <button
             key={id}
             onClick={() => { setTab(id); setCreateStep(null) }}
@@ -134,6 +194,9 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
             }`}
           >
             {label}
+            {id === 'archiv' && archived.length > 0 && (
+              <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-violet/20 text-violet text-[10px] font-bold">{archived.length}</span>
+            )}
           </button>
         ))}
       </div>
@@ -421,6 +484,212 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
               <FilePen className="w-4 h-4" />
               Uložit jako návrh
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Archiv PDF */}
+      {tab === 'archiv' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-slate-500">{archived.length === 0 ? 'Žádné nahrané smlouvy.' : `${archived.length} ${archived.length === 1 ? 'smlouva' : archived.length < 5 ? 'smlouvy' : 'smluv'} v archivu`}</p>
+            <button
+              onClick={() => setShowUpload(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-violet text-white rounded-xl text-sm font-medium hover:bg-violet/90 transition-colors"
+            >
+              <Upload className="w-4 h-4" />
+              Nahrát PDF
+            </button>
+          </div>
+
+          {archived.length === 0 && (
+            <div
+              className="border-2 border-dashed border-slate-200 rounded-xl p-12 text-center cursor-pointer hover:border-violet/40 transition-colors"
+              onClick={() => setShowUpload(true)}
+            >
+              <Archive className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+              <p className="text-slate-400 text-sm font-medium">Archiv externích smluv</p>
+              <p className="text-slate-300 text-xs mt-1">Nahrajte již podepsané smlouvy ve formátu PDF pro evidenci</p>
+              <p className="text-violet text-xs mt-3 font-medium">+ Nahrát první smlouvu</p>
+            </div>
+          )}
+
+          {archived.length > 0 && (
+            <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-100">
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Dokument</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Zaměstnanec</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Typ</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Nahráno</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Akce</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {archived.map(a => (
+                    <tr key={a.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <FileText className="w-4 h-4 text-red-400" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-navy">{a.name}</p>
+                            <p className="text-xs text-slate-400">{a.fileName}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 bg-violet rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-white text-[10px] font-bold">
+                              {a.employeeName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                            </span>
+                          </div>
+                          <span className="text-navy">{a.employeeName}</span>
+                        </div>
+                        {a.notes && <p className="text-xs text-slate-400 mt-0.5 italic pl-8">{a.notes}</p>}
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${TYPE_COLOR[a.contractType] ?? 'bg-slate-100 text-slate-600'}`}>
+                          {a.contractType}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 text-slate-500 text-xs">
+                        {a.uploadedAt.toLocaleDateString('cs-CZ')}
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          <a
+                            href={a.fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 bg-navy/5 text-navy rounded-lg text-xs font-medium hover:bg-navy/10 transition-colors"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            Otevřít
+                          </a>
+                          <button
+                            onClick={() => deleteArchived(a.id)}
+                            className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Odstranit z archivu"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Upload modal */}
+      {showUpload && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+              <h2 className="font-headline font-semibold text-navy">Nahrát existující smlouvu</h2>
+              <button onClick={() => setShowUpload(false)} className="p-1 text-slate-400 hover:text-navy rounded-lg transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-6 py-5 space-y-4 overflow-y-auto">
+              {/* Drop zone */}
+              <div
+                className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors cursor-pointer ${uploadDrag ? 'border-violet bg-violet/5' : uploadFile ? 'border-green-300 bg-green-50' : 'border-slate-200 hover:border-violet/40'}`}
+                onDragOver={e => { e.preventDefault(); setUploadDrag(true) }}
+                onDragLeave={() => setUploadDrag(false)}
+                onDrop={handleFileDrop}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/pdf"
+                  className="hidden"
+                  onChange={e => { const f = e.target.files?.[0]; if (f) setUploadFile(f) }}
+                />
+                {uploadFile ? (
+                  <>
+                    <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-green-700">{uploadFile.name}</p>
+                    <p className="text-xs text-green-500 mt-0.5">{(uploadFile.size / 1024).toFixed(0)} KB · klikněte pro změnu</p>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-slate-500">Přetáhněte PDF nebo klikněte</p>
+                    <p className="text-xs text-slate-300 mt-0.5">Pouze soubory .pdf</p>
+                  </>
+                )}
+              </div>
+
+              {/* Fields */}
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Název smlouvy *</label>
+                <input
+                  className="input"
+                  placeholder="Např. Pracovní smlouva — Jan Novák"
+                  value={uploadName}
+                  onChange={e => setUploadName(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Zaměstnanec *</label>
+                <select
+                  className="input"
+                  value={uploadEmployee}
+                  onChange={e => setUploadEmployee(e.target.value)}
+                >
+                  <option value="">— vyberte zaměstnance —</option>
+                  {DEMO_TEAM.map(m => (
+                    <option key={m.id} value={m.name}>{m.name} — {m.position}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Typ smlouvy</label>
+                <select
+                  className="input"
+                  value={uploadType}
+                  onChange={e => setUploadType(e.target.value)}
+                >
+                  {CONTRACT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Poznámka (volitelná)</label>
+                <input
+                  className="input"
+                  placeholder="Např. Podepsáno 1. 1. 2024, archivní kopie"
+                  value={uploadNotes}
+                  onChange={e => setUploadNotes(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
+              <button
+                onClick={() => setShowUpload(false)}
+                className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors"
+              >
+                Zrušit
+              </button>
+              <button
+                onClick={submitUpload}
+                disabled={!uploadFile || !uploadName || !uploadEmployee}
+                className="flex items-center gap-2 px-5 py-2 bg-violet text-white rounded-xl text-sm font-medium hover:bg-violet/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <Archive className="w-4 h-4" />
+                Uložit do archivu
+              </button>
+            </div>
           </div>
         </div>
       )}
