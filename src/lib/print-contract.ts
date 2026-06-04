@@ -60,20 +60,22 @@ export function printContract(contract: Contract, template: ContractTemplate | u
   ${design.fontFamily === 'roboto' ? '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>' : ''}
   <style>
     ${design.fontFamily === 'serenity' ? `
-    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Book.otf') format('opentype'); font-weight:400; }
-    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Medium.otf') format('opentype'); font-weight:500; }
-    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-SemiBold.otf') format('opentype'); font-weight:600; }
-    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Light.otf') format('opentype'); font-weight:300; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Light.otf') format('opentype'); font-weight:300; font-style:normal; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Book.otf') format('opentype'); font-weight:400; font-style:normal; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Regular.otf') format('opentype'); font-weight:450; font-style:normal; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Medium.otf') format('opentype'); font-weight:500; font-style:normal; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-SemiBold.otf') format('opentype'); font-weight:600; font-style:normal; }
     ` : ''}
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: ${ff};
-      color: ${pc};
+      font-weight: 500;
+      color: #0E2337;
       background: #fff;
-      font-size: 12px;
-      line-height: 1.75;
+      font-size: 12.5px;
+      line-height: 1.8;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -138,7 +140,7 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       font-size: 12px;
       font-weight: 700;
       text-align: center;
-      color: ${pc};
+      color: #0E2337;
       margin-bottom: 32px;
       line-height: 1.6;
     }
@@ -146,44 +148,39 @@ export function printContract(contract: Contract, template: ContractTemplate | u
     /* Parties table */
     .parties-table { width: 100%; margin-bottom: 20px; }
     .parties-table td {
-      padding: 3px 0;
-      font-size: 12px;
-      color: ${pc};
+      padding: 4px 0;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #0E2337;
       vertical-align: top;
     }
     .parties-table td:first-child {
       width: 160px;
-      font-weight: 400;
-      color: ${pc};
+      font-weight: 500;
+      color: #0E2337;
     }
-    .parties-table td:last-child { color: ${pc}; }
 
-    .party-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: ${pc};
-      margin-bottom: 4px;
-    }
-    .party-sep { margin: 16px 0; font-size: 12px; color: ${pc}; font-weight: 700; }
-    .party-note { font-size: 12px; color: ${pc}; margin-bottom: 20px; }
+    .party-sep { margin: 16px 0; font-size: 13px; color: #0E2337; font-weight: 700; }
+    .party-note { font-size: 12.5px; font-weight: 500; color: #0E2337; margin-bottom: 20px; }
 
     .section-bold {
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 700;
-      color: ${pc};
+      color: #0E2337;
       margin: 20px 0 12px;
     }
 
     /* Body content */
+    .contract-content { color: #0E2337; }
     .contract-content h2 {
       font-family: ${ff};
       font-size: 13px;
       font-weight: 700;
-      color: ${pc};
+      color: #0E2337;
       margin-top: 28px;
       margin-bottom: 10px;
       padding-bottom: 6px;
-      border-bottom: 1.5px solid ${pc};
+      border-bottom: 1.5px solid #0E2337;
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
@@ -196,10 +193,10 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       padding-left: 10px;
       border-left: 3px solid ${ac};
     }
-    .contract-content p  { margin-bottom: 10px; }
+    .contract-content p  { margin-bottom: 10px; font-weight: 500; color: #0E2337; }
     .contract-content ul, .contract-content ol { padding-left: 20px; margin-bottom: 10px; }
-    .contract-content li { margin-bottom: 4px; }
-    .contract-content strong { font-weight: 700; }
+    .contract-content li { margin-bottom: 4px; font-weight: 500; color: #0E2337; }
+    .contract-content strong { font-weight: 700; color: #0E2337; }
 
     /* Signature section */
     .sig-preamble {
