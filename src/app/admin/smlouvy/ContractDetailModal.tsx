@@ -167,7 +167,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
               {/* ── Signature section ── */}
               <div className="px-10 pb-10 pt-2">
                 <div className="rounded-xl p-5 mb-6" style={{ background: '#F7F8FE' }}>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: pc, opacity: 0.5 }}>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: pc }}>
                     NA DŮKAZ ČEHOŽ SMLUVNÍ STRANY PŘIPOJUJÍ SVÉ PODPISY
                   </p>
                   <div className="grid grid-cols-2 gap-8">
@@ -176,7 +176,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                       { role: 'Zaměstnanec',        name: contract.employeeName,                                               signed: !!signedAt,     date: signedAt },
                     ].map(({ role, name, signed, date }) => (
                       <div key={role}>
-                        <p className="text-[9px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: pc, opacity: 0.45 }}>{role}</p>
+                        <p className="text-[9px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: pc }}>{role}</p>
                         {signed ? (
                           <div className="rounded-xl px-4 py-3 border" style={{ borderColor: '#bbf7d0', background: '#f0fdf4' }}>
                             <div className="flex items-center gap-2 mb-1">

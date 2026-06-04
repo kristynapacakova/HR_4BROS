@@ -6,13 +6,11 @@ function fillPlaceholders(body: string, values: Record<string, string>): string 
 }
 
 function sigBox(role: string, name: string, city: string, signedDate: string | null, pc: string): string {
-  // Use rgba instead of opacity so children are not affected
-  const muted = hexToRgba(pc, 0.45)
-  const dim   = hexToRgba(pc, 0.25)
+  const dim = hexToRgba(pc, 0.2)
   return `
   <div>
-    <p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:${muted};margin-bottom:16px;">${role}</p>
-    <p style="font-size:11px;color:${muted};margin-bottom:32px;">V ${city}, dne ${signedDate ?? '____________________'}</p>
+    <p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:${pc};margin-bottom:16px;">${role}</p>
+    <p style="font-size:11px;color:${pc};margin-bottom:32px;">V ${city}, dne ${signedDate ?? '____________________'}</p>
     <div style="height:0;width:240px;border-bottom:1px solid ${dim};margin-bottom:8px;"></div>
     <p style="font-size:12px;color:${pc};font-weight:${signedDate ? '600' : '400'};">${name}</p>
     ${signedDate
@@ -175,7 +173,7 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       font-size: 10px;
       font-weight: 700;
       text-align: center;
-      color: ${pcMuted};
+      color: ${pc};
       letter-spacing: 0.05em;
       margin-bottom: 28px;
       line-height: 1.7;
@@ -194,7 +192,7 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: ${pcMuted};
+      color: ${pc};
       margin-bottom: 10px;
     }
     .parties-table { width: 100%; }
@@ -206,19 +204,19 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       color: ${pc};
       vertical-align: top;
     }
-    .parties-table td:first-child { width: 150px; color: ${pcMuted}; }
+    .parties-table td:first-child { width: 150px; color: ${pc}; }
 
     .party-sep {
       margin: 10px 0;
       font-size: 13px;
-      color: ${pcDim};
+      color: ${pc};
       font-weight: 700;
       text-align: center;
     }
     .party-note {
       font-size: ${b.fontSize}px;
       font-weight: ${b.fontWeight};
-      color: ${pcMuted};
+      color: ${pc};
       margin-top: 8px;
     }
 
@@ -274,7 +272,7 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      color: ${pcMuted};
+      color: ${pc};
       margin-bottom: 24px;
     }
     .sig-grid {
