@@ -1,5 +1,5 @@
 import type { Contract, ContractTemplate } from './mock-data'
-import { loadDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
+import { loadDesign, fontStack } from '@/app/admin/smlouvy/ContractDesignerClient'
 
 function fillPlaceholders(body: string, values: Record<string, string>): string {
   return body.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] ?? `{{${key}}}`)
@@ -23,9 +23,9 @@ function statusBadge(status: Contract['status']): string {
 function sigBox(role: string, name: string, city: string, signedDate: string | null): string {
   return `
   <div>
-    <p style="font-size:12px;color:#1e3852;margin-bottom:24px;">V ${city}, dne ${signedDate ?? '____________________'}</p>
-    <div style="height:1px;width:260px;border-bottom:1px solid #1e3852;margin-bottom:8px;"></div>
-    <p style="font-size:12px;color:#1e3852;font-weight:${signedDate ? '600' : '400'};">${name}</p>
+    <p style="font-size:12px;color:#194669;margin-bottom:24px;">V ${city}, dne ${signedDate ?? '____________________'}</p>
+    <div style="height:1px;width:260px;border-bottom:1px solid #194669;margin-bottom:8px;"></div>
+    <p style="font-size:12px;color:#194669;font-weight:${signedDate ? '600' : '400'};">${name}</p>
     <p style="font-size:11px;color:#64748b;">${role}</p>
     ${signedDate ? `<p style="font-size:10px;color:#22c55e;margin-top:4px;">✓ Podepsáno ${signedDate}</p>` : ''}
   </div>`
@@ -38,28 +38,32 @@ export function printContract(contract: Contract, template: ContractTemplate | u
   const mgmtAt   = contract.managementSignedAt ? new Date(contract.managementSignedAt).toLocaleDateString('cs-CZ') : null
   const origin   = typeof window !== 'undefined' ? window.location.origin : ''
 
-  // Use custom uploaded assets or fall back to extracted brand assets
   const logoSrc  = design.logoDataUrl  ?? `${origin}/brand/logo.png`
   const decorSrc = design.decorDataUrl ?? `${origin}/brand/watercolor.png`
 
-  const fontName = design.fontFamily === 'georgia' ? 'Georgia' : design.fontFamily === 'roboto' ? 'Roboto' : 'Serenity'
-  const ff = design.fontFamily === 'georgia'
-    ? "Georgia, 'Times New Roman', serif"
-    : design.fontFamily === 'roboto'
-    ? "'Roboto', sans-serif"
-    : "'Serenity', sans-serif"
+  const pc = design.primaryColor
+  const ac = design.accentColor
 
-  const pc = design.primaryColor  // navy
-  const ac = design.accentColor   // violet
+  const h  = design.typo.heading
+  const sh = design.typo.subheading
+  const b  = design.typo.body
+
+  const hFF  = fontStack(h.fontFamily)
+  const shFF = fontStack(sh.fontFamily)
+  const bFF  = fontStack(b.fontFamily)
+
+  // Google Fonts link if roboto is used in any slot
+  const needsRoboto = [h.fontFamily, sh.fontFamily, b.fontFamily].includes('roboto')
+  const needsSerenity = [h.fontFamily, sh.fontFamily, b.fontFamily].includes('serenity')
 
   const html = `<!DOCTYPE html>
 <html lang="cs">
 <head>
   <meta charset="UTF-8"/>
   <title>${contract.templateName} — ${contract.employeeName}</title>
-  ${design.fontFamily === 'roboto' ? '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>' : ''}
+  ${needsRoboto ? '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>' : ''}
   <style>
-    ${design.fontFamily === 'serenity' ? `
+    ${needsSerenity ? `
     @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Light.otf') format('opentype'); font-weight:300; font-style:normal; }
     @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Book.otf') format('opentype'); font-weight:400; font-style:normal; }
     @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Regular.otf') format('opentype'); font-weight:450; font-style:normal; }
@@ -70,11 +74,12 @@ export function printContract(contract: Contract, template: ContractTemplate | u
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: ${ff};
-      font-weight: 500;
-      color: #0E2337;
+      font-family: ${bFF};
+      font-weight: ${b.fontWeight};
+      font-style: ${b.italic ? 'italic' : 'normal'};
+      color: #194669;
       background: #fff;
-      font-size: 12.5px;
+      font-size: ${b.fontSize}px;
       line-height: 1.8;
       -webkit-font-smoothing: antialiased;
     }
@@ -117,16 +122,19 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       justify-content: space-between;
     }
     .cover-title {
-      font-family: ${ff};
+      font-family: ${hFF};
       font-size: 36px;
-      font-weight: 700;
+      font-weight: ${h.fontWeight};
+      font-style: ${h.italic ? 'italic' : 'normal'};
       color: ${pc};
       line-height: 1.2;
       margin-top: 100px;
       margin-bottom: 80px;
     }
     .cover-meta {
+      font-family: ${bFF};
       font-size: 13px;
+      font-weight: ${b.fontWeight};
       color: ${pc};
     }
     .cover-meta p { margin-bottom: 4px; }
@@ -137,10 +145,11 @@ export function printContract(contract: Contract, template: ContractTemplate | u
       padding: 20px 52px 52px;
     }
     .preamble {
+      font-family: ${bFF};
       font-size: 12px;
       font-weight: 700;
       text-align: center;
-      color: #0E2337;
+      color: #194669;
       margin-bottom: 32px;
       line-height: 1.6;
     }
@@ -149,57 +158,62 @@ export function printContract(contract: Contract, template: ContractTemplate | u
     .parties-table { width: 100%; margin-bottom: 20px; }
     .parties-table td {
       padding: 4px 0;
-      font-size: 12.5px;
-      font-weight: 500;
-      color: #0E2337;
+      font-family: ${bFF};
+      font-size: ${b.fontSize}px;
+      font-weight: ${b.fontWeight};
+      color: #194669;
       vertical-align: top;
     }
     .parties-table td:first-child {
       width: 160px;
-      font-weight: 500;
-      color: #0E2337;
+      font-weight: ${b.fontWeight};
+      color: #194669;
     }
 
-    .party-sep { margin: 16px 0; font-size: 13px; color: #0E2337; font-weight: 700; }
-    .party-note { font-size: 12.5px; font-weight: 500; color: #0E2337; margin-bottom: 20px; }
+    .party-sep { margin: 16px 0; font-size: 13px; color: #194669; font-weight: 700; }
+    .party-note { font-size: ${b.fontSize}px; font-weight: ${b.fontWeight}; color: #194669; margin-bottom: 20px; }
 
     .section-bold {
-      font-size: 12.5px;
+      font-size: ${b.fontSize}px;
       font-weight: 700;
-      color: #0E2337;
+      color: #194669;
       margin: 20px 0 12px;
     }
 
     /* Body content */
-    .contract-content { color: #0E2337; }
+    .contract-content { color: #194669; }
     .contract-content h2 {
-      font-family: ${ff};
-      font-size: 13px;
-      font-weight: 700;
-      color: #0E2337;
+      font-family: ${hFF};
+      font-size: ${h.fontSize}px;
+      font-weight: ${h.fontWeight};
+      font-style: ${h.italic ? 'italic' : 'normal'};
+      color: #194669;
       margin-top: 28px;
       margin-bottom: 10px;
       padding-bottom: 6px;
-      border-bottom: 1.5px solid #0E2337;
+      border-bottom: 1.5px solid #194669;
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
     .contract-content h3 {
-      font-size: 12.5px;
-      font-weight: 600;
+      font-family: ${shFF};
+      font-size: ${sh.fontSize}px;
+      font-weight: ${sh.fontWeight};
+      font-style: ${sh.italic ? 'italic' : 'normal'};
       color: ${ac};
       margin-top: 16px;
       margin-bottom: 6px;
       padding-left: 10px;
       border-left: 3px solid ${ac};
     }
-    .contract-content p  { margin-bottom: 10px; font-weight: 500; color: #0E2337; }
+    .contract-content p  { font-family: ${bFF}; font-size: ${b.fontSize}px; font-weight: ${b.fontWeight}; font-style: ${b.italic ? 'italic' : 'normal'}; margin-bottom: 10px; color: #194669; }
     .contract-content ul, .contract-content ol { padding-left: 20px; margin-bottom: 10px; }
-    .contract-content li { margin-bottom: 4px; font-weight: 500; color: #0E2337; }
-    .contract-content strong { font-weight: 700; color: #0E2337; }
+    .contract-content li { font-family: ${bFF}; font-size: ${b.fontSize}px; font-weight: ${b.fontWeight}; font-style: ${b.italic ? 'italic' : 'normal'}; margin-bottom: 4px; color: #194669; }
+    .contract-content strong { font-weight: 700; color: #194669; }
 
     /* Signature section */
     .sig-preamble {
+      font-family: ${bFF};
       font-size: 12px;
       font-weight: 700;
       color: ${pc};

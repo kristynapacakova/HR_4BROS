@@ -2,7 +2,7 @@
 
 import { Contract, ContractStatus, ContractTemplate } from '@/lib/mock-data'
 import { printContract } from '@/lib/print-contract'
-import { loadDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
+import { loadDesign, fontStack } from '@/app/admin/smlouvy/ContractDesignerClient'
 import { X, CheckCircle2, User, Building2, Download, Pen } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
@@ -44,11 +44,13 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
   const [design, setDesign] = useState<ContractDesign | null>(null)
   useEffect(() => { setDesign(loadDesign()) }, [])
   const d = design
-  const pc = d?.primaryColor ?? '#0E2337'
+  const pc = d?.primaryColor ?? '#194669'
   const ac = d?.accentColor  ?? '#7e17e0'
-  const ff = d?.fontFamily === 'georgia' ? "Georgia, serif"
-           : d?.fontFamily === 'roboto'  ? "Roboto, sans-serif"
-           : "Serenity, sans-serif"
+  const hStyle  = d?.typo?.heading    ?? { fontFamily: 'serenity' as const, fontSize: 13, fontWeight: 500, italic: false }
+  const shStyle = d?.typo?.subheading ?? { fontFamily: 'roboto'   as const, fontSize: 12, fontWeight: 700, italic: false }
+  const bStyle  = d?.typo?.body       ?? { fontFamily: 'roboto'   as const, fontSize: 12, fontWeight: 300, italic: false }
+  const ff  = fontStack(hStyle.fontFamily)
+  const bff = fontStack(bStyle.fontFamily)
 
   const timeline = [
     { label: 'Vytvořeno', date: contract.createdAt, done: true, icon: Building2 },
@@ -132,7 +134,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
                 {/* Doc title */}
                 <div className="relative z-10 mt-10 mb-1">
-                  <h1 style={{ fontFamily: ff, fontSize: 22, fontWeight: 700, color: pc, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
+                  <h1 style={{ fontFamily: ff, fontSize: 22, fontWeight: hStyle.fontWeight, fontStyle: hStyle.italic ? 'italic' : 'normal', color: pc, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
                     {contract.templateName}
                   </h1>
                 </div>
@@ -144,7 +146,8 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
               </div>
 
               {/* Body */}
-              <div className="px-10 py-8 contract-body text-[13.5px] leading-relaxed text-[#1e3a52]"
+              <div className="px-10 py-8 contract-body leading-relaxed"
+                style={{ fontFamily: bff, fontSize: bStyle.fontSize, fontWeight: bStyle.fontWeight, fontStyle: bStyle.italic ? 'italic' : 'normal', color: '#194669' }}
                 dangerouslySetInnerHTML={{ __html: filledBody }}
               />
 
@@ -215,8 +218,9 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
       <style>{`
         .contract-body h2 {
           font-family: ${ff};
-          font-size: 12px;
-          font-weight: 700;
+          font-size: ${hStyle.fontSize}px;
+          font-weight: ${hStyle.fontWeight};
+          font-style: ${hStyle.italic ? 'italic' : 'normal'};
           text-transform: uppercase;
           letter-spacing: 0.08em;
           color: ${pc};
@@ -226,18 +230,20 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
           border-bottom: 1.5px solid ${pc};
         }
         .contract-body h3 {
-          font-size: 13px;
-          font-weight: 600;
+          font-family: ${fontStack(shStyle.fontFamily)};
+          font-size: ${shStyle.fontSize}px;
+          font-weight: ${shStyle.fontWeight};
+          font-style: ${shStyle.italic ? 'italic' : 'normal'};
           color: ${ac};
           margin-top: 16px;
           margin-bottom: 6px;
           padding-left: 10px;
           border-left: 3px solid ${ac};
         }
-        .contract-body p { margin-bottom: 10px; }
+        .contract-body p { margin-bottom: 10px; color: #194669; }
         .contract-body ul, .contract-body ol { padding-left: 20px; margin-bottom: 10px; }
-        .contract-body li { margin-bottom: 4px; }
-        .contract-body strong { font-weight: 700; color: #0E2337; }
+        .contract-body li { margin-bottom: 4px; color: #194669; }
+        .contract-body strong { font-weight: 700; color: #194669; }
       `}</style>
     </div>
   )

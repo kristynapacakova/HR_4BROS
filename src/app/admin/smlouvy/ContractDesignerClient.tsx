@@ -1,30 +1,52 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Upload, Trash2, RotateCcw, Save, Eye, Palette, Type, Image as ImageIcon, Building2 } from 'lucide-react'
+import { Upload, Trash2, RotateCcw, Save, Eye, Palette, Type, Image as ImageIcon, Building2, ChevronDown } from 'lucide-react'
+
+export interface TypographyStyle {
+  fontFamily: 'serenity' | 'roboto' | 'georgia'
+  fontSize: number
+  fontWeight: 300 | 400 | 500 | 600 | 700
+  italic: boolean
+}
 
 export interface ContractDesign {
   logoDataUrl: string | null
   decorDataUrl: string | null
   primaryColor: string
   accentColor: string
+  /** @deprecated use typo.heading.fontFamily */
   fontFamily: 'serenity' | 'roboto' | 'georgia'
   companyName: string
   companyAddress: string
   companyIco: string
+  typo: {
+    heading: TypographyStyle
+    subheading: TypographyStyle
+    body: TypographyStyle
+  }
 }
 
 const DESIGN_KEY = 'fourBros_contractDesign'
 
+const DEFAULT_HEADING: TypographyStyle = { fontFamily: 'serenity', fontSize: 13, fontWeight: 500, italic: false }
+const DEFAULT_SUBHEADING: TypographyStyle = { fontFamily: 'roboto', fontSize: 12, fontWeight: 700, italic: false }
+const DEFAULT_BODY: TypographyStyle = { fontFamily: 'roboto', fontSize: 12, fontWeight: 300, italic: false }
+
 export const DEFAULT_DESIGN: ContractDesign = {
   logoDataUrl: null,
   decorDataUrl: null,
-  primaryColor: '#0E2337',
+  primaryColor: '#194669',
   accentColor: '#7e17e0',
   fontFamily: 'serenity',
   companyName: 'Four Bros s.r.o.',
   companyAddress: 'Náměstí Míru 5, 120 00 Praha 2',
   companyIco: '12345678',
+  typo: {
+    heading: DEFAULT_HEADING,
+    subheading: DEFAULT_SUBHEADING,
+    body: DEFAULT_BODY,
+  },
 }
 
 export function loadDesign(): ContractDesign {
@@ -32,7 +54,16 @@ export function loadDesign(): ContractDesign {
   try {
     const raw = localStorage.getItem(DESIGN_KEY)
     if (!raw) return DEFAULT_DESIGN
-    return { ...DEFAULT_DESIGN, ...JSON.parse(raw) }
+    const parsed = JSON.parse(raw)
+    return {
+      ...DEFAULT_DESIGN,
+      ...parsed,
+      typo: {
+        heading:    { ...DEFAULT_HEADING,    ...(parsed.typo?.heading    ?? {}) },
+        subheading: { ...DEFAULT_SUBHEADING, ...(parsed.typo?.subheading ?? {}) },
+        body:       { ...DEFAULT_BODY,       ...(parsed.typo?.body       ?? {}) },
+      },
+    }
   } catch { return DEFAULT_DESIGN }
 }
 
@@ -40,10 +71,24 @@ export function saveDesign(d: ContractDesign) {
   localStorage.setItem(DESIGN_KEY, JSON.stringify(d))
 }
 
-const FONT_OPTIONS = [
-  { value: 'serenity', label: 'Serenity (váš brand font)' },
-  { value: 'georgia',  label: 'Georgia (serif, formální)' },
-  { value: 'roboto',   label: 'Roboto (sans-serif)' },
+export function fontStack(family: TypographyStyle['fontFamily']): string {
+  if (family === 'georgia') return "Georgia, 'Times New Roman', serif"
+  if (family === 'roboto')  return "'Roboto', sans-serif"
+  return "'Serenity', sans-serif"
+}
+
+const FONT_OPTIONS: { value: TypographyStyle['fontFamily']; label: string }[] = [
+  { value: 'serenity', label: 'Serenity' },
+  { value: 'roboto',   label: 'Roboto' },
+  { value: 'georgia',  label: 'Georgia' },
+]
+
+const WEIGHT_OPTIONS: { value: TypographyStyle['fontWeight']; label: string }[] = [
+  { value: 300, label: 'Light (300)' },
+  { value: 400, label: 'Regular (400)' },
+  { value: 500, label: 'Medium (500)' },
+  { value: 600, label: 'SemiBold (600)' },
+  { value: 700, label: 'Bold (700)' },
 ]
 
 function UploadZone({
@@ -116,27 +161,130 @@ function ColorInput({ label, value, onChange }: { label: string; value: string; 
   )
 }
 
+function TypographyEditor({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: TypographyStyle
+  onChange: (v: TypographyStyle) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const preview = `${value.fontFamily} · ${value.fontSize}px · ${value.fontWeight}${value.italic ? ' · kurzíva' : ''}`
+
+  return (
+    <div className="border border-slate-200 rounded-xl overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 hover:bg-slate-100 transition-colors"
+      >
+        <div className="text-left">
+          <p className="text-xs font-semibold text-navy">{label}</p>
+          <p
+            className="text-[11px] text-slate-400 mt-0.5"
+            style={{ fontFamily: fontStack(value.fontFamily), fontWeight: value.fontWeight, fontStyle: value.italic ? 'italic' : 'normal', fontSize: 11 }}
+          >
+            {preview}
+          </p>
+        </div>
+        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="px-4 py-4 space-y-3 bg-white border-t border-slate-100">
+          {/* Font family */}
+          <div>
+            <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Písmo</label>
+            <div className="flex gap-2 flex-wrap">
+              {FONT_OPTIONS.map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => onChange({ ...value, fontFamily: opt.value })}
+                  className={`px-3 py-1.5 rounded-lg text-xs border transition-all ${value.fontFamily === opt.value ? 'border-violet bg-violet/10 text-violet font-semibold' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
+                  style={{ fontFamily: fontStack(opt.value) }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Font size */}
+          <div>
+            <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+              Velikost — {value.fontSize}px
+            </label>
+            <input
+              type="range" min={8} max={28} step={0.5}
+              value={value.fontSize}
+              onChange={e => onChange({ ...value, fontSize: parseFloat(e.target.value) })}
+              className="w-full accent-violet"
+            />
+            <div className="flex justify-between text-[9px] text-slate-300 mt-0.5">
+              <span>8px</span><span>28px</span>
+            </div>
+          </div>
+
+          {/* Font weight */}
+          <div>
+            <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Tloušťka</label>
+            <div className="grid grid-cols-3 gap-1.5">
+              {WEIGHT_OPTIONS.map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => onChange({ ...value, fontWeight: opt.value })}
+                  className={`px-2 py-1.5 rounded-lg text-[10px] border transition-all ${value.fontWeight === opt.value ? 'border-violet bg-violet/10 text-violet' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
+                  style={{ fontWeight: opt.value }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Italic toggle */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => onChange({ ...value, italic: !value.italic })}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs border transition-all ${value.italic ? 'border-violet bg-violet/10 text-violet font-semibold' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
+            >
+              <span style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>I</span>
+              Kurzíva
+            </button>
+            <span
+              className="text-xs text-slate-400"
+              style={{ fontFamily: fontStack(value.fontFamily), fontWeight: value.fontWeight, fontStyle: value.italic ? 'italic' : 'normal', fontSize: value.fontSize * 0.85 }}
+            >
+              Ukázka textu
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Live preview of the document header
 function HeaderPreview({ design }: { design: ContractDesign }) {
-  const fontStack = design.fontFamily === 'georgia'
-    ? 'Georgia, serif'
-    : design.fontFamily === 'roboto'
-    ? 'Roboto, sans-serif'
-    : 'Serenity, sans-serif'
+  const hStyle = design.typo.heading
+  const sStyle = design.typo.subheading
+  const bStyle = design.typo.body
 
   return (
     <div className="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-white">
       {/* Header area */}
       <div className="relative p-6 border-b border-slate-100 overflow-hidden" style={{ minHeight: 120 }}>
-        {/* Decoration image — custom or brand default */}
         <img
           src={design.decorDataUrl ?? '/brand/watercolor.png'}
           alt=""
           className="absolute top-0 right-0 h-28 object-contain pointer-events-none select-none opacity-80"
         />
-
         <div className="relative z-10 flex items-start justify-between">
-          {/* Logo or text fallback */}
           {design.logoDataUrl ? (
             <img src={design.logoDataUrl} alt="Logo" className="h-10 object-contain" />
           ) : (
@@ -148,39 +296,29 @@ function HeaderPreview({ design }: { design: ContractDesign }) {
         </div>
 
         <div className="relative z-10 mt-5">
-          <div style={{ fontFamily: fontStack, fontSize: 18, fontWeight: 700, color: design.primaryColor, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
+          <div style={{ fontFamily: fontStack(hStyle.fontFamily), fontSize: 18, fontWeight: hStyle.fontWeight, fontStyle: hStyle.italic ? 'italic' : 'normal', color: design.primaryColor, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
             Pracovní smlouva — Ukázka
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>
-            Připraveno pro: <strong style={{ color: design.primaryColor }}>Jan Novák</strong>
-            &nbsp;·&nbsp; Připraveno kým: <strong style={{ color: design.primaryColor }}>{design.companyName}</strong>
+          <div style={{ fontFamily: fontStack(bStyle.fontFamily), fontSize: 11, fontWeight: bStyle.fontWeight, color: '#64748b', marginTop: 6 }}>
+            Připraveno pro: <strong style={{ color: design.primaryColor, fontWeight: 700 }}>Jan Novák</strong>
+            &nbsp;·&nbsp; Připraveno kým: <strong style={{ color: design.primaryColor, fontWeight: 700 }}>{design.companyName}</strong>
           </div>
         </div>
-      </div>
-
-      {/* Status bar */}
-      <div className="grid grid-cols-4 border-b border-slate-100 bg-slate-50">
-        {[['Zaměstnanec', 'Jan Novák'], ['Typ', 'HPP'], ['Datum', '1. 1. 2026'], ['Stav', 'Podepsáno']].map(([l, v]) => (
-          <div key={l} className="px-4 py-2.5 border-r last:border-r-0 border-slate-100">
-            <p style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94a3b8', marginBottom: 2 }}>{l}</p>
-            <p style={{ fontSize: 11, fontWeight: 600, color: design.primaryColor }}>{v}</p>
-          </div>
-        ))}
       </div>
 
       {/* Body sample */}
       <div className="px-6 py-4">
-        <div style={{ fontFamily: fontStack, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: design.primaryColor, borderBottom: `1.5px solid ${design.primaryColor}`, paddingBottom: 6, marginBottom: 8 }}>
+        <div style={{ fontFamily: fontStack(hStyle.fontFamily), fontSize: hStyle.fontSize, fontWeight: hStyle.fontWeight, fontStyle: hStyle.italic ? 'italic' : 'normal', textTransform: 'uppercase', letterSpacing: '0.1em', color: design.primaryColor, borderBottom: `1.5px solid ${design.primaryColor}`, paddingBottom: 6, marginBottom: 8 }}>
           Předmět smlouvy
         </div>
-        <p style={{ fontSize: 11, color: '#1e3a52', lineHeight: 1.7 }}>
-          Zaměstnavatel přijímá zaměstnance na pozici <strong>Frontend Developer</strong> s místem výkonu práce Praha.
+        <p style={{ fontFamily: fontStack(bStyle.fontFamily), fontSize: bStyle.fontSize, fontWeight: bStyle.fontWeight, fontStyle: bStyle.italic ? 'italic' : 'normal', color: '#1e3a52', lineHeight: 1.75, marginBottom: 8 }}>
+          Zaměstnavatel přijímá zaměstnance na pozici <strong style={{ fontWeight: 700 }}>Frontend Developer</strong> s místem výkonu práce Praha.
         </p>
-        <div style={{ fontFamily: fontStack, fontSize: 11, fontWeight: 600, color: design.accentColor, borderLeft: `3px solid ${design.accentColor}`, paddingLeft: 8, marginTop: 10 }}>
+        <div style={{ fontFamily: fontStack(sStyle.fontFamily), fontSize: sStyle.fontSize, fontWeight: sStyle.fontWeight, fontStyle: sStyle.italic ? 'italic' : 'normal', color: design.accentColor, borderLeft: `3px solid ${design.accentColor}`, paddingLeft: 8, marginBottom: 6 }}>
           Základní mzdové podmínky
         </div>
-        <p style={{ fontSize: 11, color: '#1e3a52', lineHeight: 1.7, marginTop: 4 }}>
-          Zaměstnanci náleží základní měsíční mzda ve výši <strong>XX 000 Kč</strong> hrubého.
+        <p style={{ fontFamily: fontStack(bStyle.fontFamily), fontSize: bStyle.fontSize, fontWeight: bStyle.fontWeight, fontStyle: bStyle.italic ? 'italic' : 'normal', color: '#1e3a52', lineHeight: 1.75 }}>
+          Zaměstnanci náleží základní měsíční mzda ve výši <strong style={{ fontWeight: 700 }}>XX 000 Kč</strong> hrubého.
         </p>
       </div>
 
@@ -208,6 +346,11 @@ export function ContractDesignerClient() {
 
   const update = useCallback((patch: Partial<ContractDesign>) => {
     setDesign(prev => ({ ...prev, ...patch }))
+    setSaved(false)
+  }, [])
+
+  const updateTypo = useCallback((key: keyof ContractDesign['typo'], value: TypographyStyle) => {
+    setDesign(prev => ({ ...prev, typo: { ...prev.typo, [key]: value } }))
     setSaved(false)
   }, [])
 
@@ -258,24 +401,30 @@ export function ContractDesignerClient() {
               <h3 className="font-headline font-semibold text-navy text-sm">Barvy</h3>
             </div>
             <ColorInput label="Primární barva (nadpisy, záhlaví, zápatí)" value={design.primaryColor} onChange={v => update({ primaryColor: v })} />
-            <ColorInput label="Akcentová barva (h3, zvýraznění)" value={design.accentColor} onChange={v => update({ accentColor: v })} />
+            <ColorInput label="Akcentová barva (podnadpisy, zvýraznění)" value={design.accentColor} onChange={v => update({ accentColor: v })} />
           </div>
 
-          {/* Font */}
+          {/* Typography */}
           <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 space-y-3">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-2">
               <Type className="w-4 h-4 text-violet" />
-              <h3 className="font-headline font-semibold text-navy text-sm">Font</h3>
+              <h3 className="font-headline font-semibold text-navy text-sm">Typografie</h3>
             </div>
-            <div className="grid gap-2">
-              {FONT_OPTIONS.map(opt => (
-                <label key={opt.value} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${design.fontFamily === opt.value ? 'border-violet bg-violet/5' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <input type="radio" name="font" value={opt.value} checked={design.fontFamily === opt.value}
-                    onChange={() => update({ fontFamily: opt.value as ContractDesign['fontFamily'] })} className="accent-violet" />
-                  <span className="text-sm text-navy">{opt.label}</span>
-                </label>
-              ))}
-            </div>
+            <TypographyEditor
+              label="Nadpis (H2 — název sekce)"
+              value={design.typo.heading}
+              onChange={v => updateTypo('heading', v)}
+            />
+            <TypographyEditor
+              label="Podnadpis (H3 — podnázev sekce)"
+              value={design.typo.subheading}
+              onChange={v => updateTypo('subheading', v)}
+            />
+            <TypographyEditor
+              label="Text odstavce (p, li)"
+              value={design.typo.body}
+              onChange={v => updateTypo('body', v)}
+            />
           </div>
 
           {/* Company info */}
