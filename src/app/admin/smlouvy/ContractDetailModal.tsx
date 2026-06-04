@@ -1,6 +1,7 @@
 'use client'
 
 import { Contract, ContractStatus, ContractTemplate } from '@/lib/mock-data'
+import { printContract } from '@/lib/print-contract'
 import { X, CheckCircle2, Clock, User, Building2, Download, Pen } from 'lucide-react'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
@@ -110,7 +111,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
           )}
           {contract.status === 'SIGNED' && (
             <button
-              onClick={() => window.print()}
+              onClick={() => printContract(contract, template)}
               className="flex items-center gap-2 px-4 py-2 bg-navy text-white rounded-xl text-sm font-medium hover:bg-navy/90 transition-colors"
             >
               <Download className="w-4 h-4" />

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Contract, ContractTemplate } from '@/lib/mock-data'
+import { printContract } from '@/lib/print-contract'
 import { Pen, X, CheckCircle2, FileText, Download, ShieldCheck, Upload, KeyRound, Loader2, BadgeCheck, AlertCircle } from 'lucide-react'
 
 function fillPlaceholders(body: string, values: Record<string, string>) {
@@ -338,7 +339,7 @@ export function DocumentsSigningClient({ contracts, templates }: {
               </p>
             </div>
             <button
-              onClick={() => window.print()}
+              onClick={() => printContract(c, templates.find(t => t.id === c.templateId))}
               className="flex-shrink-0 p-2 text-slate-300 hover:text-navy rounded-lg transition-colors"
               title="Stáhnout PDF"
             >

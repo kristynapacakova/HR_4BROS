@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Contract, ContractTemplate, ContractStatus, DEMO_TEAM } from '@/lib/mock-data'
 import { ContractDetailModal } from './ContractDetailModal'
+import { printContract } from '@/lib/print-contract'
 import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft } from 'lucide-react'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
@@ -267,7 +268,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                           )}
                           {c.status === 'SIGNED' && (
                             <button
-                              onClick={() => window.print()}
+                              onClick={() => printContract(c, templates.find(t => t.id === c.templateId))}
                               className="flex items-center gap-1.5 px-2.5 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-medium hover:bg-green-100 transition-colors"
                             >
                               <CheckCircle2 className="w-3 h-3" />
