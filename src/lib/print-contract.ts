@@ -1,6 +1,5 @@
 import type { Contract, ContractTemplate } from './mock-data'
-import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
-import { DEFAULT_DESIGN, loadDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
+import { loadDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
 
 function fillPlaceholders(body: string, values: Record<string, string>): string {
   return body.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] ?? `{{${key}}}`)
@@ -18,70 +17,40 @@ function statusBadge(status: Contract['status']): string {
     PENDING_EMPLOYEE: 'Čeká na podpis zaměstnance', SIGNED: 'Podepsáno',
   }
   const [color, bg] = map[status]
-  return `<span style="display:inline-block;padding:3px 11px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:0.03em;background:${bg};color:${color};">${labels[status]}</span>`
+  return `<span style="display:inline-block;padding:3px 11px;border-radius:999px;font-size:10.5px;font-weight:700;background:${bg};color:${color};">${labels[status]}</span>`
 }
 
-function sigBox(role: string, name: string, signedDate: string | null, accentColor: string): string {
-  return signedDate ? `
-    <div style="border:1.5px solid #86efac;border-radius:10px;padding:16px 18px;background:linear-gradient(135deg,#f0fdf4 0%,#fff 100%);">
-      <p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#94a3b8;margin-bottom:10px;">${role}</p>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-        <div style="width:18px;height:18px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.2 2.2 3.8-4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span style="font-size:13px;font-weight:700;color:#0E2337;">${name}</span>
-      </div>
-      <p style="font-size:10px;color:#64748b;padding-left:26px;">Podepsáno: ${signedDate}</p>
-    </div>` : `
-    <div style="padding:0 4px;">
-      <p style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#94a3b8;margin-bottom:20px;">${role}</p>
-      <div style="height:1px;background:repeating-linear-gradient(to right,#cbd5e1 0,#cbd5e1 5px,transparent 5px,transparent 10px);margin-bottom:8px;margin-top:28px;"></div>
-      <p style="font-size:12px;color:#64748b;">${name}</p>
-      <p style="font-size:10px;color:#94a3b8;">Čeká na podpis</p>
-    </div>`
-}
-
-function fontFaceBlock(origin: string): string {
+function sigBox(role: string, name: string, city: string, signedDate: string | null): string {
   return `
-    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Book.otf') format('opentype'); font-weight:400; }
-    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Medium.otf') format('opentype'); font-weight:500; }
-    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-SemiBold.otf') format('opentype'); font-weight:600; }
-  `
-}
-
-function fontStack(d: ContractDesign): string {
-  if (d.fontFamily === 'georgia') return "Georgia, 'Times New Roman', serif"
-  if (d.fontFamily === 'roboto')  return "'Roboto', sans-serif"
-  return "'Serenity', sans-serif"
+  <div>
+    <p style="font-size:12px;color:#1e3852;margin-bottom:24px;">V ${city}, dne ${signedDate ?? '____________________'}</p>
+    <div style="height:1px;width:260px;border-bottom:1px solid #1e3852;margin-bottom:8px;"></div>
+    <p style="font-size:12px;color:#1e3852;font-weight:${signedDate ? '600' : '400'};">${name}</p>
+    <p style="font-size:11px;color:#64748b;">${role}</p>
+    ${signedDate ? `<p style="font-size:10px;color:#22c55e;margin-top:4px;">✓ Podepsáno ${signedDate}</p>` : ''}
+  </div>`
 }
 
 export function printContract(contract: Contract, template: ContractTemplate | undefined): void {
   const design = loadDesign()
   const body = fillPlaceholders(template?.body ?? '', contract.values)
-  const generatedAt = new Date().toLocaleString('cs-CZ')
   const signedAt = contract.employeeSignedAt   ? new Date(contract.employeeSignedAt).toLocaleDateString('cs-CZ')   : null
   const mgmtAt   = contract.managementSignedAt ? new Date(contract.managementSignedAt).toLocaleDateString('cs-CZ') : null
   const origin   = typeof window !== 'undefined' ? window.location.origin : ''
-  const ff = fontStack(design)
-  const pc = design.primaryColor
-  const ac = design.accentColor
 
-  const logoHtml = design.logoDataUrl
-    ? `<img src="${design.logoDataUrl}" alt="Logo" style="height:40px;object-fit:contain;" />`
-    : `<div>
-        <div style="font-family:${ff};font-size:24px;font-weight:700;color:${pc};letter-spacing:-0.5px;line-height:1;">4<span style="font-size:16px;letter-spacing:0.1em;">BROS</span></div>
-        <svg width="66" height="8" viewBox="0 0 66 8" fill="none" style="margin-top:4px;display:block;">
-          <path d="M2 5.5 C8 2,15 2,22 5.5 C29 9,36 9,43 5.5 C50 2,57 2,64 5.5" stroke="${pc}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-        </svg>
-       </div>`
+  // Use custom uploaded assets or fall back to extracted brand assets
+  const logoSrc  = design.logoDataUrl  ?? `${origin}/brand/logo.png`
+  const decorSrc = design.decorDataUrl ?? `${origin}/brand/watercolor.png`
 
-  const footerLogoHtml = design.logoDataUrl
-    ? `<img src="${design.logoDataUrl}" alt="Logo" style="height:20px;object-fit:contain;opacity:0.5;" />`
-    : `<span style="font-family:${ff};font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:-0.3px;">4BROS</span>`
+  const fontName = design.fontFamily === 'georgia' ? 'Georgia' : design.fontFamily === 'roboto' ? 'Roboto' : 'Serenity'
+  const ff = design.fontFamily === 'georgia'
+    ? "Georgia, 'Times New Roman', serif"
+    : design.fontFamily === 'roboto'
+    ? "'Roboto', sans-serif"
+    : "'Serenity', sans-serif"
 
-  const decorHtml = design.decorDataUrl
-    ? `<img src="${design.decorDataUrl}" alt="" style="position:absolute;top:0;right:0;height:160px;object-fit:contain;pointer-events:none;select:none;" />`
-    : ''
+  const pc = design.primaryColor  // navy
+  const ac = design.accentColor   // violet
 
   const html = `<!DOCTYPE html>
 <html lang="cs">
@@ -90,195 +59,245 @@ export function printContract(contract: Contract, template: ContractTemplate | u
   <title>${contract.templateName} — ${contract.employeeName}</title>
   ${design.fontFamily === 'roboto' ? '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>' : ''}
   <style>
-    ${design.fontFamily === 'serenity' ? fontFaceBlock(origin) : ''}
+    ${design.fontFamily === 'serenity' ? `
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Book.otf') format('opentype'); font-weight:400; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Medium.otf') format('opentype'); font-weight:500; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-SemiBold.otf') format('opentype'); font-weight:600; }
+    @font-face { font-family:'Serenity'; src:url('${origin}/fonts/Serenity-Light.otf') format('opentype'); font-weight:300; }
+    ` : ''}
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: ${ff};
-      color: #1e3a52;
-      background: #f0f2f5;
-      font-size: 13.5px;
+      color: ${pc};
+      background: #fff;
+      font-size: 12px;
       line-height: 1.75;
       -webkit-font-smoothing: antialiased;
     }
-    .sheet {
-      max-width: 800px;
-      margin: 40px auto;
+
+    /* ── Page layout ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
       background: #fff;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 48px rgba(14,35,55,0.12), 0 2px 8px rgba(14,35,55,0.06);
-    }
-    .doc-header {
+      padding: 0;
       position: relative;
-      padding: 40px 52px 32px;
-      border-bottom: 1px solid #e9edf2;
-      overflow: hidden;
-      background: #fff;
     }
-    .header-top {
+
+    /* ── Header (every page) ── */
+    .page-header {
+      position: relative;
+      padding: 28px 52px 20px;
+      overflow: hidden;
+    }
+    .header-logo {
+      height: 52px;
+      object-fit: contain;
+      display: block;
+    }
+    .header-decor {
+      position: absolute;
+      top: 0; right: 0;
+      height: 90px;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    /* ── Cover page ── */
+    .cover-body {
+      padding: 0 52px 52px;
+      min-height: calc(297mm - 120px);
       display: flex;
-      align-items: flex-start;
+      flex-direction: column;
       justify-content: space-between;
-      position: relative;
-      z-index: 1;
     }
-    .header-meta {
-      text-align: right;
-      font-size: 10px;
-      color: #94a3b8;
-      line-height: 1.7;
-      letter-spacing: 0.04em;
-    }
-    .doc-title-area {
-      position: relative;
-      z-index: 1;
-      margin-top: 44px;
-    }
-    .doc-title {
+    .cover-title {
       font-family: ${ff};
-      font-size: 28px;
+      font-size: 36px;
       font-weight: 700;
       color: ${pc};
-      letter-spacing: -0.5px;
-      line-height: 1.25;
-      margin-bottom: 12px;
+      line-height: 1.2;
+      margin-top: 100px;
+      margin-bottom: 80px;
     }
-    .doc-parties {
-      font-size: 12.5px;
-      color: #64748b;
-    }
-    .doc-parties strong { color: ${pc}; font-weight: 600; }
-    .status-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      background: #f8fafc;
-      border-bottom: 1px solid #e9edf2;
-    }
-    .status-cell {
-      padding: 12px 20px;
-      border-right: 1px solid #e9edf2;
-    }
-    .status-cell:last-child { border-right: none; }
-    .status-cell-label {
-      font-size: 9px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #94a3b8;
-      margin-bottom: 3px;
-    }
-    .status-cell-value {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: ${pc};
-    }
-    .doc-body { padding: 40px 52px 36px; }
-    .doc-body h2 {
-      font-family: ${ff};
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: ${pc};
-      margin-top: 32px;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1.5px solid ${pc};
-    }
-    .doc-body h3 {
+    .cover-meta {
       font-size: 13px;
+      color: ${pc};
+    }
+    .cover-meta p { margin-bottom: 4px; }
+    .cover-meta strong { font-weight: 700; }
+
+    /* ── Content pages ── */
+    .content-page {
+      padding: 20px 52px 52px;
+    }
+    .preamble {
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      color: ${pc};
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    /* Parties table */
+    .parties-table { width: 100%; margin-bottom: 20px; }
+    .parties-table td {
+      padding: 3px 0;
+      font-size: 12px;
+      color: ${pc};
+      vertical-align: top;
+    }
+    .parties-table td:first-child {
+      width: 160px;
+      font-weight: 400;
+      color: ${pc};
+    }
+    .parties-table td:last-child { color: ${pc}; }
+
+    .party-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: ${pc};
+      margin-bottom: 4px;
+    }
+    .party-sep { margin: 16px 0; font-size: 12px; color: ${pc}; font-weight: 700; }
+    .party-note { font-size: 12px; color: ${pc}; margin-bottom: 20px; }
+
+    .section-bold {
+      font-size: 12px;
+      font-weight: 700;
+      color: ${pc};
+      margin: 20px 0 12px;
+    }
+
+    /* Body content */
+    .contract-content h2 {
+      font-family: ${ff};
+      font-size: 13px;
+      font-weight: 700;
+      color: ${pc};
+      margin-top: 28px;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1.5px solid ${pc};
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .contract-content h3 {
+      font-size: 12.5px;
       font-weight: 600;
       color: ${ac};
-      margin-top: 18px;
-      margin-bottom: 7px;
-      padding-left: 11px;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      padding-left: 10px;
       border-left: 3px solid ${ac};
     }
-    .doc-body p  { margin-bottom: 11px; }
-    .doc-body ul, .doc-body ol { padding-left: 22px; margin-bottom: 11px; }
-    .doc-body li { margin-bottom: 5px; }
-    .doc-body strong { font-weight: 700; color: ${pc}; }
-    .sig-area {
-      margin: 8px 52px 44px;
-      padding-top: 28px;
-      border-top: 1px solid #e9edf2;
-    }
-    .sig-heading {
-      font-size: 9px;
+    .contract-content p  { margin-bottom: 10px; }
+    .contract-content ul, .contract-content ol { padding-left: 20px; margin-bottom: 10px; }
+    .contract-content li { margin-bottom: 4px; }
+    .contract-content strong { font-weight: 700; }
+
+    /* Signature section */
+    .sig-preamble {
+      font-size: 12px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #94a3b8;
-      margin-bottom: 22px;
+      color: ${pc};
+      margin: 40px 0 28px;
     }
     .sig-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 40px;
     }
-    .doc-footer {
-      background: ${pc};
-      padding: 14px 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .doc-footer-left {
-      font-size: 10px;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.6;
-    }
-    .doc-footer-left strong { color: rgba(255,255,255,0.7); font-weight: 600; }
+
     @media print {
       body { background: #fff; }
-      .sheet { margin: 0; border-radius: 0; box-shadow: none; }
+      .page { width: 100%; }
       @page { margin: 0; size: A4; }
+      .page-break { page-break-before: always; }
     }
   </style>
 </head>
 <body>
-<div class="sheet">
-  <div class="doc-header">
-    ${decorHtml}
-    <div class="header-top">
-      ${logoHtml}
-      <div class="header-meta">Interní dokument — Důvěrné<br/>${contract.createdAt.toLocaleDateString('cs-CZ')}</div>
-    </div>
-    <div class="doc-title-area">
-      <div class="doc-title">${contract.templateName}</div>
-      <div class="doc-parties">
-        Připraveno pro: <strong>${contract.employeeName}</strong>
-        &nbsp;·&nbsp; Připraveno kým: <strong>${design.companyName}</strong>
+<div class="page">
+
+  <!-- ══ COVER PAGE ══ -->
+  <div class="page-header">
+    <img class="header-logo" src="${logoSrc}" alt="4BROS" />
+    <img class="header-decor" src="${decorSrc}" alt="" />
+  </div>
+
+  <div class="cover-body">
+    <div>
+      <div class="cover-title">${contract.templateName}</div>
+      <div class="cover-meta">
+        <p><strong>Připraveno pro:</strong></p>
+        <p>${contract.employeeName}</p>
+        <br/>
+        <p><strong>Připraveno kým:</strong></p>
+        <p>${design.companyName}</p>
       </div>
     </div>
+    <div style="font-size:10px;color:#94a3b8;">${statusBadge(contract.status)} &nbsp; ${contract.createdAt.toLocaleDateString('cs-CZ')}</div>
   </div>
-  <div class="status-bar">
-    <div class="status-cell"><div class="status-cell-label">Zaměstnanec</div><div class="status-cell-value">${contract.employeeName}</div></div>
-    <div class="status-cell"><div class="status-cell-label">Typ smlouvy</div><div class="status-cell-value">${template?.type ?? '—'}</div></div>
-    <div class="status-cell"><div class="status-cell-label">Datum vytvoření</div><div class="status-cell-value">${contract.createdAt.toLocaleDateString('cs-CZ')}</div></div>
-    <div class="status-cell"><div class="status-cell-label">Stav dokumentu</div><div class="status-cell-value">${statusBadge(contract.status)}</div></div>
+
+  <!-- ══ CONTENT PAGE ══ -->
+  <div class="page-break"></div>
+  <div class="page-header">
+    <img class="header-logo" src="${logoSrc}" alt="4BROS" />
+    <img class="header-decor" src="${decorSrc}" alt="" />
   </div>
-  <div class="doc-body">${body}</div>
-  <div class="sig-area">
-    <div class="sig-heading">Na důkaz čehož smluvní strany připojují své podpisy</div>
+
+  <div class="content-page">
+    <!-- Preamble -->
+    <div class="preamble">
+      TATO ${contract.templateName.toUpperCase()} BYLA UZAVŘENA NÍŽE UVEDENÉHO DNE, MĚSÍCE A ROKU MEZI TĚMITO SMLUVNÍMI STRANAMI
+    </div>
+
+    <!-- Parties -->
+    <table class="parties-table">
+      <tr><td>Jméno:</td><td>${contract.employeeName}</td></tr>
+      ${contract.values.DATUM_NASTUPU ? `<tr><td>Datum nástupu:</td><td>${contract.values.DATUM_NASTUPU}</td></tr>` : ''}
+      ${contract.values.POZICE ? `<tr><td>Pracovní pozice:</td><td>${contract.values.POZICE}</td></tr>` : ''}
+      ${contract.values.MZDA ? `<tr><td>Mzda:</td><td>${contract.values.MZDA}</td></tr>` : ''}
+      ${contract.values.HODINOVA_SAZBA ? `<tr><td>Hodinová sazba:</td><td>${contract.values.HODINOVA_SAZBA}</td></tr>` : ''}
+      ${contract.values.MAX_HODIN ? `<tr><td>Max. hodin ročně:</td><td>${contract.values.MAX_HODIN}</td></tr>` : ''}
+      ${contract.values.TYDENNI_UVAZEK ? `<tr><td>Týdenní úvazek:</td><td>${contract.values.TYDENNI_UVAZEK} hod</td></tr>` : ''}
+    </table>
+    <p class="party-note">(dále jako <strong>„Zaměstnanec"</strong>)</p>
+
+    <p class="party-sep">a</p>
+
+    <table class="parties-table">
+      <tr><td>Firma:</td><td>${design.companyName}</td></tr>
+      <tr><td>IČO:</td><td>${design.companyIco}</td></tr>
+      <tr><td>Sídlo:</td><td>${design.companyAddress}</td></tr>
+    </table>
+    <p class="party-note">(dále jako <strong>„Zaměstnavatel"</strong>)</p>
+
+    <p class="section-bold">SMLUVNÍ STRANY UJEDNÁVAJÍ NÁSLEDUJÍCÍ:</p>
+
+    <!-- Body -->
+    <div class="contract-content">${body}</div>
+
+    <!-- Signatures -->
+    <p class="sig-preamble">NA DŮKAZ ČEHOŽ SMLUVNÍ STRANY PŘIPOJUJÍ SVÉ PODPISY</p>
     <div class="sig-grid">
-      ${sigBox('Za zaměstnavatele', contract.managementSignedBy ?? design.companyName, mgmtAt, ac)}
-      ${sigBox('Zaměstnanec', contract.employeeName, signedAt, ac)}
+      ${sigBox('Zaměstnavatel — ' + design.companyName, design.companyName, 'Praze', mgmtAt)}
+      ${sigBox('Zaměstnanec', contract.employeeName, 'Praze', signedAt)}
     </div>
   </div>
-  <div class="doc-footer">
-    <div class="doc-footer-left">
-      <strong>${design.companyName}</strong> &nbsp;·&nbsp; IČO: ${design.companyIco} &nbsp;·&nbsp; ${design.companyAddress}<br/>
-      Vygenerováno: ${generatedAt}
-    </div>
-    ${footerLogoHtml}
-  </div>
+
 </div>
 <script>document.fonts.ready.then(function(){ window.print(); });</script>
 </body>
 </html>`
 
-  const win = window.open('', '_blank', 'width=960,height=820')
+  const win = window.open('', '_blank', 'width=960,height=900')
   if (!win) return
   win.document.write(html)
   win.document.close()

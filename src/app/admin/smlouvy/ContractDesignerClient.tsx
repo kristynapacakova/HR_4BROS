@@ -128,25 +128,19 @@ function HeaderPreview({ design }: { design: ContractDesign }) {
     <div className="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-white">
       {/* Header area */}
       <div className="relative p-6 border-b border-slate-100 overflow-hidden" style={{ minHeight: 120 }}>
-        {/* Decoration image */}
-        {design.decorDataUrl && (
-          <img src={design.decorDataUrl} alt="" className="absolute top-0 right-0 h-28 object-contain pointer-events-none select-none opacity-80" />
-        )}
+        {/* Decoration image — custom or brand default */}
+        <img
+          src={design.decorDataUrl ?? '/brand/watercolor.png'}
+          alt=""
+          className="absolute top-0 right-0 h-28 object-contain pointer-events-none select-none opacity-80"
+        />
 
         <div className="relative z-10 flex items-start justify-between">
           {/* Logo or text fallback */}
           {design.logoDataUrl ? (
             <img src={design.logoDataUrl} alt="Logo" className="h-10 object-contain" />
           ) : (
-            <div>
-              <div style={{ fontFamily: fontStack, fontSize: 20, fontWeight: 700, color: design.primaryColor, letterSpacing: '-0.5px', lineHeight: 1 }}>
-                4<span style={{ fontSize: 14, letterSpacing: '0.1em' }}>BROS</span>
-              </div>
-              <svg width="60" height="7" viewBox="0 0 60 7" fill="none" style={{ marginTop: 4 }}>
-                <path d="M2 5 C8 1.5,15 1.5,22 5 C29 8.5,36 8.5,43 5 C50 1.5,56 1.5,58 5"
-                  stroke={design.primaryColor} strokeWidth="1.4" strokeLinecap="round" fill="none" />
-              </svg>
-            </div>
+            <img src="/brand/logo.png" alt="4BROS" style={{ height: 40, objectFit: 'contain' }} />
           )}
           <div style={{ fontSize: 9, color: '#94a3b8', textAlign: 'right', letterSpacing: '0.04em' }}>
             Interní dokument — Důvěrné<br />1. 1. 2026
@@ -196,11 +190,11 @@ function HeaderPreview({ design }: { design: ContractDesign }) {
           <strong style={{ color: 'rgba(255,255,255,0.8)' }}>{design.companyName}</strong>
           &nbsp;·&nbsp; IČO: {design.companyIco} &nbsp;·&nbsp; {design.companyAddress}
         </div>
-        {design.logoDataUrl ? (
-          <img src={design.logoDataUrl} alt="" className="h-5 object-contain opacity-50" />
-        ) : (
-          <div style={{ fontFamily: fontStack, fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '-0.3px' }}>4BROS</div>
-        )}
+        <img
+          src={design.logoDataUrl ?? '/brand/logo.png'}
+          alt=""
+          style={{ height: 20, objectFit: 'contain', opacity: 0.45, filter: 'brightness(10)' }}
+        />
       </div>
     </div>
   )

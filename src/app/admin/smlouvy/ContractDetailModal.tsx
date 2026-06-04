@@ -33,31 +33,10 @@ interface Props {
 }
 
 // Watercolor blob SVG — light blue, top-right decoration
-const WatercolorBlob = () => (
-  <svg
-    className="absolute top-0 right-0 w-48 h-36 pointer-events-none select-none"
-    viewBox="0 0 200 150"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <ellipse cx="160" cy="30" rx="80" ry="55" fill="rgba(147,197,253,0.22)" transform="rotate(-15 160 30)" />
-    <ellipse cx="175" cy="55" rx="55" ry="38" fill="rgba(126,23,224,0.07)" transform="rotate(10 175 55)" />
-    <ellipse cx="140" cy="15" rx="45" ry="28" fill="rgba(147,197,253,0.15)" transform="rotate(-30 140 15)" />
-  </svg>
-)
-
-// 4BROS logo lockup with wave underline
-const LogoLockup = () => (
-  <div className="flex flex-col" style={{ width: 88 }}>
-    <div className="flex items-baseline gap-0.5">
-      <span style={{ fontFamily: 'Georgia, serif', fontSize: 22, fontWeight: 700, color: '#0E2337', letterSpacing: '-1px', lineHeight: 1 }}>4</span>
-      <span style={{ fontFamily: 'Georgia, serif', fontSize: 16, fontWeight: 700, color: '#0E2337', letterSpacing: '0.1em', lineHeight: 1 }}>BROS</span>
-    </div>
-    <svg width="72" height="8" viewBox="0 0 72 8" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 3 }}>
-      <path d="M2 5 C10 1.5, 18 1.5, 26 5 C34 8.5, 42 8.5, 50 5 C58 1.5, 64 1.5, 70 5"
-        stroke="#0E2337" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-    </svg>
-  </div>
+// Brand assets from /public/brand/
+const BrandLogo = () => <img src="/brand/logo.png" alt="4BROS" className="h-10 object-contain" />
+const BrandWatercolor = () => (
+  <img src="/brand/watercolor.png" alt="" className="absolute top-0 right-0 h-24 object-contain pointer-events-none select-none" />
 )
 
 export function ContractDetailModal({ contract, template, onClose, onSign }: Props) {
@@ -138,12 +117,12 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                 {/* Custom decoration image or fallback blob */}
                 {d?.decorDataUrl
                   ? <img src={d.decorDataUrl} alt="" className="absolute top-0 right-0 h-32 object-contain pointer-events-none select-none opacity-80 z-0" />
-                  : <WatercolorBlob />
+                  : <BrandWatercolor />
                 }
                 <div className="relative z-10 flex items-start justify-between">
                   {d?.logoDataUrl
                     ? <img src={d.logoDataUrl} alt="Logo" className="h-10 object-contain" />
-                    : <LogoLockup />
+                    : <BrandLogo />
                   }
                   <div className="text-right">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Interní dokument</p>
