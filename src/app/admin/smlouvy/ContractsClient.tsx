@@ -48,20 +48,24 @@ const FILTER_OPTIONS: { value: ContractStatus | 'ALL'; label: string }[] = [
 ]
 
 const PLACEHOLDER_LABELS: Record<string, string> = {
+  ZAMESTNAVATEL: 'Zaměstnavatel (název + IČO + sídlo)',
   JMENO: 'Jméno zaměstnance',
   POZICE: 'Pracovní pozice',
-  MZDA: 'Mzda (Kč hrubého)',
+  MZDA: 'Mzda (vč. jednotky, např. 70 000 Kč)',
   DATUM_NASTUPU: 'Datum nástupu',
+  MISTO_VYKONU: 'Místo výkonu práce',
   TYDENNI_UVAZEK: 'Týdenní úvazek (hod)',
+  ZKUSEBNI_DOBA: 'Zkušební doba (text)',
   DATUM_PODPISU: 'Datum podpisu',
-  HODINOVA_SAZBA: 'Hodinová sazba (Kč)',
+  MISTO_PODPISU: 'Místo podpisu (např. V Praze)',
+  HODINOVA_SAZBA: 'Hodinová sazba (vč. jednotky)',
   MAX_HODIN: 'Max. hodin ročně',
   DATUM_UKONCENI: 'Datum ukončení',
   CISLO_DODATKU: 'Číslo dodatku',
   DATUM_PUVODNI_SMLOUVY: 'Datum původní smlouvy',
   POPIS_ZMENY: 'Popis změny',
   DATUM_UCINNOSTI: 'Datum účinnosti',
-  NOVA_MZDA: 'Nová mzda (Kč hrubého)',
+  NOVA_MZDA: 'Nová mzda (vč. jednotky)',
 }
 
 // Step 1: pick template, Step 2: fill form
