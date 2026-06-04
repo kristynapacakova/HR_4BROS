@@ -124,9 +124,6 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
           <div className="p-6">
             <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_32px_rgba(25,70,105,0.10)]">
 
-              {/* ── Navy top accent bar ── */}
-              <div className="h-1.5 w-full" style={{ background: `linear-gradient(90deg, ${pc} 0%, ${ac} 100%)` }} />
-
               {/* ── Document header ── */}
               <div className="relative px-10 pt-8 pb-7 overflow-hidden">
                 {d?.decorDataUrl
@@ -148,21 +145,13 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
                 {/* Contract title */}
                 <div className="relative z-10">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2" style={{ color: ac }}>Smlouva</p>
-                  <h1 style={{ fontFamily: ff, fontSize: 26, fontWeight: hStyle.fontWeight, fontStyle: hStyle.italic ? 'italic' : 'normal', color: pc, letterSpacing: '-0.4px', lineHeight: 1.2, marginBottom: 12 }}>
+                  <p className="text-[10px] font-semibold mb-3" style={{ color: ac }}>
+                    {d?.companyName ?? 'Four Bros s.r.o.'} &nbsp;·&nbsp; {contract.employeeName}
+                  </p>
+                  <h1 style={{ fontFamily: ff, fontSize: 26, fontWeight: hStyle.fontWeight, fontStyle: hStyle.italic ? 'italic' : 'normal', color: pc, letterSpacing: '-0.4px', lineHeight: 1.2, marginBottom: 16 }}>
                     {contract.templateName}
                   </h1>
-                  <div className="flex items-center gap-4 flex-wrap">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Připraveno pro</span>
-                      <span className="text-xs font-semibold" style={{ color: pc }}>{contract.employeeName}</span>
-                    </div>
-                    <div className="w-px h-3 bg-slate-200" />
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Připraveno kým</span>
-                      <span className="text-xs font-semibold" style={{ color: pc }}>{d?.companyName ?? 'Four Bros s.r.o.'}</span>
-                    </div>
-                  </div>
+                  <div className="w-10 h-0.5 rounded-full" style={{ background: ac }} />
                 </div>
               </div>
 
