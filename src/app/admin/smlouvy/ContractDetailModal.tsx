@@ -3,9 +3,10 @@
 import { Contract, ContractStatus, ContractTemplate } from '@/lib/mock-data'
 import { printContract } from '@/lib/print-contract'
 import { loadDesign, fontStack } from '@/app/admin/smlouvy/ContractDesignerClient'
-import { X, CheckCircle2, User, Building2, Download, Pen, Clock } from 'lucide-react'
+import { X, CheckCircle2, User, Building2, Download, Pen, Clock, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
+import { SigniSimulationModal } from './SigniSimulationModal'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
   DRAFT: 'Návrh',
@@ -40,6 +41,7 @@ const BrandWatercolor = ({ className }: { className?: string }) => (
 export function ContractDetailModal({ contract, template, onClose, onSign }: Props) {
   const filledBody = fillPlaceholders(template?.body ?? '', contract.values)
   const [design, setDesign] = useState<ContractDesign | null>(null)
+  const [showSigni, setShowSigni] = useState(false)
   useEffect(() => { setDesign(loadDesign()) }, [])
   const d = design
   const pc  = d?.primaryColor ?? '#194669'
@@ -235,6 +237,16 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                 Podepsat jako vedení
               </button>
             )}
+            {(contract.status === 'PENDING_EMPLOYEE' || contract.status === 'DRAFT') && (
+              <button
+                onClick={() => setShowSigni(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-colors"
+                style={{ borderColor: '#0EA5A4', color: '#0EA5A4', background: '#0EA5A410' }}
+              >
+                <Send className="w-3.5 h-3.5" />
+                Odeslat k e-podpisu
+              </button>
+            )}
             <button
               onClick={() => printContract(contract, template)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
@@ -284,6 +296,8 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
         .contract-body li { margin-bottom: 5px; }
         .contract-body strong { font-weight: 700; }
       `}</style>
+
+      {showSigni && <SigniSimulationModal contract={contract} onClose={() => setShowSigni(false)} />}
     </div>
   )
 }
