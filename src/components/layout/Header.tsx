@@ -11,10 +11,14 @@ interface HeaderProps {
 
 export function Header({ title, onMenuClick, userName }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-slate-200/50 px-6 py-3.5 flex items-center gap-4">
+    <header className="relative sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-slate-200/50 px-6 py-3.5 flex items-center gap-4 overflow-hidden">
+      <div
+        className="absolute -top-16 right-12 w-48 h-48 rounded-full pointer-events-none -z-10"
+        style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.10), transparent 70%)', filter: 'blur(30px)' }}
+      />
       <button
         onClick={onMenuClick}
-        className="lg:hidden text-navy p-2 rounded-xl hover:bg-slate-100 transition-colors"
+        className="lg:hidden text-navy p-2 rounded-full hover:bg-slate-100 transition-colors"
       >
         <Menu className="w-5 h-5" />
       </button>
@@ -24,18 +28,24 @@ export function Header({ title, onMenuClick, userName }: HeaderProps) {
       <div className="flex items-center gap-2">
         <Link
           href="/pravidla"
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-all duration-150"
+          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-all duration-150"
         >
           <BookOpen className="w-4 h-4" />
           Pravidla
         </Link>
-        <button className="relative p-2 text-slate-400 hover:text-navy rounded-xl hover:bg-slate-100 transition-all duration-150">
+        <button className="relative p-2 text-slate-400 hover:text-navy rounded-full hover:bg-slate-100 transition-all duration-150">
           <Bell className="w-5 h-5" />
         </button>
-        <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center shadow-sm ring-2 ring-white">
-          <span className="text-white text-xs font-semibold">
-            {userName?.[0]?.toUpperCase() || 'U'}
-          </span>
+        <div className="relative flex-shrink-0">
+          <div
+            className="absolute -inset-0.5 rounded-full opacity-40"
+            style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(4px)' }}
+          />
+          <div className="relative w-8 h-8 bg-violet rounded-full flex items-center justify-center ring-2 ring-white">
+            <span className="text-white text-xs font-semibold">
+              {userName?.[0]?.toUpperCase() || 'U'}
+            </span>
+          </div>
         </div>
       </div>
     </header>

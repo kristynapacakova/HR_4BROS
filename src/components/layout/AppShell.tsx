@@ -18,7 +18,7 @@ export function AppShell({ children, title, isAdmin, userName, userEmail, employ
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F2F2F7]">
+    <div className="flex h-screen overflow-hidden bg-[#F7F8FE]">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div

@@ -84,11 +84,12 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
         href={href}
         onClick={onClose}
         className={cn(
-          'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+          'flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all duration-150',
           isActive
-            ? 'bg-white/15 text-white'
+            ? 'text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
             : 'text-navy-300 hover:bg-white/[0.08] hover:text-white'
         )}
+        style={isActive ? { background: 'linear-gradient(135deg, rgba(126,23,224,0.35), rgba(126,23,224,0.12))' } : undefined}
       >
         <Icon className={cn('w-4 h-4 flex-shrink-0 transition-colors', isActive ? 'text-violet-light' : '')} />
         <span className="flex-1">{label}</span>
@@ -99,9 +100,15 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
   }
 
   return (
-    <div className="flex flex-col h-full bg-navy text-white">
+    <div className="relative flex flex-col h-full bg-navy text-white overflow-hidden">
+      {/* Soft violet glow accent */}
+      <div
+        className="absolute -top-24 -left-20 w-64 h-64 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.25), transparent 70%)', filter: 'blur(40px)' }}
+      />
+
       {/* Logo header */}
-      <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.07]">
+      <div className="relative flex items-center justify-between px-5 py-5 border-b border-white/[0.07]">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-violet rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
             <span className="text-white font-headline font-bold text-sm">4B</span>
@@ -129,11 +136,12 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
           href="/onboarding"
           onClick={onClose}
           className={cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+            'flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all duration-150',
             pathname === '/onboarding'
-              ? 'bg-white/15 text-white'
+              ? 'text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
               : 'text-navy-300 hover:bg-white/[0.08] hover:text-white'
           )}
+          style={pathname === '/onboarding' ? { background: 'linear-gradient(135deg, rgba(126,23,224,0.35), rgba(126,23,224,0.12))' } : undefined}
         >
           <ClipboardList className={cn('w-4 h-4 flex-shrink-0', pathname === '/onboarding' ? 'text-violet-light' : '')} />
           <span className="flex-1">Onboarding</span>
