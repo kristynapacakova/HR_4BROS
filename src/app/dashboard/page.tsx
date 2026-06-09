@@ -136,7 +136,7 @@ export default async function DashboardPage() {
 
           {/* Dovolená */}
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 group hover:border-green-200 transition-colors">
-            <div className="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center mb-4">
+            <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center mb-4">
               <CalendarDays className="w-4 h-4 text-green-600" />
             </div>
             <p className="text-2xl font-headline text-navy">{leaveBalance.annualTotal - leaveBalance.annualUsed}</p>
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
 
           {/* Čekající žádosti */}
           <div className={`rounded-2xl border shadow-sm p-5 transition-colors ${totalPending > 0 ? 'bg-amber-50 border-amber-200' : 'bg-white border-slate-100'}`}>
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-4 ${totalPending > 0 ? 'bg-amber-100' : 'bg-slate-50'}`}>
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center mb-4 ${totalPending > 0 ? 'bg-amber-100' : 'bg-slate-50'}`}>
               <Clock className={`w-4 h-4 ${totalPending > 0 ? 'text-amber-600' : 'text-slate-400'}`} />
             </div>
             <p className={`text-2xl font-headline ${totalPending > 0 ? 'text-amber-800' : 'text-navy'}`}>{totalPending}</p>
@@ -161,7 +161,7 @@ export default async function DashboardPage() {
 
           {/* Výplata */}
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-blue-200 transition-colors">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center mb-4">
+            <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center mb-4">
               <Banknote className="w-4 h-4 text-blue-600" />
             </div>
             <p className="text-2xl font-headline text-navy">{formatCurrency(latestPayslip.netAmount, latestPayslip.currency)}</p>
@@ -172,7 +172,7 @@ export default async function DashboardPage() {
           {/* Zvýšení / tenure */}
           {raiseInDays != null && raiseInDays > 0 ? (
             <div className="bg-gradient-to-br from-violet to-violet-dark rounded-2xl shadow-sm p-5 text-white">
-              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center mb-4">
+              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center mb-4">
                 <TrendingUp className="w-4 h-4 text-white" />
               </div>
               <p className="text-2xl font-headline">+{formatCurrency(salary.nextRaiseAmount, salary.currency)}</p>
@@ -183,7 +183,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-violet/20 transition-colors">
-              <div className="w-9 h-9 rounded-xl bg-violet/10 flex items-center justify-center mb-4">
+              <div className="w-9 h-9 rounded-full bg-violet/10 flex items-center justify-center mb-4">
                 <Briefcase className="w-4 h-4 text-violet" />
               </div>
               <p className="text-2xl font-headline text-navy">{tenure}</p>
@@ -202,12 +202,15 @@ export default async function DashboardPage() {
             <div className="flex flex-wrap gap-3 overflow-x-auto">
               {todayAbsences.map((absence) => (
                 <div key={absence.id} className="flex items-center gap-2 flex-shrink-0">
-                  <div className="w-8 h-8 bg-navy rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-xs font-semibold">{absence.userName[0]}</span>
+                  <div className="relative flex-shrink-0">
+                    <div className="absolute -inset-0.5 rounded-full opacity-30" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(4px)' }} />
+                    <div className="relative w-8 h-8 bg-navy rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-semibold">{absence.userName[0]}</span>
+                    </div>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-navy leading-tight">{absence.userName}</p>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
                       absence.type === 'SICK' ? 'bg-red-50 text-red-600' :
                       absence.type === 'ANNUAL' ? 'bg-green-50 text-green-700' :
                       'bg-blue-50 text-blue-700'
@@ -235,7 +238,7 @@ export default async function DashboardPage() {
                 const urgent = alert.days <= 7
                 return (
                   <div key={i} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${urgent ? 'bg-violet/5 border border-violet/20' : 'hover:bg-slate-50'} transition-colors`}>
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${urgent ? 'bg-violet/10' : 'bg-slate-100'}`}>
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${urgent ? 'bg-violet/10' : 'bg-slate-100'}`}>
                       <Icon className={`w-3.5 h-3.5 ${urgent ? 'text-violet' : 'text-slate-400'}`} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -365,10 +368,10 @@ export default async function DashboardPage() {
                   <Link
                     key={link.label}
                     href={link.href}
-                    className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors group"
+                    className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-full hover:bg-slate-50 transition-colors group"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold ${link.color}`}>
+                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${link.color}`}>
                         {link.label[0]}
                       </span>
                       <span className="text-sm text-navy">{link.label}</span>
