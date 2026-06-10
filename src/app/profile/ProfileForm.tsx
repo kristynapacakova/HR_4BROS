@@ -49,7 +49,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Demo notice */}
-      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+      <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl">
         <p className="text-amber-800 text-xs">Demo verze — změny se neukládají</p>
       </div>
 
@@ -94,7 +94,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
         <button
           type="submit"
           disabled={saving}
-          className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+          className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 rounded-full transition-colors disabled:opacity-50 shadow-sm"
         >
           {saving ? 'Ukládám...' : 'Uložit změny'}
         </button>
@@ -106,7 +106,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
       <h3 className="font-headline font-semibold text-navy mb-4 pb-3 border-b border-slate-100">{title}</h3>
       {children}
     </div>

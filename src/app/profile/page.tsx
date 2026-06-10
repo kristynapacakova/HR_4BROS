@@ -25,12 +25,15 @@ export default async function ProfilePage() {
     >
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Profile header */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="flex items-center gap-5">
-            <div className="w-16 h-16 bg-navy rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">
-              <span className="text-white font-headline text-2xl font-bold">
-                {user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
-              </span>
+            <div className="relative flex-shrink-0">
+              <div className="absolute -inset-1 rounded-full opacity-30" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }} />
+              <div className="relative w-16 h-16 bg-navy rounded-full flex items-center justify-center">
+                <span className="text-white font-headline text-2xl font-bold">
+                  {user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
+                </span>
+              </div>
             </div>
             <div>
               <h2 className="text-xl font-headline font-bold text-navy">{user.name || '—'}</h2>
