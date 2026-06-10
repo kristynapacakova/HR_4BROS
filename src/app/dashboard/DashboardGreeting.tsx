@@ -26,11 +26,6 @@ export function DashboardGreeting({ name, position, department, tenure }: Props)
         className="absolute -right-20 -top-20 w-80 h-80 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.30), transparent 70%)', filter: 'blur(48px)' }}
       />
-      {/* Watercolor accent strip */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none opacity-20"
-        style={{ backgroundImage: "url('/brand/watercolor.png')", backgroundSize: 'cover', backgroundPosition: 'center bottom' }}
-      />
 
       <div className="relative z-10 px-7 py-6 flex items-center justify-between flex-wrap gap-4">
         <div>
