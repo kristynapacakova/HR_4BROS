@@ -52,6 +52,7 @@ function tenure(startDate?: Date | null): string {
 
 export function ProfileTabs({
   user, assets, assetTypes, assetConditions, isAdmin, hrData, seniorityLevels, employmentTypes,
+  payslipsLabel, payslipsPanel, timeOffPanel, documentsPanel, onboardingPanel,
 }: {
   user: User & { startDate?: Date | null }
   assets: Asset[]
@@ -61,11 +62,20 @@ export function ProfileTabs({
   hrData?: HRData
   seniorityLevels?: { value: string; label: string }[]
   employmentTypes?: { value: string; label: string }[]
+  payslipsLabel?: string
+  payslipsPanel?: React.ReactNode
+  timeOffPanel?: React.ReactNode
+  documentsPanel?: React.ReactNode
+  onboardingPanel?: React.ReactNode
 }) {
   const tabs = [
     { id: 'udaje', label: 'Osobní údaje' },
     { id: 'majetek', label: 'Zapůjčený majetek' },
     { id: 'hr', label: 'HR údaje' },
+    { id: 'vyplata', label: payslipsLabel ?? 'Moje výplata' },
+    { id: 'dochazka', label: 'Moje docházka' },
+    { id: 'dokumenty', label: 'Dokumenty a smlouvy' },
+    { id: 'onboarding', label: 'Onboarding | Offboarding' },
   ] as const
   type TabId = typeof tabs[number]['id']
   const [tab, setTab] = useState<TabId>('udaje')
@@ -79,12 +89,12 @@ export function ProfileTabs({
   return (
     <div>
       {/* Tab bar */}
-      <div className="flex gap-1 bg-white rounded-full border border-slate-100 shadow-sm p-1 mb-5">
+      <div className="flex gap-1 bg-white rounded-full border border-slate-100 shadow-sm p-1 mb-5 overflow-x-auto">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id as TabId)}
-            className={`flex-1 py-2 text-sm font-medium rounded-full transition-all ${
+            className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${
               tab === t.id ? 'bg-navy text-white shadow-sm' : 'text-slate-500 hover:text-navy'
             }`}
           >
@@ -221,6 +231,18 @@ export function ProfileTabs({
           </div>
         </div>
       )}
+
+      {/* Moje výplata */}
+      {tab === 'vyplata' && payslipsPanel}
+
+      {/* Moje docházka */}
+      {tab === 'dochazka' && timeOffPanel}
+
+      {/* Dokumenty a smlouvy */}
+      {tab === 'dokumenty' && documentsPanel}
+
+      {/* Onboarding | Offboarding */}
+      {tab === 'onboarding' && onboardingPanel}
     </div>
   )
 }

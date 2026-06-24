@@ -6,10 +6,6 @@ import { signOut } from 'next-auth/react'
 import {
   LayoutDashboard,
   User,
-  ClipboardList,
-  FileText,
-  CalendarDays,
-  Banknote,
   ShieldCheck,
   LogOut,
   Users,
@@ -23,7 +19,6 @@ import {
   Coins,
   FilePen,
   X,
-  Lock,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -32,13 +27,8 @@ const staticNavItemsBefore = [
   { label: 'Můj účet', href: '/profile', icon: User },
 ]
 
-const staticNavItemsMid = [
-  { label: 'Moje docházka', href: '/time-off', icon: CalendarDays },
-]
-
 const staticNavItemsAfter = [
   { label: 'Schránka důvěry', href: '/feedback', icon: MessageSquareHeart },
-  { label: 'Dokumenty a smlouvy', href: '/documents', icon: FileText },
   { label: 'Interní směrnice', href: '/smernice', icon: BookOpen },
   { label: 'Tým Four Bros', href: '/team', icon: Users2 },
 ]
@@ -68,13 +58,7 @@ interface SidebarProps {
 export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboardingUnlocked, onClose }: SidebarProps) {
   const pathname = usePathname()
 
-  const payslipItem = {
-    label: employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata',
-    href: '/payslips',
-    icon: Banknote,
-  }
-
-  const navItems = [...staticNavItemsBefore, payslipItem, ...staticNavItemsMid, ...staticNavItemsAfter]
+  const navItems = [...staticNavItemsBefore, ...staticNavItemsAfter]
 
   const navLink = (href: string, label: string, Icon: React.ComponentType<{ className?: string }>, extra?: React.ReactNode) => {
     const isActive = pathname === href
@@ -130,27 +114,6 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
         <p className="px-3 text-[10px] font-semibold text-navy-400 uppercase tracking-widest mb-2 mt-1">Navigace</p>
 
         {navItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
-
-        {/* Onboarding | Offboarding */}
-        <Link
-          href="/onboarding"
-          onClick={onClose}
-          className={cn(
-            'flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all duration-150',
-            pathname === '/onboarding'
-              ? 'text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
-              : 'text-navy-300 hover:bg-white/[0.08] hover:text-white'
-          )}
-          style={pathname === '/onboarding' ? { background: 'linear-gradient(135deg, rgba(126,23,224,0.35), rgba(126,23,224,0.12))' } : undefined}
-        >
-          <ClipboardList className={cn('w-4 h-4 flex-shrink-0', pathname === '/onboarding' ? 'text-violet-light' : '')} />
-          <span className="flex-1">Onboarding</span>
-          <span className="text-navy-500 text-xs mx-0.5">·</span>
-          <span className={cn('flex items-center gap-1 text-xs', offboardingUnlocked ? 'text-green-400' : 'text-navy-500')}>
-            {offboardingUnlocked ? 'Offboarding' : <><Lock className="w-2.5 h-2.5" /><span>Offboarding</span></>}
-          </span>
-          {pathname === '/onboarding' && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-violet-light flex-shrink-0" />}
-        </Link>
 
         {isAdmin && (
           <>

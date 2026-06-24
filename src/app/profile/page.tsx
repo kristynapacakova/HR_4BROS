@@ -2,8 +2,12 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
-import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_ONBOARDING_TASKS, DEMO_OFFBOARDING_TASKS } from '@/lib/mock-data'
 import { ProfileTabs } from './ProfileTabs'
+import { PayslipsClient } from '@/app/payslips/PayslipsClient'
+import { OnboardingClient } from '@/app/onboarding/OnboardingClient'
+import { TimeOffPanel } from './panels/TimeOffPanel'
+import { DocumentsPanel } from './panels/DocumentsPanel'
 
 export default async function ProfilePage() {
   const session = await auth()
@@ -14,6 +18,9 @@ export default async function ProfilePage() {
 
   const userId = isAdmin ? 'demo-admin-1' : 'demo-employee-1'
   const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === userId)
+
+  const payslipsLabel = user.employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata'
+  const offboardingUnlocked = (user as typeof DEMO_USER & { offboardingUnlocked?: boolean }).offboardingUnlocked ?? false
 
   return (
     <AppShell
@@ -62,6 +69,25 @@ export default async function ProfilePage() {
           }}
           seniorityLevels={SENIORITY_LEVELS}
           employmentTypes={EMPLOYMENT_TYPES}
+          payslipsLabel={payslipsLabel}
+          payslipsPanel={
+            <PayslipsClient
+              payslips={DEMO_PAYSLIPS}
+              salaryInfo={DEMO_SALARY_INFO}
+              employmentType={user.employmentType ?? 'HPP'}
+              pageTitle={payslipsLabel}
+            />
+          }
+          timeOffPanel={<TimeOffPanel />}
+          documentsPanel={<DocumentsPanel isHPP={user.employmentType === 'HPP'} />}
+          onboardingPanel={
+            <OnboardingClient
+              onboardingTasks={DEMO_ONBOARDING_TASKS}
+              offboardingTasks={DEMO_OFFBOARDING_TASKS}
+              offboardingUnlocked={offboardingUnlocked}
+              isAdmin={isAdmin}
+            />
+          }
         />
       </div>
     </AppShell>
