@@ -6,6 +6,7 @@ import { signOut } from 'next-auth/react'
 import {
   LayoutDashboard,
   User,
+  ClipboardList,
   ShieldCheck,
   LogOut,
   Users,
@@ -35,6 +36,7 @@ const staticNavItemsAfter = [
 
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: ShieldCheck },
+  { label: 'Průvodce on/offboardingem', href: '/admin/pruvodce', icon: ClipboardList },
   { label: 'Uživatelé', href: '/admin/employees', icon: Users },
   { label: 'Přehled docházky', href: '/admin/leave-calendar', icon: CalendarRange },
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },

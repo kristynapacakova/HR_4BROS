@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
 import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package } from 'lucide-react'
 
@@ -78,7 +79,10 @@ export function ProfileTabs({
     { id: 'onboarding', label: 'Onboarding | Offboarding' },
   ] as const
   type TabId = typeof tabs[number]['id']
-  const [tab, setTab] = useState<TabId>('udaje')
+  const searchParams = useSearchParams()
+  const requestedTab = searchParams.get('tab')
+  const initialTab = tabs.some(t => t.id === requestedTab) ? (requestedTab as TabId) : 'udaje'
+  const [tab, setTab] = useState<TabId>(initialTab)
 
   const efficiency = hrData?.monthlyHours && hrData.clientHours
     ? Math.round((hrData.clientHours / hrData.monthlyHours) * 100)
