@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
-  CheckCircle2, Circle, ChevronLeft, ChevronRight, PartyPopper,
+  CheckCircle2, Circle, ChevronLeft, ChevronRight, ChevronDown, PartyPopper,
   ClipboardList, RotateCcw, UserPlus, UserMinus, ArrowRight,
 } from 'lucide-react'
-import { ONBOARDING_PHASES, OFFBOARDING_PHASES, type GuidePhase } from './guide-data'
+import { ONBOARDING_PHASES, OFFBOARDING_PHASES, type GuidePhase, type GuideStep } from './guide-data'
 
 type Mode = 'onboarding' | 'offboarding'
 
@@ -36,11 +36,18 @@ function load(): StoredState {
   }
 }
 
+// Every checkable unit: itemless steps count as one unit, steps with items
+// count one unit per item — the step itself is derived (done = all items done).
+function itemIds(step: GuideStep): string[] {
+  return step.items ? step.items.map((_, i) => `${step.id}::${i}`) : [step.id]
+}
+
 export function PruvodceClient() {
   const [mode, setMode] = useState<Mode>('onboarding')
   const [phaseIdx, setPhaseIdx] = useState(0)
   const [state, setState] = useState<StoredState>(EMPTY)
   const [hydrated, setHydrated] = useState(false)
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     setState(load())
@@ -55,23 +62,37 @@ export function PruvodceClient() {
   const checked = new Set(state[mode].checked)
   const memberName = state[mode].name
 
-  const allSteps = useMemo(() => phases.flatMap(p => p.steps), [phases])
-  const doneCount = allSteps.filter(s => checked.has(s.id)).length
-  const totalCount = allSteps.length
+  const isStepDone = (s: GuideStep) => itemIds(s).every(id => checked.has(id))
+
+  const allUnits = phases.flatMap(p => p.steps.flatMap(itemIds))
+  const doneCount = allUnits.filter(id => checked.has(id)).length
+  const totalCount = allUnits.length
   const pct = Math.round((doneCount / totalCount) * 100)
   const allDone = doneCount === totalCount
 
   const phase = phases[Math.min(phaseIdx, phases.length - 1)]
-  const phaseDone = (p: GuidePhase) => p.steps.every(s => checked.has(s.id))
+  const phaseDone = (p: GuidePhase) => p.steps.every(isStepDone)
 
-  const toggleStep = (id: string) => {
+  const applyChecked = (mutate: (cur: Set<string>) => void) => {
     setState(prev => {
       const cur = new Set(prev[mode].checked)
-      if (cur.has(id)) cur.delete(id)
-      else cur.add(id)
+      mutate(cur)
       return { ...prev, [mode]: { ...prev[mode], checked: Array.from(cur) } }
     })
   }
+
+  // Step-level checkbox: checks/unchecks the whole step incl. all its items
+  const toggleStep = (step: GuideStep) => {
+    const ids = itemIds(step)
+    const done = ids.every(id => checked.has(id))
+    applyChecked(cur => ids.forEach(id => (done ? cur.delete(id) : cur.add(id))))
+  }
+
+  const toggleItem = (id: string) =>
+    applyChecked(cur => (cur.has(id) ? cur.delete(id) : cur.add(id)))
+
+  const toggleExpand = (id: string) =>
+    setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
 
   const setName = (name: string) =>
     setState(prev => ({ ...prev, [mode]: { ...prev[mode], name } }))
@@ -169,8 +190,8 @@ export function PruvodceClient() {
                 </p>
                 <p className="text-white/60 text-sm mt-0.5">
                   {mode === 'onboarding'
-                    ? `Všech ${totalCount} kroků je hotových. Teď můžeš předat zbytek onboardingu ${memberName || 'novému členovi'} formou checklistu.`
-                    : `Všech ${totalCount} kroků je hotových. Spolupráce je řádně ukončena.`}
+                    ? `Všech ${totalCount} bodů je hotových. Teď můžeš předat zbytek onboardingu ${memberName || 'novému členovi'} formou checklistu.`
+                    : `Všech ${totalCount} bodů je hotových. Spolupráce je řádně ukončena.`}
                 </p>
               </div>
             </div>
@@ -195,7 +216,7 @@ export function PruvodceClient() {
           {phases.map((p, i) => {
             const done = phaseDone(p)
             const active = i === phaseIdx
-            const doneSteps = p.steps.filter(s => checked.has(s.id)).length
+            const doneSteps = p.steps.filter(isStepDone).length
             return (
               <button
                 key={p.id}
@@ -234,43 +255,82 @@ export function PruvodceClient() {
           </div>
 
           {phase.steps.map(step => {
-            const done = checked.has(step.id)
+            const done = isStepDone(step)
+            const hasItems = !!step.items?.length
+            const stepItemDone = hasItems ? itemIds(step).filter(id => checked.has(id)).length : 0
+            const isOpen = expanded[step.id] ?? false
             return (
               <div
                 key={step.id}
-                className={`bg-white rounded-2xl border shadow-sm p-5 transition-all ${
+                className={`bg-white rounded-2xl border shadow-sm transition-all ${
                   done ? 'border-green-200 bg-green-50/40' : 'border-slate-100'
                 }`}
               >
-                <div className="flex items-start gap-3.5">
+                {/* Step header */}
+                <div className="flex items-start gap-3.5 p-5">
                   <button
-                    onClick={() => toggleStep(step.id)}
+                    onClick={() => toggleStep(step)}
                     className="flex-shrink-0 mt-0.5 transition-transform hover:scale-110"
+                    title={hasItems ? (done ? 'Odškrtnout celý krok' : 'Označit celý krok jako hotový') : undefined}
                     aria-label={done ? 'Označit jako nehotové' : 'Označit jako hotové'}
                   >
                     {done
                       ? <CheckCircle2 className="w-6 h-6 text-green-500" />
                       : <Circle className="w-6 h-6 text-slate-200 hover:text-violet transition-colors" />}
                   </button>
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-headline font-semibold ${done ? 'text-green-800' : 'text-navy'}`}>{step.title}</p>
+                  <div
+                    className={`flex-1 min-w-0 ${hasItems ? 'cursor-pointer select-none' : ''}`}
+                    onClick={hasItems ? () => toggleExpand(step.id) : undefined}
+                  >
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className={`font-headline font-semibold ${done ? 'text-green-800' : 'text-navy'}`}>{step.title}</p>
+                      {hasItems && (
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                          done ? 'bg-green-100 text-green-700' : stepItemDone > 0 ? 'bg-violet/10 text-violet' : 'bg-slate-100 text-slate-400'
+                        }`}>
+                          {stepItemDone}/{step.items!.length}
+                        </span>
+                      )}
+                    </div>
                     <p className={`text-sm mt-1 leading-relaxed ${done ? 'text-green-700/70' : 'text-slate-500'}`}>{step.desc}</p>
-                    {step.items && (
-                      <ul className="mt-3 flex flex-wrap gap-1.5">
-                        {step.items.map(item => (
-                          <li
-                            key={item}
-                            className={`text-xs px-2.5 py-1 rounded-full ${
-                              done ? 'bg-green-100/70 text-green-700' : 'bg-slate-50 text-slate-500'
-                            }`}
-                          >
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
                   </div>
+                  {hasItems && (
+                    <button
+                      onClick={() => toggleExpand(step.id)}
+                      className="flex-shrink-0 mt-1 p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-all"
+                      aria-label={isOpen ? 'Sbalit' : 'Rozbalit body'}
+                    >
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                  )}
                 </div>
+
+                {/* Expandable item checklist — for going point by point with the new hire */}
+                {hasItems && isOpen && (
+                  <div className={`px-5 pb-4 pt-1 ml-[38px] mr-2 border-t ${done ? 'border-green-100' : 'border-slate-50'}`}>
+                    <ul className="pt-3 space-y-1">
+                      {step.items!.map((item, i) => {
+                        const id = `${step.id}::${i}`
+                        const itemDone = checked.has(id)
+                        return (
+                          <li key={id}>
+                            <button
+                              onClick={() => toggleItem(id)}
+                              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-sm transition-colors ${
+                                itemDone ? 'text-green-700' : 'text-navy hover:bg-slate-50'
+                              }`}
+                            >
+                              {itemDone
+                                ? <CheckCircle2 className="w-[18px] h-[18px] text-green-500 flex-shrink-0" />
+                                : <Circle className="w-[18px] h-[18px] text-slate-200 flex-shrink-0" />}
+                              <span className={itemDone ? 'line-through decoration-green-300' : ''}>{item}</span>
+                            </button>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                )}
               </div>
             )
           })}
