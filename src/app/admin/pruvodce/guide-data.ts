@@ -1,11 +1,23 @@
 // Obsah průvodce on/offboardingem — vychází z interní HR procesní mapy Four Bros
 // (fáze 2. PRE ONBOARDING → 3. ONBOARDING a 4. OFFBOARDING → 5. POST OFFBOARDING).
 
+export interface GuideItem {
+  text: string
+  /** Krátký tip zobrazený u bodu */
+  hint?: string
+  /** Detailní postup (mini-manuál) pro režim „krok za krokem" — aby zaškolení zvládl kdokoliv */
+  how?: string[]
+}
+
 export interface GuideStep {
   id: string
   title: string
   desc: string
-  items?: string[]
+  items?: (string | GuideItem)[]
+}
+
+export function normItem(it: string | GuideItem): GuideItem {
+  return typeof it === 'string' ? { text: it } : it
 }
 
 export interface GuidePhase {
@@ -138,30 +150,142 @@ export const ONBOARDING_PHASES: GuidePhase[] = [
         id: 'on-gmail',
         title: 'Gmail',
         desc: 'Společně nastavte účet: dvoufázové ověření, podpis, profilová fotka a aplikace v telefonu.',
-        items: ['Nastavit 2fázové ověření', 'Nastavit podpis', 'Nastavit fotku', 'Stáhnout appku do telefonu'],
+        items: [
+          {
+            text: 'Nastavit 2fázové ověření',
+            hint: 'Povinné pro všechny firemní účty.',
+            how: [
+              'Otevři myaccount.google.com a přihlas se firemním účtem.',
+              'V levém menu zvol „Zabezpečení".',
+              'V sekci „Jak se přihlašujete do Googlu" klikni na „Dvoufázové ověření" → „Začít".',
+              'Zadej telefonní číslo nováčka a zvol ověření SMS (nebo výzvou v telefonu).',
+              'Zadej ověřovací kód a potvrď „Zapnout".',
+            ],
+          },
+          {
+            text: 'Nastavit podpis',
+            how: [
+              'V Gmailu klikni vpravo nahoře na ozubené kolo → „Zobrazit všechna nastavení".',
+              'Na kartě „Obecné" sjeď na sekci „Podpis" a klikni „Vytvořit nový".',
+              'Vlož firemní šablonu podpisu (jméno, pozice, telefon, web fourbros.cz).',
+              'Dole nastav, aby se podpis vkládal do nových e-mailů i odpovědí, a ulož změny.',
+            ],
+          },
+          {
+            text: 'Nastavit fotku',
+            how: [
+              'Na myaccount.google.com otevři „Osobní údaje" → „Fotka".',
+              'Nahraj profesionální fotku (ideálně stejnou jako na web a Slack).',
+            ],
+          },
+          {
+            text: 'Stáhnout appku do telefonu',
+            how: [
+              'App Store / Google Play → vyhledat „Gmail" → nainstalovat.',
+              'Přihlásit se firemním účtem (projde přes 2FA — dobrá kontrola, že funguje).',
+            ],
+          },
+        ],
       },
       {
         id: 'on-kalendar',
         title: 'Google kalendář',
         desc: 'Přidej sdílené kalendáře a nauč nového člena s nimi pracovat.',
         items: [
-          'Přidat meetingovky',
-          'Přidat kalendáře Four Bros členů',
-          'Přidat kalendář „Narozeniny ve Four Bros" + doplnit narozeniny nového člena',
-          'Stáhnout appku do telefonu',
+          {
+            text: 'Přidat meetingovky',
+            how: [
+              'V Google Kalendáři vlevo u „Další kalendáře" klikni na „+".',
+              'Zvol „Procházet zdroje" / „Přihlásit se k odběru kalendáře".',
+              'Přidej kalendáře zasedaček — nováček pak vidí obsazenost při plánování meetingů.',
+            ],
+          },
+          {
+            text: 'Přidat kalendáře Four Bros členů',
+            how: [
+              'U „Další kalendáře" → „+" → „Přihlásit se k odběru kalendáře".',
+              'Postupně zadej e-maily členů týmu, se kterými bude nováček spolupracovat.',
+            ],
+          },
+          {
+            text: 'Přidat kalendář „Narozeniny ve Four Bros" + doplnit narozeniny nováčka',
+            hint: 'Nezapomeň přidat i narozeniny nového člena!',
+            how: [
+              'Nasdílej nováčkovi kalendář „Narozeniny ve Four Bros" (odkaz na odběr).',
+              'Do kalendáře přidej celodenní opakující se událost s narozeninami nového člena.',
+            ],
+          },
+          {
+            text: 'Stáhnout appku do telefonu',
+            how: ['App Store / Google Play → „Google Calendar" → přihlásit firemním účtem.'],
+          },
         ],
       },
       {
         id: 'on-1password',
         title: '1Password',
         desc: 'Projděte vaulty a ulož emergency kit. Vysvětli, které přístupy k nástrojům (Canva, Figma, ChatGPT…) tam najde.',
-        items: ['Zaškolení procesu', 'Uložení emergency kitu', 'Seznámení + vysvětlení', 'Stáhnout appku do telefonu'],
+        items: [
+          {
+            text: 'Přijmout pozvánku a založit účet',
+            how: [
+              'Nováček otevře pozvánkový e-mail „Join Four Bros on 1Password" a klikne na „Join".',
+              'Vyplní jméno a vytvoří si silné hlavní heslo (Master Password) — jediné heslo, které si musí pamatovat.',
+              'Heslo si nikam nepíše do počítače — ideálně do papírového bloku z Four Bros balíčku.',
+            ],
+          },
+          {
+            text: 'Uložit Emergency Kit',
+            hint: 'Bez Emergency Kitu se při ztrátě hesla k účtu nikdo nedostane.',
+            how: [
+              'Po registraci 1Password automaticky nabídne stažení Emergency Kitu (PDF se Secret Key).',
+              'PDF uložit mimo firemní disk (osobní úložiště) a ideálně vytisknout.',
+              'Vysvětli: Secret Key + Master Password = jediná cesta k obnově účtu.',
+            ],
+          },
+          {
+            text: 'Projít vaulty a sdílené přístupy',
+            how: [
+              'Ukaž rozdíl: „Private" vault (osobní) vs. sdílené firemní vaulty.',
+              'Projděte, co ve sdílených vaultech najde: Canva, Figma, ChatGPT, CapCut, Webflow, Google Analytics…',
+              'Pravidlo: každé nové firemní heslo se ukládá do správného sdíleného vaultu, ne do Private.',
+            ],
+          },
+          {
+            text: 'Nainstalovat aplikaci + rozšíření do prohlížeče',
+            how: [
+              'Stáhnout desktopovou appku z 1password.com/downloads.',
+              'Přidat rozšíření do prohlížeče (Chrome Web Store → „1Password") — vyplňuje hesla automaticky.',
+              'Stáhnout mobilní appku (App Store / Google Play) a přihlásit se naskenováním Setup kódu z Emergency Kitu.',
+            ],
+          },
+        ],
       },
       {
         id: 'on-slack',
         title: 'Slack',
         desc: 'Vyplňte profil a projděte kanály — kde se řeší co a jak u nás komunikujeme.',
-        items: ['Vyplnit profil (e-mail, telefon, fotka, jméno | přezdívka)', 'Seznámení s kanály', 'Stáhnout appku do telefonu'],
+        items: [
+          {
+            text: 'Vyplnit profil',
+            how: [
+              'Klikni na svou fotku vpravo nahoře → „Profile" → „Edit profile".',
+              'Vyplň: celé jméno, přezdívku (display name), pozici, telefon a nahraj fotku.',
+            ],
+          },
+          {
+            text: 'Seznámení s kanály',
+            how: [
+              'Projděte společně hlavní kanály: co kam patří (obecné, tým, klienti, random…).',
+              'Ukaž, jak si přidat kanál: „+ Add channels" → „Browse channels".',
+              'Vysvětli zvyklosti: vlákna (threads), @zmínky, emoji reakce místo „ok" zpráv.',
+            ],
+          },
+          {
+            text: 'Stáhnout appku do telefonu',
+            how: ['App Store / Google Play → „Slack" → přihlásit se přes firemní Gmail (SSO).'],
+          },
+        ],
       },
       {
         id: 'on-asana-costlocker',

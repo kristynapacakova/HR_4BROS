@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   CheckCircle2, Circle, ChevronLeft, ChevronRight, ChevronDown, PartyPopper,
-  ClipboardList, RotateCcw, UserPlus, UserMinus, ArrowRight,
+  ClipboardList, RotateCcw, UserPlus, UserMinus, ArrowRight, Play, X, Lightbulb,
 } from 'lucide-react'
-import { ONBOARDING_PHASES, OFFBOARDING_PHASES, type GuidePhase, type GuideStep } from './guide-data'
+import { ONBOARDING_PHASES, OFFBOARDING_PHASES, normItem, type GuidePhase, type GuideStep } from './guide-data'
 
 type Mode = 'onboarding' | 'offboarding'
 
@@ -48,6 +48,7 @@ export function PruvodceClient() {
   const [state, setState] = useState<StoredState>(EMPTY)
   const [hydrated, setHydrated] = useState(false)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+  const [walkthrough, setWalkthrough] = useState<{ step: GuideStep; idx: number } | null>(null)
 
   useEffect(() => {
     setState(load())
@@ -295,13 +296,23 @@ export function PruvodceClient() {
                     <p className={`text-sm mt-1 leading-relaxed ${done ? 'text-green-700/70' : 'text-slate-500'}`}>{step.desc}</p>
                   </div>
                   {hasItems && (
-                    <button
-                      onClick={() => toggleExpand(step.id)}
-                      className="flex-shrink-0 mt-1 p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-all"
-                      aria-label={isOpen ? 'Sbalit' : 'Rozbalit body'}
-                    >
-                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-                    </button>
+                    <div className="flex items-center gap-1.5 flex-shrink-0 mt-0.5">
+                      <button
+                        onClick={() => setWalkthrough({ step, idx: 0 })}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-violet bg-violet/10 hover:bg-violet hover:text-white transition-colors"
+                        title="Spustit grafického průvodce bod po bodu"
+                      >
+                        <Play className="w-3 h-3" />
+                        <span className="hidden sm:inline">Projít krok za krokem</span>
+                      </button>
+                      <button
+                        onClick={() => toggleExpand(step.id)}
+                        className="p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-all"
+                        aria-label={isOpen ? 'Sbalit' : 'Rozbalit body'}
+                      >
+                        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                    </div>
                   )}
                 </div>
 
@@ -309,7 +320,8 @@ export function PruvodceClient() {
                 {hasItems && isOpen && (
                   <div className={`px-5 pb-4 pt-1 ml-[38px] mr-2 border-t ${done ? 'border-green-100' : 'border-slate-50'}`}>
                     <ul className="pt-3 space-y-1">
-                      {step.items!.map((item, i) => {
+                      {step.items!.map((rawItem, i) => {
+                        const item = normItem(rawItem)
                         const id = `${step.id}::${i}`
                         const itemDone = checked.has(id)
                         return (
@@ -323,7 +335,15 @@ export function PruvodceClient() {
                               {itemDone
                                 ? <CheckCircle2 className="w-[18px] h-[18px] text-green-500 flex-shrink-0" />
                                 : <Circle className="w-[18px] h-[18px] text-slate-200 flex-shrink-0" />}
-                              <span className={itemDone ? 'line-through decoration-green-300' : ''}>{item}</span>
+                              <span className={itemDone ? 'line-through decoration-green-300' : ''}>{item.text}</span>
+                              {item.how && (
+                                <span
+                                  className="ml-auto flex-shrink-0 text-[10px] font-semibold text-violet bg-violet/10 px-2 py-0.5 rounded-full cursor-pointer hover:bg-violet hover:text-white transition-colors"
+                                  onClick={e => { e.stopPropagation(); setWalkthrough({ step, idx: i }) }}
+                                >
+                                  návod
+                                </span>
+                              )}
                             </button>
                           </li>
                         )
@@ -361,6 +381,126 @@ export function PruvodceClient() {
           </div>
         </div>
       </div>
+
+      {/* ══ Grafický průvodce — jeden bod = jeden slide ══ */}
+      {walkthrough && (() => {
+        const { step, idx } = walkthrough
+        const items = step.items!.map(normItem)
+        const item = items[idx]
+        const id = `${step.id}::${idx}`
+        const itemDone = checked.has(id)
+        const isLast = idx === items.length - 1
+
+        const closeWt = () => setWalkthrough(null)
+        const goNext = () => (isLast ? closeWt() : setWalkthrough({ step, idx: idx + 1 }))
+        const donAndNext = () => {
+          if (!itemDone) toggleItem(id)
+          goNext()
+        }
+
+        return (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4" style={{ background: 'rgba(14,35,55,0.85)', backdropFilter: 'blur(6px)' }}>
+            <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden">
+              {/* Glow decor */}
+              <div
+                className="absolute -top-24 -right-20 w-72 h-72 rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.12), transparent 70%)', filter: 'blur(30px)' }}
+              />
+
+              {/* Header */}
+              <div className="relative flex items-center justify-between px-7 pt-6 pb-2">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-violet">{step.title}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Bod {idx + 1} z {items.length}</p>
+                </div>
+                <button onClick={closeWt} className="p-2 rounded-full text-slate-300 hover:text-navy hover:bg-slate-50 transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Slide body */}
+              <div className="relative px-7 py-5 min-h-[320px]">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="relative flex-shrink-0">
+                    <div className="absolute -inset-1 rounded-full opacity-30" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(8px)' }} />
+                    <div className="relative w-14 h-14 rounded-full flex items-center justify-center text-white font-headline font-bold text-xl" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)' }}>
+                      {idx + 1}
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-headline font-bold text-navy leading-snug">{item.text}</h3>
+                </div>
+
+                {item.how ? (
+                  <ol className="space-y-2.5">
+                    {item.how.map((h, i) => (
+                      <li key={i} className="flex items-start gap-3 bg-[#F7F8FE] rounded-2xl px-4 py-3">
+                        <span className="w-6 h-6 rounded-full bg-white text-violet text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                          {i + 1}
+                        </span>
+                        <span className="text-sm text-navy leading-relaxed">{h}</span>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="text-sm text-slate-500 leading-relaxed bg-[#F7F8FE] rounded-2xl px-4 py-3">
+                    {step.desc}
+                  </p>
+                )}
+
+                {item.hint && (
+                  <div className="mt-4 flex items-start gap-2.5 bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3">
+                    <Lightbulb className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-amber-700 leading-relaxed">{item.hint}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer: dots + nav */}
+              <div className="relative px-7 py-5 border-t border-slate-100 flex items-center justify-between gap-3">
+                <button
+                  onClick={() => setWalkthrough(idx === 0 ? null : { step, idx: idx - 1 })}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-50 transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  {idx === 0 ? 'Zavřít' : 'Zpět'}
+                </button>
+
+                <div className="flex items-center gap-1.5">
+                  {items.map((_, i) => {
+                    const dotDone = checked.has(`${step.id}::${i}`)
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => setWalkthrough({ step, idx: i })}
+                        className={`rounded-full transition-all ${
+                          i === idx ? 'w-6 h-2 bg-violet' : dotDone ? 'w-2 h-2 bg-green-400' : 'w-2 h-2 bg-slate-200 hover:bg-slate-300'
+                        }`}
+                        aria-label={`Bod ${i + 1}`}
+                      />
+                    )
+                  })}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={goNext}
+                    className="px-4 py-2 rounded-full text-sm font-medium text-slate-400 hover:text-navy transition-colors"
+                  >
+                    Přeskočit
+                  </button>
+                  <button
+                    onClick={donAndNext}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    {isLast ? 'Hotovo — dokončit' : 'Hotovo — další bod'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }
