@@ -73,7 +73,7 @@ export function TeamClient({ members, departments, isAdmin }: {
           <button
             key={d}
             onClick={() => setDept(d)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
               dept === d ? 'bg-navy text-white shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:text-navy'
             }`}
           >
@@ -91,11 +91,17 @@ export function TeamClient({ members, departments, isAdmin }: {
           const days = daysUntilBirthday(member.birthday)
           const birthdaySoon = days !== null && days <= 30
           return (
-            <div key={member.id} className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 flex flex-col gap-3">
+            <div key={member.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-3 hover:shadow-[0_8px_32px_rgba(25,70,105,0.08)] hover:-translate-y-0.5 transition-all duration-200">
               {/* Avatar + name */}
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-2xl flex-shrink-0 border border-slate-100">
-                  {member.emoji}
+                <div className="relative flex-shrink-0">
+                  <div
+                    className="absolute -inset-1 rounded-full opacity-20 pointer-events-none"
+                    style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }}
+                  />
+                  <div className="relative w-12 h-12 rounded-full bg-[#F7F8FE] flex items-center justify-center text-2xl border border-slate-100">
+                    {member.emoji}
+                  </div>
                 </div>
                 <div className="min-w-0">
                   <p className="font-headline font-semibold text-navy truncate">{member.name}</p>
@@ -105,12 +111,12 @@ export function TeamClient({ members, departments, isAdmin }: {
 
               {/* Badges */}
               <div className="flex flex-wrap gap-1.5">
-                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${DEPT_COLORS[member.department] ?? 'bg-slate-100 text-slate-600'}`}>
+                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${DEPT_COLORS[member.department] ?? 'bg-slate-100 text-slate-600'}`}>
                   <Users2 className="w-3 h-3" />
                   {member.department}
                 </span>
                 {member.seniority && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
                     <Briefcase className="w-3 h-3" />
                     {SENIORITY_LABEL[member.seniority] ?? member.seniority}
                   </span>
@@ -123,7 +129,7 @@ export function TeamClient({ members, departments, isAdmin }: {
               )}
 
               {/* Birthday */}
-              <div className={`flex items-center gap-2 text-xs rounded-lg px-3 py-2 ${birthdaySoon ? 'bg-violet/10 text-violet font-medium' : 'bg-slate-50 text-slate-400'}`}>
+              <div className={`flex items-center gap-2 text-xs rounded-full px-3 py-2 ${birthdaySoon ? 'bg-violet/10 text-violet font-medium' : 'bg-slate-50 text-slate-400'}`}>
                 <Cake className="w-3.5 h-3.5 flex-shrink-0" />
                 <span>
                   {member.birthday ? formatBirthday(member.birthday) : 'Narozeniny neuvedeny'}

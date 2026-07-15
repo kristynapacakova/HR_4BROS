@@ -34,22 +34,22 @@ export default async function AdminPage() {
 
         {/* Top stat cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
             <p className="text-xs font-medium text-slate-400 mb-2">Aktivních lidí</p>
             <p className="text-3xl font-headline font-bold text-navy">{s.activePeople}</p>
             <p className="text-xs text-slate-400 mt-1">{s.paidPeople} placených</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
             <p className="text-xs font-medium text-slate-400 mb-2">Měsíční náklady</p>
             <p className="text-2xl font-headline font-bold text-navy">{fmt(s.monthlyCost)}</p>
             <p className="text-xs text-slate-400 mt-1">{fmt(s.annualCost)} / rok</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
             <p className="text-xs font-medium text-slate-400 mb-2">Průměr na osobu</p>
             <p className="text-2xl font-headline font-bold text-navy">{fmt(s.avgCostPerPerson)}</p>
             <p className="text-xs text-slate-400 mt-1">z {s.paidPeople} placených</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
             <p className="text-xs font-medium text-slate-400 mb-2">Efektivita</p>
             <p className="text-3xl font-headline font-bold text-violet">{s.efficiency}%</p>
             <p className="text-xs text-slate-400 mt-1">{s.clientHoursPerMonth.toLocaleString('cs-CZ')} / {s.totalHoursPerMonth.toLocaleString('cs-CZ')} h</p>
@@ -60,7 +60,7 @@ export default async function AdminPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
           {/* Typ smlouvy */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Typ smlouvy</p>
             <div className="space-y-3">
               {s.contractTypes.map((c) => (
@@ -82,7 +82,7 @@ export default async function AdminPage() {
           </div>
 
           {/* Seniorita */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Seniorita</p>
             <div className="space-y-3">
               {s.seniority.map((sr, i) => (
@@ -110,7 +110,7 @@ export default async function AdminPage() {
           </div>
 
           {/* Oddělení */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Oddělení</p>
             <div className="space-y-3">
               {s.departments.map((d, i) => (
@@ -132,7 +132,7 @@ export default async function AdminPage() {
           </div>
 
           {/* Kapacita */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Kapacita</p>
             <div className="space-y-3">
               {[
@@ -152,8 +152,8 @@ export default async function AdminPage() {
 
         {/* Quick links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link href="/admin/employees" className="group bg-white rounded-xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-lg text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
+          <Link href="/admin/employees" className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
+            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
               <Users className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -162,8 +162,8 @@ export default async function AdminPage() {
             </div>
             <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
           </Link>
-          <Link href="/admin/leave-requests" className="group bg-white rounded-xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-lg text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
+          <Link href="/admin/leave-requests" className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
+            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
               <CalendarDays className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -173,8 +173,8 @@ export default async function AdminPage() {
             {pendingLeaves > 0 && <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full">{pendingLeaves}</span>}
             <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
           </Link>
-          <Link href="/admin/odmeny" className="group bg-white rounded-xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-lg text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
+          <Link href="/admin/odmeny" className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
+            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
               <Banknote className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -183,8 +183,8 @@ export default async function AdminPage() {
             </div>
             <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
           </Link>
-          <Link href="/admin/analytics" className="group bg-white rounded-xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-lg text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
+          <Link href="/admin/analytics" className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-violet transition-all flex items-center gap-4">
+            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
               <BarChart2 className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
