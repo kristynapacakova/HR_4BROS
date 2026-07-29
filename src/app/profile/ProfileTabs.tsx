@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
-import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Briefcase as BriefcaseIcon, Banknote, CalendarDays, FileText, ClipboardList, Gift } from 'lucide-react'
+import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Banknote, CalendarDays, FileText, ClipboardList, Gift } from 'lucide-react'
 import { BenefitsPanel } from './panels/BenefitsPanel'
 
 const TYPE_ICONS: Record<string, React.ElementType> = {
@@ -73,7 +73,6 @@ export function ProfileTabs({
   const tabs = [
     { id: 'udaje', label: 'Osobní údaje', icon: UserIcon },
     { id: 'majetek', label: 'Majetek', icon: Laptop },
-    { id: 'hr', label: 'HR údaje', icon: BriefcaseIcon },
     { id: 'vyplata', label: payslipsLabel ?? 'Moje výplata', icon: Banknote },
     { id: 'dochazka', label: 'Docházka', icon: CalendarDays },
     { id: 'benefity', label: 'Benefity', icon: Gift },
@@ -117,13 +116,13 @@ export function ProfileTabs({
         </div>
       </div>
 
-      {/* Osobní údaje */}
+      {/* Osobní údaje + HR údaje */}
       {tab === 'udaje' && (
-        <ProfileForm
-          user={user}
-          employment={{ startDate: (user as { startDate?: Date | null }).startDate, currentSalary: hrData?.monthlySalary ?? null }}
-        />
-      )}
+        <div className="space-y-6">
+          <ProfileForm
+            user={user}
+            employment={{ startDate: (user as { startDate?: Date | null }).startDate, currentSalary: hrData?.monthlySalary ?? null }}
+          />
 
       {/* Zapůjčený majetek */}
       {tab === 'majetek' && (
@@ -171,9 +170,8 @@ export function ProfileTabs({
         </div>
       )}
 
-      {/* HR údaje — visible to all, editable only by admin */}
-      {tab === 'hr' && (
-        <div className="space-y-4">
+          {/* HR údaje — visible to all, editable only by admin */}
+          <div className="space-y-4">
           {/* Summary row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
@@ -251,6 +249,7 @@ export function ProfileTabs({
                 )}
               </div>
             )}
+          </div>
           </div>
         </div>
       )}
