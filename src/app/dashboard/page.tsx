@@ -2,8 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatCurrency } from '@/lib/utils'
-import { CalendarDays, Clock, Banknote, ArrowRight, Cake, Star, AlertCircle } from 'lucide-react'
-import Link from 'next/link'
+import { Clock, Cake, Star } from 'lucide-react'
 import {
   DEMO_USER, DEMO_ADMIN,
   DEMO_TASKS,
@@ -122,134 +121,62 @@ export default async function DashboardPage() {
     <AppShell title="Dashboard" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
       <div className="max-w-5xl mx-auto space-y-5">
 
-        {/* Hero greeting */}
+        {/* Hero greeting with inline stats */}
         <DashboardGreeting
           name={(user?.name || session.user.email || '').split(' ')[0]}
           position={user?.position || undefined}
           department={user?.department || undefined}
           tenure={tenure}
           startDate={startDate.toISOString()}
+          stats={[
+            { value: `${leaveBalance.annualTotal - leaveBalance.annualUsed}`, label: 'dní dovolené' },
+            { value: `${totalPending}`, label: totalPending === 0 ? 'žádosti — vše vyřízeno' : 'čekající žádosti' },
+            { value: formatCurrency(latestPayslip.netAmount, latestPayslip.currency), label: `výplata · ${MONTH_NAMES[latestPayslip.month - 1].toLowerCase()}` },
+          ]}
         />
 
-        {/* Stat cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Dnes — absences + nearest events in one card */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h3 className="font-headline text-navy mb-4">Dnes</h3>
 
-          {/* Dovolená */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 group hover:border-green-200 transition-colors">
-            <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center mb-4">
-              <CalendarDays className="w-4 h-4 text-green-600" />
-            </div>
-            <p className="text-2xl font-headline text-navy">{leaveBalance.annualTotal - leaveBalance.annualUsed}</p>
-            <p className="text-xs font-medium text-slate-500 mt-0.5">dní dovolené</p>
-            <div className="mt-3 w-full bg-slate-100 rounded-full h-1">
-              <div className="bg-green-400 h-1 rounded-full" style={{ width: `${((leaveBalance.annualTotal - leaveBalance.annualUsed) / leaveBalance.annualTotal) * 100}%` }} />
-            </div>
-            <p className="text-[10px] text-slate-400 mt-1">{leaveBalance.annualUsed} z {leaveBalance.annualTotal} vyčerpáno</p>
-          </div>
-
-          {/* Čekající žádosti */}
-          <div className={`rounded-2xl border shadow-sm p-5 transition-colors ${totalPending > 0 ? 'bg-amber-50 border-amber-200' : 'bg-white border-slate-100'}`}>
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center mb-4 ${totalPending > 0 ? 'bg-amber-100' : 'bg-slate-50'}`}>
-              <Clock className={`w-4 h-4 ${totalPending > 0 ? 'text-amber-600' : 'text-slate-400'}`} />
-            </div>
-            <p className={`text-2xl font-headline ${totalPending > 0 ? 'text-amber-800' : 'text-navy'}`}>{totalPending}</p>
-            <p className={`text-xs font-medium mt-0.5 ${totalPending > 0 ? 'text-amber-700' : 'text-slate-500'}`}>čekajících žádostí</p>
-            <p className={`text-[10px] mt-1 ${totalPending > 0 ? 'text-amber-600' : 'text-slate-400'}`}>
-              {totalPending === 0 ? 'Vše vyřízeno ✓' : `${pendingLeave.length > 0 ? `${pendingLeave.length} dovolená` : ''}${pendingLeave.length > 0 && pendingExpenses.length > 0 ? ', ' : ''}${pendingExpenses.length > 0 ? `${pendingExpenses.length} výdaje` : ''}`}
-            </p>
-          </div>
-
-          {/* Výplata */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-blue-200 transition-colors">
-            <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-              <Banknote className="w-4 h-4 text-blue-600" />
-            </div>
-            <p className="text-2xl font-headline text-navy">{formatCurrency(latestPayslip.netAmount, latestPayslip.currency)}</p>
-            <p className="text-xs font-medium text-slate-500 mt-0.5">poslední výplata</p>
-            <p className="text-[10px] text-slate-400 mt-1">{MONTH_NAMES[latestPayslip.month - 1]} {latestPayslip.year}</p>
-          </div>
-
-        </div>
-
-        {/* Dnes mimo office */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-          <h3 className="font-headline text-navy mb-3 text-sm">Dnes mimo office</h3>
           {todayAbsences.length === 0 ? (
             <p className="text-sm text-slate-500">Všichni jsou dnes v kanceláři 🎉</p>
           ) : (
-            <div className="flex flex-wrap gap-3 overflow-x-auto">
+            <div className="flex flex-wrap gap-x-6 gap-y-3">
               {todayAbsences.map((absence) => (
-                <div key={absence.id} className="flex items-center gap-2 flex-shrink-0">
-                  <div className="relative flex-shrink-0">
-                    <div className="absolute -inset-0.5 rounded-full opacity-30" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(4px)' }} />
-                    <div className="relative w-8 h-8 bg-navy rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-semibold">{absence.userName[0]}</span>
-                    </div>
+                <div key={absence.id} className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-violet text-xs font-semibold">{absence.userName[0]}</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-navy leading-tight">{absence.userName}</p>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                      absence.type === 'SICK' ? 'bg-red-50 text-red-600' :
-                      absence.type === 'ANNUAL' ? 'bg-green-50 text-green-700' :
-                      'bg-blue-50 text-blue-700'
-                    }`}>
-                      {LEAVE_TYPE_CZ[absence.type] || absence.type}
-                    </span>
+                    <p className="text-xs text-slate-400">{LEAVE_TYPE_CZ[absence.type] || absence.type}</p>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
 
-        {/* HR Alerts — admin only */}
-        {isAdmin && hrAlerts.length > 0 && (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <AlertCircle className="w-4 h-4 text-violet" />
-              <h3 className="font-headline text-navy text-sm">Nadcházející události</h3>
-              <span className="ml-auto text-xs bg-violet/10 text-violet px-2 py-0.5 rounded-full font-medium">{hrAlerts.length}</span>
-            </div>
-            <div className="space-y-2">
-              {hrAlerts.map((alert, i) => {
+          {isAdmin && hrAlerts.length > 0 && (
+            <div className="mt-5 pt-5 border-t border-slate-50 space-y-2.5">
+              {hrAlerts.slice(0, 3).map((alert, i) => {
                 const Icon = alert.type === 'birthday' ? Cake : alert.type === 'anniversary' ? Star : Clock
-                const urgent = alert.days <= 7
                 return (
-                  <div key={i} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${urgent ? 'bg-violet/5 border border-violet/20' : 'hover:bg-slate-50'} transition-colors`}>
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${urgent ? 'bg-violet/10' : 'bg-slate-100'}`}>
-                      <Icon className={`w-3.5 h-3.5 ${urgent ? 'text-violet' : 'text-slate-400'}`} />
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-violet/10 flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-3.5 h-3.5 text-violet" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-navy truncate">{alert.name}</p>
-                      <p className="text-xs text-slate-400">{alert.label}</p>
-                    </div>
-                    <span className={`text-xs font-semibold flex-shrink-0 ${urgent ? 'text-violet' : 'text-slate-400'}`}>
+                    <p className="text-sm text-navy flex-1 min-w-0 truncate">
+                      {alert.name} <span className="text-slate-400">· {alert.label}</span>
+                    </p>
+                    <span className="text-xs font-medium text-slate-400 flex-shrink-0">
                       {alert.days === 0 ? 'Dnes!' : `za ${alert.days} dní`}
                     </span>
                   </div>
                 )
               })}
             </div>
-          </div>
-        )}
-
-        {/* Quick actions — compact row */}
-        <div className="flex flex-wrap gap-2">
-          {[
-            { label: 'Žádat o dovolenou', href: '/profile?tab=dochazka' },
-            { label: 'Moje výplata',      href: '/profile?tab=vyplata' },
-            { label: 'Dokumenty',         href: '/profile?tab=dokumenty' },
-            { label: 'Upravit profil',    href: '/profile' },
-          ].map(link => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="group flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-slate-100 shadow-sm text-sm font-medium text-navy hover:border-violet/30 hover:text-violet transition-all"
-            >
-              {link.label}
-              <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-violet group-hover:translate-x-0.5 transition-all" />
-            </Link>
-          ))}
+          )}
         </div>
       </div>
     </AppShell>
