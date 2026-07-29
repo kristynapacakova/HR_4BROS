@@ -171,13 +171,13 @@ export default async function DashboardPage() {
 
           {/* Zvýšení / tenure */}
           {raiseInDays != null && raiseInDays > 0 ? (
-            <div className="bg-gradient-to-br from-violet to-violet-dark rounded-2xl shadow-sm p-5 text-white">
-              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center mb-4">
-                <TrendingUp className="w-4 h-4 text-white" />
+            <div className="bg-white rounded-2xl border border-violet/20 shadow-sm p-5">
+              <div className="w-9 h-9 rounded-full bg-violet/10 flex items-center justify-center mb-4">
+                <TrendingUp className="w-4 h-4 text-violet" />
               </div>
-              <p className="text-2xl font-headline">+{formatCurrency(salary.nextRaiseAmount, salary.currency)}</p>
-              <p className="text-xs font-medium mt-0.5 text-white/70">plánované zvýšení</p>
-              <p className="text-[10px] mt-1 text-white/50">
+              <p className="text-2xl font-headline text-violet">+{formatCurrency(salary.nextRaiseAmount, salary.currency)}</p>
+              <p className="text-xs font-medium mt-0.5 text-slate-500">plánované zvýšení</p>
+              <p className="text-[10px] mt-1 text-slate-400">
                 {salary.nextRaiseDate!.getDate()}. {CZ_MONTHS[salary.nextRaiseDate!.getMonth()]} · za {raiseInMonths} měs.
               </p>
             </div>
