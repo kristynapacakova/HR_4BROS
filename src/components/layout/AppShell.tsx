@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { VersionWatcher } from './VersionWatcher'
 
 interface AppShellProps {
   children: React.ReactNode
@@ -53,6 +54,7 @@ export function AppShell({ children, title, isAdmin, userName, userEmail, employ
         <main className="flex-1 overflow-y-auto p-5 lg:p-7">
           {children}
         </main>
+        <VersionWatcher />
       </div>
     </div>
   )
