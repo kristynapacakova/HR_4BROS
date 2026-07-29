@@ -1,5 +1,8 @@
+'use client'
+
+import { useRef } from 'react'
 import { formatDate, getDaysBetween } from '@/lib/utils'
-import { CalendarDays, Plus, Home } from 'lucide-react'
+import { CalendarDays, Plus, Home, ChevronLeft, ChevronRight } from 'lucide-react'
 import { LeaveRequestForm } from '@/app/time-off/LeaveRequestForm'
 import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
 import { SickNoteUpload } from './SickNoteUpload'
@@ -140,16 +143,46 @@ function HolidayTable({ year, holidays, today }: {
     byMonth.set(h.date.getMonth(), arr)
   }
   const months = Array.from(byMonth.keys()).sort((a, b) => a - b)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const el = scrollRef.current
+    if (!el) return
+    const card = el.querySelector<HTMLElement>('[data-month-card]')
+    const step = card ? card.offsetWidth + 20 : 300
+    el.scrollBy({ left: dir * step, behavior: 'smooth' })
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 className="font-headline font-semibold text-navy">Státní svátky {year}</h3>
-        <span className="text-xs text-slate-400">{holidays.length} svátků</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-slate-400">{holidays.length} svátků</span>
+          <button
+            onClick={() => scrollByCard(-1)}
+            className="p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors"
+            aria-label="Předchozí měsíce"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => scrollByCard(1)}
+            className="p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors"
+            aria-label="Další měsíce"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
-      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div
+        ref={scrollRef}
+        className="p-6 flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none"
+      >
         {months.map(m => (
-          <MonthMini key={m} year={year} month={m} holidays={byMonth.get(m)!} today={today} />
+          <div key={m} data-month-card className="flex-shrink-0 w-[260px] snap-start">
+            <MonthMini year={year} month={m} holidays={byMonth.get(m)!} today={today} />
+          </div>
         ))}
       </div>
     </div>

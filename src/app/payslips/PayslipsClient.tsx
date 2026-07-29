@@ -116,15 +116,15 @@ export function PayslipsClient({
   const [showSickDetail, setShowSickDetail] = useState(false)
 
   const sorted = [...payslips].sort((a, b) => (b.year - a.year) || (b.month - a.month))
-  const recent = sorted.slice(0, 5)
 
   const byYear = sorted.reduce<Record<number, Payslip[]>>((acc, p) => {
     (acc[p.year] ??= []).push(p)
     return acc
   }, {})
   const years = Object.keys(byYear).map(Number).sort((a, b) => b - a)
-  // null = zobrazit „Posledních 5 výplat", jinak konkrétní rok leden–prosinec
-  const [selectedYear, setSelectedYear] = useState<number | null>(null)
+  const currentCalendarYear = new Date().getFullYear()
+  const defaultYear = years.includes(currentCalendarYear) ? currentCalendarYear : (years[0] ?? currentCalendarYear)
+  const [selectedYear, setSelectedYear] = useState<number>(defaultYear)
 
   const latestReal = payslips.find(p => !p.planned)
   const isICO = employmentType === 'ICO'
@@ -210,21 +210,13 @@ export function PayslipsClient({
         )
       })()}
 
-      {/* Přehled výplat — klikatelné roky nahoře, pod tím buď posledních 5, nebo celý zvolený rok */}
+      {/* Přehled výplat — klikatelné roky nahoře, výchozí je aktuální rok */}
       <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy mb-3">
             {isICO ? 'Přehled faktur' : 'Přehled výplat'}
           </h3>
           <div className="flex flex-wrap gap-1">
-            <button
-              onClick={() => setSelectedYear(null)}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
-                selectedYear === null ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
-              }`}
-            >
-              Poslední
-            </button>
             {years.map(y => (
               <button
                 key={y}
@@ -239,16 +231,10 @@ export function PayslipsClient({
           </div>
         </div>
 
-        {selectedYear === null ? (
-          <div className="divide-y divide-slate-50">
-            {recent.length === 0 ? (
-              <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
-            ) : (
-              recent.map(p => <PayslipRow key={p.id} p={p} isICO={isICO} />)
-            )}
-          </div>
-        ) : (
+        {byYear[selectedYear] ? (
           <YearPanel year={selectedYear} payslips={byYear[selectedYear]} isICO={isICO} />
+        ) : (
+          <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
         )}
       </div>
     </div>
