@@ -15,14 +15,16 @@ const REDUCTION_BANDS = [
 ]
 const COMPENSATION_RATE = 0.6      // náhrada mzdy = 60 % redukovaného průměru
 const HOURS_PER_DAY = 8
-const AVG_MONTH_HOURS = 174        // 2088 h / 12 měsíců
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
 }
 
-export function computeSickPay(monthlySalary: number, sickDays: number) {
-  const avgHourly = (monthlySalary * 12) / 2088
+/**
+ * Obecný výpočet náhrady při nemoci — zadá se průměrný hodinový výdělek,
+ * počet hodin běžného pracovního dne a počet dní nemoci.
+ */
+export function computeSickPayGeneric(avgHourly: number, hoursPerDay: number, sickDays: number) {
   // redukce průměrného hodinového výdělku
   let reduced = 0
   let prev = 0
@@ -33,14 +35,19 @@ export function computeSickPay(monthlySalary: number, sickDays: number) {
     }
   }
   const compensationHourly = reduced * COMPENSATION_RATE
-  const compensationDay = compensationHourly * HOURS_PER_DAY
-  const normalDay = (monthlySalary / AVG_MONTH_HOURS) * HOURS_PER_DAY
+  const compensationDay = compensationHourly * hoursPerDay
+  const normalDay = avgHourly * hoursPerDay
   const employerDays = Math.min(sickDays, 14)   // prvních 14 dní platí zaměstnavatel
   const csszDays = Math.max(sickDays - 14, 0)   // od 15. dne platí ČSSZ nemocenské
   const compensationTotal = compensationDay * employerDays
   const normalTotal = normalDay * employerDays
   const deduction = normalTotal - compensationTotal
   return { avgHourly, reduced, compensationHourly, compensationDay, normalDay, employerDays, csszDays, compensationTotal, deduction }
+}
+
+export function computeSickPay(monthlySalary: number, sickDays: number) {
+  const avgHourly = (monthlySalary * 12) / 2088
+  return computeSickPayGeneric(avgHourly, HOURS_PER_DAY, sickDays)
 }
 
 export function SickPayCard({ monthlySalary, initialDays = 0 }: { monthlySalary: number; initialDays?: number }) {

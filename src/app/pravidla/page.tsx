@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
-import { SickPayCard } from '@/app/profile/panels/SickPayCard'
+import { SickPayEstimator } from './SickPayEstimator'
 
 export default async function PravidlaPage() {
   const session = await auth()
@@ -10,8 +10,6 @@ export default async function PravidlaPage() {
 
   const isAdmin = session.user.role === 'ADMIN'
   const user = isAdmin ? DEMO_ADMIN : DEMO_USER
-  const monthlySalary = (user as typeof DEMO_USER).monthlySalary ?? null
-  const isEmployee = ['HPP', 'DPP', 'DPC'].includes(user.employmentType ?? '')
 
   return (
     <AppShell
@@ -127,11 +125,9 @@ export default async function PravidlaPage() {
               <span className="text-violet">https://www.vypocet.cz/popis-vypoctu-nemocenske</span>
             </p>
 
-            {isEmployee && monthlySalary && (
-              <div className="pt-1">
-                <SickPayCard monthlySalary={monthlySalary} />
-              </div>
-            )}
+            <div className="pt-1">
+              <SickPayEstimator />
+            </div>
 
             <p className="text-sm text-slate-600 leading-relaxed">
               Jak má každý z nás možnosti v případě, kdy se člověk necítí dobře? Prvně je preferováno, aby zůstal doma. V závislosti na reálném zdravotním stavu pak každý z nás má následující možnosti:
