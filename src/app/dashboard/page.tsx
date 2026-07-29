@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatCurrency } from '@/lib/utils'
-import { CalendarDays, Clock, Banknote, CheckCircle2, Circle, TrendingUp, Briefcase, ArrowRight, Receipt, Cake, Star, AlertCircle } from 'lucide-react'
+import { CalendarDays, Clock, Banknote, ArrowRight, Cake, Star, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import {
   DEMO_USER, DEMO_ADMIN,
@@ -132,7 +132,7 @@ export default async function DashboardPage() {
         />
 
         {/* Stat cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
           {/* Dovolená */}
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 group hover:border-green-200 transition-colors">
@@ -169,28 +169,6 @@ export default async function DashboardPage() {
             <p className="text-[10px] text-slate-400 mt-1">{MONTH_NAMES[latestPayslip.month - 1]} {latestPayslip.year}</p>
           </div>
 
-          {/* Zvýšení / tenure */}
-          {raiseInDays != null && raiseInDays > 0 ? (
-            <div className="bg-white rounded-2xl border border-violet/20 shadow-sm p-5">
-              <div className="w-9 h-9 rounded-full bg-violet/10 flex items-center justify-center mb-4">
-                <TrendingUp className="w-4 h-4 text-violet" />
-              </div>
-              <p className="text-2xl font-headline text-violet">+{formatCurrency(salary.nextRaiseAmount, salary.currency)}</p>
-              <p className="text-xs font-medium mt-0.5 text-slate-500">plánované zvýšení</p>
-              <p className="text-[10px] mt-1 text-slate-400">
-                {salary.nextRaiseDate!.getDate()}. {CZ_MONTHS[salary.nextRaiseDate!.getMonth()]} · za {raiseInMonths} měs.
-              </p>
-            </div>
-          ) : (
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:border-violet/20 transition-colors">
-              <div className="w-9 h-9 rounded-full bg-violet/10 flex items-center justify-center mb-4">
-                <Briefcase className="w-4 h-4 text-violet" />
-              </div>
-              <p className="text-2xl font-headline text-navy">{tenure}</p>
-              <p className="text-xs font-medium text-slate-500 mt-0.5">ve firmě</p>
-              <p className="text-[10px] text-slate-400 mt-1">od {startDate.getDate()}. {CZ_MONTHS[startDate.getMonth()]} {startDate.getFullYear()}</p>
-            </div>
-          )}
         </div>
 
         {/* Dnes mimo office */}
@@ -255,134 +233,23 @@ export default async function DashboardPage() {
           </div>
         )}
 
-        {/* Main grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-
-          {/* Tasks — wider */}
-          <div className="lg:col-span-3 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="font-headline text-navy">Moje úkoly</h3>
-              <span className="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full">
-                {completedTasks.length}/{tasks.length} hotovo
-              </span>
-            </div>
-
-            {pendingTasks.length > 0 ? (
-              <ul className="space-y-2 mb-4">
-                {pendingTasks.map(task => (
-                  <li key={task.id} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
-                    <Circle className="w-4 h-4 text-slate-200 group-hover:text-violet flex-shrink-0 mt-0.5 transition-colors" />
-                    <div className="flex-1 min-w-0">
-                      <span className="text-sm text-navy">{task.title}</span>
-                      {task.dueDate && (
-                        <p className="text-xs text-slate-400 mt-0.5">Do {task.dueDate.getDate()}. {CZ_MONTHS[task.dueDate.getMonth()]}</p>
-                      )}
-                    </div>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full flex-shrink-0 font-medium ${
-                      task.category === 'ONBOARDING' ? 'bg-violet/10 text-violet' : 'bg-blue-50 text-blue-600'
-                    }`}>
-                      {task.category === 'ONBOARDING' ? 'Onboarding' : 'HR'}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="text-center py-8">
-                <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <CheckCircle2 className="w-7 h-7 text-green-500" />
-                </div>
-                <p className="text-sm font-medium text-navy">Všechny úkoly jsou splněné!</p>
-                <p className="text-xs text-slate-400 mt-1">Nemáš žádné nevyřízené úkoly.</p>
-              </div>
-            )}
-
-            {completedTasks.length > 0 && (
-              <details className="border-t border-slate-50 pt-3">
-                <summary className="text-xs text-slate-400 cursor-pointer hover:text-violet transition-colors select-none">
-                  Hotové úkoly ({completedTasks.length})
-                </summary>
-                <ul className="space-y-1.5 mt-2">
-                  {completedTasks.map(task => (
-                    <li key={task.id} className="flex items-center gap-3 px-3 py-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span className="text-sm text-slate-300 line-through">{task.title}</span>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            )}
-          </div>
-
-          {/* Right column */}
-          <div className="lg:col-span-2 space-y-4">
-
-            {/* Onboarding — only before 100% */}
-            {!onboardingDone && (
-              <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-headline text-navy text-sm">Onboarding</h4>
-                  <span className="text-xs font-semibold text-amber-600">{onboardingPct}%</span>
-                </div>
-                <div className="w-full bg-amber-50 rounded-full h-2">
-                  <div className="bg-amber-400 h-2 rounded-full transition-all" style={{ width: `${onboardingPct}%` }} />
-                </div>
-                <p className="text-xs text-slate-400 mt-2">
-                  {onboardingTasks.filter(t => !t.completed).length} kroků zbývá k dokončení
-                </p>
-              </div>
-            )}
-
-            {/* Pending expenses */}
-            {pendingExpenses.length > 0 && (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-headline text-navy text-sm">Výdaje ke schválení</h4>
-                  <span className="w-5 h-5 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-[10px] font-bold">
-                    {pendingExpenses.length}
-                  </span>
-                </div>
-                <ul className="space-y-2">
-                  {pendingExpenses.map(exp => (
-                    <li key={exp.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Receipt className="w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
-                        <span className="text-xs text-slate-600 truncate">{exp.title}</span>
-                      </div>
-                      <span className="text-xs font-semibold text-navy ml-2 flex-shrink-0">{exp.amount} Kč</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Quick actions */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-              <h4 className="font-headline text-navy text-sm mb-3">Rychlé akce</h4>
-              <div className="space-y-1.5">
-                {[
-                  { label: 'Žádat o dovolenou', href: '/time-off', color: 'text-green-600 bg-green-50' },
-                  { label: 'Proplatit výdaj',   href: '/time-off', color: 'text-amber-600 bg-amber-50' },
-                  { label: 'Výplatní pásky',    href: '/payslips', color: 'text-blue-600 bg-blue-50' },
-                  { label: 'Upravit profil',    href: '/profile',  color: 'text-violet bg-violet/10' },
-                ].map(link => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-full hover:bg-slate-50 transition-colors group"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${link.color}`}>
-                        {link.label[0]}
-                      </span>
-                      <span className="text-sm text-navy">{link.label}</span>
-                    </div>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-violet group-hover:translate-x-0.5 transition-all" />
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-          </div>
+        {/* Quick actions — compact row */}
+        <div className="flex flex-wrap gap-2">
+          {[
+            { label: 'Žádat o dovolenou', href: '/profile?tab=dochazka' },
+            { label: 'Moje výplata',      href: '/profile?tab=vyplata' },
+            { label: 'Dokumenty',         href: '/profile?tab=dokumenty' },
+            { label: 'Upravit profil',    href: '/profile' },
+          ].map(link => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="group flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-slate-100 shadow-sm text-sm font-medium text-navy hover:border-violet/30 hover:text-violet transition-all"
+            >
+              {link.label}
+              <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-violet group-hover:translate-x-0.5 transition-all" />
+            </Link>
+          ))}
         </div>
       </div>
     </AppShell>
