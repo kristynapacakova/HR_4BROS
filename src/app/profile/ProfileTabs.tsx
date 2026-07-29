@@ -124,52 +124,6 @@ export function ProfileTabs({
             employment={{ startDate: (user as { startDate?: Date | null }).startDate, currentSalary: hrData?.monthlySalary ?? null }}
           />
 
-      {/* Zapůjčený majetek */}
-      {tab === 'majetek' && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100">
-            <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({assets.length} položek)</h3>
-          </div>
-          {assets.length === 0 ? (
-            <div className="px-6 py-12 text-center">
-              <Package className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-              <p className="text-slate-400">Zatím nemáte přiřazený žádný majetek.</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-slate-50">
-              {assets.map(asset => {
-                const Icon = TYPE_ICONS[asset.type] || Package
-                const typeLabel = assetTypes.find(t => t.value === asset.type)?.label || asset.type
-                const conditionLabel = assetConditions.find(c => c.value === asset.condition)?.label || asset.condition
-                return (
-                  <div key={asset.id} className="px-6 py-4 flex items-center gap-4">
-                    <div className="w-10 h-10 bg-alice rounded-full flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-5 h-5 text-navy" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-medium text-navy">{asset.name}</p>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${CONDITION_COLORS[asset.condition] || 'bg-slate-50 text-slate-600'}`}>
-                          {conditionLabel}
-                        </span>
-                      </div>
-                      <p className="text-sm text-slate-400 mt-0.5">
-                        {asset.brand} {asset.model}
-                        {asset.serialNumber && <span className="ml-2 text-slate-300">S/N: {asset.serialNumber}</span>}
-                      </p>
-                      {asset.notes && <p className="text-xs text-slate-400 mt-0.5 italic">{asset.notes}</p>}
-                    </div>
-                    <div className="text-right flex-shrink-0 hidden sm:block">
-                      <p className="text-xs text-slate-400">{typeLabel}</p>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      )}
-
           {/* HR údaje — visible to all, editable only by admin */}
           <div className="space-y-4">
           {/* Summary row */}
@@ -251,6 +205,52 @@ export function ProfileTabs({
             )}
           </div>
           </div>
+        </div>
+      )}
+
+      {/* Zapůjčený majetek */}
+      {tab === 'majetek' && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-100">
+            <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({assets.length} položek)</h3>
+          </div>
+          {assets.length === 0 ? (
+            <div className="px-6 py-12 text-center">
+              <Package className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+              <p className="text-slate-400">Zatím nemáte přiřazený žádný majetek.</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-50">
+              {assets.map(asset => {
+                const Icon = TYPE_ICONS[asset.type] || Package
+                const typeLabel = assetTypes.find(t => t.value === asset.type)?.label || asset.type
+                const conditionLabel = assetConditions.find(c => c.value === asset.condition)?.label || asset.condition
+                return (
+                  <div key={asset.id} className="px-6 py-4 flex items-center gap-4">
+                    <div className="w-10 h-10 bg-alice rounded-full flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-5 h-5 text-navy" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-medium text-navy">{asset.name}</p>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${CONDITION_COLORS[asset.condition] || 'bg-slate-50 text-slate-600'}`}>
+                          {conditionLabel}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-400 mt-0.5">
+                        {asset.brand} {asset.model}
+                        {asset.serialNumber && <span className="ml-2 text-slate-300">S/N: {asset.serialNumber}</span>}
+                      </p>
+                      {asset.notes && <p className="text-xs text-slate-400 mt-0.5 italic">{asset.notes}</p>}
+                    </div>
+                    <div className="text-right flex-shrink-0 hidden sm:block">
+                      <p className="text-xs text-slate-400">{typeLabel}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
 
