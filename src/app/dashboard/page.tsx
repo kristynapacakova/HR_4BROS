@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatCurrency } from '@/lib/utils'
-import { Clock, Cake, Star } from 'lucide-react'
+
 import {
   DEMO_USER, DEMO_ADMIN,
   DEMO_TASKS,
@@ -16,6 +16,7 @@ import {
   DEMO_EMPLOYEES,
 } from '@/lib/mock-data'
 import { DashboardGreeting } from './DashboardGreeting'
+import { EventsCard } from './EventsCard'
 
 const CZ_MONTHS = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']
 const MONTH_NAMES = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec']
@@ -75,47 +76,18 @@ export default async function DashboardPage() {
     HOMEOFFICE: 'Home office',
   }
 
-  // HR alerts — upcoming events in next 60 days (admin only)
-  type HRAlert = { type: 'birthday' | 'anniversary' | 'trial'; name: string; label: string; days: number }
-  const hrAlerts: HRAlert[] = []
-  if (isAdmin) {
-    const now2 = new Date(); now2.setHours(0,0,0,0)
-    const HORIZON = 60
-
-    // Birthdays from DEMO_TEAM
-    for (const member of DEMO_TEAM) {
-      if (!member.birthday) continue
-      const [, bm, bd] = member.birthday.split('-').map(Number)
-      let next = new Date(now2.getFullYear(), bm - 1, bd)
-      if (next < now2) next = new Date(now2.getFullYear() + 1, bm - 1, bd)
-      const days = Math.round((next.getTime() - now2.getTime()) / 86400000)
-      if (days <= HORIZON) hrAlerts.push({ type: 'birthday', name: member.name, label: `Narozeniny (${next.getDate()}. ${['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'][bm-1]})`, days })
-    }
-
-    // Work anniversaries from DEMO_EMPLOYEES
-    for (const emp of DEMO_EMPLOYEES) {
-      if (!emp.startDate) continue
-      const sd = new Date(emp.startDate)
-      const years = now2.getFullYear() - sd.getFullYear()
-      if (years <= 0) continue
-      let anniv = new Date(now2.getFullYear(), sd.getMonth(), sd.getDate())
-      if (anniv < now2) anniv = new Date(now2.getFullYear() + 1, sd.getMonth(), sd.getDate())
-      const days = Math.round((anniv.getTime() - now2.getTime()) / 86400000)
-      const yrs = anniv.getFullYear() - sd.getFullYear()
-      if (days <= HORIZON) hrAlerts.push({ type: 'anniversary', name: emp.name ?? emp.email, label: `Výročí ${yrs} ${yrs === 1 ? 'rok' : yrs < 5 ? 'roky' : 'let'} ve firmě`, days })
-    }
-
-    // Trial periods ending (3 months from startDate, show if ending within 60 days)
-    for (const emp of DEMO_EMPLOYEES) {
-      if (!emp.startDate) continue
-      const sd = new Date(emp.startDate)
-      const trialEnd = new Date(sd.getFullYear(), sd.getMonth() + 3, sd.getDate())
-      const days = Math.round((trialEnd.getTime() - now2.getTime()) / 86400000)
-      if (days >= 0 && days <= HORIZON) hrAlerts.push({ type: 'trial', name: emp.name ?? emp.email, label: `Konec zkušební doby (${trialEnd.getDate()}. ${['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'][trialEnd.getMonth()]})`, days })
-    }
-
-    hrAlerts.sort((a, b) => a.days - b.days)
-  }
+  // Narozeniny tento týden — z profilů týmu
+  const weekBirthdays = DEMO_TEAM
+    .filter(m => m.birthday)
+    .map(m => {
+      const [, bm, bd] = m.birthday!.split('-').map(Number)
+      let next = new Date(today.getFullYear(), bm - 1, bd)
+      if (next < today) next = new Date(today.getFullYear() + 1, bm - 1, bd)
+      const days = Math.round((next.getTime() - today.getTime()) / 86400000)
+      return { name: m.name, days, dateLabel: `${next.getDate()}. ${CZ_MONTHS[bm - 1]}` }
+    })
+    .filter(b => b.days <= 7)
+    .sort((a, b) => a.days - b.days)
 
   return (
     <AppShell title="Dashboard" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
@@ -157,27 +129,10 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          {isAdmin && hrAlerts.length > 0 && (
-            <div className="mt-5 pt-5 border-t border-slate-50 space-y-2.5">
-              {hrAlerts.slice(0, 3).map((alert, i) => {
-                const Icon = alert.type === 'birthday' ? Cake : alert.type === 'anniversary' ? Star : Clock
-                return (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full bg-violet/10 flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-3.5 h-3.5 text-violet" />
-                    </div>
-                    <p className="text-sm text-navy flex-1 min-w-0 truncate">
-                      {alert.name} <span className="text-slate-400">· {alert.label}</span>
-                    </p>
-                    <span className="text-xs font-medium text-slate-400 flex-shrink-0">
-                      {alert.days === 0 ? 'Dnes!' : `za ${alert.days} dní`}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
-          )}
         </div>
+
+        {/* Kalendář akcí — Google Kalendář + narozeniny tento týden */}
+        <EventsCard birthdays={weekBirthdays} isAdmin={isAdmin} />
       </div>
     </AppShell>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { EMPLOYMENT_TYPES } from '@/lib/mock-data'
 
 interface UserData {
@@ -23,6 +23,7 @@ interface ProfileFormProps {
 export function ProfileForm({ user }: ProfileFormProps) {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [nickname, setNickname] = useState('')
   const [formData, setFormData] = useState({
     name: user.name || '',
     phone: user.phone || '',
@@ -34,12 +35,20 @@ export function ProfileForm({ user }: ProfileFormProps) {
     ecRelationship: '',
   })
 
+  useEffect(() => {
+    try { setNickname(localStorage.getItem('fb-nickname') ?? '') } catch { /* noop */ }
+  }, [])
+
   const update = (key: string, value: string) => setFormData((p) => ({ ...p, [key]: value }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    // Demo: simulate save delay then show demo notice
+    // Nickname is persisted locally — the dashboard greets you with it
+    try {
+      if (nickname.trim()) localStorage.setItem('fb-nickname', nickname.trim())
+      else localStorage.removeItem('fb-nickname')
+    } catch { /* noop */ }
     await new Promise((r) => setTimeout(r, 600))
     setSaving(false)
     setSaved(true)
@@ -57,6 +66,17 @@ export function ProfileForm({ user }: ProfileFormProps) {
       <Section title="Osobní údaje">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Jméno a příjmení" value={formData.name} onChange={(v) => update('name', v)} />
+          <div>
+            <label className="block text-xs font-medium text-violet mb-1">Přezdívka — jak ti máme říkat 💜</label>
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="např. Peťa, Kiki…"
+              className="w-full px-3 py-2 border rounded-lg text-sm transition-all bg-white border-violet/30 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            />
+            <p className="text-[10px] text-slate-400 mt-1">Portál tě bude vítat touto přezdívkou. Tahle volba se ukládá.</p>
+          </div>
           <Field label="E-mail" value={user.email} readOnly />
           <Field label="Telefon" value={formData.phone} onChange={(v) => update('phone', v)} type="tel" />
           <Field label="Oddělení" value={user.department || ''} readOnly />
