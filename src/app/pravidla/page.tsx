@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
+import { SickPayCard } from '@/app/profile/panels/SickPayCard'
 
 export default async function PravidlaPage() {
   const session = await auth()
@@ -9,6 +10,8 @@ export default async function PravidlaPage() {
 
   const isAdmin = session.user.role === 'ADMIN'
   const user = isAdmin ? DEMO_ADMIN : DEMO_USER
+  const monthlySalary = (user as typeof DEMO_USER).monthlySalary ?? null
+  const isEmployee = ['HPP', 'DPP', 'DPC'].includes(user.employmentType ?? '')
 
   return (
     <AppShell
@@ -19,19 +22,6 @@ export default async function PravidlaPage() {
       employmentType={user.employmentType}
     >
       <div className="max-w-3xl mx-auto space-y-6">
-
-        {/* Header */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
-          <h2 className="text-xl font-headline font-bold text-navy mb-1">Firemní pravidla a postupy</h2>
-          <p className="text-sm text-slate-500">
-            Přehled pravidel pro homeoffice, dovolenou, nemoc a další situace. Přečti si je a v případě dotazů kontaktuj HR.
-          </p>
-          {isAdmin && (
-            <div className="mt-4 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700">
-              <strong>Admin:</strong> Úprava pravidel je v demo verzi dostupná pouze jako ukázka.
-            </div>
-          )}
-        </div>
 
         {/* HOMEOFFICE */}
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
@@ -136,6 +126,13 @@ export default async function PravidlaPage() {
               Příklady výpočtu jsou uvedeny zde:{' '}
               <span className="text-violet">https://www.vypocet.cz/popis-vypoctu-nemocenske</span>
             </p>
+
+            {isEmployee && monthlySalary && (
+              <div className="pt-1">
+                <SickPayCard monthlySalary={monthlySalary} />
+              </div>
+            )}
+
             <p className="text-sm text-slate-600 leading-relaxed">
               Jak má každý z nás možnosti v případě, kdy se člověk necítí dobře? Prvně je preferováno, aby zůstal doma. V závislosti na reálném zdravotním stavu pak každý z nás má následující možnosti:
             </p>
