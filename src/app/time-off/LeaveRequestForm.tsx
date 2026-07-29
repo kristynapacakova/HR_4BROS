@@ -206,7 +206,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
       {isSick && (
         <div>
           <label className="block text-xs font-medium text-slate-500 mb-1">
-            Neschopenka <span className="text-slate-300 font-normal">(PDF, PNG, JPG — nepovinné)</span>
+            Neschopenka <span className="text-slate-300 font-normal">(nepovinné — pokud ji ještě nemáš, klidně doplň po skončení nemoci v historii žádostí)</span>
           </label>
           {attachment ? (
             <div className="flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-xl bg-slate-50">

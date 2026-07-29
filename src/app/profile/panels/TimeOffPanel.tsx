@@ -2,6 +2,7 @@ import { formatDate, getDaysBetween } from '@/lib/utils'
 import { CalendarDays, Plus } from 'lucide-react'
 import { LeaveRequestForm } from '@/app/time-off/LeaveRequestForm'
 import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
+import { SickNoteUpload } from './SickNoteUpload'
 
 const LEAVE_LABEL: Record<string, string> = {
   DOVOLENA: 'Dovolená', HOMEOFFICE: 'Homeoffice', NEMOC: 'Nemoc',
@@ -100,6 +101,7 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
                   </p>
                   {req.reason && <p className="text-xs text-slate-400 mt-0.5 italic">"{req.reason}"</p>}
                   {req.note && <p className="text-xs text-amber-600 mt-0.5">Poznámka HR: {req.note}</p>}
+                  {(req.type === 'NEMOC' || req.type === 'SICK') && <SickNoteUpload requestId={req.id} />}
                 </div>
               </div>
             ))}
