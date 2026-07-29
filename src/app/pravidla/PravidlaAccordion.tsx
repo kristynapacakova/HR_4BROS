@@ -17,7 +17,7 @@ const SECTIONS: Section[] = [
     id: 'homeoffice',
     emoji: '💻',
     title: 'Homeoffice',
-    summary: 'Nahlas do 7:59 na Slack a do Google Kalendáře.',
+    summary: 'Pracuješ z gauče? Jen nám dej vědět do 7:59 na Slacku a do kalendáře 🏡',
     content: (
       <div className="space-y-3">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -36,7 +36,7 @@ const SECTIONS: Section[] = [
     id: 'dovolena',
     emoji: '✈️',
     title: 'Dovolená',
-    summary: '25 dní ročně dle úvazku, s pravidly pro informování a předání klientů.',
+    summary: '25 dní na odpočinek ročně — mrkni, jak na hlášení a předání klientů 🌴',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -112,7 +112,7 @@ const SECTIONS: Section[] = [
     id: 'nemoc',
     emoji: '🤒',
     title: 'Nemoc',
-    summary: 'Náhrada mzdy od 1. do 15. dne nemoci, s kalkulačkou srážky.',
+    summary: 'Jsi nemocný/á? Nezůstaneš bez peněz — a kalkulačka ti hned spočítá kolik 🤒',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -137,7 +137,7 @@ const SECTIONS: Section[] = [
     id: 'lekar',
     emoji: '🩺',
     title: 'Návštěva lékaře',
-    summary: 'Pracovní volno s náhradou mzdy na nezbytně nutnou dobu.',
+    summary: 'K doktorovi tě pustíme s klidným svědomím a náhradou mzdy 🩺',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -156,7 +156,7 @@ const SECTIONS: Section[] = [
     id: 'pohreb',
     emoji: '🕊️',
     title: 'Pohřeb',
-    summary: 'Placené volno na celý den s poznámkou „pohřeb“.',
+    summary: 'Upřímnou soustrast — na volno s náma počítej celý den 🕊️',
     content: (
       <p className="text-sm text-slate-600 leading-relaxed">
         V prvé řadě — upřímnou soustrast. Pokud budeš na pohřbu, zvol <strong>„pohřeb"</strong> — jedná se tak o placené volno celý den.
@@ -167,7 +167,7 @@ const SECTIONS: Section[] = [
     id: 'fakturace',
     emoji: '💸',
     title: 'Fakturace',
-    summary: 'Uzávěrka k 10. dni, splatnost faktur ke 20. dni.',
+    summary: 'Nezapomeň na uzávěrku k 10. — peníze pak přijdou 20. 💸',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
