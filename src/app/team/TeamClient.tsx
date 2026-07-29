@@ -74,7 +74,7 @@ export function TeamClient({ members, departments, isAdmin }: {
             key={d}
             onClick={() => setDept(d)}
             className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
-              dept === d ? 'bg-navy text-white shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:text-navy'
+              dept === d ? 'bg-violet text-white shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:text-navy'
             }`}
           >
             {d}

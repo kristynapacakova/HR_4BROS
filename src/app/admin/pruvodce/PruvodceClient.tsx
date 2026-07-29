@@ -119,7 +119,7 @@ export function PruvodceClient() {
             <button
               onClick={() => switchMode('onboarding')}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-all ${
-                mode === 'onboarding' ? 'bg-navy text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+                mode === 'onboarding' ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
               }`}
             >
               <UserPlus className="w-4 h-4" />
@@ -128,7 +128,7 @@ export function PruvodceClient() {
             <button
               onClick={() => switchMode('offboarding')}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-all ${
-                mode === 'offboarding' ? 'bg-navy text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+                mode === 'offboarding' ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
               }`}
             >
               <UserMinus className="w-4 h-4" />
@@ -175,15 +175,15 @@ export function PruvodceClient() {
 
       {/* All done celebration */}
       {allDone && (
-        <div className="relative bg-navy rounded-2xl overflow-hidden">
+        <div className="relative rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)' }}>
           <div
             className="absolute -right-16 -top-16 w-64 h-64 rounded-full pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.35), transparent 70%)', filter: 'blur(40px)' }}
+            style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%)', filter: 'blur(40px)' }}
           />
           <div className="relative z-10 px-7 py-6 flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                <PartyPopper className="w-6 h-6 text-violet-light" />
+                <PartyPopper className="w-6 h-6 text-white" />
               </div>
               <div>
                 <p className="text-white font-headline font-semibold text-lg">
@@ -199,7 +199,7 @@ export function PruvodceClient() {
             {mode === 'onboarding' && (
               <Link
                 href="/profile?tab=onboarding"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-violet bg-white hover:bg-white/90 transition-colors"
               >
                 <ClipboardList className="w-4 h-4" />
                 Předat checklist novému členovi
@@ -225,7 +225,7 @@ export function PruvodceClient() {
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-full text-left transition-all ${
                   active ? 'text-white' : 'hover:bg-slate-50'
                 }`}
-                style={active ? { background: 'linear-gradient(135deg, #194669, #2E5070)' } : undefined}
+                style={active ? { background: 'linear-gradient(135deg, #7e17e0, #9b45e8)' } : undefined}
               >
                 <span
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0 ${

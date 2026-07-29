@@ -128,7 +128,7 @@ export function PayslipsClient({
                   onClick={() => setSelectedYear(y)}
                   className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
                     y === selectedYear
-                      ? 'bg-navy text-white'
+                      ? 'bg-violet text-white'
                       : 'text-slate-500 hover:text-navy hover:bg-slate-50'
                   }`}
                 >

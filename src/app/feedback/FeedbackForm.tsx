@@ -52,7 +52,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
             type="button"
             onClick={() => setAnonymous(true)}
             className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border-2 transition-all text-left ${
-              anonymous ? 'border-navy bg-navy text-white' : 'border-slate-200 text-slate-600 hover:border-slate-300'
+              anonymous ? 'border-navy bg-violet text-white' : 'border-slate-200 text-slate-600 hover:border-slate-300'
             }`}
           >
             <EyeOff className="w-4 h-4 flex-shrink-0" />

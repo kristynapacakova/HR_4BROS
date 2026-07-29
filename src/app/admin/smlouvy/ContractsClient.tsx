@@ -195,7 +195,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
             key={id}
             onClick={() => { setTab(id); setCreateStep(null) }}
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-              tab === id ? 'bg-navy text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+              tab === id ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
             }`}
           >
             {label}
@@ -247,7 +247,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                   key={opt.value}
                   onClick={() => setFilter(opt.value)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                    filter === opt.value ? 'bg-navy text-white' : 'bg-white text-slate-500 border border-slate-200 hover:text-navy'
+                    filter === opt.value ? 'bg-violet text-white' : 'bg-white text-slate-500 border border-slate-200 hover:text-navy'
                   }`}
                 >
                   {opt.label}

@@ -72,40 +72,39 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
         className={cn(
           'flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all duration-150',
           isActive
-            ? 'text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
-            : 'text-navy-300 hover:bg-white/[0.08] hover:text-white'
+            ? 'bg-violet/10 text-violet'
+            : 'text-slate-500 hover:bg-slate-50 hover:text-navy'
         )}
-        style={isActive ? { background: 'linear-gradient(135deg, rgba(126,23,224,0.35), rgba(126,23,224,0.12))' } : undefined}
       >
-        <Icon className={cn('w-4 h-4 flex-shrink-0 transition-colors', isActive ? 'text-violet-light' : '')} />
+        <Icon className={cn('w-4 h-4 flex-shrink-0 transition-colors', isActive ? 'text-violet' : 'text-slate-400')} />
         <span className="flex-1">{label}</span>
         {extra}
-        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-violet-light flex-shrink-0" />}
+        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-violet flex-shrink-0" />}
       </Link>
     )
   }
 
   return (
-    <div className="relative flex flex-col h-full bg-navy text-white overflow-hidden">
+    <div className="relative flex flex-col h-full bg-white border-r border-slate-100 overflow-hidden">
       {/* Soft violet glow accent */}
       <div
         className="absolute -top-24 -left-20 w-64 h-64 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.25), transparent 70%)', filter: 'blur(40px)' }}
+        style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.08), transparent 70%)', filter: 'blur(40px)' }}
       />
 
       {/* Logo header */}
-      <div className="relative flex items-center justify-between px-5 py-5 border-b border-white/[0.07]">
+      <div className="relative flex items-center justify-between px-5 py-5 border-b border-slate-100">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-violet rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+          <div className="w-9 h-9 bg-violet rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
             <span className="text-white font-headline font-bold text-sm">4B</span>
           </div>
           <div>
-            <p className="font-headline font-semibold text-white text-base leading-tight">Four Bros</p>
-            <p className="text-navy-400 text-[11px] tracking-wide">HR Portál</p>
+            <p className="font-headline font-semibold text-navy text-base leading-tight">Four Bros</p>
+            <p className="text-slate-400 text-[11px] tracking-wide">HR Portál</p>
           </div>
         </div>
         {onClose && (
-          <button onClick={onClose} className="lg:hidden text-navy-400 hover:text-white p-1.5 rounded-lg transition-colors">
+          <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-navy p-1.5 rounded-lg transition-colors">
             <X className="w-4 h-4" />
           </button>
         )}
@@ -113,14 +112,14 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        <p className="px-3 text-[10px] font-semibold text-navy-400 uppercase tracking-widest mb-2 mt-1">Navigace</p>
+        <p className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-2 mt-1">Navigace</p>
 
         {navItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
 
         {isAdmin && (
           <>
             <div className="pt-5 pb-2">
-              <p className="px-3 text-[10px] font-semibold text-navy-400 uppercase tracking-widest">Administrace</p>
+              <p className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Administrace</p>
             </div>
             {adminItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
           </>
@@ -128,21 +127,21 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
       </nav>
 
       {/* User footer */}
-      <div className="px-3 py-3 border-t border-white/[0.07]">
+      <div className="px-3 py-3 border-t border-slate-100">
         <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5">
-          <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-white/20">
+          <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-violet/15">
             <span className="text-white text-xs font-semibold">
               {userName?.[0]?.toUpperCase() || userEmail?.[0]?.toUpperCase() || '?'}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate leading-tight">{userName || 'Uživatel'}</p>
-            <p className="text-[11px] text-navy-400 truncate">{userEmail}</p>
+            <p className="text-sm font-medium text-navy truncate leading-tight">{userName || 'Uživatel'}</p>
+            <p className="text-[11px] text-slate-400 truncate">{userEmail}</p>
           </div>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-navy-400 hover:bg-white/[0.08] hover:text-white transition-all duration-150"
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-full text-sm font-medium text-slate-400 hover:bg-slate-50 hover:text-navy transition-all duration-150"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
           <span>Odhlásit se</span>

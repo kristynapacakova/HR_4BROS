@@ -65,7 +65,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
             onClick={() => setTab(t.id)}
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
               tab === t.id
-                ? 'bg-navy text-white shadow-sm'
+                ? 'bg-violet text-white shadow-sm'
                 : 'text-slate-500 hover:text-navy'
             }`}
           >

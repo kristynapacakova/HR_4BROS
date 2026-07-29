@@ -99,7 +99,7 @@ export function ProfileTabs({
             key={t.id}
             onClick={() => setTab(t.id as TabId)}
             className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${
-              tab === t.id ? 'bg-navy text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+              tab === t.id ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
             }`}
           >
             {t.label}

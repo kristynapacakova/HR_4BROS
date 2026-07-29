@@ -270,7 +270,7 @@ export function LeaveCalendar({ leaves }: { leaves: Leave[] }) {
 
       {/* Hover tooltip - fixed bottom right */}
       {hoveredLeave && (
-        <div className="fixed bottom-6 right-6 bg-navy text-white rounded-xl shadow-xl p-4 z-50 max-w-xs">
+        <div className="fixed bottom-6 right-6 bg-violet text-white rounded-xl shadow-xl p-4 z-50 max-w-xs">
           <p className="font-semibold text-sm">{hoveredLeave.userName}</p>
           <p className="text-xs text-navy-200 mt-0.5">{hoveredLeave.department} · {TYPE_COLORS[hoveredLeave.type]?.label}</p>
           <p className="text-xs text-navy-300 mt-2">

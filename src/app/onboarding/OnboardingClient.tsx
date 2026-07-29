@@ -111,7 +111,7 @@ export function OnboardingClient({
         <button
           onClick={() => setTab('onboarding')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-            tab === 'onboarding' ? 'bg-navy text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+            tab === 'onboarding' ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
           }`}
         >
           Onboarding
@@ -120,7 +120,7 @@ export function OnboardingClient({
           onClick={() => offboardingUnlocked && setTab('offboarding')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${
             tab === 'offboarding'
-              ? 'bg-navy text-white shadow-sm'
+              ? 'bg-violet text-white shadow-sm'
               : offboardingUnlocked
                 ? 'text-slate-500 hover:text-navy'
                 : 'text-slate-300 cursor-not-allowed'
