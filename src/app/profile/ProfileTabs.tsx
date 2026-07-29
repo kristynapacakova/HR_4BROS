@@ -93,27 +93,25 @@ export function ProfileTabs({
 
   return (
     <div>
-      {/* Tab bar — clean underline style */}
-      <div className="border-b border-slate-200 mb-6 -mx-1 px-1 overflow-x-auto scrollbar-none">
-        <div className="flex gap-1 min-w-max">
-          {tabs.map(t => {
-            const Icon = t.icon
-            const active = tab === t.id
-            return (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id as TabId)}
-                className={`relative flex items-center gap-2 px-3.5 pt-2 pb-3 text-sm font-medium transition-colors whitespace-nowrap ${
-                  active ? 'text-violet' : 'text-slate-500 hover:text-navy'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${active ? 'text-violet' : 'text-slate-400'}`} />
-                {t.label}
-                {active && <span className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full bg-violet" />}
-              </button>
-            )
-          })}
-        </div>
+      {/* Tab bar — clean underline style, wraps instead of clipping on narrow screens */}
+      <div className="flex flex-wrap gap-x-1 gap-y-1 border-b border-slate-200 mb-6">
+        {tabs.map(t => {
+          const Icon = t.icon
+          const active = tab === t.id
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id as TabId)}
+              className={`relative flex items-center gap-2 px-3.5 pt-2 pb-3 text-sm font-medium transition-colors whitespace-nowrap ${
+                active ? 'text-violet' : 'text-slate-500 hover:text-navy'
+              }`}
+            >
+              <Icon className={`w-4 h-4 ${active ? 'text-violet' : 'text-slate-400'}`} />
+              {t.label}
+              {active && <span className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full bg-violet" />}
+            </button>
+          )
+        })}
       </div>
 
       {/* Osobní údaje + HR údaje */}
