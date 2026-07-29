@@ -1,5 +1,5 @@
 import { formatDate, getDaysBetween } from '@/lib/utils'
-import { CalendarDays, Plus } from 'lucide-react'
+import { CalendarDays, Plus, Home } from 'lucide-react'
 import { LeaveRequestForm } from '@/app/time-off/LeaveRequestForm'
 import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
 import { SickNoteUpload } from './SickNoteUpload'
@@ -51,15 +51,27 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
   const currentYear = today.getFullYear()
   const thisYearHolidays = getCzechHolidays(currentYear)
 
+  const homeofficeUsed = leaveRequests
+    .filter(r => r.type === 'HOMEOFFICE' && r.status !== 'REJECTED' && new Date(r.startDate).getFullYear() === currentYear)
+    .reduce((sum, r) => sum + getDaysBetween(r.startDate, r.endDate), 0)
+
   return (
     <div className="space-y-6">
 
       {/* Balance cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <BalanceCard title="Řádná dovolená" used={leaveBalance.annualUsed} total={leaveBalance.annualTotal} remaining={annualRemaining} color="violet" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <BalanceCard title="Dovolená" used={leaveBalance.annualUsed} total={leaveBalance.annualTotal} remaining={annualRemaining} color="violet" />
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
-          <p className="text-xs font-medium text-slate-500 mb-1">Nemoc / absence</p>
+          <p className="text-xs font-medium text-slate-500 mb-1">Nemoc</p>
           <p className="text-2xl font-headline font-bold text-navy">{leaveBalance.sickUsed} dní</p>
+          <p className="text-xs text-slate-400 mt-1">čerpáno letos</p>
+        </div>
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
+          <div className="flex items-center gap-1.5 mb-1">
+            <Home className="w-3.5 h-3.5 text-blue-400" />
+            <p className="text-xs font-medium text-slate-500">Homeoffice</p>
+          </div>
+          <p className="text-2xl font-headline font-bold text-navy">{homeofficeUsed} dní</p>
           <p className="text-xs text-slate-400 mt-1">čerpáno letos</p>
         </div>
       </div>
@@ -113,39 +125,94 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
   )
 }
 
+const MONTH_NAMES_CZ = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec']
+const DOW_LABELS = ['Po','Út','St','Čt','Pá','So','Ne']
+
 function HolidayTable({ year, holidays, today }: {
   year: number
   holidays: { date: Date; name: string }[]
   today: Date
 }) {
+  const byMonth = new Map<number, { date: Date; name: string }[]>()
+  for (const h of holidays) {
+    const arr = byMonth.get(h.date.getMonth()) ?? []
+    arr.push(h)
+    byMonth.set(h.date.getMonth(), arr)
+  }
+  const months = Array.from(byMonth.keys()).sort((a, b) => a - b)
+
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 className="font-headline font-semibold text-navy">Státní svátky {year}</h3>
         <span className="text-xs text-slate-400">{holidays.length} svátků</span>
       </div>
-      <div className="divide-y divide-slate-50">
-        {holidays.map((h) => {
-          const isPast = h.date < today
-          const isToday = h.date.toDateString() === today.toDateString()
-          const dow = h.date.toLocaleDateString('cs-CZ', { weekday: 'long' })
+      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {months.map(m => (
+          <MonthMini key={m} year={year} month={m} holidays={byMonth.get(m)!} today={today} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function MonthMini({ year, month, holidays, today }: {
+  year: number; month: number; holidays: { date: Date; name: string }[]; today: Date
+}) {
+  const first = new Date(year, month, 1)
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  // Po=0 ... Ne=6
+  const leadingBlanks = (first.getDay() + 6) % 7
+  const holidayMap = new Map(holidays.map(h => [h.date.getDate(), h]))
+  const cells = Array.from({ length: leadingBlanks }, () => null as null | number)
+    .concat(Array.from({ length: daysInMonth }, (_, i) => i + 1))
+
+  return (
+    <div className="rounded-2xl bg-[#F7F8FE] p-4">
+      <p className="text-sm font-semibold text-navy mb-3">{MONTH_NAMES_CZ[month]}</p>
+      <div className="grid grid-cols-7 gap-y-1 text-center">
+        {DOW_LABELS.map(d => (
+          <span key={d} className="text-[9px] font-medium text-slate-400 uppercase">{d}</span>
+        ))}
+        {cells.map((day, i) => {
+          if (day === null) return <span key={`b${i}`} />
+          const date = new Date(year, month, day)
+          const holiday = holidayMap.get(day)
+          const isWeekend = date.getDay() === 0 || date.getDay() === 6
+          const isToday = date.toDateString() === today.toDateString()
+          const isPast = date < today && !isToday
+          const isFriOrMon = holiday && (date.getDay() === 5 || date.getDay() === 1)
+          return (
+            <div key={day} className="relative flex items-center justify-center py-1" title={holiday?.name}>
+              <span
+                className={`w-6 h-6 flex items-center justify-center rounded-full text-[11px] font-medium ${
+                  isToday ? 'bg-violet text-white' :
+                  holiday ? 'bg-white text-violet font-bold shadow-sm' :
+                  isWeekend ? 'text-slate-300' :
+                  isPast ? 'text-slate-300' : 'text-navy'
+                }`}
+              >
+                {day}
+              </span>
+              {isFriOrMon && !isToday && (
+                <span className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-green-400" />
+              )}
+            </div>
+          )
+        })}
+      </div>
+      <div className="mt-3 pt-3 border-t border-white space-y-1">
+        {holidays.map(h => {
           const isFriOrMon = h.date.getDay() === 5 || h.date.getDay() === 1
           return (
-            <div key={h.date.toISOString()} className={`px-6 py-3 flex items-center gap-4 ${isToday ? 'bg-violet/5' : isPast ? 'opacity-40' : ''}`}>
-              <div className={`w-14 text-center flex-shrink-0 rounded-xl py-1 ${isToday ? 'bg-violet text-white' : 'bg-slate-50 text-navy'}`}>
-                <p className="text-[10px] font-medium uppercase tracking-wide opacity-70">{h.date.toLocaleDateString('cs-CZ', { month: 'short' })}</p>
-                <p className="text-xl font-headline font-bold leading-tight">{h.date.getDate()}</p>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-navy">{h.name}</p>
-                <p className="text-xs text-slate-400 capitalize">{dow}</p>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {isToday && <span className="text-xs bg-violet text-white px-2 py-0.5 rounded-full font-medium">Dnes</span>}
-                {isFriOrMon && !isPast && !isToday && (
-                  <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium">Prodloužený víkend</span>
-                )}
-              </div>
+            <div key={h.date.toISOString()} className="flex items-center justify-between gap-2 text-xs">
+              <span className="text-slate-500 truncate">{h.date.getDate()}. {h.name}</span>
+              {isFriOrMon && (
+                <span className="flex items-center gap-1 text-[10px] text-green-600 font-medium flex-shrink-0">
+                  <span className="w-1 h-1 rounded-full bg-green-400" />
+                  Prodloužený víkend
+                </span>
+              )}
             </div>
           )
         })}
