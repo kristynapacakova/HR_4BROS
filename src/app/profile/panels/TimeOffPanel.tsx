@@ -2,6 +2,7 @@ import { formatDate, getDaysBetween } from '@/lib/utils'
 import { CalendarDays, Plus } from 'lucide-react'
 import { LeaveRequestForm } from '@/app/time-off/LeaveRequestForm'
 import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
+import { SickPayCard } from './SickPayCard'
 
 const LEAVE_LABEL: Record<string, string> = {
   DOVOLENA: 'Dovolená', HOMEOFFICE: 'Homeoffice', NEMOC: 'Nemoc',
@@ -40,7 +41,7 @@ function getCzechHolidays(year: number) {
   ].sort((a, b) => a.date.getTime() - b.date.getTime())
 }
 
-export function TimeOffPanel() {
+export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isEmployee?: boolean; monthlySalary?: number | null }) {
   const leaveBalance = DEMO_LEAVE_BALANCE
   const leaveRequests = DEMO_LEAVE_REQUESTS
 
@@ -62,6 +63,9 @@ export function TimeOffPanel() {
           <p className="text-xs text-slate-400 mt-1">čerpáno letos</p>
         </div>
       </div>
+
+      {/* Náhrada při nemoci — jen pro zaměstnance */}
+      {isEmployee && monthlySalary && <SickPayCard monthlySalary={monthlySalary} />}
 
       {/* New request — holidays auto-calculated inside form */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">

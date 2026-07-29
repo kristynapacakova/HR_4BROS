@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Banknote, ChevronLeft, ChevronRight, TrendingUp, Clock } from 'lucide-react'
+import { Banknote, ChevronLeft, ChevronRight, TrendingUp, Clock, Download, Stethoscope, ChevronDown } from 'lucide-react'
+import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 
 const MONTH_NAMES = [
   'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
@@ -36,12 +37,16 @@ export function PayslipsClient({
   salaryInfo,
   employmentType,
   pageTitle,
+  sickDays = 0,
 }: {
   payslips: Payslip[]
   salaryInfo: SalaryInfo
   employmentType: string
   pageTitle: string
+  /** Dny nemoci v aktuálním měsíci — zobrazí rozpis srážky */
+  sickDays?: number
 }) {
+  const [showSickDetail, setShowSickDetail] = useState(false)
   const currentYear = new Date().getFullYear()
   const years = Array.from(new Set(payslips.map(p => p.year))).sort((a, b) => b - a)
   const [selectedYear, setSelectedYear] = useState(currentYear)
@@ -97,6 +102,46 @@ export function PayslipsClient({
           </div>
         </div>
       )}
+
+      {/* Nemoc v tomto měsíci — rozpis srážky */}
+      {!isICO && sickDays > 0 && (() => {
+        const r = computeSickPay(salaryInfo.currentSalary, sickDays)
+        return (
+          <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-5">
+            <button onClick={() => setShowSickDetail(s => !s)} className="w-full flex items-center gap-3 text-left">
+              <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                <Stethoscope className="w-4 h-4 text-red-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-navy">Nemoc tento měsíc — {sickDays} {sickDays === 1 ? 'den' : sickDays < 5 ? 'dny' : 'dní'}</p>
+                <p className="text-xs text-slate-400">Očekávaná srážka ze mzdy: <span className="font-semibold text-red-500">−{fmt(r.deduction, 'CZK')}</span></p>
+              </div>
+              <ChevronDown className={`w-4 h-4 text-slate-300 transition-transform ${showSickDetail ? 'rotate-180' : ''}`} />
+            </button>
+            {showSickDetail && (
+              <div className="mt-4 rounded-2xl bg-[#F7F8FE] p-4 space-y-1.5 text-sm">
+                {[
+                  ['Průměrný hodinový výdělek', `${fmt(r.avgHourly, 'CZK')}/h`],
+                  ['Po redukci (90/60/30 %)', `${fmt(r.reduced, 'CZK')}/h`],
+                  ['Náhrada mzdy (60 % redukovaného)', `${fmt(r.compensationHourly, 'CZK')}/h`],
+                  ['Náhrada za den (8 h)', fmt(r.compensationDay, 'CZK')],
+                  [`Hrazeno zaměstnavatelem (1.–14. den)`, `${r.employerDays} dní → ${fmt(r.compensationTotal, 'CZK')}`],
+                  ...(r.csszDays > 0 ? [['Od 15. dne platí ČSSZ (nemocenské)', `${r.csszDays} dní`]] : []),
+                ].map(([label, value]) => (
+                  <div key={label as string} className="flex items-center justify-between gap-4">
+                    <span className="text-slate-500">{label}</span>
+                    <span className="font-semibold text-navy whitespace-nowrap">{value}</span>
+                  </div>
+                ))}
+                <div className="flex items-center justify-between gap-4 pt-2 border-t border-slate-200">
+                  <span className="text-slate-500 font-medium">Srážka oproti běžné mzdě</span>
+                  <span className="font-bold text-red-500">−{fmt(r.deduction, 'CZK')}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      })()}
 
       {/* Year selector */}
       <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
@@ -181,6 +226,14 @@ export function PayslipsClient({
                   </p>
                   <p className="text-xs text-slate-400">čistá</p>
                 </div>
+                {!p.planned && (
+                  <button
+                    className="flex-shrink-0 p-2 text-slate-300 hover:text-violet rounded-full hover:bg-violet/5 transition-colors"
+                    title={`Stáhnout ${isICO ? 'fakturu' : 'výplatní pásku'} — ${MONTH_NAMES[p.month - 1]} ${p.year} (demo)`}
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             ))
           )}

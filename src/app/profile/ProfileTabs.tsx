@@ -93,13 +93,13 @@ export function ProfileTabs({
   return (
     <div>
       {/* Tab bar */}
-      <div className="flex gap-1 bg-white rounded-full border border-slate-100 shadow-sm p-1 mb-5 overflow-x-auto">
+      <div className="flex flex-wrap gap-1.5 bg-white rounded-3xl border border-slate-100 shadow-sm p-1.5 mb-5">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id as TabId)}
-            className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${
-              tab === t.id ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+            className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${
+              tab === t.id ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
             }`}
           >
             {t.label}
@@ -108,7 +108,12 @@ export function ProfileTabs({
       </div>
 
       {/* Osobní údaje */}
-      {tab === 'udaje' && <ProfileForm user={user} />}
+      {tab === 'udaje' && (
+        <ProfileForm
+          user={user}
+          employment={{ startDate: (user as { startDate?: Date | null }).startDate, currentSalary: hrData?.monthlySalary ?? null }}
+        />
+      )}
 
       {/* Zapůjčený majetek */}
       {tab === 'majetek' && (
@@ -211,12 +216,16 @@ export function ProfileTabs({
               <Field label="Klientské hodiny (h/měs)">
                 <input type="number" defaultValue={hrData?.clientHours ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
               </Field>
-              <Field label="Mzda / měsíc (Kč)">
-                <input type="number" defaultValue={hrData?.monthlySalary ?? ''} disabled={!isAdmin} placeholder="pro HPP/DPP/DPČ" className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-              </Field>
-              <Field label="Hodinová sazba (Kč/h)">
-                <input type="number" defaultValue={hrData?.hourlyRate ?? ''} disabled={!isAdmin} placeholder="pro IČO" className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-              </Field>
+              {user.employmentType !== 'ICO' && (
+                <Field label="Mzda / měsíc (Kč)">
+                  <input type="number" defaultValue={hrData?.monthlySalary ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
+                </Field>
+              )}
+              {user.employmentType === 'ICO' && (
+                <Field label="Hodinová sazba (Kč/h)">
+                  <input type="number" defaultValue={hrData?.hourlyRate ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
+                </Field>
+              )}
             </div>
             {/* Derived stats */}
             {(hrData?.monthlyHours || hrData?.monthlySalary || hrData?.hourlyRate) && (

@@ -2,8 +2,9 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
-import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_ONBOARDING_TASKS, DEMO_OFFBOARDING_TASKS } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_ONBOARDING_TASKS, DEMO_OFFBOARDING_TASKS, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
 import { ProfileTabs } from './ProfileTabs'
+import { AvatarUpload } from '@/components/AvatarUpload'
 import { PayslipsClient } from '@/app/payslips/PayslipsClient'
 import { OnboardingClient } from '@/app/onboarding/OnboardingClient'
 import { TimeOffPanel } from './panels/TimeOffPanel'
@@ -20,6 +21,19 @@ export default async function ProfilePage() {
   const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === userId)
 
   const payslipsLabel = user.employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata'
+
+  // Dny nemoci v aktuálním měsíci → rozpis srážky v Moje výplata
+  const now = new Date()
+  const sickDaysThisMonth = DEMO_LEAVE_REQUESTS
+    .filter(r => (r.type === 'NEMOC' || r.type === 'SICK') && r.status !== 'REJECTED')
+    .reduce((sum, r) => {
+      const start = new Date(r.startDate)
+      const end = new Date(r.endDate)
+      if (end.getMonth() !== now.getMonth() && start.getMonth() !== now.getMonth()) return sum
+      const from = start.getMonth() === now.getMonth() ? start : new Date(now.getFullYear(), now.getMonth(), 1)
+      const to = end.getMonth() === now.getMonth() ? end : new Date(now.getFullYear(), now.getMonth() + 1, 0)
+      return sum + Math.max(0, Math.round((to.getTime() - from.getTime()) / 86400000) + 1)
+    }, 0)
   const offboardingUnlocked = (user as typeof DEMO_USER & { offboardingUnlocked?: boolean }).offboardingUnlocked ?? false
 
   return (
@@ -34,14 +48,7 @@ export default async function ProfilePage() {
         {/* Profile header */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="flex items-center gap-5">
-            <div className="relative flex-shrink-0">
-              <div className="absolute -inset-1 rounded-full opacity-30" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }} />
-              <div className="relative w-16 h-16 bg-navy rounded-full flex items-center justify-center">
-                <span className="text-white font-headline text-2xl font-bold">
-                  {user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
-                </span>
-              </div>
-            </div>
+            <AvatarUpload initial={user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()} />
             <div>
               <h2 className="text-xl font-headline font-bold text-navy">{user.name || '—'}</h2>
               <p className="text-slate-500 text-sm">{user.position || '—'}</p>
@@ -76,9 +83,15 @@ export default async function ProfilePage() {
               salaryInfo={DEMO_SALARY_INFO}
               employmentType={user.employmentType ?? 'HPP'}
               pageTitle={payslipsLabel}
+              sickDays={sickDaysThisMonth}
             />
           }
-          timeOffPanel={<TimeOffPanel />}
+          timeOffPanel={
+            <TimeOffPanel
+              isEmployee={['HPP', 'DPP', 'DPC'].includes(user.employmentType ?? '')}
+              monthlySalary={(user as typeof DEMO_USER).monthlySalary ?? null}
+            />
+          }
           documentsPanel={<DocumentsPanel isHPP={user.employmentType === 'HPP'} />}
           onboardingPanel={
             <OnboardingClient

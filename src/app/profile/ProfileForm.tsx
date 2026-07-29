@@ -18,12 +18,39 @@ interface UserData {
 
 interface ProfileFormProps {
   user: UserData
+  /** Extra data pro zaměstnanecký poměr (HPP/DPP/DPČ) */
+  employment?: {
+    startDate?: Date | null
+    currentSalary?: number | null
+  }
 }
 
-export function ProfileForm({ user }: ProfileFormProps) {
+const INSURANCE_COMPANIES = [
+  { code: '111', name: 'VZP — Všeobecná zdravotní pojišťovna' },
+  { code: '201', name: 'VoZP — Vojenská zdravotní pojišťovna' },
+  { code: '205', name: 'ČPZP — Česká průmyslová zdravotní pojišťovna' },
+  { code: '207', name: 'OZP — Oborová zdravotní pojišťovna' },
+  { code: '211', name: 'ZPMV — Zdravotní pojišťovna ministerstva vnitra' },
+  { code: '213', name: 'RBP — Revírní bratrská pokladna' },
+]
+
+const BOZP_URL = 'https://www.skolenibozp.cz/'
+const BOZP_KEY = 'fb-bozp-last-done'
+
+function fmtCzk(n: number) {
+  return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
+}
+
+export function ProfileForm({ user, employment }: ProfileFormProps) {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [nickname, setNickname] = useState('')
+  const [birthDate, setBirthDate] = useState('')
+  const [insurance, setInsurance] = useState('111')
+  const [startingSalary, setStartingSalary] = useState('')
+  const [bozpLastDone, setBozpLastDone] = useState<string | null>(null)
+
+  const isEmployee = ['HPP', 'DPP', 'DPC'].includes(user.employmentType ?? '')
   const [formData, setFormData] = useState({
     name: user.name || '',
     phone: user.phone || '',
@@ -36,8 +63,28 @@ export function ProfileForm({ user }: ProfileFormProps) {
   })
 
   useEffect(() => {
-    try { setNickname(localStorage.getItem('fb-nickname') ?? '') } catch { /* noop */ }
+    try {
+      setNickname(localStorage.getItem('fb-nickname') ?? '')
+      setBozpLastDone(localStorage.getItem(BOZP_KEY))
+    } catch { /* noop */ }
   }, [])
+
+  const markBozpDone = () => {
+    const today = new Date().toISOString().slice(0, 10)
+    try { localStorage.setItem(BOZP_KEY, today) } catch { /* noop */ }
+    setBozpLastDone(today)
+  }
+
+  const bozpNextDue = bozpLastDone
+    ? new Date(new Date(bozpLastDone).setFullYear(new Date(bozpLastDone).getFullYear() + 1))
+    : null
+  const bozpOverdue = bozpNextDue ? bozpNextDue < new Date() : true
+
+  const currentSalary = employment?.currentSalary ?? null
+  const startSalaryNum = Number(startingSalary) || null
+  const growthPct = currentSalary && startSalaryNum && startSalaryNum > 0
+    ? Math.round(((currentSalary - startSalaryNum) / startSalaryNum) * 100)
+    : null
 
   const update = (key: string, value: string) => setFormData((p) => ({ ...p, [key]: value }))
 
@@ -89,6 +136,90 @@ export function ProfileForm({ user }: ProfileFormProps) {
           <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
         </div>
       </Section>
+
+      {/* Zaměstnanecké údaje — jen pro HPP/DPP/DPČ */}
+      {isEmployee && (
+        <Section title="Zaměstnanecké údaje">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Datum narození</label>
+              <input
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Zdravotní pojišťovna</label>
+              <select
+                value={insurance}
+                onChange={(e) => setInsurance(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              >
+                {INSURANCE_COMPANIES.map(i => <option key={i.code} value={i.code}>{i.code} · {i.name}</option>)}
+              </select>
+            </div>
+            <Field label="Nástup" value={employment?.startDate ? new Date(employment.startDate).toLocaleDateString('cs-CZ') : '—'} readOnly />
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Nástupní plat (Kč)</label>
+              <input
+                type="number"
+                value={startingSalary}
+                onChange={(e) => setStartingSalary(e.target.value)}
+                placeholder="např. 45 000"
+                className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-medium text-slate-500 mb-1">Aktuální plat</label>
+              <div className="flex items-center gap-3">
+                <p className="text-lg font-headline font-bold text-navy">{currentSalary ? fmtCzk(currentSalary) : '—'}</p>
+                {growthPct !== null && growthPct > 0 && (
+                  <span className="text-xs font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded-full">
+                    +{growthPct} % od nástupu 📈
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Školení BOZP */}
+          <div className={`mt-5 rounded-2xl p-4 border ${bozpOverdue ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200'}`}>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <p className="text-sm font-semibold text-navy">Školení BOZP</p>
+                {bozpLastDone ? (
+                  <p className={`text-xs mt-0.5 ${bozpOverdue ? 'text-amber-700' : 'text-green-700'}`}>
+                    {bozpOverdue
+                      ? `⚠️ Propadlé — naposledy ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')}`
+                      : `✓ Splněno ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')} · další termín ${bozpNextDue!.toLocaleDateString('cs-CZ')}`}
+                  </p>
+                ) : (
+                  <p className="text-xs text-amber-700 mt-0.5">⚠️ Zatím neabsolvováno — je potřeba každý rok</p>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={BOZP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-full text-xs font-semibold text-white bg-violet hover:bg-violet-dark transition-colors"
+                >
+                  Přejít na školení →
+                </a>
+                <button
+                  type="button"
+                  onClick={markBozpDone}
+                  className="px-3 py-2 rounded-full text-xs font-medium text-slate-500 bg-white border border-slate-200 hover:text-navy transition-colors"
+                >
+                  Označit jako splněné
+                </button>
+              </div>
+            </div>
+          </div>
+        </Section>
+      )}
 
       {/* Address */}
       <Section title="Adresa">

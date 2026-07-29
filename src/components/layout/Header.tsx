@@ -2,6 +2,7 @@
 
 import { Menu, Bell, BookOpen } from 'lucide-react'
 import Link from 'next/link'
+import { HeaderAvatar } from '@/components/AvatarUpload'
 
 interface HeaderProps {
   title: string
@@ -36,17 +37,7 @@ export function Header({ title, onMenuClick, userName }: HeaderProps) {
         <button className="relative p-2 text-slate-400 hover:text-navy rounded-full hover:bg-slate-100 transition-all duration-150">
           <Bell className="w-5 h-5" />
         </button>
-        <div className="relative flex-shrink-0">
-          <div
-            className="absolute -inset-0.5 rounded-full opacity-40"
-            style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(4px)' }}
-          />
-          <div className="relative w-8 h-8 bg-violet rounded-full flex items-center justify-center ring-2 ring-white">
-            <span className="text-white text-xs font-semibold">
-              {userName?.[0]?.toUpperCase() || 'U'}
-            </span>
-          </div>
-        </div>
+        <HeaderAvatar initial={userName?.[0]?.toUpperCase() || 'U'} />
       </div>
     </header>
   )
