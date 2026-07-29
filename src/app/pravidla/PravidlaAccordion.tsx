@@ -17,12 +17,19 @@ const SECTIONS: Section[] = [
     id: 'homeoffice',
     emoji: '💻',
     title: 'Homeoffice',
-    summary: 'Jak nahlásit den mimo kancelář',
+    summary: 'Nahlásit do 7:59 na Slack a do kalendáře',
     content: (
-      <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
-        <li>Informace o plánovaném Homeoffice si zadejte do Docházky tak, aby se to daný den propsalo na Slacku do vlákna <span className="text-violet font-medium">#ucast_absence</span></li>
-        <li>V Google Kalendáři si nastavte, že daný den nebudete v kanceláři</li>
-      </ol>
+      <div className="space-y-3">
+        <p className="text-sm text-slate-600 leading-relaxed">
+          Informace o plánovaném Homeoffice si zadej tak, aby se to daný den propsalo na Slacku do vlákna <span className="text-violet font-medium">#ucast_absence</span>, tj. nejpozději do <strong>7:59</strong> ten den. Pokud to nestihneš, napiš to na Slack do vlákna <span className="text-violet font-medium">#ucast_absence</span>.
+        </p>
+        <p className="text-sm text-slate-600 leading-relaxed">
+          Prosím, dodržuj tohle pravidlo primárně z hlediska bezpečnosti (např. pro případ, že by hořelo → díky tomu víme, že tě na kanclu nemusíme nikde hledat).
+        </p>
+        <p className="text-sm text-slate-600 leading-relaxed">
+          V Google Kalendáři si nastav, že daný den nebudeš v kanceláři.
+        </p>
+      </div>
     ),
   },
   {
@@ -33,7 +40,7 @@ const SECTIONS: Section[] = [
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
-          Každý z nás si čas od času potřebuje odpočinout a na nějakou dobu prostě nemyslet na práci. Zároveň však potřebujeme zajistit, aby naše nepřítomnost nedopadla negativně na naše klienty.
+          Každý z nás si čas od času potřebuje odpočinout a na nějakou dobu prostě nemyslet na práci. Zároveň však potřebujeme zajistit, aby naše nepřítomnost nedopadla negativně na naše klienty nebo tým.
         </p>
         <p className="text-sm text-slate-600 leading-relaxed">
           Počet dní dovolené na každého je 25 dní za rok. Dovolenou počítáme však na základě typu úvazku:
@@ -65,22 +72,22 @@ const SECTIONS: Section[] = [
           </table>
         </div>
         <p className="text-sm text-slate-600 leading-relaxed">
-          Tzn. že nově, dle zákona, má každý nárok na 25 dní dovolené, avšak jiné počty hodin → to se odvíjí od výše úvazku.
+          Dle zákona, má každý nárok na stejný počet dní dovolené, avšak jiné počty hodin → to se odvíjí od výše úvazku.
         </p>
 
         <div>
           <p className="text-sm font-semibold text-navy mb-1">Informování o plánované dovolené/absenci ℹ️</p>
           <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
-            <li>Informaci o plánované absenci (např. dovolená, návštěva lékaře, apod.) co nejdříve zadejte do Docházky a pokud to nestihnete, pošlete toto info na Slacku do kanálu <span className="text-violet font-medium">#účast_absence</span>.</li>
-            <li>Zároveň si v Google Kalendáři vytvoříte ihned sami událost – typ: nejsem v práci a do popisu události napište o jakou absenci se jedná.</li>
+            <li>Informaci o plánované absenci (např. dovolená, návštěva lékaře, apod.) co nejdříve zadej do systému a pokud to nestihneš, pošli toto info na Slacku do kanálu <span className="text-violet font-medium">#účast_absence</span>.</li>
+            <li>Zároveň si to zaktualizuješ i v Google Kalendáři.</li>
           </ol>
         </div>
 
         <div>
           <p className="text-sm font-semibold text-navy mb-1">Předání klientů v případě dovolené 📋</p>
           <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
-            <li>V Asaně si otevřete k tomu určený projekt „📋 DOVOLENÁ/PŘEDÁVÁNÍ".</li>
-            <li>Rozhodnutí o osobě, která vás zastoupí, konzultujete s vaším teamleaderem.</li>
+            <li>V Asaně si otevřeš k tomu určený projekt „📋 DOVOLENÁ/PŘEDÁVÁNÍ".</li>
+            <li>Rozhodnutí o osobě, která tě zastoupí, konzultuješ s vaším teamleaderem.</li>
             <li>U každého klienta přidat jako assigneeho určeného člověka.</li>
             <li>Task přidat také ke klientovi do sekce „Dovolená" pomocí „Add to another project".</li>
             <li>Každý úkol bude mít dva subtasky: Klient informován a Potvrzení assigneeho.</li>
