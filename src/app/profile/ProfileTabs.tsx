@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
-import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Briefcase as BriefcaseIcon, Banknote, CalendarDays, FileText, ClipboardList } from 'lucide-react'
+import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Briefcase as BriefcaseIcon, Banknote, CalendarDays, FileText, ClipboardList, Gift } from 'lucide-react'
+import { BenefitsPanel } from './panels/BenefitsPanel'
 
 const TYPE_ICONS: Record<string, React.ElementType> = {
   NOTEBOOK: Laptop, TELEFON: Smartphone, MYS: Mouse,
@@ -75,6 +76,7 @@ export function ProfileTabs({
     { id: 'hr', label: 'HR údaje', icon: BriefcaseIcon },
     { id: 'vyplata', label: payslipsLabel ?? 'Moje výplata', icon: Banknote },
     { id: 'dochazka', label: 'Docházka', icon: CalendarDays },
+    { id: 'benefity', label: 'Benefity', icon: Gift },
     { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
     { id: 'onboarding', label: 'Onboarding', icon: ClipboardList },
   ] as const
@@ -258,6 +260,9 @@ export function ProfileTabs({
 
       {/* Moje docházka */}
       {tab === 'dochazka' && timeOffPanel}
+
+      {/* Benefity */}
+      {tab === 'benefity' && <BenefitsPanel />}
 
       {/* Dokumenty a smlouvy */}
       {tab === 'dokumenty' && documentsPanel}
