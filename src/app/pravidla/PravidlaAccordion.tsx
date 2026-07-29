@@ -17,7 +17,7 @@ const SECTIONS: Section[] = [
     id: 'homeoffice',
     emoji: '💻',
     title: 'Homeoffice',
-    summary: 'Nahlásit do 7:59 na Slack a do kalendáře',
+    summary: 'Nahlas do 7:59 na Slack a do Google Kalendáře.',
     content: (
       <div className="space-y-3">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -36,7 +36,7 @@ const SECTIONS: Section[] = [
     id: 'dovolena',
     emoji: '✈️',
     title: 'Dovolená',
-    summary: 'Nárok, informování, předání klientů, převod do dalšího roku',
+    summary: '25 dní ročně dle úvazku, s pravidly pro informování a předání klientů.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -112,35 +112,23 @@ const SECTIONS: Section[] = [
     id: 'nemoc',
     emoji: '🤒',
     title: 'Nemoc',
-    summary: 'Náhrada odměny, neschopenka, výpočet srážky',
+    summary: 'Náhrada mzdy od 1. do 15. dne nemoci, s kalkulačkou srážky.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
-          Každý z členů týmu Four Bros má měsíčně určitou časovou kapacitu, kterou může věnovat práci. Nemoc si však často nevybírá. Ve Four Bros si spolupráce se všemi váříme, a proto v případě nemoci budeme absentované hodiny finančně nahrazovat od 1. do 15. dne nemoci — stejně, jako by daný člověk spolupracoval s Four Bros na hlavní pracovní poměr.
+          Každý z členů týmu Four Bros má měsíčně určitou časovou kapacitu, kterou může věnovat práci. Nemoc si však často nevybírá. Ve Four Bros si spolupráce se všemi váříme, a proto v případě nemoci budeme absentované hodiny finančně nahrazovat od 1. do 15. dne nemoci.
         </p>
-        <p className="text-sm text-slate-600">
-          Příklady výpočtu jsou uvedeny zde:{' '}
-          <a href="https://www.vypocet.cz/popis-vypoctu-nemocenske" target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">vypocet.cz/popis-vypoctu-nemocenske</a>
-        </p>
-
         <SickPayEstimator />
 
         <p className="text-sm text-slate-600 leading-relaxed">
-          Jak má každý z nás možnosti v případě, kdy se necítí dobře? Prvně je preferováno zůstat doma. Máš tyto možnosti:
+          Jak má každý z nás možnosti v případě, kdy se necítí dobře? Prvně je preferováno zůstat doma. Máš tyto možnosti: <strong>nahradit si absenci</strong> (zpravidla krátkodobou, 1–2 dny) v následujících dnech a týdnech, což ti nesnižuje odměnu, anebo <strong>navštívit lékaře</strong> a dostat neschopenku, kterou elektronicky najdeš na <a href="https://eportal.cssz.cz" target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">eportal.cssz.cz</a> v sekci eNeschopenka / „Dočasná pracovní neschopnost" → „Přehled DPN", odkud si ji stáhneš v PDF.
         </p>
-        <ol className="list-decimal list-inside space-y-2 text-sm text-slate-600 leading-relaxed">
-          <li><strong>Nahradit si absenci</strong> (zpravidla krátkodobou, 1–2 dny) v následujících dnech a týdnech — nesnižuje ti to odměnu.</li>
-          <li><strong>Navštívit lékaře</strong> a dostat neschopenku. Elektronicky ji najdeš na <a href="https://eportal.cssz.cz" target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">eportal.cssz.cz</a> v sekci <strong>eNeschopenka</strong> / <strong>„Dočasná pracovní neschopnost"</strong> → <strong>„Přehled DPN"</strong>, odkud si ji stáhneš v PDF.</li>
-        </ol>
 
         <div>
           <p className="text-sm font-semibold text-navy mb-1">Co je potřeba splnit pro proplacení?</p>
-          <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
-            <li>Podmínkou je přinést potvrzení od lékaře / stáhnout ho z <a href="https://eportal.cssz.cz" target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">eportal.cssz.cz</a>.</li>
-            <li>Evidenci průkazů má na starosti Kristý.</li>
-            <li>Dny nemoci zadej do <span className="text-violet">dochazka.fourbros.cz</span> se statusem „Nemoc".</li>
-            <li>Výpočet náhrady se počítá vždy ke konci měsíce, ve kterém jsi byl/a nemocný/á.</li>
-          </ol>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            Podmínkou je přinést potvrzení od lékaře nebo ho stáhnout z <a href="https://eportal.cssz.cz" target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">eportal.cssz.cz</a> (evidenci má na starosti Kristý), dny nemoci zadat do systému jako „Nemoc" a počítat s tím, že výpočet náhrady se provádí vždy ke konci měsíce, ve kterém proběhla nemoc.
+          </p>
         </div>
       </div>
     ),
@@ -149,7 +137,7 @@ const SECTIONS: Section[] = [
     id: 'lekar',
     emoji: '🩺',
     title: 'Návštěva lékaře',
-    summary: 'Pracovní volno s náhradou mzdy na nezbytně nutnou dobu',
+    summary: 'Pracovní volno s náhradou mzdy na nezbytně nutnou dobu.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -157,12 +145,9 @@ const SECTIONS: Section[] = [
         </p>
         <div>
           <p className="text-sm font-semibold text-navy mb-1">Jaká jsou pravidla?</p>
-          <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
-            <li>Potvrzení od lékaře doneste/zašlete co nejdříve emailem Office Manažerce.</li>
-            <li>V <span className="text-violet">dochazka.fourbros.cz</span> využijte status „Lékař" (ne „Nemoc" ani „Neplacené volno").</li>
-            <li>Při akutní návštěvě, kdy to nestihnete zapsat, napište alespoň info na Slack.</li>
-            <li>Čas strávený návštěvou by neměl jít na úkor klientských hodin.</li>
-          </ol>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            Potvrzení od lékaře dones/zašli co nejdříve emailem Kristý, v systému využij status „Lékař" (ne „Nemoc" ani „Neplacené volno"), při akutní návštěvě, kdy to nestihneš zapsat, napiš alespoň info na Slack do vlákna <span className="text-violet font-medium">#ucast_absence</span>, a čas strávený návštěvou by neměl jít na úkor klientských hodin.
+          </p>
         </div>
       </div>
     ),
@@ -171,10 +156,10 @@ const SECTIONS: Section[] = [
     id: 'pohreb',
     emoji: '🕊️',
     title: 'Pohřeb',
-    summary: 'Placené volno s poznámkou „pohřeb“',
+    summary: 'Placené volno na celý den s poznámkou „pohřeb“.',
     content: (
       <p className="text-sm text-slate-600 leading-relaxed">
-        V prvé řadě — upřímnou soustrast. Pokud budeš na pohřbu, zvol <strong>„placené volno"</strong> a do poznámky napiš <em>pohřeb</em>.
+        V prvé řadě — upřímnou soustrast. Pokud budeš na pohřbu, zvol <strong>„pohřeb"</strong> — jedná se tak o placené volno celý den.
       </p>
     ),
   },
@@ -182,22 +167,17 @@ const SECTIONS: Section[] = [
     id: 'fakturace',
     emoji: '💸',
     title: 'Fakturace',
-    summary: 'Uzávěrka k 10. dni, splatnost faktur ke 20. dni',
+    summary: 'Uzávěrka k 10. dni, splatnost faktur ke 20. dni.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
-          Fakturace odpracovaných hodin probíhá přes platformu Docházka. Kontrola a doplnění položek je možná do 10. dne v měsíci — po tomto datu automaticky spadají do dalšího měsíce.
+          Fakturace odpracovaných hodin probíhá přes platformu HR Portál.
         </p>
         <div>
           <p className="text-sm font-semibold text-navy mb-1">Jaká jsou pravidla?</p>
-          <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
-            <li>Ke konci měsíce zkontroluj svoji fakturaci; potřebuješ-li něco doplnit/proplatit, napiš Kristýně.</li>
-            <li>K 10. dni se fakturace daného měsíce uzavře a nelze ji dál editovat.</li>
-            <li>K 10. dni se vystaví faktura za kancelářské místo se splatností 10 dní.</li>
-            <li>Spolupracující osoba vystaví fakturu k 10. dni a odešle ji na <span className="text-violet">invoice@fourbros.cz</span>.</li>
-            <li>Faktury jsou propláceny dle smlouvy ke 20. dni v měsíci.</li>
-            <li>S jakoukoli nejasností se obrať na Kristý.</li>
-          </ol>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            Ke konci měsíce zkontroluj svoji fakturaci a pokud potřebuješ něco doplnit nebo proplatit, napiš Kristý; k 10. dni se vystaví faktura za kancelářské místo se splatností 10 dní; k 10. dni v měsíci vystav fakturu za provedené služby a odešli ji na <span className="text-violet">invoice@fourbros.cz</span>; faktury jsou propláceny dle smlouvy ke 20. dni v měsíci. S jakoukoli nejasností se obrať na Kristý.
+          </p>
         </div>
       </div>
     ),
