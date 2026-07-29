@@ -82,7 +82,7 @@ export default async function TimeOffPage() {
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
           <h3 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
             <Plus className="w-5 h-5 text-violet" />
-            Nová žádost o dovolenou
+            Nová žádost
           </h3>
           <LeaveRequestForm monthlySalary={['HPP', 'DPP', 'DPC'].includes(user.employmentType ?? '') ? ((user as typeof DEMO_USER).monthlySalary ?? null) : null} />
         </div>

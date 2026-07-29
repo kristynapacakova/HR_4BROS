@@ -44,7 +44,7 @@ export default async function ProfilePage() {
       userEmail={session.user.email}
       employmentType={user.employmentType}
     >
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto space-y-6">
         {/* Profile header */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="flex items-center gap-5">

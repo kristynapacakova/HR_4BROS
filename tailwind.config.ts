@@ -79,7 +79,7 @@ const config: Config = {
       },
       fontFamily: {
         headline: ["Serenity", ...fontFamily.sans],
-        sans: ["Roboto", ...fontFamily.sans],
+        sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       lineHeight: {
         relaxed: "1.6",

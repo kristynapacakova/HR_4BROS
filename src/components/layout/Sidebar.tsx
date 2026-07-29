@@ -20,6 +20,7 @@ import {
   Coins,
   FilePen,
   X,
+  Lock,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -115,6 +116,26 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
         <p className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-2 mt-1">Navigace</p>
 
         {navItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
+
+        {/* Onboarding | Offboarding */}
+        <Link
+          href="/onboarding"
+          onClick={onClose}
+          className={cn(
+            'flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all duration-150',
+            pathname === '/onboarding'
+              ? 'bg-violet/10 text-violet'
+              : 'text-slate-500 hover:bg-slate-50 hover:text-navy'
+          )}
+        >
+          <ClipboardList className={cn('w-4 h-4 flex-shrink-0', pathname === '/onboarding' ? 'text-violet' : 'text-slate-400')} />
+          <span className="flex-1">Onboarding</span>
+          <span className="text-slate-300 text-xs mx-0.5">·</span>
+          <span className={cn('flex items-center gap-1 text-xs', offboardingUnlocked ? 'text-green-500' : 'text-slate-300')}>
+            {offboardingUnlocked ? 'Offboarding' : <><Lock className="w-2.5 h-2.5" /><span>Offboarding</span></>}
+          </span>
+          {pathname === '/onboarding' && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-violet flex-shrink-0" />}
+        </Link>
 
         {isAdmin && (
           <>

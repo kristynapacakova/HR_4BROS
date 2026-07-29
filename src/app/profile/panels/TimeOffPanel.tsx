@@ -80,7 +80,7 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <h3 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
           <Plus className="w-5 h-5 text-violet" />
-          Nová žádost o dovolenou
+          Nová žádost
         </h3>
         <LeaveRequestForm monthlySalary={isEmployee ? monthlySalary : null} />
       </div>

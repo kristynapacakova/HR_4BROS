@@ -77,7 +77,6 @@ export function ProfileTabs({
     { id: 'dochazka', label: 'Docházka', icon: CalendarDays },
     { id: 'benefity', label: 'Benefity', icon: Gift },
     { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
-    { id: 'onboarding', label: 'Onboarding', icon: ClipboardList },
   ] as const
   type TabId = typeof tabs[number]['id']
   const searchParams = useSearchParams()
@@ -92,9 +91,10 @@ export function ProfileTabs({
   const seniorityLabel = seniorityLevels?.find(s => s.value === hrData?.seniority)?.label ?? hrData?.seniority ?? '—'
 
   return (
-    <div>
-      {/* Tab bar — pill container, wraps evenly on narrow screens */}
-      <div className="flex flex-wrap gap-1.5 bg-slate-50 rounded-2xl p-1.5 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 items-start">
+
+      {/* Sidebar nav — desktop */}
+      <nav className="hidden md:block bg-white rounded-2xl border border-slate-100 shadow-sm p-2 sticky top-20">
         {tabs.map(t => {
           const Icon = t.icon
           const active = tab === t.id
@@ -102,16 +102,32 @@ export function ProfileTabs({
             <button
               key={t.id}
               onClick={() => setTab(t.id as TabId)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-                active ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy'
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${
+                active ? 'bg-violet/10 text-violet' : 'text-slate-500 hover:bg-slate-50 hover:text-navy'
               }`}
             >
-              <Icon className={`w-4 h-4 ${active ? 'text-violet' : 'text-slate-400'}`} />
-              {t.label}
+              <Icon className={`w-4 h-4 flex-shrink-0 ${active ? 'text-violet' : 'text-slate-400'}`} />
+              <span className="truncate">{t.label}</span>
             </button>
           )
         })}
+      </nav>
+
+      {/* Dropdown nav — mobile */}
+      <div className="md:hidden relative">
+        <select
+          value={tab}
+          onChange={e => setTab(e.target.value as TabId)}
+          className="w-full appearance-none bg-white border border-slate-100 shadow-sm rounded-2xl pl-4 pr-10 py-3 text-sm font-medium text-navy focus:outline-none focus:ring-2 focus:ring-violet"
+        >
+          {tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+        </select>
+        <svg className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </div>
+
+      <div className="min-w-0">
 
       {/* Osobní údaje + HR údaje */}
       {tab === 'udaje' && (
@@ -121,87 +137,83 @@ export function ProfileTabs({
             employment={{ startDate: (user as { startDate?: Date | null }).startDate, currentSalary: hrData?.monthlySalary ?? null }}
           />
 
-          {/* HR údaje — visible to all, editable only by admin */}
-          <div className="space-y-4">
-          {/* Summary row */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { label: 'Seniorita', value: seniorityLabel },
-              { label: 'Ve firmě', value: tenure((user as { startDate?: Date | null }).startDate) },
-              { label: 'Úvazek', value: hrData?.monthlyHours ? `${hrData.monthlyHours} h/měs` : '—' },
-              { label: 'Efektivita', value: efficiency ? `${efficiency} %` : '—', highlight: true },
-            ].map(c => (
-              <div key={c.label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-                <p className="text-xs text-slate-400 mb-1">{c.label}</p>
-                <p className={`text-xl font-headline font-bold ${c.highlight ? 'text-violet' : 'text-navy'}`}>{c.value}</p>
+          {/* HR údaje — viditelné jen pro TL / admina / HR */}
+          {isAdmin && (
+            <div className="space-y-4">
+              {/* Summary row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { label: 'Seniorita', value: seniorityLabel },
+                  { label: 'Ve firmě', value: tenure((user as { startDate?: Date | null }).startDate) },
+                  { label: 'Úvazek', value: hrData?.monthlyHours ? `${hrData.monthlyHours} h/měs` : '—' },
+                  { label: 'Efektivita', value: efficiency ? `${efficiency} %` : '—', highlight: true },
+                ].map(c => (
+                  <div key={c.label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                    <p className="text-xs text-slate-400 mb-1">{c.label}</p>
+                    <p className={`text-xl font-headline font-bold ${c.highlight ? 'text-violet' : 'text-navy'}`}>{c.value}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Detail form */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="font-headline font-semibold text-navy">HR údaje</h3>
-              {isAdmin
-                ? <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">Demo — nelze uložit</span>
-                : <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                    Pouze HR může upravovat
-                  </span>
-              }
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <Field label="Pozice">
-                <input defaultValue={user.position ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-              </Field>
-              <Field label="Seniorita">
-                <select defaultValue={hrData?.seniority ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`}>
-                  <option value="">— vyberte —</option>
-                  {seniorityLevels?.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-                </select>
-              </Field>
-              <Field label="Oddělení / Tým">
-                <input defaultValue={user.department ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-              </Field>
-              <Field label="Typ spolupráce">
-                <select defaultValue={user.employmentType ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`}>
-                  <option value="">— vyberte —</option>
-                  {employmentTypes?.map(e => <option key={e.value} value={e.value}>{e.value} — {e.label.split('–')[1]?.trim() ?? e.label}</option>)}
-                </select>
-              </Field>
-              <Field label="Úvazek (h/měs)">
-                <input type="number" defaultValue={hrData?.monthlyHours ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-              </Field>
-              <Field label="Klientské hodiny (h/měs)">
-                <input type="number" defaultValue={hrData?.clientHours ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-              </Field>
-              {user.employmentType !== 'ICO' && (
-                <Field label="Mzda / měsíc (Kč)">
-                  <input type="number" defaultValue={hrData?.monthlySalary ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-                </Field>
-              )}
-              {user.employmentType === 'ICO' && (
-                <Field label="Hodinová sazba (Kč/h)">
-                  <input type="number" defaultValue={hrData?.hourlyRate ?? ''} disabled={!isAdmin} className={`input ${!isAdmin ? 'bg-slate-50 text-slate-500 cursor-default' : ''}`} />
-                </Field>
-              )}
-            </div>
-            {/* Derived stats */}
-            {(hrData?.monthlyHours || hrData?.monthlySalary || hrData?.hourlyRate) && (
-              <div className="mt-5 pt-5 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
-                {efficiency !== null && (
-                  <div><p className="text-xs text-slate-400">Efektivita</p><p className="font-semibold text-violet">{efficiency} %</p></div>
-                )}
-                {hrData.monthlySalary && hrData.clientHours && (
-                  <div><p className="text-xs text-slate-400">Náklad / kl. hodinu</p><p className="font-semibold text-navy">{fmt(Math.round(hrData.monthlySalary / hrData.clientHours))}</p></div>
-                )}
-                {hrData.hourlyRate && hrData.clientHours && (
-                  <div><p className="text-xs text-slate-400">Měs. fakturace (odhad)</p><p className="font-semibold text-navy">{fmt(hrData.hourlyRate * hrData.clientHours)}</p></div>
+              {/* Detail form */}
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="font-headline font-semibold text-navy">HR údaje</h3>
+                  <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">Demo — nelze uložit</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <Field label="Pozice">
+                    <input defaultValue={user.position ?? ''} className="input" />
+                  </Field>
+                  <Field label="Seniorita">
+                    <select defaultValue={hrData?.seniority ?? ''} className="input">
+                      <option value="">— vyberte —</option>
+                      {seniorityLevels?.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Oddělení / Tým">
+                    <input defaultValue={user.department ?? ''} className="input" />
+                  </Field>
+                  <Field label="Typ spolupráce">
+                    <select defaultValue={user.employmentType ?? ''} className="input">
+                      <option value="">— vyberte —</option>
+                      {employmentTypes?.map(e => <option key={e.value} value={e.value}>{e.value} — {e.label.split('–')[1]?.trim() ?? e.label}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Úvazek (h/měs)">
+                    <input type="number" defaultValue={hrData?.monthlyHours ?? ''} className="input" />
+                  </Field>
+                  <Field label="Klientské hodiny (h/měs)">
+                    <input type="number" defaultValue={hrData?.clientHours ?? ''} className="input" />
+                  </Field>
+                  {user.employmentType !== 'ICO' && (
+                    <Field label="Mzda / měsíc (Kč)">
+                      <input type="number" defaultValue={hrData?.monthlySalary ?? ''} className="input" />
+                    </Field>
+                  )}
+                  {user.employmentType === 'ICO' && (
+                    <Field label="Hodinová sazba (Kč/h)">
+                      <input type="number" defaultValue={hrData?.hourlyRate ?? ''} className="input" />
+                    </Field>
+                  )}
+                </div>
+                {/* Derived stats */}
+                {(hrData?.monthlyHours || hrData?.monthlySalary || hrData?.hourlyRate) && (
+                  <div className="mt-5 pt-5 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                    {efficiency !== null && (
+                      <div><p className="text-xs text-slate-400">Efektivita</p><p className="font-semibold text-violet">{efficiency} %</p></div>
+                    )}
+                    {hrData.monthlySalary && hrData.clientHours && (
+                      <div><p className="text-xs text-slate-400">Náklad / kl. hodinu</p><p className="font-semibold text-navy">{fmt(Math.round(hrData.monthlySalary / hrData.clientHours))}</p></div>
+                    )}
+                    {hrData.hourlyRate && hrData.clientHours && (
+                      <div><p className="text-xs text-slate-400">Měs. fakturace (odhad)</p><p className="font-semibold text-navy">{fmt(hrData.hourlyRate * hrData.clientHours)}</p></div>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-          </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -262,9 +274,7 @@ export function ProfileTabs({
 
       {/* Dokumenty a smlouvy */}
       {tab === 'dokumenty' && documentsPanel}
-
-      {/* Onboarding | Offboarding */}
-      {tab === 'onboarding' && onboardingPanel}
+      </div>
     </div>
   )
 }

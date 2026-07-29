@@ -65,49 +65,36 @@ function PayslipRow({ p, isICO }: { p: Payslip; isICO: boolean }) {
   )
 }
 
-function YearAccordion({ year, payslips, isICO, defaultOpen = false }: {
-  year: number; payslips: Payslip[]; isICO: boolean; defaultOpen?: boolean
-}) {
-  const [open, setOpen] = useState(defaultOpen)
+function YearPanel({ year, payslips, isICO }: { year: number; payslips: Payslip[]; isICO: boolean }) {
   const byMonth = new Map(payslips.map(p => [p.month, p]))
   // Celý rok leden–prosinec, i pro měsíce bez záznamu
   const allMonths = Array.from({ length: 12 }, (_, i) => 12 - i).map(m => byMonth.get(m) ?? null)
   const yearTotal = payslips.filter(p => !p.planned).reduce((sum, p) => sum + p.netAmount, 0)
-  const recordedCount = payslips.length
 
   return (
-    <div className="border-b border-slate-100 last:border-0">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full px-6 py-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold text-navy">{year}</span>
-          <span className="text-xs text-slate-400">{recordedCount} {recordedCount === 1 ? 'záznam' : recordedCount < 5 ? 'záznamy' : 'záznamů'}</span>
-        </div>
-        <div className="flex items-center gap-3">
-          {yearTotal > 0 && <span className="text-sm font-semibold text-navy">{fmt(yearTotal, 'CZK')}</span>}
-          <ChevronDown className={`w-4 h-4 text-slate-300 transition-transform ${open ? 'rotate-180' : ''}`} />
-        </div>
-      </button>
-      {open && (
-        <div className="divide-y divide-slate-50 bg-slate-50/40">
-          {allMonths.map((p, i) => {
-            const month = 12 - i
-            if (!p) {
-              return (
-                <div key={month} className="px-6 py-3 flex items-center gap-4 opacity-40">
-                  <div className="p-2.5 rounded-lg bg-slate-100 flex-shrink-0">
-                    <Banknote className="w-5 h-5 text-slate-300" />
-                  </div>
-                  <p className="text-sm text-slate-400 flex-1">{MONTH_NAMES[month - 1]} {year} — bez záznamu</p>
-                </div>
-              )
-            }
-            return <PayslipRow key={p.id} p={p} isICO={isICO} />
-          })}
+    <div>
+      {yearTotal > 0 && (
+        <div className="px-6 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-sm">
+          <span className="text-slate-500">Celkem čistá za {year}</span>
+          <span className="font-semibold text-navy">{fmt(yearTotal, 'CZK')}</span>
         </div>
       )}
+      <div className="divide-y divide-slate-50">
+        {allMonths.map((p, i) => {
+          const month = 12 - i
+          if (!p) {
+            return (
+              <div key={month} className="px-6 py-3 flex items-center gap-4 opacity-40">
+                <div className="p-2.5 rounded-lg bg-slate-100 flex-shrink-0">
+                  <Banknote className="w-5 h-5 text-slate-300" />
+                </div>
+                <p className="text-sm text-slate-400 flex-1">{MONTH_NAMES[month - 1]} {year} — bez záznamu</p>
+              </div>
+            )
+          }
+          return <PayslipRow key={p.id} p={p} isICO={isICO} />
+        })}
+      </div>
     </div>
   )
 }
@@ -138,6 +125,7 @@ export function PayslipsClient({
     return acc
   }, {})
   const olderYears = Object.keys(olderByYear).map(Number).sort((a, b) => b - a)
+  const [selectedYear, setSelectedYear] = useState<number | null>(olderYears[0] ?? null)
 
   const latestReal = payslips.find(p => !p.planned)
   const isICO = employmentType === 'ICO'
@@ -239,7 +227,7 @@ export function PayslipsClient({
         </div>
       </div>
 
-      {/* Older payslips — collapsible, grouped by year (full Jan–Dec) */}
+      {/* Older payslips — collapsible, clickable year strip + full Jan–Dec panel */}
       {older.length > 0 && (
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
           <button
@@ -256,9 +244,23 @@ export function PayslipsClient({
           </button>
           {showHistory && (
             <div>
-              {olderYears.map((y, i) => (
-                <YearAccordion key={y} year={y} payslips={olderByYear[y]} isICO={isICO} defaultOpen={i === 0} />
-              ))}
+              {/* Clickable year pills */}
+              <div className="px-6 py-3 border-t border-slate-100 flex flex-wrap gap-1">
+                {olderYears.map(y => (
+                  <button
+                    key={y}
+                    onClick={() => setSelectedYear(y)}
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
+                      y === selectedYear ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
+                    }`}
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
+              {selectedYear !== null && (
+                <YearPanel year={selectedYear} payslips={olderByYear[selectedYear]} isICO={isICO} />
+              )}
             </div>
           )}
         </div>
