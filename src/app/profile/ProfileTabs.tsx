@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
-import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package } from 'lucide-react'
+import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Briefcase as BriefcaseIcon, Banknote, CalendarDays, FileText, ClipboardList } from 'lucide-react'
 
 const TYPE_ICONS: Record<string, React.ElementType> = {
   NOTEBOOK: Laptop, TELEFON: Smartphone, MYS: Mouse,
@@ -70,13 +70,13 @@ export function ProfileTabs({
   onboardingPanel?: React.ReactNode
 }) {
   const tabs = [
-    { id: 'udaje', label: 'Osobní údaje' },
-    { id: 'majetek', label: 'Zapůjčený majetek' },
-    { id: 'hr', label: 'HR údaje' },
-    { id: 'vyplata', label: payslipsLabel ?? 'Moje výplata' },
-    { id: 'dochazka', label: 'Moje docházka' },
-    { id: 'dokumenty', label: 'Dokumenty a smlouvy' },
-    { id: 'onboarding', label: 'Onboarding | Offboarding' },
+    { id: 'udaje', label: 'Osobní údaje', icon: UserIcon },
+    { id: 'majetek', label: 'Majetek', icon: Laptop },
+    { id: 'hr', label: 'HR údaje', icon: BriefcaseIcon },
+    { id: 'vyplata', label: payslipsLabel ?? 'Moje výplata', icon: Banknote },
+    { id: 'dochazka', label: 'Docházka', icon: CalendarDays },
+    { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
+    { id: 'onboarding', label: 'Onboarding', icon: ClipboardList },
   ] as const
   type TabId = typeof tabs[number]['id']
   const searchParams = useSearchParams()
@@ -92,19 +92,27 @@ export function ProfileTabs({
 
   return (
     <div>
-      {/* Tab bar */}
-      <div className="flex flex-wrap gap-1.5 bg-white rounded-3xl border border-slate-100 shadow-sm p-1.5 mb-5">
-        {tabs.map(t => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id as TabId)}
-            className={`px-4 py-2 text-sm font-medium rounded-full transition-all whitespace-nowrap ${
-              tab === t.id ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      {/* Tab bar — clean underline style */}
+      <div className="border-b border-slate-200 mb-6 -mx-1 px-1 overflow-x-auto scrollbar-none">
+        <div className="flex gap-1 min-w-max">
+          {tabs.map(t => {
+            const Icon = t.icon
+            const active = tab === t.id
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id as TabId)}
+                className={`relative flex items-center gap-2 px-3.5 pt-2 pb-3 text-sm font-medium transition-colors whitespace-nowrap ${
+                  active ? 'text-violet' : 'text-slate-500 hover:text-navy'
+                }`}
+              >
+                <Icon className={`w-4 h-4 ${active ? 'text-violet' : 'text-slate-400'}`} />
+                {t.label}
+                {active && <span className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full bg-violet" />}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Osobní údaje */}

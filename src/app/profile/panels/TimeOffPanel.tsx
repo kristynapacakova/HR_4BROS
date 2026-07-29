@@ -73,7 +73,7 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
           <Plus className="w-5 h-5 text-violet" />
           Nová žádost o dovolenou
         </h3>
-        <LeaveRequestForm />
+        <LeaveRequestForm monthlySalary={isEmployee ? monthlySalary : null} />
       </div>
 
       {/* Holidays this year */}

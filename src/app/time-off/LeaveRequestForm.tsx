@@ -1,8 +1,13 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { CalendarX, Info, ExternalLink, AlertCircle } from 'lucide-react'
+import { CalendarX, Info, ExternalLink, AlertCircle, Stethoscope } from 'lucide-react'
 import Link from 'next/link'
+import { computeSickPay } from '@/app/profile/panels/SickPayCard'
+
+function fmtCzk(n: number) {
+  return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
+}
 
 // ── Czech holiday helpers ────────────────────────────────────────────────────
 
@@ -88,7 +93,7 @@ const LEAVE_TYPES = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function LeaveRequestForm() {
+export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: number | null }) {
   const [form, setForm] = useState({
     type: 'DOVOLENA',
     startDate: '',
@@ -262,6 +267,41 @@ export function LeaveRequestForm() {
               Tento typ absence se neodečítá ze zůstatku dovolené
             </p>
           )}
+
+          {/* Náhrada + srážka při nemoci */}
+          {isSick && monthlySalary && calc.workdays >= 1 && (() => {
+            const r = computeSickPay(monthlySalary, calc.workdays)
+            return (
+              <div className="pt-2 border-t border-slate-200 space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-red-500">
+                  <Stethoscope className="w-3.5 h-3.5" />
+                  Orientační dopad na výplatu
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <div>
+                    <p className="text-[11px] text-slate-400">Náhrada za den</p>
+                    <p className="text-sm font-bold text-navy">{fmtCzk(r.compensationDay)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-slate-400">Náhrada celkem ({r.employerDays} dní)</p>
+                    <p className="text-sm font-bold text-navy">{fmtCzk(r.compensationTotal)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-slate-400">Srážka ze mzdy</p>
+                    <p className="text-sm font-bold text-red-500">−{fmtCzk(r.deduction)}</p>
+                  </div>
+                </div>
+                {r.csszDays > 0 && (
+                  <p className="text-[11px] text-slate-400">
+                    Od 15. dne ({r.csszDays} dní) platí nemocenské ČSSZ — nejde ze mzdy od Four Bros.
+                  </p>
+                )}
+                <p className="text-[11px] text-slate-400">
+                  Podrobný rozpis najdeš v záložce <strong>Moje výplata</strong> a v kartě „Náhrada při nemoci&ldquo; výše.
+                </p>
+              </div>
+            )
+          })()}
           {calc.holidays.length > 0 && selectedType.deductsBalance && (
             <div className="space-y-1.5 pt-1 border-t border-slate-200">
               <div className="flex items-center gap-1.5 text-xs text-violet font-medium">
