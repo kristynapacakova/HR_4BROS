@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { CalendarX, Info, ExternalLink, AlertCircle, Stethoscope } from 'lucide-react'
+import { useState, useMemo, useRef } from 'react'
+import { CalendarX, Info, ExternalLink, AlertCircle, Stethoscope, Paperclip, X, FileText, Image as ImageIcon } from 'lucide-react'
 import Link from 'next/link'
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 
@@ -103,8 +103,30 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
   })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [attachment, setAttachment] = useState<{ name: string; size: number; kind: 'pdf' | 'image' } | null>(null)
+  const [attachError, setAttachError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const update = (k: string, v: string | boolean) => setForm((p) => ({ ...p, [k]: v }))
+
+  const MAX_FILE_MB = 10
+  const handleFilePick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    const isPdf = file.type === 'application/pdf'
+    const isImage = file.type === 'image/png' || file.type === 'image/jpeg'
+    if (!isPdf && !isImage) {
+      setAttachError('Podporované formáty: PDF, PNG, JPG')
+      return
+    }
+    if (file.size > MAX_FILE_MB * 1024 * 1024) {
+      setAttachError(`Soubor je moc velký (max ${MAX_FILE_MB} MB)`)
+      return
+    }
+    setAttachError(null)
+    setAttachment({ name: file.name, size: file.size, kind: isPdf ? 'pdf' : 'image' })
+  }
 
   const selectedType = LEAVE_TYPES.find(t => t.value === form.type)!
   const isSick = form.type === 'NEMOC'
@@ -131,6 +153,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
     setLoading(false)
     setSuccess(true)
     setForm({ type: 'DOVOLENA', startDate: '', endDate: '', halfDay: false, reason: '' })
+    setAttachment(null)
     setTimeout(() => setSuccess(false), 3000)
   }
 
@@ -176,6 +199,52 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
             </Link>
             {' '}— najdeš tam postup, neschopenku i kontakt na HR.
           </p>
+        </div>
+      )}
+
+      {/* Neschopenka upload */}
+      {isSick && (
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">
+            Neschopenka <span className="text-slate-300 font-normal">(PDF, PNG, JPG — nepovinné)</span>
+          </label>
+          {attachment ? (
+            <div className="flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-xl bg-slate-50">
+              <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
+                {attachment.kind === 'pdf'
+                  ? <FileText className="w-4 h-4 text-red-400" />
+                  : <ImageIcon className="w-4 h-4 text-blue-400" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-navy truncate">{attachment.name}</p>
+                <p className="text-xs text-slate-400">{(attachment.size / 1024 / 1024).toFixed(1)} MB</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAttachment(null)}
+                className="p-1.5 rounded-full text-slate-400 hover:text-red-500 hover:bg-white transition-colors flex-shrink-0"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-slate-200 rounded-xl text-sm text-slate-500 hover:border-violet hover:text-violet hover:bg-violet/5 transition-colors"
+            >
+              <Paperclip className="w-4 h-4" />
+              Nahrát neschopenku
+            </button>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/pdf,image/png,image/jpeg"
+            onChange={handleFilePick}
+            className="hidden"
+          />
+          {attachError && <p className="text-xs text-red-500 mt-1">{attachError}</p>}
         </div>
       )}
 
@@ -261,12 +330,6 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
               {calc.workdays === 0.5 ? 'půl dne' : `${calc.workdays} ${calc.workdays === 1 ? 'den' : 'dní'}`}
             </span>
           </div>
-          {!selectedType.deductsBalance && (
-            <p className="text-xs text-slate-400 flex items-center gap-1">
-              <Info className="w-3.5 h-3.5" />
-              Tento typ absence se neodečítá ze zůstatku dovolené
-            </p>
-          )}
 
           {/* Náhrada + srážka při nemoci */}
           {isSick && monthlySalary && calc.workdays >= 1 && (() => {
@@ -297,7 +360,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
                   </p>
                 )}
                 <p className="text-[11px] text-slate-400">
-                  Podrobný rozpis najdeš v záložce <strong>Moje výplata</strong> a v kartě „Náhrada při nemoci&ldquo; výše.
+                  Podrobný rozpis srážky uvidíš i v záložce <strong>Moje výplata</strong> po zpracování žádosti.
                 </p>
               </div>
             )

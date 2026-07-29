@@ -2,7 +2,6 @@ import { formatDate, getDaysBetween } from '@/lib/utils'
 import { CalendarDays, Plus } from 'lucide-react'
 import { LeaveRequestForm } from '@/app/time-off/LeaveRequestForm'
 import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
-import { SickPayCard } from './SickPayCard'
 
 const LEAVE_LABEL: Record<string, string> = {
   DOVOLENA: 'Dovolená', HOMEOFFICE: 'Homeoffice', NEMOC: 'Nemoc',
@@ -64,10 +63,7 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
         </div>
       </div>
 
-      {/* Náhrada při nemoci — jen pro zaměstnance */}
-      {isEmployee && monthlySalary && <SickPayCard monthlySalary={monthlySalary} />}
-
-      {/* New request — holidays auto-calculated inside form */}
+      {/* New request — holidays auto-calculated inside form; sick-pay estimate appears inline when „Nemoc" is selected */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <h3 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
           <Plus className="w-5 h-5 text-violet" />
