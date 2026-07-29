@@ -114,18 +114,17 @@ export function PayslipsClient({
   sickDays?: number
 }) {
   const [showSickDetail, setShowSickDetail] = useState(false)
-  const [showHistory, setShowHistory] = useState(false)
 
   const sorted = [...payslips].sort((a, b) => (b.year - a.year) || (b.month - a.month))
   const recent = sorted.slice(0, 5)
-  const older = sorted.slice(5)
 
-  const olderByYear = older.reduce<Record<number, Payslip[]>>((acc, p) => {
+  const byYear = sorted.reduce<Record<number, Payslip[]>>((acc, p) => {
     (acc[p.year] ??= []).push(p)
     return acc
   }, {})
-  const olderYears = Object.keys(olderByYear).map(Number).sort((a, b) => b - a)
-  const [selectedYear, setSelectedYear] = useState<number | null>(olderYears[0] ?? null)
+  const years = Object.keys(byYear).map(Number).sort((a, b) => b - a)
+  // null = zobrazit „Posledních 5 výplat", jinak konkrétní rok leden–prosinec
+  const [selectedYear, setSelectedYear] = useState<number | null>(null)
 
   const latestReal = payslips.find(p => !p.planned)
   const isICO = employmentType === 'ICO'
@@ -211,60 +210,47 @@ export function PayslipsClient({
         )
       })()}
 
-      {/* Recent payslips — always visible */}
+      {/* Přehled výplat — klikatelné roky nahoře, pod tím buď posledních 5, nebo celý zvolený rok */}
       <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
-          <h3 className="font-headline font-semibold text-navy">
-            {isICO ? 'Posledních 5 faktur' : 'Posledních 5 výplat'}
+          <h3 className="font-headline font-semibold text-navy mb-3">
+            {isICO ? 'Přehled faktur' : 'Přehled výplat'}
           </h3>
+          <div className="flex flex-wrap gap-1">
+            <button
+              onClick={() => setSelectedYear(null)}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
+                selectedYear === null ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
+              }`}
+            >
+              Poslední
+            </button>
+            {years.map(y => (
+              <button
+                key={y}
+                onClick={() => setSelectedYear(y)}
+                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
+                  y === selectedYear ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
+                }`}
+              >
+                {y}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="divide-y divide-slate-50">
-          {recent.length === 0 ? (
-            <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
-          ) : (
-            recent.map(p => <PayslipRow key={p.id} p={p} isICO={isICO} />)
-          )}
-        </div>
-      </div>
 
-      {/* Older payslips — collapsible, clickable year strip + full Jan–Dec panel */}
-      {older.length > 0 && (
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
-          <button
-            onClick={() => setShowHistory(s => !s)}
-            className="w-full px-6 py-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
-          >
-            <h3 className="font-headline font-semibold text-navy">
-              {showHistory ? 'Skrýt starší historii' : 'Zobrazit starší historii'}
-            </h3>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400">{olderYears.length} {olderYears.length === 1 ? 'rok' : olderYears.length < 5 ? 'roky' : 'let'}</span>
-              <ChevronDown className={`w-4 h-4 text-slate-300 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
-            </div>
-          </button>
-          {showHistory && (
-            <div>
-              {/* Clickable year pills */}
-              <div className="px-6 py-3 border-t border-slate-100 flex flex-wrap gap-1">
-                {olderYears.map(y => (
-                  <button
-                    key={y}
-                    onClick={() => setSelectedYear(y)}
-                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
-                      y === selectedYear ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
-                    }`}
-                  >
-                    {y}
-                  </button>
-                ))}
-              </div>
-              {selectedYear !== null && (
-                <YearPanel year={selectedYear} payslips={olderByYear[selectedYear]} isICO={isICO} />
-              )}
-            </div>
-          )}
-        </div>
-      )}
+        {selectedYear === null ? (
+          <div className="divide-y divide-slate-50">
+            {recent.length === 0 ? (
+              <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
+            ) : (
+              recent.map(p => <PayslipRow key={p.id} p={p} isICO={isICO} />)
+            )}
+          </div>
+        ) : (
+          <YearPanel year={selectedYear} payslips={byYear[selectedYear]} isICO={isICO} />
+        )}
+      </div>
     </div>
   )
 }

@@ -91,10 +91,9 @@ export function ProfileTabs({
   const seniorityLabel = seniorityLevels?.find(s => s.value === hrData?.seniority)?.label ?? hrData?.seniority ?? '—'
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 items-start">
-
-      {/* Sidebar nav — desktop */}
-      <nav className="hidden md:block bg-white rounded-2xl border border-slate-100 shadow-sm p-2 sticky top-20">
+    <div>
+      {/* Tab bar — horizontal pill row under the profile header, clearly separate from the main nav */}
+      <div className="flex flex-wrap gap-1.5 bg-slate-50 rounded-2xl p-1.5 mb-6">
         {tabs.map(t => {
           const Icon = t.icon
           const active = tab === t.id
@@ -102,32 +101,16 @@ export function ProfileTabs({
             <button
               key={t.id}
               onClick={() => setTab(t.id as TabId)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${
-                active ? 'bg-violet/10 text-violet' : 'text-slate-500 hover:bg-slate-50 hover:text-navy'
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                active ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy'
               }`}
             >
-              <Icon className={`w-4 h-4 flex-shrink-0 ${active ? 'text-violet' : 'text-slate-400'}`} />
-              <span className="truncate">{t.label}</span>
+              <Icon className={`w-4 h-4 ${active ? 'text-violet' : 'text-slate-400'}`} />
+              {t.label}
             </button>
           )
         })}
-      </nav>
-
-      {/* Dropdown nav — mobile */}
-      <div className="md:hidden relative">
-        <select
-          value={tab}
-          onChange={e => setTab(e.target.value as TabId)}
-          className="w-full appearance-none bg-white border border-slate-100 shadow-sm rounded-2xl pl-4 pr-10 py-3 text-sm font-medium text-navy focus:outline-none focus:ring-2 focus:ring-violet"
-        >
-          {tabs.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
-        </select>
-        <svg className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
       </div>
-
-      <div className="min-w-0">
 
       {/* Osobní údaje + HR údaje */}
       {tab === 'udaje' && (
@@ -274,7 +257,6 @@ export function ProfileTabs({
 
       {/* Dokumenty a smlouvy */}
       {tab === 'dokumenty' && documentsPanel}
-      </div>
     </div>
   )
 }
