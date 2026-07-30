@@ -188,30 +188,61 @@ export function PravidlaAccordion() {
   const [openId, setOpenId] = useState<string | null>(SECTIONS[0].id)
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
-      {SECTIONS.map(section => {
-        const open = openId === section.id
-        return (
-          <div key={section.id}>
-            <button
-              onClick={() => setOpenId(open ? null : section.id)}
-              className="w-full flex items-center gap-3.5 px-6 py-4 text-left hover:bg-slate-50 transition-colors"
-            >
-              <span className="text-xl flex-shrink-0">{section.emoji}</span>
-              <div className="flex-1 min-w-0">
-                <p className="font-headline font-semibold text-navy">{section.title}</p>
-                <p className="text-xs text-slate-400 truncate">{section.summary}</p>
-              </div>
-              <ChevronDown className={`w-4 h-4 text-slate-300 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
-            </button>
-            {open && (
-              <div className="px-6 pb-6 pt-1">
-                {section.content}
-              </div>
-            )}
-          </div>
-        )
-      })}
+    <div className="space-y-6">
+
+      {/* Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-8">
+        <div
+          className="absolute -right-16 -top-16 w-64 h-64 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.30), transparent 70%)', filter: 'blur(48px)' }}
+        />
+        <div
+          className="absolute -left-10 -bottom-16 w-48 h-48 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(247,248,254,0.12), transparent 70%)', filter: 'blur(40px)' }}
+        />
+        <div className="relative">
+          <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2">Na jedné lodi</p>
+          <h1 className="font-headline text-2xl font-semibold text-white mb-1.5">Pravidla a postupy</h1>
+          <p className="text-white/60 text-sm leading-relaxed max-w-md">
+            Krátký přehled toho, jak to u nás chodí — homeoffice, dovolená, nemoc a další situace. Klikni na téma a rozbal si detaily.
+          </p>
+        </div>
+      </div>
+
+      {/* Accordion */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
+        {SECTIONS.map(section => {
+          const open = openId === section.id
+          return (
+            <div key={section.id} className={open ? 'bg-[#F7F8FE]/60' : undefined}>
+              <button
+                onClick={() => setOpenId(open ? null : section.id)}
+                className="w-full flex items-center gap-4 px-6 py-4 text-left hover:bg-slate-50 transition-colors"
+              >
+                <div
+                  className={`w-11 h-11 rounded-full flex items-center justify-center text-xl flex-shrink-0 transition-colors ${
+                    open ? 'bg-violet/10' : 'bg-alice'
+                  }`}
+                >
+                  {section.emoji}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-headline font-semibold text-navy">{section.title}</p>
+                  <p className="text-xs text-slate-400 leading-snug mt-0.5">{section.summary}</p>
+                </div>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${open ? 'bg-violet/10' : ''}`}>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180 text-violet' : 'text-slate-300'}`} />
+                </div>
+              </button>
+              {open && (
+                <div className="pl-6 sm:pl-[76px] pr-6 pb-7 pt-1">
+                  {section.content}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
