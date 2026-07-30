@@ -190,16 +190,15 @@ export function PravidlaAccordion() {
   return (
     <div className="space-y-6">
 
-      {/* Header — watercolor wave + editorial-size headline */}
+      {/* Header — editorial-size headline with soft violet glow */}
       <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-10 sm:px-10 sm:py-12">
         <div
           className="absolute -right-16 -top-16 w-72 h-72 rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.32), transparent 70%)', filter: 'blur(52px)' }}
         />
-        <img
-          src="/brand/watercolor.png"
-          alt=""
-          className="absolute bottom-0 right-0 w-64 opacity-[0.14] pointer-events-none select-none"
+        <div
+          className="absolute -left-10 -bottom-20 w-56 h-56 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(155,69,232,0.18), transparent 70%)', filter: 'blur(44px)' }}
         />
         <div className="relative max-w-lg">
           <div className="flex items-center gap-2 mb-4">
