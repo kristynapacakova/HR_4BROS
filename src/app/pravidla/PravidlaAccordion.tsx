@@ -17,7 +17,7 @@ const SECTIONS: Section[] = [
     id: 'homeoffice',
     emoji: '💻',
     title: 'Homeoffice',
-    summary: 'Pracuješ z gauče? Jen nám dej vědět do 7:59 na Slacku a do kalendáře 🏡',
+    summary: 'Pracuješ z domova? Stačí dát vědět do 7:59 a jedeme dál.',
     content: (
       <div className="space-y-3">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -36,7 +36,7 @@ const SECTIONS: Section[] = [
     id: 'dovolena',
     emoji: '✈️',
     title: 'Dovolená',
-    summary: '25 dní na odpočinek ročně — mrkni, jak na hlášení a předání klientů 🌴',
+    summary: '25 dní ročně na vypnutí hlavy — a jasný postup, jak předat klienty, než vypadneš.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -76,7 +76,7 @@ const SECTIONS: Section[] = [
         </p>
 
         <div>
-          <p className="text-sm font-semibold text-navy mb-1">Informování o plánované dovolené/absenci ℹ️</p>
+          <p className="text-sm font-semibold text-navy mb-1">Informování o plánované dovolené/absenci</p>
           <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
             <li>Informaci o plánované absenci (např. dovolená, návštěva lékaře, apod.) co nejdříve zadej do systému a pokud to nestihneš, pošli toto info na Slacku do kanálu <span className="text-violet font-medium">#účast_absence</span>.</li>
             <li>Zároveň si to zaktualizuješ i v Google Kalendáři.</li>
@@ -84,7 +84,7 @@ const SECTIONS: Section[] = [
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-navy mb-1">Předání klientů v případě dovolené 📋</p>
+          <p className="text-sm font-semibold text-navy mb-1">Předání klientů v případě dovolené</p>
           <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 leading-relaxed">
             <li>V Asaně si otevřeš k tomu určený projekt „📋 DOVOLENÁ/PŘEDÁVÁNÍ".</li>
             <li>Rozhodnutí o osobě, která tě zastoupí, konzultuješ s vaším teamleaderem.</li>
@@ -112,7 +112,7 @@ const SECTIONS: Section[] = [
     id: 'nemoc',
     emoji: '🤒',
     title: 'Nemoc',
-    summary: 'Jsi nemocný/á? Nezůstaneš bez peněz — a kalkulačka ti hned spočítá kolik 🤒',
+    summary: 'Nemoc nikoho nešetří — proto ti prvních 15 dní nahradíme odměnu. Kalkulačka spočítá kolik.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -137,7 +137,7 @@ const SECTIONS: Section[] = [
     id: 'lekar',
     emoji: '🩺',
     title: 'Návštěva lékaře',
-    summary: 'K doktorovi tě pustíme s klidným svědomím a náhradou mzdy 🩺',
+    summary: 'K lékaři v pracovní době? Bez obav, poskytneme volno s náhradou mzdy.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -156,7 +156,7 @@ const SECTIONS: Section[] = [
     id: 'pohreb',
     emoji: '🕊️',
     title: 'Pohřeb',
-    summary: 'Upřímnou soustrast — na volno s náma počítej celý den 🕊️',
+    summary: 'V těžkých chvílích jsme s tebou — placené volno na celý den.',
     content: (
       <p className="text-sm text-slate-600 leading-relaxed">
         V prvé řadě — upřímnou soustrast. Pokud budeš na pohřbu, zvol <strong>„pohřeb"</strong> — jedná se tak o placené volno celý den.
@@ -167,7 +167,7 @@ const SECTIONS: Section[] = [
     id: 'fakturace',
     emoji: '💸',
     title: 'Fakturace',
-    summary: 'Nezapomeň na uzávěrku k 10. — peníze pak přijdou 20. 💸',
+    summary: 'Uzávěrka k 10. dni, peníze na účtu k 20. — bez výmluv, ale i bez zbytečných komplikací.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
