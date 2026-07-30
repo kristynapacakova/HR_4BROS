@@ -190,45 +190,56 @@ export function PravidlaAccordion() {
   return (
     <div className="space-y-6">
 
-      {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-8">
+      {/* Header — watercolor wave + editorial-size headline */}
+      <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-10 sm:px-10 sm:py-12">
         <div
-          className="absolute -right-16 -top-16 w-64 h-64 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.30), transparent 70%)', filter: 'blur(48px)' }}
+          className="absolute -right-16 -top-16 w-72 h-72 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.32), transparent 70%)', filter: 'blur(52px)' }}
         />
-        <div
-          className="absolute -left-10 -bottom-16 w-48 h-48 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(247,248,254,0.12), transparent 70%)', filter: 'blur(40px)' }}
+        <img
+          src="/brand/watercolor.png"
+          alt=""
+          className="absolute bottom-0 right-0 w-64 opacity-[0.14] pointer-events-none select-none"
         />
-        <div className="relative">
-          <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2">Na jedné lodi</p>
-          <h1 className="font-headline text-2xl font-semibold text-white mb-1.5">Pravidla a postupy</h1>
-          <p className="text-white/60 text-sm leading-relaxed max-w-md">
-            Krátký přehled toho, jak to u nás chodí — homeoffice, dovolená, nemoc a další situace. Klikni na téma a rozbal si detaily.
+        <div className="relative max-w-lg">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-violet-light" style={{ fontSize: 10, letterSpacing: '0.2em' }}>∿∿∿</span>
+            <p className="text-violet-light text-xs font-semibold uppercase tracking-[0.2em]">Na jedné lodi</p>
+          </div>
+          <h1 className="font-headline text-3xl sm:text-4xl font-semibold text-white mb-3 leading-tight">
+            Jak to u nás chodí
+          </h1>
+          <p className="text-white/60 text-[15px] leading-relaxed">
+            Homeoffice, dovolená, nemoc a pár dalších situací, do kterých se dřív nebo později připlete každý z nás. Rozklikni si téma a najdi si, co potřebuješ.
           </p>
         </div>
       </div>
 
       {/* Accordion */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
-        {SECTIONS.map(section => {
+        {SECTIONS.map((section, i) => {
           const open = openId === section.id
           return (
             <div key={section.id} className={open ? 'bg-[#F7F8FE]/60' : undefined}>
               <button
                 onClick={() => setOpenId(open ? null : section.id)}
-                className="w-full flex items-center gap-4 px-6 py-4 text-left hover:bg-slate-50 transition-colors"
+                className="w-full flex items-center gap-4 px-6 py-5 text-left hover:bg-slate-50 transition-colors"
               >
                 <div
-                  className={`w-11 h-11 rounded-full flex items-center justify-center text-xl flex-shrink-0 transition-colors ${
+                  className={`relative w-11 h-11 rounded-full flex items-center justify-center text-xl flex-shrink-0 transition-colors ${
                     open ? 'bg-violet/10' : 'bg-alice'
                   }`}
                 >
                   {section.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-headline font-semibold text-navy">{section.title}</p>
-                  <p className="text-xs text-slate-400 leading-snug mt-0.5">{section.summary}</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[11px] font-semibold text-violet tracking-wide flex-shrink-0">0{i + 1}</span>
+                    <p className="font-headline font-semibold text-navy">{section.title}</p>
+                  </div>
+                  <p className="font-headline text-[15px] text-slate-500 leading-snug mt-1 italic">
+                    „{section.summary}"
+                  </p>
                 </div>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${open ? 'bg-violet/10' : ''}`}>
                   <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180 text-violet' : 'text-slate-300'}`} />
