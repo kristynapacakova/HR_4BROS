@@ -36,7 +36,7 @@ const SECTIONS: Section[] = [
     id: 'dovolena',
     emoji: '✈️',
     title: 'Dovolená',
-    summary: '25 dní ročně na vypnutí hlavy — a jasný postup, jak předat klienty, než vypadneš.',
+    summary: '25 dní ročně na vypnutí hlavy — a jasný postup, jak před odjezdem předat klienty.',
     content: (
       <div className="space-y-4">
         <p className="text-sm text-slate-600 leading-relaxed">
