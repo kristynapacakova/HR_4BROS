@@ -96,13 +96,9 @@ export function Sidebar({ isAdmin, userName, userEmail, employmentType, offboard
       {/* Logo header */}
       <div className="relative flex items-center justify-between px-5 py-5 border-b border-slate-100">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-violet rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-            <span className="text-white font-headline font-bold text-sm">4B</span>
-          </div>
-          <div>
-            <p className="font-headline font-semibold text-navy text-base leading-tight">Four Bros</p>
-            <p className="text-slate-400 text-[11px] tracking-wide">HR Portál</p>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logo.png" alt="Four Bros" className="h-7 w-auto flex-shrink-0" />
+          <p className="text-slate-400 text-[11px] tracking-wide border-l border-slate-200 pl-3">HR Portál</p>
         </div>
         {onClose && (
           <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-navy p-1.5 rounded-lg transition-colors">

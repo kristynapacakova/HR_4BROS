@@ -205,12 +205,9 @@ export function PravidlaAccordion() {
             <span className="text-violet-light" style={{ fontSize: 10, letterSpacing: '0.2em' }}>∿∿∿</span>
             <p className="text-violet-light text-xs font-semibold uppercase tracking-[0.2em]">Na jedné lodi</p>
           </div>
-          <h1 className="font-headline text-3xl sm:text-4xl font-semibold text-white mb-3 leading-tight">
+          <h1 className="font-headline text-3xl sm:text-4xl font-semibold text-white leading-tight">
             Jak to u nás chodí
           </h1>
-          <p className="text-white/60 text-[15px] leading-relaxed">
-            Homeoffice, dovolená, nemoc a pár dalších situací, do kterých se dřív nebo později připlete každý z nás. Rozklikni si téma a najdi si, co potřebuješ.
-          </p>
         </div>
       </div>
 
