@@ -156,10 +156,10 @@ const SECTIONS: Section[] = [
     id: 'pohreb',
     emoji: '🕊️',
     title: 'Pohřeb',
-    summary: 'I v těch těžkých chvílích jsme s tebou. Upřímnou soustrast. ❤️',
+    summary: 'Placené volno na celý den — a upřímná soustrast.',
     content: (
       <p className="text-sm text-slate-600 leading-relaxed">
-        Pokud budeš na pohřbu, zvol <strong>„pohřeb"</strong> — jedná se tak o placené volno celý den a každý ví, že tě ten den nemá rušit.
+        I v těch těžkých chvílích jsme s tebou. Upřímnou soustrast. ❤️ Pokud budeš na pohřbu, zvol <strong>„pohřeb"</strong> — jedná se tak o placené volno celý den a každý ví, že tě ten den nemá rušit.
       </p>
     ),
   },
