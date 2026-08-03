@@ -228,14 +228,9 @@ export function PravidlaAccordion() {
                 >
                   {section.emoji}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[11px] font-semibold text-violet tracking-wide flex-shrink-0">0{i + 1}</span>
-                    <p className="font-headline font-semibold text-navy">{section.title}</p>
-                  </div>
-                  <p className="font-headline text-[15px] text-slate-500 leading-snug mt-1 italic">
-                    „{section.summary}"
-                  </p>
+                <div className="flex-1 min-w-0 flex items-baseline gap-2">
+                  <span className="text-[11px] font-semibold text-violet tracking-wide flex-shrink-0">0{i + 1}</span>
+                  <p className="font-headline font-semibold text-navy">{section.title}</p>
                 </div>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${open ? 'bg-violet/10' : ''}`}>
                   <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180 text-violet' : 'text-slate-300'}`} />
