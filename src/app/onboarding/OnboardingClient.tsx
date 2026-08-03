@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { CheckCircle2, Circle, Lock, AlertTriangle, PartyPopper } from 'lucide-react'
+import { OnboardingGuide } from './OnboardingGuide'
 
 interface Task {
   id: string
@@ -157,12 +158,11 @@ export function OnboardingClient({
     })
   }
 
-  const activeTasks = tab === 'onboarding' ? onboardingTasks : offboardingTasks
-  const activeDone = activeTasks.filter(t => t.completed || !!progress[t.id]).length
-  const activePct = activeTasks.length > 0 ? Math.round((activeDone / activeTasks.length) * 100) : 0
+  const offboardingDone = offboardingTasks.filter(t => t.completed || !!progress[t.id]).length
+  const offboardingPct = offboardingTasks.length > 0 ? Math.round((offboardingDone / offboardingTasks.length) * 100) : 0
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
+    <div className="max-w-3xl mx-auto space-y-5">
       {/* Hero */}
       <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-8">
         <div
@@ -178,10 +178,10 @@ export function OnboardingClient({
               {tab === 'onboarding' ? 'Rozjeď to s námi' : 'Předání a rozloučení'}
             </h1>
           </div>
-          {(tab === 'onboarding' || offboardingUnlocked) && (
+          {tab === 'offboarding' && offboardingUnlocked && (
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/10 text-right">
               <p className="text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Hotovo</p>
-              <p className="text-white font-headline text-lg leading-tight">{activePct}%</p>
+              <p className="text-white font-headline text-lg leading-tight">{offboardingPct}%</p>
             </div>
           )}
         </div>
@@ -212,7 +212,7 @@ export function OnboardingClient({
         </button>
       </div>
 
-      {tab === 'onboarding' && <TaskList tasks={onboardingTasks} progress={progress} onToggle={toggle} />}
+      {tab === 'onboarding' && <OnboardingGuide />}
       {tab === 'offboarding' && (
         offboardingUnlocked ? <TaskList tasks={offboardingTasks} progress={progress} onToggle={toggle} /> : <OffboardingLocked />
       )}
