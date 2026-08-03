@@ -198,7 +198,7 @@ export function PruvodceClient() {
             </div>
             {mode === 'onboarding' && (
               <Link
-                href="/profile?tab=onboarding"
+                href="/onboarding"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-violet bg-white hover:bg-white/90 transition-colors"
               >
                 <ClipboardList className="w-4 h-4" />

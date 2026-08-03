@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { CheckCircle2, Circle, Lock, AlertTriangle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { CheckCircle2, Circle, Lock, AlertTriangle, PartyPopper } from 'lucide-react'
 
 interface Task {
   id: string
@@ -12,60 +12,92 @@ interface Task {
   order: number
 }
 
-function TaskList({ tasks }: { tasks: Task[] }) {
-  const completed = tasks.filter(t => t.completed).length
-  const progress = tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0
+const STORAGE_KEY = 'fb-onboarding-progress'
+
+interface StoredProgress {
+  // task id -> ISO date string it was checked off
+  [taskId: string]: string
+}
+
+function loadProgress(): StoredProgress {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? (JSON.parse(raw) as StoredProgress) : {}
+  } catch {
+    return {}
+  }
+}
+
+function TaskList({ tasks, progress, onToggle }: {
+  tasks: Task[]
+  progress: StoredProgress
+  onToggle: (taskId: string) => void
+}) {
+  const isDone = (t: Task) => t.completed || !!progress[t.id]
+  const doneAt = (t: Task) => progress[t.id] ?? (t.completedAt ? t.completedAt.toISOString() : null)
+
+  const completed = tasks.filter(isDone).length
+  const pct = tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0
+  const allDone = pct === 100
 
   return (
     <div className="space-y-5">
       {/* Progress */}
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-headline font-semibold text-navy">Průběh</h2>
-          <span className="text-lg font-bold text-violet">{progress}%</span>
+          <h2 className="font-headline font-semibold text-navy">Tvůj postup</h2>
+          <span className="text-lg font-bold text-violet">{pct}%</span>
         </div>
         <div className="w-full bg-slate-100 rounded-full h-3 mb-3">
           <div
-            className="bg-violet h-3 rounded-full transition-all duration-500"
-            style={{ width: `${progress}%` }}
+            className={`h-3 rounded-full transition-all duration-500 ${allDone ? 'bg-green-500' : 'bg-violet'}`}
+            style={{ width: `${pct}%` }}
           />
         </div>
         <p className="text-sm text-slate-500">Splněno {completed} z {tasks.length} úkolů</p>
-        {progress === 100 && (
-          <div className="mt-4 flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-lg">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-            <p className="text-sm font-medium">Všechny úkoly jsou splněny.</p>
+        {allDone && (
+          <div className="mt-4 flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-xl">
+            <PartyPopper className="w-5 h-5 flex-shrink-0" />
+            <p className="text-sm font-medium">Skvělá práce — máš vše hotovo!</p>
           </div>
         )}
       </div>
 
       {/* Tasks */}
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy">Úkoly</h3>
         </div>
         <ul className="divide-y divide-slate-50">
-          {tasks.map((task) => (
-            <li key={task.id} className="px-6 py-4 flex items-start gap-4">
-              <div className="mt-0.5 flex-shrink-0">
-                {task.completed
-                  ? <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  : <Circle className="w-5 h-5 text-slate-300" />
-                }
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className={`text-sm font-medium ${task.completed ? 'line-through text-slate-400' : 'text-navy'}`}>
-                  {task.title}
-                </p>
-                <p className="text-xs text-slate-400 mt-0.5">{task.description}</p>
-                {task.completed && task.completedAt && (
-                  <p className="text-xs text-green-500 mt-1">
-                    Splněno {new Date(task.completedAt).toLocaleDateString('cs-CZ')}
+          {tasks.map((task) => {
+            const done = isDone(task)
+            const at = doneAt(task)
+            return (
+              <li key={task.id} className="px-6 py-4 flex items-start gap-4 hover:bg-slate-50/60 transition-colors">
+                <button
+                  onClick={() => onToggle(task.id)}
+                  className="mt-0.5 flex-shrink-0 transition-transform hover:scale-110"
+                  aria-label={done ? 'Označit jako nehotové' : 'Označit jako hotové'}
+                >
+                  {done
+                    ? <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    : <Circle className="w-5 h-5 text-slate-300 hover:text-violet transition-colors" />
+                  }
+                </button>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-medium ${done ? 'line-through text-slate-400' : 'text-navy'}`}>
+                    {task.title}
                   </p>
-                )}
-              </div>
-            </li>
-          ))}
+                  <p className="text-xs text-slate-400 mt-0.5">{task.description}</p>
+                  {done && at && (
+                    <p className="text-xs text-green-500 mt-1">
+                      Splněno {new Date(at).toLocaleDateString('cs-CZ')}
+                    </p>
+                  )}
+                </div>
+              </li>
+            )
+          })}
         </ul>
       </div>
     </div>
@@ -95,7 +127,6 @@ export function OnboardingClient({
   onboardingTasks,
   offboardingTasks,
   offboardingUnlocked,
-  isAdmin,
 }: {
   onboardingTasks: Task[]
   offboardingTasks: Task[]
@@ -103,24 +134,74 @@ export function OnboardingClient({
   isAdmin: boolean
 }) {
   const [tab, setTab] = useState<'onboarding' | 'offboarding'>('onboarding')
+  const [progress, setProgress] = useState<StoredProgress>({})
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    setProgress(loadProgress())
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (hydrated) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)) } catch { /* noop */ }
+    }
+  }, [progress, hydrated])
+
+  const toggle = (taskId: string) => {
+    setProgress(prev => {
+      const next = { ...prev }
+      if (next[taskId]) delete next[taskId]
+      else next[taskId] = new Date().toISOString()
+      return next
+    })
+  }
+
+  const activeTasks = tab === 'onboarding' ? onboardingTasks : offboardingTasks
+  const activeDone = activeTasks.filter(t => t.completed || !!progress[t.id]).length
+  const activePct = activeTasks.length > 0 ? Math.round((activeDone / activeTasks.length) * 100) : 0
 
   return (
     <div className="max-w-2xl mx-auto space-y-5">
+      {/* Hero */}
+      <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-8">
+        <div
+          className="absolute -right-16 -top-16 w-64 h-64 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.30), transparent 70%)', filter: 'blur(48px)' }}
+        />
+        <div className="relative flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <p className="text-violet-light text-xs font-semibold uppercase tracking-[0.15em] mb-2">
+              {tab === 'onboarding' ? 'Vítej na palubě' : 'Offboarding'}
+            </p>
+            <h1 className="font-headline text-2xl font-semibold text-white">
+              {tab === 'onboarding' ? 'Rozjeď to s námi' : 'Předání a rozloučení'}
+            </h1>
+          </div>
+          {(tab === 'onboarding' || offboardingUnlocked) && (
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/10 text-right">
+              <p className="text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Hotovo</p>
+              <p className="text-white font-headline text-lg leading-tight">{activePct}%</p>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Tab bar */}
-      <div className="flex gap-1 bg-white rounded-xl border border-slate-100 shadow-sm p-1">
+      <div className="flex gap-1 bg-slate-50 rounded-2xl p-1.5">
         <button
           onClick={() => setTab('onboarding')}
-          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-            tab === 'onboarding' ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+          className={`flex-1 py-2.5 text-sm font-medium rounded-xl transition-all ${
+            tab === 'onboarding' ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy'
           }`}
         >
           Onboarding
         </button>
         <button
           onClick={() => offboardingUnlocked && setTab('offboarding')}
-          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2 ${
             tab === 'offboarding'
-              ? 'bg-violet text-white shadow-sm'
+              ? 'bg-white text-violet shadow-sm'
               : offboardingUnlocked
                 ? 'text-slate-500 hover:text-navy'
                 : 'text-slate-300 cursor-not-allowed'
@@ -131,9 +212,9 @@ export function OnboardingClient({
         </button>
       </div>
 
-      {tab === 'onboarding' && <TaskList tasks={onboardingTasks} />}
+      {tab === 'onboarding' && <TaskList tasks={onboardingTasks} progress={progress} onToggle={toggle} />}
       {tab === 'offboarding' && (
-        offboardingUnlocked ? <TaskList tasks={offboardingTasks} /> : <OffboardingLocked />
+        offboardingUnlocked ? <TaskList tasks={offboardingTasks} progress={progress} onToggle={toggle} /> : <OffboardingLocked />
       )}
     </div>
   )

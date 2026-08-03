@@ -2,11 +2,10 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
-import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_ONBOARDING_TASKS, DEMO_OFFBOARDING_TASKS, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
 import { ProfileTabs } from './ProfileTabs'
 import { AvatarUpload } from '@/components/AvatarUpload'
 import { PayslipsClient } from '@/app/payslips/PayslipsClient'
-import { OnboardingClient } from '@/app/onboarding/OnboardingClient'
 import { TimeOffPanel } from './panels/TimeOffPanel'
 import { DocumentsPanel } from './panels/DocumentsPanel'
 
@@ -34,7 +33,6 @@ export default async function ProfilePage() {
       const to = end.getMonth() === now.getMonth() ? end : new Date(now.getFullYear(), now.getMonth() + 1, 0)
       return sum + Math.max(0, Math.round((to.getTime() - from.getTime()) / 86400000) + 1)
     }, 0)
-  const offboardingUnlocked = (user as typeof DEMO_USER & { offboardingUnlocked?: boolean }).offboardingUnlocked ?? false
 
   return (
     <AppShell
@@ -93,14 +91,6 @@ export default async function ProfilePage() {
             />
           }
           documentsPanel={<DocumentsPanel isHPP={user.employmentType === 'HPP'} />}
-          onboardingPanel={
-            <OnboardingClient
-              onboardingTasks={DEMO_ONBOARDING_TASKS}
-              offboardingTasks={DEMO_OFFBOARDING_TASKS}
-              offboardingUnlocked={offboardingUnlocked}
-              isAdmin={isAdmin}
-            />
-          }
         />
       </div>
     </AppShell>

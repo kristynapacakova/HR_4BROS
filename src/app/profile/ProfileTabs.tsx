@@ -54,7 +54,7 @@ function tenure(startDate?: Date | null): string {
 
 export function ProfileTabs({
   user, assets, assetTypes, assetConditions, isAdmin, hrData, seniorityLevels, employmentTypes,
-  payslipsLabel, payslipsPanel, timeOffPanel, documentsPanel, onboardingPanel,
+  payslipsLabel, payslipsPanel, timeOffPanel, documentsPanel,
 }: {
   user: User & { startDate?: Date | null }
   assets: Asset[]
@@ -68,7 +68,6 @@ export function ProfileTabs({
   payslipsPanel?: React.ReactNode
   timeOffPanel?: React.ReactNode
   documentsPanel?: React.ReactNode
-  onboardingPanel?: React.ReactNode
 }) {
   const tabs = [
     { id: 'udaje', label: 'Osobní údaje', icon: UserIcon },
