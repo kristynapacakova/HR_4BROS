@@ -3,6 +3,24 @@
 import { useEffect, useState } from 'react'
 import { CheckCircle2, Circle, Lock, AlertTriangle, PartyPopper } from 'lucide-react'
 import { OnboardingGuide } from './OnboardingGuide'
+import { OFFBOARDING_PHASES } from '@/app/admin/pruvodce/guide-data'
+
+// Sdílené úložiště s HR průvodcem (/admin/pruvodce) — dokud HR neodškrtá
+// fázi "Výpověď" u odcházejícího člena, offboarding checklist se mu neotevře.
+const GUIDE_STORAGE_KEY = 'fb-hr-pruvodce'
+const offVypovedSteps = OFFBOARDING_PHASES.find(p => p.id === 'off-vypoved')?.steps ?? []
+const offPrepUnits = offVypovedSteps.flatMap(s => s.items ? s.items.map((_, i) => `${s.id}::${i}`) : [s.id])
+
+function loadHrOffboardingChecked(): string[] {
+  try {
+    const raw = localStorage.getItem(GUIDE_STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw) as { offboarding?: { checked?: string[] } }
+    return parsed.offboarding?.checked ?? []
+  } catch {
+    return []
+  }
+}
 
 interface Task {
   id: string
@@ -137,9 +155,11 @@ export function OnboardingClient({
   const [tab, setTab] = useState<'onboarding' | 'offboarding'>('onboarding')
   const [progress, setProgress] = useState<StoredProgress>({})
   const [hydrated, setHydrated] = useState(false)
+  const [hrOffChecked, setHrOffChecked] = useState<string[]>([])
 
   useEffect(() => {
     setProgress(loadProgress())
+    setHrOffChecked(loadHrOffboardingChecked())
     setHydrated(true)
   }, [])
 
@@ -161,6 +181,11 @@ export function OnboardingClient({
   const offboardingDone = offboardingTasks.filter(t => t.completed || !!progress[t.id]).length
   const offboardingPct = offboardingTasks.length > 0 ? Math.round((offboardingDone / offboardingTasks.length) * 100) : 0
 
+  // Otevřeno, jakmile HR odškrtá fázi „Výpověď" ve svém průvodci (nebo pokud
+  // je ručně odemknuto adminem přes mock data — kombinace obojího).
+  const hrOffboardingReady = offPrepUnits.length > 0 && offPrepUnits.every(id => hrOffChecked.includes(id))
+  const isOffboardingUnlocked = offboardingUnlocked || hrOffboardingReady
+
   return (
     <div className="max-w-3xl mx-auto space-y-5">
       {/* Hero */}
@@ -178,7 +203,7 @@ export function OnboardingClient({
               {tab === 'onboarding' ? 'Rozjeď to s námi' : 'Předání a rozloučení'}
             </h1>
           </div>
-          {tab === 'offboarding' && offboardingUnlocked && (
+          {tab === 'offboarding' && isOffboardingUnlocked && (
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/10 text-right">
               <p className="text-white/50 text-[10px] uppercase tracking-widest mb-0.5">Hotovo</p>
               <p className="text-white font-headline text-lg leading-tight">{offboardingPct}%</p>
@@ -198,23 +223,23 @@ export function OnboardingClient({
           Onboarding
         </button>
         <button
-          onClick={() => offboardingUnlocked && setTab('offboarding')}
+          onClick={() => isOffboardingUnlocked && setTab('offboarding')}
           className={`flex-1 py-2.5 text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2 ${
             tab === 'offboarding'
               ? 'bg-white text-violet shadow-sm'
-              : offboardingUnlocked
+              : isOffboardingUnlocked
                 ? 'text-slate-500 hover:text-navy'
                 : 'text-slate-300 cursor-not-allowed'
           }`}
         >
-          {!offboardingUnlocked && <Lock className="w-3.5 h-3.5" />}
+          {!isOffboardingUnlocked && <Lock className="w-3.5 h-3.5" />}
           Offboarding
         </button>
       </div>
 
       {tab === 'onboarding' && <OnboardingGuide />}
       {tab === 'offboarding' && (
-        offboardingUnlocked ? <TaskList tasks={offboardingTasks} progress={progress} onToggle={toggle} /> : <OffboardingLocked />
+        isOffboardingUnlocked ? <TaskList tasks={offboardingTasks} progress={progress} onToggle={toggle} /> : <OffboardingLocked />
       )}
     </div>
   )

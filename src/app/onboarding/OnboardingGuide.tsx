@@ -2,14 +2,38 @@
 
 import { useEffect, useState } from 'react'
 import {
-  CheckCircle2, Circle, ChevronDown, ChevronLeft, ChevronRight,
-  Play, X, Lightbulb, PartyPopper, Users,
+  CheckCircle2, Circle, ChevronLeft, X, Lightbulb, PartyPopper, Lock, AlertTriangle,
+  Mail, CalendarDays, KeyRound, MessageSquare, ListChecks, Clock3, Building2, Package, Wallet, Target,
 } from 'lucide-react'
-import { ONBOARDING_PHASES, normItem, type GuidePhase, type GuideStep } from '@/app/admin/pruvodce/guide-data'
+import { ONBOARDING_PHASES, normItem, type GuideStep } from '@/app/admin/pruvodce/guide-data'
 
-// Fáze, které si employee sám odškrtává — dřívější fáze (smlouvy, příprava
-// místa, přístupy…) dělá HR ještě před nástupem, zobrazují se jen informačně.
-const INTERACTIVE_PHASE_IDS = ['on-den1', 'on-zkusebka']
+// Jen to, co si employee sám nastavuje — HR agenda (smlouvy, příprava před
+// nástupem…) sem záměrně nepatří, to řeší HR mimo tuhle appku.
+const SETUP_STEP_IDS = ['on-predani', 'on-gmail', 'on-kalendar', 'on-1password', 'on-slack', 'on-asana-costlocker', 'on-dochazka', 'on-settleup', 'on-prostory']
+const GOALS_STEP_IDS = ['on-cile', 'on-11', 'on-feedback']
+
+const setupSteps = ONBOARDING_PHASES.flatMap(p => p.steps).filter(s => SETUP_STEP_IDS.includes(s.id))
+const goalSteps = ONBOARDING_PHASES.flatMap(p => p.steps).filter(s => GOALS_STEP_IDS.includes(s.id))
+
+// Fáze, které si před nástupem odškrtává HR (smlouvy, příprava místa,
+// přístupy…) — dokud tohle HR nedokončí, nový člen nemá co nastavovat.
+const HR_PREP_PHASE_IDS = ['on-24h', 'on-3dny', 'on-14dni', 'on-7dni', 'on-pred']
+const hrPrepSteps = ONBOARDING_PHASES.filter(p => HR_PREP_PHASE_IDS.includes(p.id)).flatMap(p => p.steps)
+
+const STEP_ICONS: Record<string, typeof Mail> = {
+  'on-predani': Package,
+  'on-gmail': Mail,
+  'on-kalendar': CalendarDays,
+  'on-1password': KeyRound,
+  'on-slack': MessageSquare,
+  'on-asana-costlocker': ListChecks,
+  'on-dochazka': Clock3,
+  'on-settleup': Wallet,
+  'on-prostory': Building2,
+  'on-cile': Target,
+  'on-11': CalendarDays,
+  'on-feedback': MessageSquare,
+}
 
 // Sdílí úložiště s HR průvodcem (/admin/pruvodce) — co si tu zaškrtneš,
 // uvidí HR live ve svém přehledu, a naopak.
@@ -44,23 +68,15 @@ function itemIds(step: GuideStep): string[] {
 }
 
 export function OnboardingGuide() {
-  const [phaseIdx, setPhaseIdx] = useState(0)
+  const [section, setSection] = useState<'setup' | 'goals'>('setup')
   const [state, setState] = useState<StoredState>(EMPTY)
   const [hydrated, setHydrated] = useState(false)
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+  const [openStepId, setOpenStepId] = useState<string | null>(null)
   const [walkthrough, setWalkthrough] = useState<{ step: GuideStep; idx: number } | null>(null)
 
   useEffect(() => {
-    const loaded = load()
-    setState(loaded)
+    setState(load())
     setHydrated(true)
-    // Naskoč rovnou na první fázi, kterou má employee ještě rozdělanou
-    const checkedSet = new Set(loaded.onboarding.checked)
-    const firstUndone = ONBOARDING_PHASES.findIndex(p =>
-      INTERACTIVE_PHASE_IDS.includes(p.id) && !p.steps.every(s => itemIds(s).every(id => checkedSet.has(id)))
-    )
-    if (firstUndone !== -1) setPhaseIdx(firstUndone)
-    else setPhaseIdx(ONBOARDING_PHASES.findIndex(p => p.id === 'on-den1'))
   }, [])
 
   useEffect(() => {
@@ -68,19 +84,20 @@ export function OnboardingGuide() {
   }, [state, hydrated])
 
   const checked = new Set(state.onboarding.checked)
-
   const isStepDone = (s: GuideStep) => itemIds(s).every(id => checked.has(id))
-  const isInteractive = (p: GuidePhase) => INTERACTIVE_PHASE_IDS.includes(p.id)
-  const phaseDone = (p: GuidePhase) => (isInteractive(p) ? p.steps.every(isStepDone) : true) // HR fáze = automaticky hotové
 
-  const interactiveUnits = ONBOARDING_PHASES.filter(isInteractive).flatMap(p => p.steps.flatMap(itemIds))
-  const doneCount = interactiveUnits.filter(id => checked.has(id)).length
-  const totalCount = interactiveUnits.length
+  const hrPrepUnits = hrPrepSteps.flatMap(itemIds)
+  const hrPrepDoneCount = hrPrepUnits.filter(id => checked.has(id)).length
+  const hrPrepReady = hrPrepUnits.length > 0 && hrPrepDoneCount === hrPrepUnits.length
+
+  const allUnits = [...setupSteps, ...goalSteps].flatMap(itemIds)
+  const doneCount = allUnits.filter(id => checked.has(id)).length
+  const totalCount = allUnits.length
   const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0
   const allDone = doneCount === totalCount
 
-  const phase = ONBOARDING_PHASES[Math.min(phaseIdx, ONBOARDING_PHASES.length - 1)]
-  const interactive = isInteractive(phase)
+  const setupDone = setupSteps.filter(isStepDone).length
+  const goalsDone = goalSteps.filter(isStepDone).length
 
   const applyChecked = (mutate: (cur: Set<string>) => void) => {
     setState(prev => {
@@ -99,15 +116,33 @@ export function OnboardingGuide() {
   const toggleItem = (id: string) =>
     applyChecked(cur => (cur.has(id) ? cur.delete(id) : cur.add(id)))
 
-  const toggleExpand = (id: string) =>
-    setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
-
   if (!hydrated) return null
+
+  if (!hrPrepReady) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-2xl border border-slate-100 shadow-sm">
+        <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-5">
+          <Lock className="w-8 h-8 text-slate-400" />
+        </div>
+        <h3 className="font-headline font-semibold text-navy text-lg mb-2">Ještě chvilku strpení</h3>
+        <p className="text-slate-500 text-sm max-w-sm leading-relaxed">
+          HR ti teď připravuje nástup — jakmile dokončí svoji přípravu, otevře se ti tenhle průvodce
+          a budeš si moct sám nastavit všechny přístupy.
+        </p>
+        <div className="mt-6 flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-xl px-5 py-3 text-sm text-amber-700">
+          <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+          Připraveno {hrPrepDoneCount} z {hrPrepUnits.length}
+        </div>
+      </div>
+    )
+  }
+
+  const activeSteps = section === 'setup' ? setupSteps : goalSteps
 
   return (
     <div className="space-y-5">
 
-      {/* Progress — jen to, co má employee sám na starosti */}
+      {/* Progress */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-headline font-semibold text-navy">Tvůj postup</h2>
@@ -119,216 +154,145 @@ export function OnboardingGuide() {
             style={{ width: `${pct}%` }}
           />
         </div>
-        <p className="text-sm text-slate-500">Splněno {doneCount} z {totalCount} bodů, které máš na starosti ty</p>
+        <p className="text-sm text-slate-500">Splněno {doneCount} z {totalCount} bodů</p>
       </div>
 
       {allDone && (
         <div className="flex items-center gap-3 bg-green-50 border border-green-100 rounded-2xl px-5 py-4">
           <PartyPopper className="w-6 h-6 text-green-600 flex-shrink-0" />
-          <p className="text-sm font-medium text-green-700">Skvělá práce — máš zaškolení hotové! HR to uvidí i ve svém přehledu.</p>
+          <p className="text-sm font-medium text-green-700">Skvělá práce — máš vše nastavené a hotové!</p>
         </div>
       )}
 
-      {/* Celá cesta — všech 7 fází, ať víš, kde přesně jsi a co tě ještě čeká */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">Tvoje cesta onboardingem</p>
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {ONBOARDING_PHASES.map((p, i) => {
-            const done = phaseDone(p)
-            const active = i === phaseIdx
-            const hr = !isInteractive(p)
-            return (
-              <button
-                key={p.id}
-                onClick={() => setPhaseIdx(i)}
-                className={`flex-shrink-0 w-[168px] text-left rounded-2xl border p-3.5 transition-all ${
-                  active ? 'border-violet bg-violet/5' : done ? 'border-green-100 bg-green-50/40' : 'border-slate-100 hover:border-slate-200'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <span
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0 ${
-                      done ? 'bg-green-500 text-white' : active ? 'bg-violet text-white' : 'bg-slate-100 text-slate-400'
-                    }`}
-                  >
-                    {done ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
-                  </span>
-                  {hr && <Users className="w-3.5 h-3.5 text-slate-300 flex-shrink-0" />}
-                </div>
-                <p className={`text-sm font-semibold leading-snug ${active ? 'text-violet' : 'text-navy'}`}>{p.title}</p>
-                <p className="text-[11px] text-slate-400 mt-1 leading-snug">{p.timing}</p>
-              </button>
-            )
-          })}
-        </div>
-        <p className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-3">
-          <Users className="w-3 h-3" />
-          Fáze s touto ikonou má na starosti HR — u těch nemusíš nic dělat, jen víš, co se zrovna děje.
-        </p>
+      {/* Section switch */}
+      <div className="flex gap-1.5 bg-slate-50 rounded-2xl p-1.5">
+        <button
+          onClick={() => setSection('setup')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+            section === 'setup' ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy'
+          }`}
+        >
+          Nastavení přístupů
+          <span className="text-xs text-slate-400">{setupDone}/{setupSteps.length}</span>
+        </button>
+        <button
+          onClick={() => setSection('goals')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+            section === 'goals' ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy'
+          }`}
+        >
+          Zkušební doba
+          <span className="text-xs text-slate-400">{goalsDone}/{goalSteps.length}</span>
+        </button>
       </div>
 
-      {/* Detail vybrané fáze */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-wider text-violet">{phase.timing}</p>
-          {!interactive && (
-            <span className="flex items-center gap-1.5 text-xs font-medium text-slate-400">
-              <Users className="w-3.5 h-3.5" />
-              Zajišťuje HR
-            </span>
-          )}
-        </div>
-
-        {!interactive && (
-          <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3">
-            <p className="text-xs text-amber-700 leading-relaxed">
-              Tuhle fázi má na starosti HR, ty tu nic zaškrtávat nemusíš — je tu jen pro přehled, co se aktuálně děje.
-            </p>
-          </div>
-        )}
-
-        {phase.steps.map(step => {
+      {/* Tool cards grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {activeSteps.map(step => {
+          const Icon = STEP_ICONS[step.id] ?? Circle
           const done = isStepDone(step)
           const hasItems = !!step.items?.length
           const stepItemDone = hasItems ? itemIds(step).filter(id => checked.has(id)).length : 0
-          const isOpen = expanded[step.id] ?? false
-
-          if (!interactive) {
-            return (
-              <div key={step.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                <p className="font-headline font-semibold text-navy">{step.title}</p>
-                <p className="text-sm text-slate-500 mt-1 leading-relaxed">{step.desc}</p>
-                {hasItems && (
-                  <ul className="mt-3 flex flex-wrap gap-1.5">
-                    {step.items!.map((rawItem, i) => {
-                      const item = normItem(rawItem)
-                      return (
-                        <li key={i} className="text-xs px-2.5 py-1 rounded-full bg-slate-50 text-slate-500">
-                          {item.text}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                )}
-              </div>
-            )
-          }
-
           return (
-            <div
+            <button
               key={step.id}
-              className={`bg-white rounded-2xl border shadow-sm transition-all ${
-                done ? 'border-green-200 bg-green-50/40' : 'border-slate-100'
+              onClick={() => setOpenStepId(step.id)}
+              className={`relative flex flex-col items-center text-center gap-2 rounded-2xl border p-5 transition-all ${
+                done ? 'border-green-200 bg-green-50/40' : 'border-slate-100 bg-white hover:border-violet/30 hover:shadow-sm'
               }`}
             >
-              <div className="flex items-start gap-3.5 p-5">
-                <button
-                  onClick={() => toggleStep(step)}
-                  className="flex-shrink-0 mt-0.5 transition-transform hover:scale-110"
-                  aria-label={done ? 'Označit jako nehotové' : 'Označit jako hotové'}
-                >
-                  {done
-                    ? <CheckCircle2 className="w-6 h-6 text-green-500" />
-                    : <Circle className="w-6 h-6 text-slate-200 hover:text-violet transition-colors" />}
-                </button>
-                <div
-                  className={`flex-1 min-w-0 ${hasItems ? 'cursor-pointer select-none' : ''}`}
-                  onClick={hasItems ? () => toggleExpand(step.id) : undefined}
-                >
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className={`font-headline font-semibold ${done ? 'text-green-800' : 'text-navy'}`}>{step.title}</p>
-                    {hasItems && (
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                        done ? 'bg-green-100 text-green-700' : stepItemDone > 0 ? 'bg-violet/10 text-violet' : 'bg-slate-100 text-slate-400'
-                      }`}>
-                        {stepItemDone}/{step.items!.length}
-                      </span>
-                    )}
+              {done && (
+                <span className="absolute top-2.5 right-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                </span>
+              )}
+              <div className={`w-11 h-11 rounded-full flex items-center justify-center ${done ? 'bg-green-100' : 'bg-violet/10'}`}>
+                <Icon className={`w-5 h-5 ${done ? 'text-green-600' : 'text-violet'}`} />
+              </div>
+              <p className={`text-sm font-medium leading-snug ${done ? 'text-green-800' : 'text-navy'}`}>{step.title}</p>
+              {hasItems && (
+                <span className={`text-[11px] font-semibold ${done ? 'text-green-600' : 'text-slate-400'}`}>
+                  {stepItemDone}/{step.items!.length}
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Step detail sheet */}
+      {openStepId && (() => {
+        const step = activeSteps.find(s => s.id === openStepId)
+        if (!step) return null
+        const done = isStepDone(step)
+        const hasItems = !!step.items?.length
+        const Icon = STEP_ICONS[step.id] ?? Circle
+        return (
+          <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ background: 'rgba(14,35,55,0.5)', backdropFilter: 'blur(4px)' }}>
+            <div className="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-lg max-h-[85vh] overflow-y-auto">
+              <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${done ? 'bg-green-100' : 'bg-violet/10'}`}>
+                    <Icon className={`w-5 h-5 ${done ? 'text-green-600' : 'text-violet'}`} />
                   </div>
-                  <p className={`text-sm mt-1 leading-relaxed ${done ? 'text-green-700/70' : 'text-slate-500'}`}>{step.desc}</p>
+                  <div>
+                    <h3 className="font-headline font-semibold text-navy text-lg">{step.title}</h3>
+                    <p className="text-sm text-slate-500 mt-0.5">{step.desc}</p>
+                  </div>
                 </div>
-                {hasItems && (
-                  <div className="flex items-center gap-1.5 flex-shrink-0 mt-0.5">
-                    <button
-                      onClick={() => setWalkthrough({ step, idx: 0 })}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-violet bg-violet/10 hover:bg-violet hover:text-white transition-colors"
-                      title="Spustit průvodce krok za krokem"
-                    >
-                      <Play className="w-3 h-3" />
-                      <span className="hidden sm:inline">Krok za krokem</span>
-                    </button>
-                    <button
-                      onClick={() => toggleExpand(step.id)}
-                      className="p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-all"
-                      aria-label={isOpen ? 'Sbalit' : 'Rozbalit body'}
-                    >
-                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                  </div>
-                )}
+                <button onClick={() => setOpenStepId(null)} className="p-2 rounded-full text-slate-300 hover:text-navy hover:bg-slate-50 transition-colors flex-shrink-0">
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              {hasItems && isOpen && (
-                <div className={`px-5 pb-4 pt-1 ml-[38px] mr-2 border-t ${done ? 'border-green-100' : 'border-slate-50'}`}>
-                  <ul className="pt-3 space-y-1">
+              <div className="px-6 pb-6 space-y-4">
+                {hasItems ? (
+                  <ul className="space-y-1.5">
                     {step.items!.map((rawItem, i) => {
                       const item = normItem(rawItem)
                       const id = `${step.id}::${i}`
                       const itemDone = checked.has(id)
                       return (
-                        <li key={id}>
+                        <li key={id} className="flex items-center gap-2">
                           <button
                             onClick={() => toggleItem(id)}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-sm transition-colors ${
-                              itemDone ? 'text-green-700' : 'text-navy hover:bg-slate-50'
+                            className={`flex-1 flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-sm transition-colors ${
+                              itemDone ? 'bg-green-50 text-green-700' : 'bg-slate-50 text-navy hover:bg-slate-100'
                             }`}
                           >
                             {itemDone
                               ? <CheckCircle2 className="w-[18px] h-[18px] text-green-500 flex-shrink-0" />
-                              : <Circle className="w-[18px] h-[18px] text-slate-200 flex-shrink-0" />}
+                              : <Circle className="w-[18px] h-[18px] text-slate-300 flex-shrink-0" />}
                             <span className={itemDone ? 'line-through decoration-green-300' : ''}>{item.text}</span>
-                            {item.how && (
-                              <span
-                                className="ml-auto flex-shrink-0 text-[10px] font-semibold text-violet bg-violet/10 px-2 py-0.5 rounded-full cursor-pointer hover:bg-violet hover:text-white transition-colors"
-                                onClick={e => { e.stopPropagation(); setWalkthrough({ step, idx: i }) }}
-                              >
-                                návod
-                              </span>
-                            )}
                           </button>
+                          {item.how && (
+                            <button
+                              onClick={() => setWalkthrough({ step, idx: i })}
+                              className="flex-shrink-0 px-3 py-2.5 rounded-xl text-xs font-semibold text-violet bg-violet/10 hover:bg-violet hover:text-white transition-colors"
+                            >
+                              Ukaž jak
+                            </button>
+                          )}
                         </li>
                       )
                     })}
                   </ul>
-                </div>
-              )}
+                ) : (
+                  <button
+                    onClick={() => { toggleStep(step); setOpenStepId(null) }}
+                    className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                      done ? 'bg-green-50 text-green-700' : 'bg-violet text-white hover:bg-violet-dark'
+                    }`}
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    {done ? 'Hotovo — odškrtnuto' : 'Označit jako hotové'}
+                  </button>
+                )}
+              </div>
             </div>
-          )
-        })}
-
-        {/* Phase navigation */}
-        <div className="flex items-center justify-between pt-1">
-          <button
-            onClick={() => setPhaseIdx(i => Math.max(0, i - 1))}
-            disabled={phaseIdx === 0}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium text-slate-500 hover:text-navy hover:bg-white border border-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-white"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Předchozí
-          </button>
-          {phaseIdx < ONBOARDING_PHASES.length - 1 ? (
-            <button
-              onClick={() => setPhaseIdx(i => Math.min(ONBOARDING_PHASES.length - 1, i + 1))}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors"
-            >
-              Další fáze
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <span className="text-sm font-medium text-slate-400">Poslední fáze</span>
-          )}
-        </div>
-      </div>
+          </div>
+        )
+      })()}
 
       {/* ══ Grafický průvodce — jeden bod = jeden slide ══ */}
       {walkthrough && (() => {
