@@ -190,27 +190,25 @@ export function OnboardingClient({
 
   return (
     <div className="max-w-3xl mx-auto space-y-5">
-      {/* Demo přepínač pohledu — pouze pro testování, ať nemusíš přepínat účty */}
-      <div className="flex items-center justify-between gap-3 bg-amber-50 border border-amber-100 rounded-2xl px-4 py-2.5">
-        <p className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">Demo náhled</p>
-        <div className="flex gap-1 bg-white rounded-full p-1">
-          <button
-            onClick={() => setPreviewAsHr(true)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-              previewAsHr ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy'
-            }`}
-          >
-            HR náhled
-          </button>
-          <button
-            onClick={() => setPreviewAsHr(false)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-              !previewAsHr ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy'
-            }`}
-          >
-            Pohled nováčka
-          </button>
-        </div>
+      {/* Demo přepínač pohledu — nenápadný řádek jen pro testování */}
+      <div className="flex items-center justify-end gap-2 text-xs">
+        <span className="text-slate-400">Demo náhled:</span>
+        <button
+          onClick={() => setPreviewAsHr(true)}
+          className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
+            previewAsHr ? 'bg-violet/10 text-violet' : 'text-slate-400 hover:text-navy'
+          }`}
+        >
+          HR
+        </button>
+        <button
+          onClick={() => setPreviewAsHr(false)}
+          className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
+            !previewAsHr ? 'bg-violet/10 text-violet' : 'text-slate-400 hover:text-navy'
+          }`}
+        >
+          Nováček
+        </button>
       </div>
 
       {/* Hero */}

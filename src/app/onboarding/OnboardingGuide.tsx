@@ -139,12 +139,10 @@ export function OnboardingGuide({ isAdmin = false }: { isAdmin?: boolean }) {
     <div className="space-y-5">
 
       {isAdmin && !state.onboarding.started && (
-        <div className="flex items-center gap-2.5 bg-violet/5 border border-violet/15 rounded-2xl px-4 py-3">
-          <Lock className="w-4 h-4 text-violet flex-shrink-0" />
-          <p className="text-xs text-violet">
-            Náhled pro HR — nový člen tohle ještě nevidí, dokud nezmáčkneš „Spustit onboarding" v průvodci.
-          </p>
-        </div>
+        <p className="flex items-center gap-1.5 text-xs text-slate-400">
+          <Lock className="w-3.5 h-3.5 flex-shrink-0" />
+          Náhled — nový člen tohle ještě nevidí, dokud nezmáčkneš „Spustit onboarding" v průvodci.
+        </p>
       )}
 
       {/* Progress */}
