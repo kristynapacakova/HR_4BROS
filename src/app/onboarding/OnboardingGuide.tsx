@@ -15,11 +15,6 @@ const GOALS_STEP_IDS = ['on-cile', 'on-11', 'on-feedback']
 const setupSteps = ONBOARDING_PHASES.flatMap(p => p.steps).filter(s => SETUP_STEP_IDS.includes(s.id))
 const goalSteps = ONBOARDING_PHASES.flatMap(p => p.steps).filter(s => GOALS_STEP_IDS.includes(s.id))
 
-// Fáze, které si před nástupem odškrtává HR (smlouvy, příprava místa,
-// přístupy…) — dokud tohle HR nedokončí, nový člen nemá co nastavovat.
-const HR_PREP_PHASE_IDS = ['on-24h', 'on-3dny', 'on-14dni', 'on-7dni', 'on-pred']
-const hrPrepSteps = ONBOARDING_PHASES.filter(p => HR_PREP_PHASE_IDS.includes(p.id)).flatMap(p => p.steps)
-
 const STEP_ICONS: Record<string, typeof Mail> = {
   'on-predani': Package,
   'on-gmail': Mail,
@@ -36,27 +31,29 @@ const STEP_ICONS: Record<string, typeof Mail> = {
 }
 
 // Sdílí úložiště s HR průvodcem (/admin/pruvodce) — co si tu zaškrtneš,
-// uvidí HR live ve svém přehledu, a naopak.
+// uvidí HR live ve svém přehledu, a naopak. Otevírá se ručně tlačítkem
+// "Spustit onboarding" v HR průvodci — nečeká se, až HR odškrtá úplně vše
+// (kdyby byla např. na dovolené, spustit to může kdokoliv jiný z týmu).
 const STORAGE_KEY = 'fb-hr-pruvodce'
 
 interface StoredState {
-  onboarding: { checked: string[]; name: string }
-  offboarding: { checked: string[]; name: string }
+  onboarding: { checked: string[]; name: string; started: boolean }
+  offboarding: { checked: string[]; name: string; started: boolean }
 }
 
 const EMPTY: StoredState = {
-  onboarding: { checked: [], name: '' },
-  offboarding: { checked: [], name: '' },
+  onboarding: { checked: [], name: '', started: false },
+  offboarding: { checked: [], name: '', started: false },
 }
 
 function load(): StoredState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return EMPTY
-    const parsed = JSON.parse(raw) as Partial<StoredState>
+    const parsed = JSON.parse(raw) as Partial<{ onboarding: Partial<StoredState['onboarding']>; offboarding: Partial<StoredState['offboarding']> }>
     return {
-      onboarding: { checked: parsed.onboarding?.checked ?? [], name: parsed.onboarding?.name ?? '' },
-      offboarding: { checked: parsed.offboarding?.checked ?? [], name: parsed.offboarding?.name ?? '' },
+      onboarding: { checked: parsed.onboarding?.checked ?? [], name: parsed.onboarding?.name ?? '', started: parsed.onboarding?.started ?? false },
+      offboarding: { checked: parsed.offboarding?.checked ?? [], name: parsed.offboarding?.name ?? '', started: parsed.offboarding?.started ?? false },
     }
   } catch {
     return EMPTY
@@ -86,9 +83,7 @@ export function OnboardingGuide() {
   const checked = new Set(state.onboarding.checked)
   const isStepDone = (s: GuideStep) => itemIds(s).every(id => checked.has(id))
 
-  const hrPrepUnits = hrPrepSteps.flatMap(itemIds)
-  const hrPrepDoneCount = hrPrepUnits.filter(id => checked.has(id)).length
-  const hrPrepReady = hrPrepUnits.length > 0 && hrPrepDoneCount === hrPrepUnits.length
+  const started = state.onboarding.started
 
   const allUnits = [...setupSteps, ...goalSteps].flatMap(itemIds)
   const doneCount = allUnits.filter(id => checked.has(id)).length
@@ -118,7 +113,7 @@ export function OnboardingGuide() {
 
   if (!hydrated) return null
 
-  if (!hrPrepReady) {
+  if (!started) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-2xl border border-slate-100 shadow-sm">
         <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-5">
@@ -126,12 +121,12 @@ export function OnboardingGuide() {
         </div>
         <h3 className="font-headline font-semibold text-navy text-lg mb-2">Ještě chvilku strpení</h3>
         <p className="text-slate-500 text-sm max-w-sm leading-relaxed">
-          HR ti teď připravuje nástup — jakmile dokončí svoji přípravu, otevře se ti tenhle průvodce
+          HR ti teď připravuje nástup — jakmile ti onboarding spustí, otevře se ti tenhle průvodce
           a budeš si moct sám nastavit všechny přístupy.
         </p>
         <div className="mt-6 flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-xl px-5 py-3 text-sm text-amber-700">
           <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-          Připraveno {hrPrepDoneCount} z {hrPrepUnits.length}
+          Ozvi se HR, ať ti to spustí
         </div>
       </div>
     )

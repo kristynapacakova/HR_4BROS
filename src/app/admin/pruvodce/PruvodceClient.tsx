@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   CheckCircle2, Circle, ChevronLeft, ChevronRight, ChevronDown, PartyPopper,
-  ClipboardList, RotateCcw, UserPlus, UserMinus, ArrowRight, Play, X, Lightbulb,
+  ClipboardList, RotateCcw, UserPlus, UserMinus, ArrowRight, Play, X, Lightbulb, Rocket, Lock,
 } from 'lucide-react'
 import { ONBOARDING_PHASES, OFFBOARDING_PHASES, normItem, type GuidePhase, type GuideStep } from './guide-data'
 
@@ -12,24 +12,25 @@ type Mode = 'onboarding' | 'offboarding'
 
 const STORAGE_KEY = 'fb-hr-pruvodce'
 
+interface ModeState { checked: string[]; name: string; started: boolean }
 interface StoredState {
-  onboarding: { checked: string[]; name: string }
-  offboarding: { checked: string[]; name: string }
+  onboarding: ModeState
+  offboarding: ModeState
 }
 
 const EMPTY: StoredState = {
-  onboarding: { checked: [], name: '' },
-  offboarding: { checked: [], name: '' },
+  onboarding: { checked: [], name: '', started: false },
+  offboarding: { checked: [], name: '', started: false },
 }
 
 function load(): StoredState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return EMPTY
-    const parsed = JSON.parse(raw) as Partial<StoredState>
+    const parsed = JSON.parse(raw) as Partial<{ onboarding: Partial<ModeState>; offboarding: Partial<ModeState> }>
     return {
-      onboarding: { checked: parsed.onboarding?.checked ?? [], name: parsed.onboarding?.name ?? '' },
-      offboarding: { checked: parsed.offboarding?.checked ?? [], name: parsed.offboarding?.name ?? '' },
+      onboarding: { checked: parsed.onboarding?.checked ?? [], name: parsed.onboarding?.name ?? '', started: parsed.onboarding?.started ?? false },
+      offboarding: { checked: parsed.offboarding?.checked ?? [], name: parsed.offboarding?.name ?? '', started: parsed.offboarding?.started ?? false },
     }
   } catch {
     return EMPTY
@@ -62,6 +63,7 @@ export function PruvodceClient() {
   const phases: GuidePhase[] = mode === 'onboarding' ? ONBOARDING_PHASES : OFFBOARDING_PHASES
   const checked = new Set(state[mode].checked)
   const memberName = state[mode].name
+  const memberStarted = state[mode].started
 
   const isStepDone = (s: GuideStep) => itemIds(s).every(id => checked.has(id))
 
@@ -98,9 +100,12 @@ export function PruvodceClient() {
   const setName = (name: string) =>
     setState(prev => ({ ...prev, [mode]: { ...prev[mode], name } }))
 
+  const toggleStarted = () =>
+    setState(prev => ({ ...prev, [mode]: { ...prev[mode], started: !prev[mode].started } }))
+
   const reset = () => {
     if (!confirm(`Opravdu resetovat průběh ${mode === 'onboarding' ? 'onboardingu' : 'offboardingu'}? Hodí se pro dalšího člena týmu.`)) return
-    setState(prev => ({ ...prev, [mode]: { checked: [], name: '' } }))
+    setState(prev => ({ ...prev, [mode]: { checked: [], name: '', started: false } }))
     setPhaseIdx(0)
   }
 
@@ -152,6 +157,28 @@ export function PruvodceClient() {
               Reset
             </button>
           </div>
+        </div>
+
+        {/* Spustit / zastavit — kdokoliv z HR to může kdykoliv přepnout, není to vázané na dokončení checklistu */}
+        <div className={`flex items-center justify-between gap-3 rounded-2xl px-4 py-3 ${memberStarted ? 'bg-green-50 border border-green-100' : 'bg-amber-50 border border-amber-100'}`}>
+          <div className="flex items-center gap-2.5">
+            {memberStarted
+              ? <Rocket className="w-4 h-4 text-green-600 flex-shrink-0" />
+              : <Lock className="w-4 h-4 text-amber-600 flex-shrink-0" />}
+            <p className={`text-xs ${memberStarted ? 'text-green-700' : 'text-amber-700'}`}>
+              {memberStarted
+                ? `${mode === 'onboarding' ? 'Onboarding' : 'Offboarding'} je pro ${memberName || 'nového člena'} otevřený — vidí ho ve své appce.`
+                : `${mode === 'onboarding' ? 'Onboarding' : 'Offboarding'} ještě ${memberName || 'člen'} nevidí — dej vědět, až má začít.`}
+            </p>
+          </div>
+          <button
+            onClick={toggleStarted}
+            className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-colors ${
+              memberStarted ? 'bg-white text-green-700 hover:bg-green-100' : 'bg-violet text-white hover:bg-violet-dark'
+            }`}
+          >
+            {memberStarted ? 'Zavřít znovu' : `Spustit ${mode === 'onboarding' ? 'onboarding' : 'offboarding'}`}
+          </button>
         </div>
 
         {/* Progress bar */}

@@ -3,22 +3,19 @@
 import { useEffect, useState } from 'react'
 import { CheckCircle2, Circle, Lock, AlertTriangle, PartyPopper } from 'lucide-react'
 import { OnboardingGuide } from './OnboardingGuide'
-import { OFFBOARDING_PHASES } from '@/app/admin/pruvodce/guide-data'
 
-// Sdílené úložiště s HR průvodcem (/admin/pruvodce) — dokud HR neodškrtá
-// fázi "Výpověď" u odcházejícího člena, offboarding checklist se mu neotevře.
+// Sdílené úložiště s HR průvodcem (/admin/pruvodce) — otevírá se ručně
+// tlačítkem "Spustit offboarding" v HR průvodci, ne až po dokončení checklistu.
 const GUIDE_STORAGE_KEY = 'fb-hr-pruvodce'
-const offVypovedSteps = OFFBOARDING_PHASES.find(p => p.id === 'off-vypoved')?.steps ?? []
-const offPrepUnits = offVypovedSteps.flatMap(s => s.items ? s.items.map((_, i) => `${s.id}::${i}`) : [s.id])
 
-function loadHrOffboardingChecked(): string[] {
+function loadHrOffboardingStarted(): boolean {
   try {
     const raw = localStorage.getItem(GUIDE_STORAGE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw) as { offboarding?: { checked?: string[] } }
-    return parsed.offboarding?.checked ?? []
+    if (!raw) return false
+    const parsed = JSON.parse(raw) as { offboarding?: { started?: boolean } }
+    return parsed.offboarding?.started ?? false
   } catch {
-    return []
+    return false
   }
 }
 
@@ -155,11 +152,11 @@ export function OnboardingClient({
   const [tab, setTab] = useState<'onboarding' | 'offboarding'>('onboarding')
   const [progress, setProgress] = useState<StoredProgress>({})
   const [hydrated, setHydrated] = useState(false)
-  const [hrOffChecked, setHrOffChecked] = useState<string[]>([])
+  const [hrOffStarted, setHrOffStarted] = useState(false)
 
   useEffect(() => {
     setProgress(loadProgress())
-    setHrOffChecked(loadHrOffboardingChecked())
+    setHrOffStarted(loadHrOffboardingStarted())
     setHydrated(true)
   }, [])
 
@@ -181,10 +178,9 @@ export function OnboardingClient({
   const offboardingDone = offboardingTasks.filter(t => t.completed || !!progress[t.id]).length
   const offboardingPct = offboardingTasks.length > 0 ? Math.round((offboardingDone / offboardingTasks.length) * 100) : 0
 
-  // Otevřeno, jakmile HR odškrtá fázi „Výpověď" ve svém průvodci (nebo pokud
-  // je ručně odemknuto adminem přes mock data — kombinace obojího).
-  const hrOffboardingReady = offPrepUnits.length > 0 && offPrepUnits.every(id => hrOffChecked.includes(id))
-  const isOffboardingUnlocked = offboardingUnlocked || hrOffboardingReady
+  // Otevřeno, jakmile HR ručně klikne na „Spustit offboarding" ve svém
+  // průvodci (nebo pokud je ručně odemknuto adminem přes mock data).
+  const isOffboardingUnlocked = offboardingUnlocked || hrOffStarted
 
   return (
     <div className="max-w-3xl mx-auto space-y-5">
