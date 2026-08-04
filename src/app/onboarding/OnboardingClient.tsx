@@ -154,6 +154,9 @@ export function OnboardingClient({
   const [progress, setProgress] = useState<StoredProgress>({})
   const [hydrated, setHydrated] = useState(false)
   const [hrOffStarted, setHrOffStarted] = useState(false)
+  // Demo přepínač pohledu — ať nemusíš přihlašovat jiný účet, abys viděla obě strany.
+  const [previewAsHr, setPreviewAsHr] = useState(isAdmin)
+  const effectiveIsAdmin = previewAsHr
 
   useEffect(() => {
     setProgress(loadProgress())
@@ -183,10 +186,33 @@ export function OnboardingClient({
   // průvodci (nebo pokud je ručně odemknuto adminem přes mock data).
   // HR (admin) si vlastní onboarding/offboarding nezamyká sám sobě — vidí
   // rovnou plný obsah (náhled i kontrola toho, co uvidí nový/odcházející člen).
-  const isOffboardingUnlocked = isAdmin || offboardingUnlocked || hrOffStarted
+  const isOffboardingUnlocked = effectiveIsAdmin || offboardingUnlocked || hrOffStarted
 
   return (
     <div className="max-w-3xl mx-auto space-y-5">
+      {/* Demo přepínač pohledu — pouze pro testování, ať nemusíš přepínat účty */}
+      <div className="flex items-center justify-between gap-3 bg-amber-50 border border-amber-100 rounded-2xl px-4 py-2.5">
+        <p className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">Demo náhled</p>
+        <div className="flex gap-1 bg-white rounded-full p-1">
+          <button
+            onClick={() => setPreviewAsHr(true)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              previewAsHr ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy'
+            }`}
+          >
+            HR náhled
+          </button>
+          <button
+            onClick={() => setPreviewAsHr(false)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              !previewAsHr ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy'
+            }`}
+          >
+            Pohled nováčka
+          </button>
+        </div>
+      </div>
+
       {/* Hero */}
       <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-8">
         <div
@@ -236,7 +262,7 @@ export function OnboardingClient({
         </button>
       </div>
 
-      {tab === 'onboarding' && <OnboardingGuide isAdmin={isAdmin} />}
+      {tab === 'onboarding' && <OnboardingGuide isAdmin={effectiveIsAdmin} />}
       {tab === 'offboarding' && (
         isOffboardingUnlocked ? <TaskList tasks={offboardingTasks} progress={progress} onToggle={toggle} /> : <OffboardingLocked />
       )}

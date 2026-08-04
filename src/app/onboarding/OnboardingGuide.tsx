@@ -151,21 +151,28 @@ export function OnboardingGuide({ isAdmin = false }: { isAdmin?: boolean }) {
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-headline font-semibold text-navy">Tvůj postup</h2>
-          <span className={`text-lg font-bold ${allDone ? 'text-green-600' : 'text-violet'}`}>{pct}%</span>
+          <span className={`text-2xl font-headline font-bold ${allDone ? 'text-green-600' : 'text-violet'}`}>{pct}%</span>
         </div>
-        <div className="w-full bg-slate-100 rounded-full h-3 mb-3">
+        <div className="w-full bg-slate-100 rounded-full h-3 mb-3 overflow-hidden">
           <div
-            className={`h-3 rounded-full transition-all duration-500 ${allDone ? 'bg-green-500' : 'bg-violet'}`}
-            style={{ width: `${pct}%` }}
+            className="h-3 rounded-full transition-all duration-700 ease-out"
+            style={{
+              width: `${pct}%`,
+              background: allDone ? '#22c55e' : 'linear-gradient(90deg, #7e17e0, #9b45e8)',
+            }}
           />
         </div>
         <p className="text-sm text-slate-500">Splněno {doneCount} z {totalCount} bodů</p>
       </div>
 
       {allDone && (
-        <div className="flex items-center gap-3 bg-green-50 border border-green-100 rounded-2xl px-5 py-4">
-          <PartyPopper className="w-6 h-6 text-green-600 flex-shrink-0" />
-          <p className="text-sm font-medium text-green-700">Skvělá práce — máš vše nastavené a hotové!</p>
+        <div className="relative overflow-hidden flex items-center gap-3 rounded-2xl px-5 py-4" style={{ background: 'linear-gradient(135deg, #22c55e, #16a34a)' }}>
+          <div
+            className="absolute -right-10 -top-10 w-40 h-40 rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%)', filter: 'blur(30px)' }}
+          />
+          <PartyPopper className="relative w-6 h-6 text-white flex-shrink-0" />
+          <p className="relative text-sm font-medium text-white">Skvělá práce — máš vše nastavené a hotové!</p>
         </div>
       )}
 
@@ -202,8 +209,10 @@ export function OnboardingGuide({ isAdmin = false }: { isAdmin?: boolean }) {
             <button
               key={step.id}
               onClick={() => setOpenStepId(step.id)}
-              className={`relative flex flex-col items-center text-center gap-2 rounded-2xl border p-5 transition-all ${
-                done ? 'border-green-200 bg-green-50/40' : 'border-slate-100 bg-white hover:border-violet/30 hover:shadow-sm'
+              className={`relative flex flex-col items-center text-center gap-2 rounded-2xl border p-5 transition-all duration-200 hover:-translate-y-0.5 ${
+                done
+                  ? 'border-green-200 bg-green-50/40 shadow-sm'
+                  : 'border-slate-100 bg-white hover:border-violet/30 hover:shadow-[0_8px_24px_rgba(126,23,224,0.10)]'
               }`}
             >
               {done && (
@@ -211,12 +220,15 @@ export function OnboardingGuide({ isAdmin = false }: { isAdmin?: boolean }) {
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
                 </span>
               )}
-              <div className={`w-11 h-11 rounded-full flex items-center justify-center ${done ? 'bg-green-100' : 'bg-violet/10'}`}>
-                <Icon className={`w-5 h-5 ${done ? 'text-green-600' : 'text-violet'}`} />
+              <div className={`relative w-12 h-12 rounded-full flex items-center justify-center transition-transform ${done ? 'bg-green-100' : 'bg-violet/10'}`}>
+                {!done && (
+                  <div className="absolute -inset-1 rounded-full opacity-20 pointer-events-none" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }} />
+                )}
+                <Icon className={`relative w-5 h-5 ${done ? 'text-green-600' : 'text-violet'}`} />
               </div>
               <p className={`text-sm font-medium leading-snug ${done ? 'text-green-800' : 'text-navy'}`}>{step.title}</p>
               {hasItems && (
-                <span className={`text-[11px] font-semibold ${done ? 'text-green-600' : 'text-slate-400'}`}>
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${done ? 'text-green-600 bg-green-100' : 'text-violet bg-violet/10'}`}>
                   {stepItemDone}/{step.items!.length}
                 </span>
               )}
