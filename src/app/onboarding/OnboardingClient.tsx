@@ -143,6 +143,7 @@ export function OnboardingClient({
   onboardingTasks,
   offboardingTasks,
   offboardingUnlocked,
+  isAdmin,
 }: {
   onboardingTasks: Task[]
   offboardingTasks: Task[]
@@ -180,7 +181,9 @@ export function OnboardingClient({
 
   // Otevřeno, jakmile HR ručně klikne na „Spustit offboarding" ve svém
   // průvodci (nebo pokud je ručně odemknuto adminem přes mock data).
-  const isOffboardingUnlocked = offboardingUnlocked || hrOffStarted
+  // HR (admin) si vlastní onboarding/offboarding nezamyká sám sobě — vidí
+  // rovnou plný obsah (náhled i kontrola toho, co uvidí nový/odcházející člen).
+  const isOffboardingUnlocked = isAdmin || offboardingUnlocked || hrOffStarted
 
   return (
     <div className="max-w-3xl mx-auto space-y-5">
@@ -233,7 +236,7 @@ export function OnboardingClient({
         </button>
       </div>
 
-      {tab === 'onboarding' && <OnboardingGuide />}
+      {tab === 'onboarding' && <OnboardingGuide isAdmin={isAdmin} />}
       {tab === 'offboarding' && (
         isOffboardingUnlocked ? <TaskList tasks={offboardingTasks} progress={progress} onToggle={toggle} /> : <OffboardingLocked />
       )}

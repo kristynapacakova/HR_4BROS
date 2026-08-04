@@ -64,7 +64,7 @@ function itemIds(step: GuideStep): string[] {
   return step.items ? step.items.map((_, i) => `${step.id}::${i}`) : [step.id]
 }
 
-export function OnboardingGuide() {
+export function OnboardingGuide({ isAdmin = false }: { isAdmin?: boolean }) {
   const [section, setSection] = useState<'setup' | 'goals'>('setup')
   const [state, setState] = useState<StoredState>(EMPTY)
   const [hydrated, setHydrated] = useState(false)
@@ -83,7 +83,8 @@ export function OnboardingGuide() {
   const checked = new Set(state.onboarding.checked)
   const isStepDone = (s: GuideStep) => itemIds(s).every(id => checked.has(id))
 
-  const started = state.onboarding.started
+  // HR (admin) si to nezamyká sám sobě — vidí rovnou plný obsah pro náhled/kontrolu.
+  const started = isAdmin || state.onboarding.started
 
   const allUnits = [...setupSteps, ...goalSteps].flatMap(itemIds)
   const doneCount = allUnits.filter(id => checked.has(id)).length
@@ -136,6 +137,15 @@ export function OnboardingGuide() {
 
   return (
     <div className="space-y-5">
+
+      {isAdmin && !state.onboarding.started && (
+        <div className="flex items-center gap-2.5 bg-violet/5 border border-violet/15 rounded-2xl px-4 py-3">
+          <Lock className="w-4 h-4 text-violet flex-shrink-0" />
+          <p className="text-xs text-violet">
+            Náhled pro HR — nový člen tohle ještě nevidí, dokud nezmáčkneš „Spustit onboarding" v průvodci.
+          </p>
+        </div>
+      )}
 
       {/* Progress */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
