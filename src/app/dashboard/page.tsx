@@ -1,7 +1,6 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { formatCurrency } from '@/lib/utils'
 
 import {
   DEMO_USER, DEMO_ADMIN,
@@ -9,8 +8,6 @@ import {
   DEMO_LEAVE_BALANCE,
   DEMO_LEAVE_REQUESTS,
   DEMO_EXPENSE_REQUESTS,
-  DEMO_PAYSLIPS,
-  DEMO_SALARY_INFO,
   DEMO_TEAM_LEAVES,
   DEMO_TEAM,
   DEMO_EMPLOYEES,
@@ -19,7 +16,6 @@ import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
 
 const CZ_MONTHS = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']
-const MONTH_NAMES = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec']
 
 function tenureText(startDate: Date): string {
   const now = new Date()
@@ -47,14 +43,9 @@ export default async function DashboardPage() {
   const onboardingPct = Math.round((onboardingTasks.filter(t => t.completed).length / onboardingTasks.length) * 100)
 
   const leaveBalance = DEMO_LEAVE_BALANCE
-  const latestPayslip = DEMO_PAYSLIPS[0]
   const pendingExpenses = DEMO_EXPENSE_REQUESTS.filter(e => e.status === 'PENDING')
   const pendingLeave = DEMO_LEAVE_REQUESTS.filter(l => l.status === 'PENDING')
   const totalPending = pendingExpenses.length + pendingLeave.length
-
-  const salary = DEMO_SALARY_INFO
-  const raiseInDays = salary.nextRaiseDate ? Math.round((salary.nextRaiseDate.getTime() - Date.now()) / 86400000) : null
-  const raiseInMonths = raiseInDays != null ? Math.round(raiseInDays / 30) : null
 
   const startDate = user.startDate || new Date('2024-01-15')
   const tenure = tenureText(startDate)
@@ -103,7 +94,6 @@ export default async function DashboardPage() {
           stats={[
             { value: `${leaveBalance.annualTotal - leaveBalance.annualUsed}`, label: 'dní dovolené' },
             { value: `${totalPending}`, label: totalPending === 0 ? 'žádosti — vše vyřízeno' : 'čekající žádosti' },
-            { value: formatCurrency(latestPayslip.netAmount, latestPayslip.currency), label: `výplata · ${MONTH_NAMES[latestPayslip.month - 1].toLowerCase()}` },
           ]}
         />
 
