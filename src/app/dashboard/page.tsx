@@ -87,7 +87,8 @@ export default async function DashboardPage() {
 
         {/* Dnes — absences + nearest events in one card */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-headline text-navy mb-4">Dnes</h3>
+          <h3 className="font-headline text-navy mb-1">Dnes</h3>
+          <p className="text-xs text-slate-400 mb-4">Kdo je dnes mimo kancelář</p>
 
           {todayAbsences.length === 0 ? (
             <p className="text-sm text-slate-500">Všichni jsou dnes v kanceláři 🎉</p>
