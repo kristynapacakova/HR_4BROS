@@ -5,9 +5,6 @@ import { AppShell } from '@/components/layout/AppShell'
 import {
   DEMO_USER, DEMO_ADMIN,
   DEMO_TASKS,
-  DEMO_LEAVE_BALANCE,
-  DEMO_LEAVE_REQUESTS,
-  DEMO_EXPENSE_REQUESTS,
   DEMO_TEAM_LEAVES,
   DEMO_TEAM,
   DEMO_EMPLOYEES,
@@ -41,11 +38,6 @@ export default async function DashboardPage() {
   const onboardingTasks = tasks.filter(t => t.category === 'ONBOARDING')
   const onboardingDone = onboardingTasks.every(t => t.completed)
   const onboardingPct = Math.round((onboardingTasks.filter(t => t.completed).length / onboardingTasks.length) * 100)
-
-  const leaveBalance = DEMO_LEAVE_BALANCE
-  const pendingExpenses = DEMO_EXPENSE_REQUESTS.filter(e => e.status === 'PENDING')
-  const pendingLeave = DEMO_LEAVE_REQUESTS.filter(l => l.status === 'PENDING')
-  const totalPending = pendingExpenses.length + pendingLeave.length
 
   const startDate = user.startDate || new Date('2024-01-15')
   const tenure = tenureText(startDate)
@@ -91,10 +83,6 @@ export default async function DashboardPage() {
           department={user?.department || undefined}
           tenure={tenure}
           startDate={startDate.toISOString()}
-          stats={[
-            { value: `${leaveBalance.annualTotal - leaveBalance.annualUsed}`, label: 'dní dovolené' },
-            { value: `${totalPending}`, label: totalPending === 0 ? 'žádosti — vše vyřízeno' : 'čekající žádosti' },
-          ]}
         />
 
         {/* Dnes — absences + nearest events in one card */}
