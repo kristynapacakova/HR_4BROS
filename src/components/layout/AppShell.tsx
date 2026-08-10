@@ -12,10 +12,9 @@ interface AppShellProps {
   userName?: string | null
   userEmail?: string | null
   employmentType?: string | null
-  offboardingUnlocked?: boolean
 }
 
-export function AppShell({ children, title, isAdmin, userName, userEmail, employmentType, offboardingUnlocked }: AppShellProps) {
+export function AppShell({ children, title, isAdmin, userName, userEmail, employmentType }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -39,7 +38,6 @@ export function AppShell({ children, title, isAdmin, userName, userEmail, employ
           userName={userName}
           userEmail={userEmail}
           employmentType={employmentType}
-          offboardingUnlocked={offboardingUnlocked}
           onClose={() => setSidebarOpen(false)}
         />
       </aside>

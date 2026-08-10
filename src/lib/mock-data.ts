@@ -322,7 +322,6 @@ export const DEMO_USER = {
   birthDate: new Date("1990-05-20"),
   bankAccount: "1234567890/0800",
   taxId: "123456789",
-  offboardingUnlocked: false,
   // HR fields
   seniority: "MEDIOR",
   monthlyHours: 168,
@@ -375,24 +374,6 @@ export const DEMO_TEAM: {
   { id: "t13", name: "Michaela Červenková",position: "Office Manager",       department: "Backoffice",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠" },
   { id: "t14", name: "Radek Pospíšil",     position: "Business Developer",   department: "Sales",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼" },
   { id: "t15", name: "Tereza Müllerová",   position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧" },
-]
-
-export const DEMO_ONBOARDING_TASKS = [
-  { id: "1", title: "Vyplnit osobní údaje", description: "Doplňte všechny osobní údaje v profilu", completed: true, completedAt: new Date("2024-01-16"), order: 1 },
-  { id: "2", title: "Podepsat pracovní smlouvu", description: "Přečtěte a podepište svoji pracovní smlouvu", completed: true, completedAt: new Date("2024-01-17"), order: 2 },
-  { id: "3", title: "Nahrát kopii občanského průkazu", description: "Nahrajte scan nebo foto vašeho OP", completed: false, completedAt: null, order: 3 },
-  { id: "4", title: "Nastavit bankovní účet pro výplatu", description: "Doplňte bankovní účet v sekci Profil", completed: false, completedAt: null, order: 4 },
-  { id: "5", title: "Absolvovat BOZP školení", description: "Dokončete online školení bezpečnosti práce", completed: false, completedAt: null, order: 5 },
-]
-
-export const DEMO_OFFBOARDING_TASKS = [
-  { id: "off-1", title: "Vrátit firemní vybavení", description: "Notebook, telefon, klíče a veškeré firemní vybavení předejte osobně na HR.", completed: false, completedAt: null, order: 1 },
-  { id: "off-2", title: "Předat přístupy a hesla", description: "Předejte správci IT všechna hesla, přístupy a API klíče, ke kterým máte přístup.", completed: false, completedAt: null, order: 2 },
-  { id: "off-3", title: "Dokončit předávací protokol klientů", description: "Předejte klienty a projekty určenému kolegovi dle pokynů teamleadera.", completed: false, completedAt: null, order: 3 },
-  { id: "off-4", title: "Podepsat výstupní dokumenty", description: "Přečtěte a podepište výstupní dokumenty (dohoda o ukončení, NDA apod.).", completed: false, completedAt: null, order: 4 },
-  { id: "off-5", title: "Smazat firemní data z osobních zařízení", description: "Odstraňte veškeré firemní aplikace, dokumenty a přístupy ze svých osobních zařízení.", completed: false, completedAt: null, order: 5 },
-  { id: "off-6", title: "Poslední výplatní páska / faktura", description: "Zkontrolujte závěrečné vyúčtování a potvrďte správnost poslední výplaty nebo faktury.", completed: false, completedAt: null, order: 6 },
-  { id: "off-7", title: "Exit interview s HR", description: "Absolvujte závěrečný rozhovor s HR. Vaše zpětná vazba je pro nás cenná.", completed: false, completedAt: null, order: 7 },
 ]
 
 // tag: SMLOUVA | DODATEK | GDPR | NDA  (for contracts section)
@@ -513,7 +494,6 @@ export const DEMO_EMPLOYEES = [
     monthlySalary: 65000,
     hourlyRate: null as number | null,
     leaveBalances: [{ annualTotal: 20, annualUsed: 5 }],
-    onboardingTasks: DEMO_ONBOARDING_TASKS,
   },
   {
     id: "demo-employee-2",
@@ -529,12 +509,6 @@ export const DEMO_EMPLOYEES = [
     monthlySalary: 28000,
     hourlyRate: null as number | null,
     leaveBalances: [{ annualTotal: 20, annualUsed: 8 }],
-    onboardingTasks: [
-      { id: "6", title: "Vyplnit osobní údaje", completed: true, completedAt: new Date("2023-06-02"), order: 1 },
-      { id: "7", title: "Podepsat pracovní smlouvu", completed: true, completedAt: new Date("2023-06-03"), order: 2 },
-      { id: "8", title: "Nahrát kopii občanského průkazu", completed: true, completedAt: new Date("2023-06-04"), order: 3 },
-      { id: "9", title: "Absolvovat BOZP školení", completed: true, completedAt: new Date("2023-06-10"), order: 4 },
-    ],
   },
   {
     id: "demo-employee-3",
@@ -550,10 +524,6 @@ export const DEMO_EMPLOYEES = [
     monthlySalary: null as number | null,
     hourlyRate: 1200,
     leaveBalances: [{ annualTotal: 20, annualUsed: 12 }],
-    onboardingTasks: [
-      { id: "10", title: "Vyplnit osobní údaje", completed: true, completedAt: new Date("2022-03-16"), order: 1 },
-      { id: "11", title: "Podepsat pracovní smlouvu", completed: true, completedAt: new Date("2022-03-17"), order: 2 },
-    ],
   },
 ]
 
