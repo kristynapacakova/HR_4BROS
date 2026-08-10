@@ -202,38 +202,32 @@ export function PruvodceClient() {
 
       {/* All done celebration */}
       {allDone && (
-        <div className="relative rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)' }}>
-          <div
-            className="absolute -right-16 -top-16 w-64 h-64 rounded-full pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%)', filter: 'blur(40px)' }}
-          />
-          <div className="relative z-10 px-7 py-6 flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                <PartyPopper className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-white font-headline font-semibold text-lg">
-                  {mode === 'onboarding' ? 'Vše DONE! 🎉' : 'Offboarding dokončen ✓'}
-                </p>
-                <p className="text-white/60 text-sm mt-0.5">
-                  {mode === 'onboarding'
-                    ? `Všech ${totalCount} bodů je hotových. Teď můžeš předat zbytek onboardingu ${memberName || 'novému členovi'} formou checklistu.`
-                    : `Všech ${totalCount} bodů je hotových. Spolupráce je řádně ukončena.`}
-                </p>
-              </div>
+        <div className="flex items-center justify-between flex-wrap gap-4 bg-white rounded-2xl border border-green-100 px-6 py-5">
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+              <PartyPopper className="w-5 h-5 text-green-600" />
             </div>
-            {mode === 'onboarding' && (
-              <Link
-                href="/onboarding"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-violet bg-white hover:bg-white/90 transition-colors"
-              >
-                <ClipboardList className="w-4 h-4" />
-                Předat checklist novému členovi
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            )}
+            <div>
+              <p className="font-headline font-semibold text-navy">
+                {mode === 'onboarding' ? 'Vše hotovo' : 'Offboarding dokončen'}
+              </p>
+              <p className="text-slate-500 text-sm mt-0.5">
+                {mode === 'onboarding'
+                  ? `Všech ${totalCount} bodů je hotových. Teď můžeš předat zbytek onboardingu ${memberName || 'novému členovi'} formou checklistu.`
+                  : `Všech ${totalCount} bodů je hotových. Spolupráce je řádně ukončena.`}
+              </p>
+            </div>
           </div>
+          {mode === 'onboarding' && (
+            <Link
+              href="/onboarding"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors flex-shrink-0"
+            >
+              <ClipboardList className="w-4 h-4" />
+              Předat checklist novému členovi
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          )}
         </div>
       )}
 
@@ -250,20 +244,19 @@ export function PruvodceClient() {
                 key={p.id}
                 onClick={() => setPhaseIdx(i)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-full text-left transition-all ${
-                  active ? 'text-white' : 'hover:bg-slate-50'
+                  active ? 'bg-violet/10' : 'hover:bg-slate-50'
                 }`}
-                style={active ? { background: 'linear-gradient(135deg, #7e17e0, #9b45e8)' } : undefined}
               >
                 <span
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0 ${
-                    done ? 'bg-green-500 text-white' : active ? 'bg-white/15 text-white' : 'bg-violet/10 text-violet'
+                    done ? 'bg-green-500 text-white' : active ? 'bg-violet text-white' : 'bg-violet/10 text-violet'
                   }`}
                 >
                   {done ? <CheckCircle2 className="w-4 h-4" /> : `0${i + 1}`}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className={`block text-sm font-medium truncate ${active ? 'text-white' : 'text-navy'}`}>{p.title}</span>
-                  <span className={`block text-[11px] truncate ${active ? 'text-white/60' : 'text-slate-400'}`}>
+                  <span className={`block text-sm font-medium truncate ${active ? 'text-violet' : 'text-navy'}`}>{p.title}</span>
+                  <span className="block text-[11px] truncate text-slate-400">
                     {doneSteps}/{p.steps.length} hotovo
                   </span>
                 </span>
