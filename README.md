@@ -17,6 +17,7 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 
 - **Přehled** — postup v procentech, kolikátý je den onboardingu, aktuální fáze a co je na řadě
 - **Postup** — sedm rozbalovacích fází, celkem 62 odškrtávacích kroků s odznakem role, která je má na starosti
+- **Přístupy** — kompletní postup zajištění přístupů novému kolegovi: založení účtů, fyzické přístupy, nastavení nástrojů krok za krokem a 14 řešených zádrhelů
 - **Návody** — 16 návodů krok za krokem: přihlášení do nástrojů, přístupy do klientských účtů, výkazy hodin, první call s klientem, kontrola výstupů před odesláním, mlčenlivost a klientská data, náš brand manuál, e-mailový podpis a další
 - **Značka** — pravidla z brand manuálu pro každého, kdo píše klientovi
 - **Kdo je kdo** — posádka Four Bros a na co se koho ptát
@@ -55,6 +56,14 @@ scrollu a tmavý režim. Bez chyb v konzoli.
 Tabulka zákonných termínů slouží jako připomínka, co nesmí zapadnout, ne jako právní
 výklad. Konkrétní lhůty a maximální délku zkušební doby si nech potvrdit od účetní
 nebo právníka — zákoník práce se v této oblasti opakovaně měnil.
+
+## Zdroj obsahu
+
+Postup přístupů a seznam nástrojů vychází z **interní procesní mapy Four Bros**,
+obnovené z větve `claude/dazzling-allen-z9AjG` (commit `44d838f` ji odstranil
+z HR aplikace s poznámkou „will be redone separately"). Reálný stack:
+Four Bros Gmail, Asana, 1Password, Slack, Costlocker, SettleUp, docházka
+a fakturace, PandaDoc na smlouvy, iGET na vstup do budovy.
 
 ## Obsah je psaný na agenturu
 

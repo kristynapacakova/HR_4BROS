@@ -403,6 +403,41 @@ input[type="checkbox"]::after{
 input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent);}
 input[type="checkbox"]:checked::after{transform:rotate(-45deg) scale(1);}
 
+/* ---------- Pravidla ---------- */
+.rules{display:grid;gap:.6rem;min-width:0;max-width:none;}
+.rule{
+  display:flex;gap:.9rem;align-items:flex-start;min-width:0;
+  background:var(--surface);border-radius:var(--r);padding:1rem 1.15rem;
+}
+.rule-n{
+  width:26px;height:26px;border-radius:var(--r-full);flex:none;
+  background:var(--navy-solid);color:#FFFFFF;display:grid;place-items:center;
+  font-size:var(--t-xs);font-weight:500;
+}
+.rule h3{font-size:var(--t-base);margin-bottom:.15rem;}
+.rule p{font-size:var(--t-sm);color:var(--ink-muted);max-width:none;}
+
+/* ---------- Zádrhele ---------- */
+.faq{display:grid;gap:.5rem;min-width:0;max-width:none;padding-left:0;list-style:none;}
+.qa{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;min-width:0;
+}
+.qa[open]{border-color:var(--accent);}
+.qa summary{
+  display:flex;align-items:center;gap:1rem;padding:.9rem 1.15rem;
+  cursor:pointer;list-style:none;font-weight:500;color:var(--ink-strong);
+  transition:background .16s ease;
+}
+.qa summary::-webkit-details-marker{display:none;}
+.qa summary:hover{background:var(--surface);}
+.qa summary > span{flex:1;min-width:0;}
+.qa-body{
+  padding:0 1.15rem 1.15rem 2.6rem;display:grid;gap:.55rem;
+  max-width:none;color:var(--ink);
+}
+.qa-body li::marker{color:var(--accent-ink);font-weight:500;}
+
 /* ---------- Posádka ---------- */
 .crew{display:grid;gap:.6rem;min-width:0;max-width:none;}
 @media (min-width:700px){.crew{grid-template-columns:1fr 1fr;}}
@@ -615,6 +650,7 @@ var ICON = {
   folder:'<path class="stroke" d="M3.5 6.5A1.5 1.5 0 0 1 5 5h4l2 2.5h8a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18z"/><path class="detail" d="M9 13.5h6"/>',
   health:'<path class="stroke" d="M3.5 12h4l2-4 3 8 2.5-5 1.5 3h4"/><path class="detail" d="M19 8.5V5.5M17.5 7h3"/>',
   money:'<rect class="stroke" x="3" y="6" width="18" height="12" rx="2"/><circle class="detail" cx="12" cy="12" r="2.6"/>',
+  key:'<circle class="stroke" cx="8" cy="14" r="4.2"/><path class="stroke" d="m11 11 8.5-8.5M17 5l2.5 2.5M14.5 7.5 17 10"/><circle class="detail-fill" cx="8" cy="14" r="1.3"/>',
   shield:'<path class="stroke" d="M12 3.4 19 5.9v6c0 4-3 7.1-7 8.6-4-1.5-7-4.6-7-8.6v-6z"/><path class="detail" d="m9.4 11.9 1.8 1.8 3.5-3.6"/>',
   handshake:'<path class="stroke" d="M3.5 10.5 7 7l3.5 2.5L14 7l6.5 3.5"/><path class="stroke" d="M20.5 10.5V16l-4 2.5-4.5-3.5-4.5 3.5L3.5 16v-5.5"/><path class="detail" d="M10.5 13.5 12 15l1.5-1.5"/>'
 };
@@ -637,13 +673,14 @@ var SETTINGS = [
     { key:'emailTvar',  label:'Tvar pracovního e-mailu',  ph:'jmeno@fourbros.cz', def:'jmeno@fourbros.cz' }
   ]},
   { group:'Nástroje', items:[
-    { key:'projekty',   label:'Projektový nástroj',        ph:'Asana, ClickUp, Jira…' },
-    { key:'vykazy',     label:'Výkaz odpracovaných hodin', ph:'název nástroje' },
-    { key:'disk',       label:'Kde se ukládají podklady',  ph:'Google Drive, sdílený disk…' },
-    { key:'chat',       label:'Komunikační nástroj',       ph:'Slack, Teams…' },
+    { key:'projekty',   label:'Projektový nástroj',        ph:'Asana', def:'Asana' },
+    { key:'vykazy',     label:'Výkaz odpracovaných hodin', ph:'Costlocker', def:'Costlocker' },
+    { key:'disk',       label:'Kde se ukládají podklady',  ph:'Google Disk', def:'Google Disk' },
+    { key:'chat',       label:'Komunikační nástroj',       ph:'Slack', def:'Slack' },
     { key:'dochazka',   label:'Docházka a dovolená',       ph:'název nástroje' },
     { key:'brandSlozka',label:'Složka s logy a šablonami', ph:'odkaz nebo cesta' },
-    { key:'hesla',      label:'Správce hesel',             ph:'1Password, Bitwarden…' }
+    { key:'hesla',      label:'Správce hesel',             ph:'1Password', def:'1Password' },
+    { key:'smlouvy',    label:'Podpis smluv',              ph:'PandaDoc', def:'PandaDoc' }
   ]},
   { group:'Praktické', items:[
     { key:'dressCode',  label:'Dress code',    ph:'jak chodíme oblečení' },
@@ -669,7 +706,7 @@ var PHASES = [
     id:'pred', title:'Před nástupem', when:'2 týdny předem', from:-14, to:-1,
     intro:'V den nástupu je všechno připravené a nový člověk ví, kam a v kolik má přijít. Nic z toho se nedá stihnout ráno v den D.',
     tasks:[
-      { id:'p1',  who:'HR',      t:'Pracovní smlouva vyhotovena a podepsána — nejpozději v den nástupu' },
+      { id:'p1',  who:'HR',      t:'Smlouva připravena v {{smlouvy}} a podepsána oběma stranami — nejpozději v den nástupu' },
       { id:'p2',  who:'HR',      t:'Vstupní lékařská prohlídka objednána a absolvována <strong>před</strong> vznikem pracovního poměru', guide:'prohlidka' },
       { id:'p3',  who:'HR',      t:'Mzdový výměr připraven, pokud mzda není přímo ve smlouvě' },
       { id:'p4',  who:'HR',      t:'Osobní dotazník, prohlášení poplatníka daně, číslo účtu, kontakt pro případ nouze' },
@@ -979,6 +1016,241 @@ var CREW = [
 ];
 
 /* ============================================================
+   4b. PŘÍSTUPY — postup, nástroje a zádrhele
+   Vychází z interní procesní mapy Four Bros (fáze PRE ONBOARDING
+   → ONBOARDING) a z reálného seznamu nástrojů.
+   ============================================================ */
+
+var ACCESS_RULES = [
+  { t:'Účty zakládej 7 dní předem, pozvánky posílej den předem',
+    d:'Založení účtu a odeslání pozvánky jsou dvě různé věci. Když pošleš pozvánku týden dopředu, do nástupu vyprší a první den řešíš, proč se nováček nikam nedostane.' },
+  { t:'Každý má vlastní účet',
+    d:'Žádné sdílené přihlášení kromě těch, která sdílená být musí. Když člověk odejde, deaktivuješ účet a hotovo — nemusíš měnit hesla na dvaceti místech.' },
+  { t:'Firemní hesla patří do sdíleného vaultu, ne do Private',
+    d:'Co si nováček uloží do svého Private vaultu v 1Passwordu, k tomu se nedostane nikdo jiný — ani admin. Tohle je nejčastější tichý problém, který vyplave až při odchodu.' }
+];
+
+var ACCESS_STEPS = [
+  {
+    id:'ac-zalozeni', title:'Založení účtů', when:'7 dní před nástupem', who:'HR',
+    intro:'Založ účty ve všech nástrojích, které používáme. Přihlašovací údaje ulož do 1Passwordu — předáš je až první den.',
+    tasks:[
+      { id:'ac1', t:'<strong>Four Bros Gmail</strong> — vytvořen účet, zvolen tvar adresy' },
+      { id:'ac2', t:'<strong>1Password</strong> — odeslána pozvánka, přiřazeny vaulty podle role' },
+      { id:'ac3', t:'<strong>Slack</strong> — účet založen, přiřazeny kanály podle role a klientů' },
+      { id:'ac4', t:'<strong>Asana</strong> — účet založen a zařazen do <em>týmu</em>, ne jen do organizace' },
+      { id:'ac5', t:'<strong>Costlocker</strong> — účet založen, přiřazeny projekty' },
+      { id:'ac6', t:'<strong>SettleUp</strong> — připraven link nebo QR do společné skupiny' },
+      { id:'ac7', t:'<strong>Docházka &amp; fakturace</strong> — účet založen, doplněn počet dní dovolené' },
+      { id:'ac8', t:'Ověřeno, že máme <strong>volné licence</strong> ve všech placených nástrojích' },
+      { id:'ac9', t:'Všechny přihlašovací údaje uloženy do 1Passwordu' }
+    ]
+  },
+  {
+    id:'ac-fyzicke', title:'Fyzické přístupy', when:'Před nástupem', who:'HR',
+    intro:'Klíče a čipy mají dodací lhůtu. Když je řešíš den předem, nováček první den nemůže do budovy sám.',
+    tasks:[
+      { id:'ac10', t:'Klíče od budovy připraveny' },
+      { id:'ac11', t:'Čip vyroben a aktivován' },
+      { id:'ac12', t:'<strong>iGET</strong> — připraven QR kód pro přidání člena' },
+      { id:'ac13', t:'Telefonní číslo nováčka zaneseno pro <strong>otevírání brány</strong>' },
+      { id:'ac14', t:'Ověřeno, že čip i brána opravdu fungují — ne jen že jsou vyrobené' }
+    ]
+  },
+  {
+    id:'ac-denjedna', title:'Nastavení s nováčkem', when:'1. den', who:'HR + nováček',
+    intro:'Tohle se dělá společně u jednoho počítače, ne posláním návodu e-mailem. Zabere to zhruba dvě hodiny a ušetří to týden dohadování.',
+    tasks:[
+      { id:'ac15', t:'Gmail — dvoufázové ověření, podpis, fotka, aplikace v telefonu', tool:'gmail' },
+      { id:'ac16', t:'Google kalendář — meetingovky, kalendáře členů, narozeniny', tool:'kalendar' },
+      { id:'ac17', t:'1Password — Master Password, <strong>Emergency Kit</strong>, vaulty, rozšíření', tool:'onepassword' },
+      { id:'ac18', t:'Slack — profil, kanály, aplikace v telefonu', tool:'slack' },
+      { id:'ac19', t:'Asana a Costlocker — zaškolení vede teamleader', tool:'asana' },
+      { id:'ac20', t:'Docházka a fakturace — projití procesu', tool:'dochazka' },
+      { id:'ac21', t:'SettleUp — připojení do skupiny na drobné výdaje' },
+      { id:'ac22', t:'Nováček se <strong>přede mnou přihlásil</strong> do všech nástrojů' }
+    ]
+  }
+];
+
+/* Detailní postup po nástrojích — převzato z interní procesní mapy. */
+var TOOLS = [
+  {
+    id:'gmail', name:'Four Bros Gmail', tag:'Základ',
+    lead:'Bez tohohle účtu nefunguje nic dalšího — Slack i většina ostatních nástrojů se na něj přihlašuje.',
+    steps:[
+      'Nováček otevře <strong>myaccount.google.com</strong> a přihlásí se firemním účtem.',
+      'V levém menu zvolí Zabezpečení → Dvoufázové ověření → Začít. Zadá své telefonní číslo a potvrdí kód.',
+      '<strong>Záložní kódy si hned stáhněte</strong> a uložte do 1Passwordu. Bez nich je ztracený telefon velký problém.',
+      'V Gmailu: ozubené kolo → Zobrazit všechna nastavení → Obecné → Podpis → Vytvořit nový. Vlož firemní šablonu (jméno, pozice, telefon, fourbros.cz).',
+      'Dole nastav, aby se podpis vkládal do nových e-mailů <em>i do odpovědí</em>.',
+      'Na myaccount.google.com → Osobní údaje → Fotka nahraj profesionální fotku. Ideálně stejnou jako na web a Slack.',
+      'Stáhni Gmail do telefonu a přihlas se — projde to přes dvoufázové ověření, takže si rovnou ověříš, že funguje.'
+    ]
+  },
+  {
+    id:'kalendar', name:'Google kalendář', tag:'Základ',
+    lead:'Bez sdílených kalendářů nováček nevidí obsazenost zasedaček a plánuje meetingy naslepo.',
+    steps:[
+      'V kalendáři vlevo u „Další kalendáře" klikni na <strong>+</strong> → Procházet zdroje.',
+      'Přidej kalendáře <strong>meetingovek</strong> — nováček pak vidí, kdy jsou volné.',
+      'Přes + → Přihlásit se k odběru kalendáře postupně přidej e-maily členů týmu, se kterými bude spolupracovat.',
+      'Nasdílej kalendář <strong>Narozeniny ve Four Bros</strong>.',
+      'Do toho kalendáře rovnou přidej <strong>narozeniny nováčka</strong> jako celodenní opakující se událost. Na tohle se zapomíná nejčastěji.',
+      'Stáhni Google Calendar do telefonu a přihlas firemním účtem.'
+    ]
+  },
+  {
+    id:'onepassword', name:'1Password', tag:'Hesla',
+    lead:'Nejcitlivější krok celého dne. Když se odbyde, vyplave to až za rok při odchodu.',
+    steps:[
+      'Nováček otevře pozvánkový e-mail <em>Join Four Bros on 1Password</em> a klikne na Join.',
+      'Vyplní jméno a vytvoří si silné <strong>Master Password</strong> — jediné heslo, které si musí pamatovat.',
+      'Heslo si nepíše do počítače. Ideálně do papírového bloku z Four Bros balíčku.',
+      '1Password po registraci nabídne stažení <strong>Emergency Kitu</strong> (PDF se Secret Key). Ulož ho mimo firemní disk a ideálně vytiskni.',
+      'Vysvětli nahlas: <strong>Secret Key + Master Password = jediná cesta k obnově účtu.</strong> Bez nich se do účtu nedostane nikdo, ani my.',
+      'Ukaž rozdíl mezi <strong>Private</strong> vaultem a sdílenými firemními vaulty.',
+      'Projděte, co ve sdílených vaultech najde — Canva, Figma, ChatGPT, CapCut, Webflow, Google Analytics a další.',
+      'Řekni pravidlo: <strong>každé nové firemní heslo patří do sdíleného vaultu</strong>, nikdy do Private.',
+      'Nainstalujte desktopovou aplikaci, rozšíření do prohlížeče a mobilní aplikaci (přihlášení naskenováním Setup kódu z Emergency Kitu).'
+    ]
+  },
+  {
+    id:'slack', name:'Slack', tag:'Komunikace',
+    lead:'Přihlašuje se přes firemní Gmail, takže Gmail musí být hotový první.',
+    steps:[
+      'Fotka vpravo nahoře → Profile → Edit profile.',
+      'Vyplň celé jméno, přezdívku, pozici, telefon a nahraj fotku.',
+      'Projděte společně hlavní kanály — co kam patří: obecné, tým, klienti, random.',
+      'Ukaž, jak si přidat kanál: <strong>+ Add channels → Browse channels</strong>.',
+      'Vysvětli zvyklosti: odpovídá se ve <strong>vláknech</strong>, zmínky přes @, na potvrzení stačí emoji reakce místo zprávy „ok".',
+      'Stáhni Slack do telefonu a přihlas se přes firemní Gmail.'
+    ]
+  },
+  {
+    id:'asana', name:'Asana a Costlocker', tag:'Práce',
+    lead:'Zaškolení vede teamleader, ne HR. Tady jde o způsob práce, ne o nastavení účtu.',
+    steps:[
+      'Ověř, že je nováček zařazený do <strong>týmu</strong>, ne jen do organizace — jinak projekty neuvidí.',
+      'Teamleader projde zadávání a přebírání tasků: kdo je zadavatel, kdo řešitel, jak se nastavuje termín.',
+      'Nováček si stáhne Asanu do telefonu.',
+      'V Costlockeru ověř, že má <strong>přiřazené projekty</strong> — bez toho nemá kam vykazovat.',
+      'Teamleader vysvětlí, jak se vykazuje: průběžně během dne, na konkrétní projekt, s popisem, který snese oko klienta.',
+      'Nováček si zkusí vykázat <strong>první den ještě dnes</strong> a někdo mu to zkontroluje.'
+    ]
+  },
+  {
+    id:'dochazka', name:'Docházka a fakturace', tag:'Administrativa',
+    lead:'Krátké, ale nepřeskakuj to — chybějící dny dovolené se řeší až v okamžiku, kdy si o ni nováček požádá.',
+    steps:[
+      'Projděte proces docházky — jak se zapisuje příchod a odchod.',
+      'Projděte proces fakturace, pokud se ho nováček týká (jinak platí u OSVČ).',
+      '<strong>Doplň počet dní dovolené</strong> do systému. Na tohle se zapomíná.',
+      'Ukaž, kde si nováček žádá o dovolenou a kdo mu ji schvaluje.'
+    ]
+  }
+];
+
+var ACCESS_FAQ = [
+  { q:'Nováček nemůže dokončit dvoufázové ověření',
+    a:[
+      'Nejčastěji nemá u sebe telefon nebo se překlepl v čísle. Zkontroluj zadané číslo dřív, než začneš řešit cokoliv jiného.',
+      'Když SMS nechodí, přepni metodu na <strong>výzvu v telefonu</strong> přes přihlášenou aplikaci Google.',
+      'Když je účet zablokovaný v půlce nastavení, admin může dvoufázové ověření resetovat v administraci Google Workspace.',
+      '<strong>Vždycky uložte záložní kódy</strong> do 1Passwordu. Ztracený nebo rozbitý telefon je pak dvouminutový problém místo půldenního.'
+    ]},
+  { q:'Nováček zapomněl Master Password nebo ztratil Emergency Kit',
+    a:[
+      'Samotné 1Password heslo obnovit neumí — to je princip, ne chyba.',
+      'Pokud má tým zapnutou <strong>obnovu účtu administrátorem</strong>, spustí ji admin a nováček si nastaví nové Master Password.',
+      'Pokud obnova zapnutá není, účet se zakládá znovu. O sdílené vaulty nepřijdeš, ale <strong>Private vault je nenávratně pryč</strong>.',
+      'Prevence, která tohle celé řeší: Emergency Kit vytisknout hned první den a odnést domů. Ne „až někdy".'
+    ]},
+  { q:'Firemní heslo je uložené v Private vaultu a nikdo se k němu nedostane',
+    a:[
+      'Do Private vaultu nevidí ani admin. Když člověk odejde, heslo odejde s ním.',
+      'Řešení tady a teď: nováček heslo <strong>přesune</strong> do správného sdíleného vaultu (Move item).',
+      'Pokud už odešel, heslo se musí u dané služby resetovat přes „zapomenuté heslo" na firemní e-mail.',
+      'Projděte to jednou za čas napříč týmem — nejen u nováčků. Tenhle problém tiše roste.'
+    ]},
+  { q:'Nováček se ve Slacku registroval soukromým e-mailem',
+    a:[
+      'Vznikne mu druhý účet, který nepatří do firmy a nejde spravovat.',
+      'Deaktivuj ten soukromý účet v administraci Slacku.',
+      'Pošli pozvánku znovu a nechej ho přihlásit se <strong>přes firemní Gmail</strong>.',
+      'Zprávy z prvního účtu se nepřenesou. Když už tam něco napsal, ať to zkopíruje.'
+    ]},
+  { q:'Nováček nevidí v Asaně projekty',
+    a:[
+      'V devíti z deseti případů je v organizaci, ale <strong>není v týmu</strong>. Přidej ho do týmu, ne jen do organizace.',
+      'Zkontroluj, jestli nemá roli hosta — host vidí jen to, do čeho je výslovně pozvaný.',
+      'Ověř, že se dívá pod firemním účtem. Bývá přihlášený pod soukromým z minulé práce.',
+      'U konkrétního projektu zkontroluj, jestli není nastavený jako soukromý.'
+    ]},
+  { q:'Nováček nemůže vykazovat v Costlockeru',
+    a:[
+      'Nemá přiřazené projekty. Přiřazení dělá teamleader, ne HR.',
+      'Zkontroluj, jestli má správnou roli — u některých rolí jde jen prohlížení.',
+      'Když projekt teprve vzniká, nech ho zatím vykazovat na interní položku a poznamenej si to. Nevykázaný čas se zpětně nedohledá.'
+    ]},
+  { q:'Pozvánky vypršely dřív, než nováček nastoupil',
+    a:[
+      'Klasika, když se účty zakládají týden dopředu. Pozvánky mají omezenou platnost.',
+      'Účty zakládej sedm dní předem, ale <strong>pozvánky rozešli až den před nástupem</strong>.',
+      'Když už vypršely, prostě je pošli znovu — trvá to minutu, jen na to nesmíš přijít až v deset ráno prvního dne.'
+    ]},
+  { q:'Nováček nastoupil a účet ještě není hotový',
+    a:[
+      'Nepanikař a nepřehazuj pořadí dne. Přesuň dopředu věci, které účet nepotřebují: prohlídku kanceláře, představení týmu, BOZP, předání vybavení.',
+      'Nikdy nepůjčuj cizí přihlášení, ať to „zatím nějak jde".',
+      'Založ účet ještě týž den. Když to nejde do konce dne, řekni nováčkovi nahlas, kdy to bude — nejistota je horší než zpoždění.',
+      'Zapiš si, proč se to stalo. Když se to opakuje, není problém v tom dni, ale v procesu.'
+    ]},
+  { q:'Klíče nebo čip nejsou hotové',
+    a:[
+      'Domluv na první dny konkrétního člověka, který nováčka pouští dovnitř — jmenovitě, ne „někdo z týmu".',
+      'Nováček ať první dny nechodí jako první ani neodchází jako poslední.',
+      'Nastav si připomínku na den, kdy to má být hotové, a ověř to. Bez připomínky to vyšumí.',
+      'Čip po převzetí <strong>vyzkoušej u dveří</strong>, nespoléhej na to, že je aktivovaný.'
+    ]},
+  { q:'Brána nepustí, i když jsme číslo zadali',
+    a:[
+      'Zkontroluj tvar čísla — s předvolbou, bez mezer.',
+      'Ověř, že nováček volá <strong>z toho čísla</strong>, které jsi zadala, a nemá skryté číslo.',
+      'Vyzkoušejte to společně, ne až ho to zaskočí v pondělí ráno v dešti.',
+      'iGET QR kód ať si uloží do telefonu, ne jen do e-mailu — v garážích nebývá signál.'
+    ]},
+  { q:'Došly placené licence v Asaně, Costlockeru nebo 1Passwordu',
+    a:[
+      'Ověř volné licence <strong>ve chvíli, kdy zakládáš účty</strong>, ne až první den.',
+      'Nákup licence obvykle schvaluje vedení — počítej s tím, že to nemusí být hotové týž den.',
+      'Zkontroluj, jestli nedržíme licence po lidech, kteří už odešli. Bývá to nejrychlejší řešení.'
+    ]},
+  { q:'Nováček má stejné jméno jako někdo v týmu',
+    a:[
+      'Rozhodni tvar adresy <strong>dřív</strong>, než účet založíš — přejmenovávat se to bude špatně.',
+      'Drž se jedné konvence pro celou firmu, ne výjimky pro jednoho člověka.',
+      'Zkontroluj i Slack a Asanu, ať se dva lidé se stejným jménem dají rozlišit — pomáhá doplnit pozici do profilu.'
+    ]},
+  { q:'Nastupuje OSVČ, ne zaměstnanec — platí to samé?',
+    a:[
+      'Nástrojové přístupy ano, s nimi pracuje stejně jako kdokoliv jiný.',
+      'Liší se smluvní část: místo pracovní smlouvy jde o smlouvu o spolupráci a odpadá docházka i dovolená v zaměstnaneckém režimu.',
+      'Fakturace se řeší opačně — místo mzdy chodí faktura. Projděte to hned první den.',
+      'Zbytek onboardingu ale nezkracuj. Externista, který neví, jak to u vás chodí, odvádí horší práci než ten, kdo to ví.'
+    ]},
+  { q:'Nováček odchází ještě ve zkušební době',
+    a:[
+      'Projdi seznam z offboardingu, nespoléhej na paměť — je snadné zapomenout na nástroj, který používal jednou.',
+      'Odeber: Google Workspace, Slack, Asana, Costlocker, 1Password, docházka.',
+      'Nastav <strong>přesměrování e-mailu</strong> na někoho konkrétního, ať se neztratí klientská komunikace.',
+      'Změň heslo ke <strong>sdíleným účtům</strong>, ke kterým měl přístup.',
+      'Vyber klíče, čip a elektroniku a nech podepsat předávací protokol.',
+      'Jeho tasky v Asaně přiřaď konkrétním lidem, ne „týmu".'
+    ]}
+];
+
+/* ============================================================
    5. ŠABLONY
    ============================================================ */
 var TEMPLATES = [
@@ -1188,6 +1460,7 @@ var ROUTES = [
   { id:'uvod',      label:'Přehled',    icon:'home',   render:viewUvod },
   { id:'plan',      label:'Postup',     icon:'steps',  render:viewPlan },
   { id:'navody',    label:'Návody',     icon:'guide',  render:viewNavody },
+  { id:'pristupy',  label:'Přístupy',   icon:'key',    render:viewPristupy },
   { id:'znacka',    label:'Značka',     icon:'brand',  render:viewZnacka },
   { id:'lide',      label:'Kdo je kdo', icon:'people', render:viewLide },
   { id:'terminy',   label:'Termíny',    icon:'docs',   render:viewTerminy },
@@ -1406,6 +1679,102 @@ function viewGuide(g){
   });
   h += '</ol>';
 
+  h += '<div class="btns"><button class="btn ghost" data-print>Vytisknout návod</button></div>';
+  return h;
+}
+
+/* ---------- Přístupy ---------- */
+function viewPristupy(params){
+  if(params && params.id){
+    var tool = TOOLS.filter(function(x){ return x.id === params.id; })[0];
+    if(tool){ return viewTool(tool); }
+  }
+
+  var h = '';
+  h += '<div class="head">';
+  h +=   '<h1>Přístupy pro nového kolegu</h1>';
+  h +=   '<p class="lede">Kompletní postup od založení účtů po první přihlášení. Dole jsou řešení zádrhelů, které se opakují nejčastěji.</p>';
+  h += '</div>';
+
+  h += '<section class="group"><h2>Tři pravidla, ze kterých plyne zbytek</h2>';
+  h +=   '<div class="rules">';
+  ACCESS_RULES.forEach(function(r, i){
+    h += '<div class="rule"><span class="rule-n">' + (i + 1) + '</span>' +
+         '<div style="min-width:0"><h3>' + esc(r.t) + '</h3><p>' + esc(r.d) + '</p></div></div>';
+  });
+  h +=   '</div>';
+  h += '</section>';
+
+  h += '<section class="group"><h2>Postup</h2>';
+  h +=   '<ul class="phases">';
+  ACCESS_STEPS.forEach(function(ph, i){
+    var done = 0;
+    ph.tasks.forEach(function(t){ if(state.done['t:' + t.id]){ done++; } });
+    h += '<li><details class="phase" data-phase="' + esc(ph.id) + '"' + (i === 0 ? ' open' : '') + '>';
+    h +=   '<summary><div style="flex:1;min-width:0"><h3>' + esc(ph.title) + '</h3>' +
+             '<span class="when">' + esc(ph.when) + ' · ' + esc(ph.who) + '</span></div>';
+    h +=     '<span class="count" data-count>' + done + '/' + ph.tasks.length + '</span>' + CHEV + '</summary>';
+    h +=   '<div class="phase-body"><p>' + esc(ph.intro) + '</p><ul class="tasks">';
+    ph.tasks.forEach(function(t){
+      var checked = state.done['t:' + t.id] ? ' checked' : '';
+      h += '<li><div class="task">';
+      h +=   '<label class="task-main"><input type="checkbox" data-task="' + esc(t.id) + '"' + checked + '>';
+      h +=   '<span class="text">' + fillIn(t.t) + '</span></label>';
+      if(t.tool){
+        h += '<div class="task-sub"><button class="helper" data-gotool="' + esc(t.tool) + '">Postup krok za krokem</button></div>';
+      }
+      h += '</div></li>';
+    });
+    h +=   '</ul></div>';
+    h += '</details></li>';
+  });
+  h +=   '</ul>';
+  h += '</section>';
+
+  h += '<section class="group"><h2>Nastavení nástrojů</h2>';
+  h +=   '<p class="lede">Klikni na nástroj a projdi ho s nováčkem u jednoho počítače.</p>';
+  h +=   '<div class="tiles">';
+  TOOLS.forEach(function(t){
+    h += '<button class="tile" data-gotool="' + esc(t.id) + '">';
+    h +=   '<div class="top"><div class="badge">' + svg('key') + '</div>';
+    h +=     '<h3>' + esc(t.name) + '</h3><span class="n">' + t.steps.length + ' kroků</span></div>';
+    h +=   '<p>' + esc(t.lead) + '</p>';
+    h += '</button>';
+  });
+  h +=   '</div>';
+  h += '</section>';
+
+  h += '<section class="group"><h2>Když se zasekneš</h2>';
+  h +=   '<p class="lede">Situace, které se opakují. U každé konkrétní postup, ne obecná rada.</p>';
+  h +=   '<ul class="faq">';
+  ACCESS_FAQ.forEach(function(f){
+    h += '<li><details class="qa"><summary><span>' + esc(f.q) + '</span>' + CHEV + '</summary><ol class="qa-body">';
+    f.a.forEach(function(x){ h += '<li>' + fillIn(x) + '</li>'; });
+    h += '</ol></details></li>';
+  });
+  h +=   '</ul>';
+  h += '</section>';
+
+  h += '<div class="btns"><button class="btn ghost" data-print>Vytisknout celý postup</button></div>';
+  return h;
+}
+
+function viewTool(t){
+  var h = '';
+  h += '<button class="back" data-gotool="">← Všechny nástroje</button>';
+  h += '<div class="head">';
+  h +=   '<p class="label">' + esc(t.tag) + '</p>';
+  h +=   '<h1>' + esc(t.name) + '</h1>';
+  h +=   '<p class="lede">' + esc(t.lead) + '</p>';
+  h += '</div>';
+  h += '<ol class="steps">';
+  t.steps.forEach(function(step, i){
+    var key = 'w:' + t.id + ':' + i;
+    h += '<li><label><input type="checkbox" data-step="' + esc(key) + '"' +
+         (state.done[key] ? ' checked' : '') + '>' +
+         '<span class="text">' + fillIn(step) + '</span></label></li>';
+  });
+  h += '</ol>';
   h += '<div class="btns"><button class="btn ghost" data-print>Vytisknout návod</button></div>';
   return h;
 }
@@ -1725,6 +2094,14 @@ document.addEventListener('click', function(e){
     e.preventDefault();
     var gid = guideBtn.getAttribute('data-goguide');
     location.hash = gid ? '#/navody/' + gid : '#/navody';
+    return;
+  }
+
+  var toolBtn = t.closest('[data-gotool]');
+  if(toolBtn){
+    e.preventDefault();
+    var tid = toolBtn.getAttribute('data-gotool');
+    location.hash = tid ? '#/pristupy/' + tid : '#/pristupy';
     return;
   }
 
