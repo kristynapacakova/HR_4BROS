@@ -2,12 +2,15 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 
+import Link from 'next/link'
+import { CheckSquare, ChevronRight } from 'lucide-react'
 import {
   DEMO_USER, DEMO_ADMIN,
   DEMO_TASKS,
   DEMO_TEAM_LEAVES,
   DEMO_TEAM,
   DEMO_EMPLOYEES,
+  DEMO_ALL_LEAVE_REQUESTS,
 } from '@/lib/mock-data'
 import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
@@ -52,6 +55,8 @@ export default async function DashboardPage() {
     return today >= start && today <= end && (l.status === 'APPROVED' || l.status === 'PENDING')
   })
 
+  const pendingLeaveRequests = DEMO_ALL_LEAVE_REQUESTS.filter(l => l.status === 'PENDING')
+
   const LEAVE_TYPE_CZ: Record<string, string> = {
     ANNUAL: 'Dovolená',
     SICK: 'Nemoc',
@@ -84,6 +89,47 @@ export default async function DashboardPage() {
           tenure={tenure}
           startDate={startDate.toISOString()}
         />
+
+        {/* Čeká na tebe — admin-only, akční přehled schválení */}
+        {isAdmin && (
+          <Link
+            href="/admin/leave-requests"
+            className="block bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:border-violet/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <CheckSquare className="w-4 h-4 text-violet" />
+                </div>
+                <div>
+                  <p className="font-headline text-navy leading-tight">Čeká na tebe</p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {pendingLeaveRequests.length === 0
+                      ? 'Žádné žádosti ke schválení'
+                      : `${pendingLeaveRequests.length} ${pendingLeaveRequests.length === 1 ? 'žádost o dovolenou čeká' : 'žádosti o dovolenou čekají'} na schválení`}
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors flex-shrink-0" />
+            </div>
+
+            {pendingLeaveRequests.length > 0 && (
+              <div className="flex flex-wrap gap-x-6 gap-y-3 mt-4 pt-4 border-t border-slate-100">
+                {pendingLeaveRequests.slice(0, 4).map((req) => (
+                  <div key={req.id} className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-slate-500 text-[11px] font-semibold">{req.user.name[0]}</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-navy leading-tight">{req.user.name}</p>
+                      <p className="text-xs text-slate-400">{LEAVE_TYPE_CZ[req.type] || req.type}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Link>
+        )}
 
         {/* Dnes — absences + nearest events in one card */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
