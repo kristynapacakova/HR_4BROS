@@ -16,7 +16,7 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 ### Obrazovky
 
 - **Přehled** — postup v procentech, kolikátý je den onboardingu, aktuální fáze a co je na řadě
-- **Postup** — sedm fází od D−14 po první rok, celkem 59 odškrtávacích kroků s uvedením, kdo je vlastníkem
+- **Postup** — sedm rozbalovacích fází, celkem 59 odškrtávacích kroků s odznakem role, která je má na starosti
 - **Návody** — 12 návodů krok za krokem (přihlášení do systémů, e-mailový podpis, docházka a nemoc, první schůzka s klientem, kam co ukládat, vizitky, hodnoticí 1:1 a další)
 - **Značka** — pravidla z brand manuálu pro každého, kdo píše klientovi
 - **Kdo je kdo** — na co se ptát buddyho, nadřízeného, HR a IT
@@ -58,20 +58,16 @@ nebo právníka — zákoník práce se v této oblasti opakovaně měnil.
 
 ## Vizuální styl
 
-Vizuální myšlenka je **navigační mapa**. Vychází ze značky samotné — logo je loďka,
-brand manuál mluví o tom, že jsme „s klientem na jedné lodi" a že správným použitím
-barev „držíte kurz". Onboarding je vytyčený kurz s datem vyplutí a body obratu, takže:
+Čistý, moderní vzhled: vzdušné bílé plochy, měkce zaoblené karty, jemné stíny
+a vzdušná typografie. Členění nese odstup a plocha, ne rámečky.
 
-- **Kurz místo seznamu** — fáze nejsou karty pod sebou, ale waypointy vynesené
-  na kurzové čáře, každý se svou značkou dne (`D−14`, `D+30`, `D+90`)
-- **Vlasová kresba** — členění nese linka v primární barvě, ne barevné výplně;
-  bílá zůstává dominantní plochou, jak žádá manuál
-- **Přístrojová typografie** — třetí písmová role vedle Serenity a Roboto: tabulkové
-  číslice s prostrkanou verzálkou pro všechny údaje, počty a časy
-- **Fialová má jediný význam** — Electric Violet označuje výhradně vaši aktuální
-  polohu na kurzu a odškrtnuté kroky. Tím sama od sebe drží limit 5 % plochy
-  a zároveň něco sděluje
-- **Ukazatel postupu** je přístrojový oblouk s ryskami, ne obyčejný pruh
+- **Fáze jsou rozbalovací** — otevřená je ta aktuální, ostatní jsou složené,
+  takže se místo zdi 59 zaškrtávátek zobrazí přehledný seznam
+- **Fialová má jediný význam** — Electric Violet označuje aktuální fázi,
+  odškrtnuté kroky a hlavní tlačítka. Tím sama od sebe drží limit 5 % plochy
+- **Kruhový ukazatel** postupu na přehledu, tenký pruh v postranním panelu
+- **Odznaky rolí** (HR, Manažer, IT, Buddy) u každého kroku, aby bylo hned vidět,
+  kdo ho má na starosti
 
 Dodržené kapitoly brand manuálu:
 
@@ -86,6 +82,6 @@ Fonty Serenity a Roboto nejsou v souboru vložené kvůli licenci. Bez nich se a
 zobrazí v náhradních řezech — pro přesnou podobu je potřeba mít je nainstalované
 z firemní složky s fonty.
 
-Logo je v hlavičce zastoupené zjednodušenou značkou. Oficiální soubor loga do aplikace
+Logo je v postranním panelu zastoupené zjednodušenou značkou. Oficiální soubor loga do aplikace
 nevkládám, aby nedošlo k porušení pravidel z kapitoly 1.6 (proporce, ochranná zóna,
 minimální velikost) — pokud ho chceš doplnit, použij originální soubor ze sdílené složky.

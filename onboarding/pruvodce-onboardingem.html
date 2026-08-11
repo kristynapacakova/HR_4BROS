@@ -3,9 +3,6 @@
 <style>
 /* ============================================================
    FOUR BROS — ONBOARDING
-   Vizuální systém: navigační mapa.
-   Vlasová kresba v primární barvě na bílém listu, přístrojové
-   číslice pro údaje, fialová výhradně pro označení aktuální polohy.
    Barvy a písma podle Four Bros Brand Guidelines v1.0.
    ============================================================ */
 
@@ -16,82 +13,93 @@
   --lightgrey:#F4F4F4;
   --violet:#7E17E0;
 
-  /* Role */
-  --paper:#FFFFFF;
-  --panel:#FFFFFF;
-  --tint:#F7F8FE;
-  --tint-2:#F4F4F4;
-  --ink:#22384B;
+  /* Plochy a text */
+  --bg:#FFFFFF;
+  --surface:#F7F8FE;
+  --surface-2:#F4F4F4;
+  --card:#FFFFFF;
+  --ink:#2A3F52;
   --ink-strong:#194669;
-  --ink-soft:#5F7789;
-  --ink-faint:#8CA0B2;
-  --rule:#D3E0EC;
-  --rule-soft:#E8EFF6;
-  --graticule:rgba(25,70,105,.022);
-  --fix:#7E17E0;
-  --fix-ink:#7E17E0;
-  --fix-wash:#F5EBFE;
-  --on-fix:#FFFFFF;
-  --lift:0 1px 1px rgba(25,70,105,.04);
+  --ink-muted:#6B8299;
+  --ink-light:#93A8BB;
+  --line:#E4EBF3;
+  --line-soft:#EFF4F9;
 
-  /* Písma — brandbook 5.1–5.4 */
+  --accent:#7E17E0;
+  --accent-hover:#6D12C4;
+  --accent-soft:#F4EAFE;
+  --accent-ink:#7E17E0;
+  --on-accent:#FFFFFF;
+
+  --shadow-sm:0 1px 2px rgba(25,70,105,.05);
+  --shadow:0 1px 3px rgba(25,70,105,.06),0 8px 20px -6px rgba(25,70,105,.09);
+  --shadow-lg:0 2px 6px rgba(25,70,105,.07),0 16px 40px -12px rgba(25,70,105,.14);
+
+  /* Písma (brandbook 5.1–5.4) */
   --display:'Serenity','Serenity Light','Futura','Avenir Next','Century Gothic','Questrial','Trebuchet MS',sans-serif;
   --body:'Roboto','Roboto Light','Helvetica Neue','Segoe UI',Arial,sans-serif;
-  --instrument:'Roboto Mono','SFMono-Regular',ui-monospace,'DejaVu Sans Mono',Menlo,Consolas,monospace;
 
-  /* Měřítko */
-  --t-xs:0.75rem;
-  --t-sm:0.8125rem;
+  --t-xs:.8125rem;
+  --t-sm:.875rem;
   --t-base:1rem;
-  --t-md:1.125rem;
-  --t-lg:1.3125rem;
-  --t-xl:clamp(1.4rem,2.1vw,1.75rem);
-  --t-2xl:clamp(1.85rem,3.4vw,2.6rem);
-  --t-3xl:clamp(2.4rem,5.5vw,3.75rem);
+  --t-md:1.0625rem;
+  --t-lg:1.1875rem;
+  --t-xl:1.375rem;
+  --t-2xl:clamp(1.55rem,2.6vw,1.9rem);
+  --t-3xl:clamp(1.9rem,4vw,2.75rem);
 
-  --measure:64ch;
-  --margin:264px;
+  --r-sm:8px;
+  --r:12px;
+  --r-lg:16px;
+  --r-full:999px;
+
+  --measure:66ch;
+  --side:262px;
 }
 
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0B1D2E;
-    --panel:#11293F;
-    --tint:#152F47;
-    --tint-2:#102639;
-    --ink:#D4E3EF;
+    --bg:#0F1F2E;
+    --surface:#17293B;
+    --surface-2:#142334;
+    --card:#17293B;
+    --ink:#D7E3ED;
     --ink-strong:#FFFFFF;
-    --ink-soft:#93AAC0;
-    --ink-faint:#6B869C;
-    --rule:#25486A;
-    --rule-soft:#1B3A57;
-    --graticule:rgba(150,190,225,.05);
-    --fix:#B472FF;
-    --fix-ink:#C795FF;
-    --fix-wash:#2A1B48;
-    --on-fix:#150A2B;
-    --navy:#9FC0DA;
-    --lift:0 1px 1px rgba(0,0,0,.25);
+    --ink-muted:#93A8BB;
+    --ink-light:#6F8699;
+    --line:#25405A;
+    --line-soft:#1E3549;
+    --accent:#B472FF;
+    --accent-hover:#C48EFF;
+    --accent-soft:#2B1A48;
+    --accent-ink:#C795FF;
+    --on-accent:#190B32;
+    --navy:#A8C6DE;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 20px -6px rgba(0,0,0,.4);
+    --shadow-lg:0 2px 6px rgba(0,0,0,.35),0 16px 40px -12px rgba(0,0,0,.5);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0B1D2E;
-  --panel:#11293F;
-  --tint:#152F47;
-  --tint-2:#102639;
-  --ink:#D4E3EF;
+  --bg:#0F1F2E;
+  --surface:#17293B;
+  --surface-2:#142334;
+  --card:#17293B;
+  --ink:#D7E3ED;
   --ink-strong:#FFFFFF;
-  --ink-soft:#93AAC0;
-  --ink-faint:#6B869C;
-  --rule:#25486A;
-  --rule-soft:#1B3A57;
-  --graticule:rgba(150,190,225,.05);
-  --fix:#B472FF;
-  --fix-ink:#C795FF;
-  --fix-wash:#2A1B48;
-  --on-fix:#150A2B;
-  --navy:#9FC0DA;
-  --lift:0 1px 1px rgba(0,0,0,.25);
+  --ink-muted:#93A8BB;
+  --ink-light:#6F8699;
+  --line:#25405A;
+  --line-soft:#1E3549;
+  --accent:#B472FF;
+  --accent-hover:#C48EFF;
+  --accent-soft:#2B1A48;
+  --accent-ink:#C795FF;
+  --on-accent:#190B32;
+  --navy:#A8C6DE;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 20px -6px rgba(0,0,0,.4);
+  --shadow-lg:0 2px 6px rgba(0,0,0,.35),0 16px 40px -12px rgba(0,0,0,.5);
 }
 
 *{box-sizing:border-box;}
@@ -99,564 +107,426 @@ html{scroll-behavior:smooth;}
 
 body{
   margin:0;
+  background:var(--bg);
   color:var(--ink);
-  /* Čistý bílý list — brandbook žádá, aby většinu plochy pokrývala bílá.
-     Členění nese vlasová linka, ne výplň. */
-  background:var(--paper);
   font-family:var(--body);
   font-weight:300;
   font-size:var(--t-base);
   line-height:1.62;
   -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
 }
 
-/* ---------- Typografie ---------- */
-h1,h2,.display{
-  font-family:var(--display);
-  font-weight:300;
-  color:var(--ink-strong);
-  margin:0;
-  line-height:1.08;
-  letter-spacing:-.02em;
-  text-wrap:balance;
+h1,h2{
+  font-family:var(--display);font-weight:300;color:var(--ink-strong);
+  margin:0;line-height:1.15;letter-spacing:-.02em;text-wrap:balance;
 }
-h1{font-size:var(--t-2xl);}
-h2{font-size:var(--t-xl);}
-h3{
-  font-family:var(--body);font-weight:700;font-size:var(--t-md);
-  color:var(--ink-strong);margin:0;line-height:1.35;text-wrap:balance;
-  letter-spacing:-.005em;
-}
+h1{font-size:var(--t-3xl);}
+h2{font-size:var(--t-2xl);}
+h3{font-family:var(--body);font-weight:700;font-size:var(--t-lg);color:var(--ink-strong);
+   margin:0;line-height:1.35;text-wrap:balance;letter-spacing:-.008em;}
 h4{font-family:var(--body);font-weight:700;font-size:var(--t-base);color:var(--ink-strong);margin:0;line-height:1.45;}
 p{margin:0;max-width:var(--measure);text-wrap:pretty;}
 strong{font-weight:700;color:var(--ink-strong);}
-a{color:var(--fix-ink);text-underline-offset:3px;text-decoration-thickness:1px;}
-/* Míra řádku platí jen pro čtený text, ne pro strukturní seznamy — ty musí
-   držet šířku sloupce, jinak se rozpadne zarovnání s panely nad nimi. */
-ul,ol{margin:0;padding-left:1.15rem;display:grid;gap:.4rem;max-width:var(--measure);}
-.log,.steps,.course,.plates,.swatches{max-width:none;padding-left:0;gap:0;}
-li::marker{color:var(--ink-faint);}
+a{color:var(--accent-ink);text-underline-offset:3px;}
+ul,ol{margin:0;padding-left:1.2rem;display:grid;gap:.45rem;max-width:var(--measure);}
+li::marker{color:var(--ink-light);}
 
-:focus-visible{outline:2px solid var(--fix);outline-offset:3px;border-radius:2px;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
 
-/* Přístrojová role — všechny údaje, značky a počty */
-.instr{
-  font-family:var(--instrument);
-  font-size:var(--t-xs);
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-variant-numeric:tabular-nums;
-  color:var(--ink-soft);
-  font-weight:400;
+.label{
+  font-size:var(--t-sm);font-weight:500;color:var(--ink-muted);margin:0;
+  letter-spacing:0;
 }
-.stamp{
-  font-family:var(--instrument);
-  font-size:var(--t-xs);
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:var(--ink-faint);
-  margin:0;
-  font-weight:400;
-}
-.lede{font-size:var(--t-md);line-height:1.55;color:var(--ink);max-width:56ch;}
+.lede{font-size:var(--t-md);line-height:1.6;color:var(--ink-muted);max-width:58ch;font-weight:300;}
 
 /* ============================================================
    KOSTRA
    ============================================================ */
 .app{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr);}
-@media (min-width:960px){
-  .app{grid-template-columns:var(--margin) minmax(0,1fr);}
-}
+@media (min-width:980px){.app{grid-template-columns:var(--side) minmax(0,1fr);}}
 
-/* ---------- Levý okraj mapy ---------- */
-.margin{
-  min-width:0;
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
+.side{
+  min-width:0;background:var(--surface);
+  border-bottom:1px solid var(--line);
   position:sticky;top:0;z-index:40;
-  display:flex;flex-direction:column;gap:.9rem;
+  display:flex;flex-direction:column;gap:.85rem;
   padding:.85rem 1rem;
 }
-@media (min-width:960px){
-  .margin{
-    border-bottom:0;border-right:1px solid var(--rule);
-    height:100vh;padding:2rem 1.5rem 1.5rem;gap:1.75rem;
-    /* měřítková rýha podél vnitřní hrany */
-    background-image:repeating-linear-gradient(
-      to bottom,var(--rule) 0 1px,transparent 1px 16px);
-    background-size:5px 100%;
-    background-position:right 0 top 0;
-    background-repeat:no-repeat;
+@media (min-width:980px){
+  .side{
+    border-bottom:0;border-right:1px solid var(--line);
+    height:100vh;padding:1.5rem 1rem;gap:1.35rem;
   }
 }
 
-.ensign{display:flex;align-items:center;gap:.65rem;min-width:0;}
-.ensign svg{width:30px;height:30px;flex:none;}
-.ensign b{
-  font-family:var(--display);font-size:1.2rem;font-weight:400;
-  color:var(--ink-strong);letter-spacing:.01em;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+.logo{display:flex;align-items:center;gap:.6rem;min-width:0;padding:0 .4rem;}
+.logo svg{width:30px;height:30px;flex:none;}
+.logo b{
+  font-family:var(--display);font-size:1.2rem;font-weight:400;color:var(--ink-strong);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em;
 }
 
-.helm{display:flex;gap:0;border:1px solid var(--rule);min-width:0;}
-.helm button{
-  flex:1;font-family:var(--instrument);font-size:var(--t-xs);
-  letter-spacing:.12em;text-transform:uppercase;
-  background:transparent;border:0;padding:.5rem .4rem;
-  color:var(--ink-faint);cursor:pointer;white-space:nowrap;
-  transition:color .15s ease,background .15s ease;
+.toggle{
+  display:flex;gap:.2rem;background:var(--surface-2);
+  border-radius:var(--r-full);padding:.22rem;min-width:0;
 }
-.helm button + button{border-left:1px solid var(--rule);}
-.helm button[aria-pressed="true"]{background:var(--ink-strong);color:var(--paper);}
+.toggle button{
+  flex:1;font-family:var(--body);font-size:var(--t-sm);font-weight:500;
+  background:transparent;border:0;border-radius:var(--r-full);
+  padding:.42rem .5rem;color:var(--ink-muted);cursor:pointer;white-space:nowrap;
+  transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.toggle button:hover{color:var(--ink-strong);}
+.toggle button[aria-pressed="true"]{
+  background:var(--bg);color:var(--ink-strong);box-shadow:var(--shadow-sm);
+}
 
-.index{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;min-width:0;}
-.index::-webkit-scrollbar{display:none;}
-@media (min-width:960px){
-  .index{flex-direction:column;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;}
+.menu{display:flex;gap:.2rem;overflow-x:auto;scrollbar-width:none;min-width:0;}
+.menu::-webkit-scrollbar{display:none;}
+@media (min-width:980px){
+  .menu{flex-direction:column;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;}
 }
-.index a{
+.menu a{
   display:flex;align-items:center;gap:.7rem;
-  padding:.6rem .75rem;color:var(--ink);text-decoration:none;
-  font-size:var(--t-base);white-space:nowrap;line-height:1.3;
-  border-left:2px solid transparent;
-  transition:background .14s ease,border-color .14s ease;
+  padding:.6rem .75rem;border-radius:var(--r-sm);
+  color:var(--ink);text-decoration:none;font-size:var(--t-base);
+  white-space:nowrap;line-height:1.3;
+  transition:background .16s ease,color .16s ease;
 }
-@media (max-width:959px){
-  .index a{border-left:0;border-bottom:2px solid transparent;padding:.5rem .7rem;}
+.menu a:hover{background:var(--bg);}
+.menu a[aria-current="page"]{
+  background:var(--bg);color:var(--ink-strong);font-weight:500;box-shadow:var(--shadow-sm);
 }
-.index a:hover{background:var(--tint);}
-.index a[aria-current="page"]{
-  border-color:var(--fix);color:var(--ink-strong);background:var(--tint);
+.menu a svg{width:19px;height:19px;flex:none;}
+.menu a .n{
+  margin-left:auto;font-size:var(--t-xs);color:var(--ink-light);
+  font-variant-numeric:tabular-nums;
 }
-.index a svg{width:18px;height:18px;flex:none;}
-.index a .tally{
-  margin-left:auto;font-family:var(--instrument);font-size:var(--t-xs);
-  letter-spacing:.06em;color:var(--ink-faint);font-variant-numeric:tabular-nums;
-}
-@media (max-width:959px){.index a .tally{display:none;}}
+@media (max-width:979px){.menu a .n{display:none;}}
 
-.margin-foot{display:none;}
-@media (min-width:960px){
-  .margin-foot{display:grid;gap:.3rem;border-top:1px solid var(--rule-soft);padding-top:.9rem;}
+.side-foot{display:none;}
+@media (min-width:980px){
+  .side-foot{display:grid;gap:.5rem;padding:0 .4rem;}
 }
+.side-progress{display:grid;gap:.4rem;}
+.side-progress .row{display:flex;justify-content:space-between;font-size:var(--t-xs);color:var(--ink-muted);}
+.side-progress .row b{color:var(--ink-strong);font-weight:500;font-variant-numeric:tabular-nums;}
+.bar{height:5px;border-radius:var(--r-full);background:var(--surface-2);overflow:hidden;}
+.bar > i{display:block;height:100%;border-radius:var(--r-full);background:var(--accent);
+  width:0;transition:width .5s cubic-bezier(.22,.61,.36,1);}
 
-/* ---------- Plocha ---------- */
-.sheet{min-width:0;padding:clamp(1.5rem,3.5vw,3.25rem) clamp(1.15rem,3.5vw,3.25rem) 6rem;}
-.view{max-width:790px;display:grid;gap:clamp(2rem,3.6vw,3rem);min-width:0;}
-.stack{display:grid;gap:1rem;min-width:0;}
-.stack-tight{display:grid;gap:.6rem;min-width:0;}
+.main{min-width:0;padding:clamp(1.5rem,3.5vw,3rem) clamp(1.15rem,3.5vw,3rem) 6rem;}
+.view{max-width:800px;display:grid;gap:clamp(1.75rem,3vw,2.5rem);min-width:0;}
+.group{display:grid;gap:1rem;min-width:0;}
+.head{display:grid;gap:.6rem;min-width:0;}
 
-/* Titulek obrazovky s vlasovou linkou pod ním */
-.masthead{display:grid;gap:.75rem;min-width:0;}
-.masthead .rule{height:1px;background:var(--rule);margin-top:.35rem;}
-
-/* ---------- Panely ---------- */
-.plate{
-  background:var(--panel);
-  border:1px solid var(--rule);
-  padding:clamp(1.1rem,2.4vw,1.6rem);
-  display:grid;gap:.9rem;min-width:0;
-  box-shadow:var(--lift);
+/* ============================================================
+   PRVKY
+   ============================================================ */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:clamp(1.15rem,2.4vw,1.5rem);display:grid;gap:.85rem;min-width:0;
 }
-.plate.tint{background:var(--tint);border-color:var(--rule-soft);box-shadow:none;}
-.plate.bare{background:transparent;border:0;padding:0;box-shadow:none;}
-
-/* Rohové značky — mapová konvence, jen na hlavním panelu */
-.plate--corners{position:relative;}
-.plate--corners::before,.plate--corners::after{
-  content:"";position:absolute;width:9px;height:9px;pointer-events:none;
-  border:1px solid var(--navy);opacity:.5;
-}
-.plate--corners::before{top:-1px;left:-1px;border-right:0;border-bottom:0;}
-.plate--corners::after{bottom:-1px;right:-1px;border-left:0;border-top:0;}
+.card.soft{background:var(--surface);border-color:transparent;}
+.card.raised{box-shadow:var(--shadow);border-color:var(--line-soft);}
 
 .duo{display:grid;gap:1rem;min-width:0;}
 @media (min-width:640px){.duo{grid-template-columns:1fr 1fr;}}
-.trio{display:grid;gap:1rem;min-width:0;}
-@media (min-width:700px){.trio{grid-template-columns:repeat(3,1fr);}}
 
-/* ---------- Ikony (brandbook 6.1) ---------- */
-.ic .stroke{fill:none;stroke:var(--navy);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-.ic .detail{fill:none;stroke:var(--fix);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-.ic .detail-fill{fill:var(--fix);stroke:none;}
-.disc{
-  width:40px;height:40px;border-radius:50%;background:var(--tint);
-  border:1px solid var(--rule-soft);display:grid;place-items:center;flex:none;
+.ic .stroke{fill:none;stroke:var(--navy);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.ic .detail{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.ic .detail-fill{fill:var(--accent);stroke:none;}
+.badge{
+  width:42px;height:42px;border-radius:var(--r-full);background:var(--alice);
+  display:grid;place-items:center;flex:none;
 }
-.disc svg{width:20px;height:20px;}
+:root[data-theme="dark"] .badge,:root:not([data-theme="light"]) .badge{background:var(--surface-2);}
+.badge svg{width:21px;height:21px;}
 
-/* ============================================================
-   PŘÍSTROJ — hlavní ukazatel na přehledu
-   ============================================================ */
-.instrument{
-  display:grid;gap:1.5rem;align-items:center;
-  grid-template-columns:minmax(0,1fr);
+.pill{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-size:var(--t-xs);font-weight:500;color:var(--ink-muted);
+  background:var(--surface-2);border-radius:var(--r-full);
+  padding:.14rem .55rem;white-space:nowrap;
 }
-@media (min-width:620px){
-  .instrument{grid-template-columns:minmax(0,1fr) auto;gap:2rem;}
+.pill.now{background:var(--accent-soft);color:var(--accent-ink);}
+.pill.now::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.pill.ok{background:var(--accent-soft);color:var(--accent-ink);}
+
+.btn{
+  font-family:var(--body);font-size:var(--t-sm);font-weight:500;
+  color:var(--on-accent);background:var(--accent);
+  border:1px solid var(--accent);border-radius:var(--r-sm);
+  padding:.6rem 1.1rem;cursor:pointer;
+  transition:background .16s ease,border-color .16s ease,transform .1s ease;
 }
-.gauge{position:relative;width:154px;height:154px;justify-self:center;flex:none;}
-.gauge svg{width:100%;height:100%;display:block;}
-.gauge .track{fill:none;stroke:var(--rule);stroke-width:1.5;}
-.gauge .ticks{stroke:var(--rule);stroke-width:1;stroke-linecap:round;}
-.gauge .arc{
-  fill:none;stroke:var(--fix);stroke-width:5;stroke-linecap:butt;
+.btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
+.btn:active{transform:translateY(1px);}
+.btn.ghost{background:var(--card);color:var(--ink-strong);border-color:var(--line);}
+.btn.ghost:hover{background:var(--surface);border-color:var(--ink-light);}
+.btns{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;}
+
+/* ---------- Přehled ---------- */
+.hero{
+  display:grid;gap:1.5rem;align-items:center;grid-template-columns:minmax(0,1fr);
+}
+@media (min-width:620px){.hero{grid-template-columns:minmax(0,1fr) auto;gap:2rem;}}
+
+.ring{position:relative;width:132px;height:132px;justify-self:center;flex:none;}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.ring .track{fill:none;stroke:var(--surface-2);stroke-width:9;}
+.ring .fill{
+  fill:none;stroke:var(--accent);stroke-width:9;stroke-linecap:round;
   transition:stroke-dashoffset .9s cubic-bezier(.22,.61,.36,1);
 }
-.gauge-read{
-  position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:.1rem;
+.ring-num{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:.05rem;}
+.ring-num b{
+  font-family:var(--display);font-size:2rem;font-weight:300;color:var(--ink-strong);
+  line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
 }
-.gauge-read b{
-  font-family:var(--display);font-size:2.1rem;font-weight:300;
-  color:var(--ink-strong);line-height:1;font-variant-numeric:tabular-nums;
-  letter-spacing:-.02em;
-}
-.gauge-read span{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.16em;
-  text-transform:uppercase;color:var(--ink-faint);
-}
+.ring-num span{font-size:var(--t-xs);color:var(--ink-muted);}
 
-/* Řada odečtů oddělená svislými vlasovými linkami */
-.readouts{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  border-top:1px solid var(--rule);
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;}
+@media (min-width:620px){.stats{grid-template-columns:repeat(4,minmax(0,1fr));}}
+.stat{
+  background:var(--surface);border-radius:var(--r-sm);padding:.8rem .9rem;
+  display:grid;gap:.1rem;min-width:0;
 }
-@media (min-width:620px){.readouts{grid-template-columns:repeat(4,minmax(0,1fr));}}
-.readout{padding:.9rem 1rem;display:grid;gap:.15rem;min-width:0;border-left:1px solid var(--rule-soft);}
-.readout:first-child{border-left:0;padding-left:0;}
-@media (max-width:619px){
-  .readout:nth-child(odd){border-left:0;padding-left:0;}
-  .readout:nth-child(n+3){border-top:1px solid var(--rule-soft);}
+.stat dt{font-size:var(--t-xs);color:var(--ink-muted);}
+.stat dd{
+  margin:0;font-size:var(--t-lg);font-weight:500;color:var(--ink-strong);
+  font-variant-numeric:tabular-nums;line-height:1.3;overflow-wrap:anywhere;
 }
-.readout dt{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.15em;
-  text-transform:uppercase;color:var(--ink-faint);
-}
-.readout dd{
-  margin:0;font-family:var(--display);font-size:1.4rem;color:var(--ink-strong);
-  font-variant-numeric:tabular-nums;line-height:1.2;letter-spacing:-.01em;
-  overflow-wrap:anywhere;
-}
-.readout dd.small{font-family:var(--body);font-size:var(--t-base);font-weight:400;line-height:1.35;}
+.stat dd.text{font-size:var(--t-base);font-weight:400;}
 
-/* ============================================================
-   KURZ — fáze jako waypointy na kurzové čáře
-   ============================================================ */
-.course{list-style:none;margin:0;padding:0;display:grid;gap:0;}
-.leg{
-  position:relative;
-  padding:0 0 2.25rem 0;
-  display:grid;gap:.9rem;min-width:0;
+/* ---------- Fáze ---------- */
+.phases{display:grid;gap:.75rem;list-style:none;margin:0;padding:0;max-width:none;}
+.phase{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;min-width:0;transition:border-color .18s ease,box-shadow .18s ease;
 }
-@media (min-width:720px){
-  .leg{padding-left:5.75rem;}
-  /* kurzová čára */
-  .leg::before{
-    content:"";position:absolute;left:14px;top:1.15rem;bottom:-1.15rem;
-    width:1px;background:var(--rule);
-  }
-  .leg:last-child::before{display:none;}
+.phase[open]{box-shadow:var(--shadow);}
+.phase.current{border-color:var(--accent);}
+.phase summary{
+  display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;
+  padding:1rem 1.15rem;cursor:pointer;list-style:none;min-width:0;
+  transition:background .16s ease;
 }
-.leg-mark{display:flex;align-items:center;gap:.7rem;min-width:0;}
-@media (min-width:720px){
-  .leg-mark{position:absolute;left:0;top:0;width:4.75rem;display:block;}
+.phase summary:hover{background:var(--surface);}
+.phase summary::-webkit-details-marker{display:none;}
+.phase summary h3{flex:1;min-width:0;}
+.phase .when{font-size:var(--t-sm);color:var(--ink-muted);display:block;font-weight:300;}
+.phase .count{font-size:var(--t-sm);color:var(--ink-muted);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.chev{
+  width:18px;height:18px;flex:none;color:var(--ink-light);
+  transition:transform .22s ease;
 }
-.leg-dot{
-  width:29px;height:29px;flex:none;border-radius:50%;
-  border:1px solid var(--navy);background:var(--paper);
-  display:grid;place-items:center;position:relative;z-index:1;
-}
-.leg-dot i{width:7px;height:7px;border-radius:50%;background:var(--navy);display:block;}
-.leg.done .leg-dot i{background:var(--navy);}
-.leg.now .leg-dot{border-color:var(--fix);border-width:1.5px;}
-.leg.now .leg-dot i{background:var(--fix);}
-.leg.now .leg-dot::after{
-  content:"";position:absolute;inset:-5px;border-radius:50%;
-  border:1px solid var(--fix);opacity:.35;
-}
-.leg-day{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.1em;
-  color:var(--ink-faint);font-variant-numeric:tabular-nums;white-space:nowrap;
-}
-@media (min-width:720px){.leg-day{display:block;margin-top:.5rem;}}
-.leg.now .leg-day{color:var(--fix-ink);}
+.phase[open] .chev{transform:rotate(180deg);}
+.phase-body{padding:0 1.15rem 1.15rem;display:grid;gap:1rem;min-width:0;}
+.phase-body > p{color:var(--ink-muted);}
 
-.leg-head{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;min-width:0;}
-.leg-head h2{font-size:var(--t-lg);}
-.leg-tally{
-  margin-left:auto;font-family:var(--instrument);font-size:var(--t-xs);
-  letter-spacing:.08em;color:var(--ink-faint);font-variant-numeric:tabular-nums;
-  white-space:nowrap;
+.tasks{list-style:none;margin:0;padding:0;display:grid;gap:0;max-width:none;
+  border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;}
+.tasks > li{border-bottom:1px solid var(--line-soft);min-width:0;}
+.tasks > li:last-child{border-bottom:0;}
+.task{display:grid;gap:.3rem;padding:.75rem .95rem;min-width:0;transition:background .14s ease;}
+.task:hover{background:var(--surface);}
+.task-main{display:flex;gap:.8rem;align-items:flex-start;cursor:pointer;min-width:0;}
+.task .text{display:block;flex:1;min-width:0;line-height:1.5;overflow-wrap:anywhere;}
+.task input:checked ~ .text{color:var(--ink-light);}
+.task input:checked ~ .text strong,
+.task input:checked ~ .text .val{color:var(--ink-light);font-weight:400;}
+.task-sub{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;padding-left:calc(19px + .8rem);}
+.helper{
+  font-size:var(--t-xs);font-weight:500;color:var(--accent-ink);background:var(--accent-soft);
+  border:0;border-radius:var(--r-full);padding:.14rem .6rem;cursor:pointer;
+  font-family:var(--body);white-space:nowrap;transition:background .16s ease;
 }
-.here{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.16em;
-  text-transform:uppercase;color:var(--on-fix);background:var(--fix);
-  padding:.1rem .45rem;white-space:nowrap;
-}
-
-/* ---------- Úkoly ---------- */
-.log{
-  list-style:none;margin:0;padding:0;display:grid;min-width:0;
-  border:1px solid var(--rule);background:var(--panel);
-}
-.log li{border-bottom:1px solid var(--rule-soft);min-width:0;}
-.log li:last-child{border-bottom:0;}
-.entry{display:grid;gap:.3rem;padding:.7rem .95rem;min-width:0;}
-.entry:hover{background:var(--tint);}
-.entry-main{display:flex;gap:.85rem;align-items:flex-start;cursor:pointer;min-width:0;}
-.entry .text{display:block;flex:1;min-width:0;line-height:1.5;overflow-wrap:anywhere;}
-.entry input:checked ~ .text{color:var(--ink-faint);}
-.entry input:checked ~ .text strong,
-.entry input:checked ~ .text .set{color:var(--ink-faint);font-weight:400;}
-/* Popisky pod větou zarovnané pod text, ne pod zaškrtávátko. */
-.entry-sub{
-  display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;
-  padding-left:calc(18px + .85rem);
-}
-.owner{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.12em;
-  text-transform:uppercase;color:var(--ink-faint);
-}
-.owner::before{content:"";display:inline-block;width:11px;height:1px;background:var(--rule);vertical-align:middle;margin-right:.45rem;}
-.seelink{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.12em;
-  text-transform:uppercase;color:var(--fix-ink);background:none;border:0;
-  padding:0;cursor:pointer;flex:none;white-space:nowrap;
-  border-bottom:1px solid currentColor;line-height:1.4;
-}
+.helper:hover{background:var(--accent);color:var(--on-accent);}
 
 input[type="checkbox"]{
   appearance:none;-webkit-appearance:none;
-  width:18px;height:18px;margin:.22rem 0 0;flex:none;
-  border:1px solid var(--navy);background:var(--panel);
+  width:19px;height:19px;margin:.2rem 0 0;flex:none;
+  border:1.5px solid var(--ink-light);border-radius:5px;background:var(--card);
   cursor:pointer;display:grid;place-content:center;
-  transition:background .14s ease,border-color .14s ease;
+  transition:background .16s ease,border-color .16s ease;
 }
+input[type="checkbox"]:hover{border-color:var(--accent);}
 input[type="checkbox"]::after{
   content:"";width:9px;height:5px;
-  border-left:1.75px solid var(--on-fix);border-bottom:1.75px solid var(--on-fix);
-  transform:rotate(-45deg) scale(0);transition:transform .14s cubic-bezier(.3,1.4,.5,1);
+  border-left:2px solid var(--on-accent);border-bottom:2px solid var(--on-accent);
+  transform:rotate(-45deg) scale(0);
+  transition:transform .18s cubic-bezier(.3,1.5,.5,1);
 }
-input[type="checkbox"]:checked{background:var(--fix);border-color:var(--fix);}
+input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent);}
 input[type="checkbox"]:checked::after{transform:rotate(-45deg) scale(1);}
 
 /* ---------- Návody ---------- */
-.plates{display:grid;gap:0;border-top:1px solid var(--rule);min-width:0;}
-@media (min-width:640px){.plates{grid-template-columns:1fr 1fr;}}
-.chart{
+.tiles{display:grid;gap:.75rem;min-width:0;max-width:none;}
+@media (min-width:640px){.tiles{grid-template-columns:1fr 1fr;}}
+.tile{
   text-align:left;font-family:var(--body);font-size:var(--t-base);color:var(--ink);
-  background:transparent;border:0;border-bottom:1px solid var(--rule);
-  padding:1.15rem 1.1rem 1.25rem;cursor:pointer;
-  display:grid;gap:.5rem;min-width:0;position:relative;
-  transition:background .16s ease;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:1.15rem;cursor:pointer;display:grid;gap:.55rem;min-width:0;
+  transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
 }
-@media (min-width:640px){
-  .chart:nth-child(odd){border-right:1px solid var(--rule);}
-}
-.chart:hover{background:var(--tint);}
-.chart::after{
-  content:"";position:absolute;left:0;top:-1px;width:0;height:2px;
-  background:var(--fix);transition:width .22s ease;
-}
-.chart:hover::after{width:38px;}
-.chart .top{display:flex;align-items:center;gap:.75rem;min-width:0;}
-.chart h3{font-size:var(--t-base);flex:1;min-width:0;}
-.chart p{font-size:var(--t-sm);color:var(--ink-soft);max-width:none;line-height:1.5;}
-.chart .tally{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.06em;
-  color:var(--ink-faint);font-variant-numeric:tabular-nums;flex:none;
-}
-.chart .tally.full{color:var(--fix-ink);}
+.tile:hover{border-color:transparent;box-shadow:var(--shadow);transform:translateY(-2px);}
+.tile .top{display:flex;align-items:center;gap:.75rem;min-width:0;}
+.tile h3{font-size:var(--t-base);flex:1;min-width:0;}
+.tile p{font-size:var(--t-sm);color:var(--ink-muted);max-width:none;line-height:1.5;}
+.tile .n{font-size:var(--t-xs);color:var(--ink-light);font-variant-numeric:tabular-nums;flex:none;}
 
-.steps{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s;
-  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0;}
-.steps li{display:flex;gap:1rem;align-items:flex-start;padding:.85rem .25rem;
-  border-bottom:1px solid var(--rule-soft);min-width:0;}
-.steps li:last-child{border-bottom:0;}
-.steps li::before{
-  counter-increment:s;content:counter(s,decimal-leading-zero);
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.08em;
-  color:var(--ink-faint);min-width:1.6rem;line-height:1.7;flex:none;
-  font-variant-numeric:tabular-nums;
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:.5rem;counter-reset:s;max-width:none;}
+.steps > li{
+  display:flex;gap:.9rem;align-items:flex-start;min-width:0;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:.85rem 1rem;transition:border-color .16s ease;
 }
-.steps label{display:flex;gap:.85rem;align-items:flex-start;cursor:pointer;flex:1;min-width:0;}
+.steps > li:hover{border-color:var(--ink-light);}
+.steps > li::before{
+  counter-increment:s;content:counter(s);
+  width:24px;height:24px;border-radius:var(--r-full);flex:none;
+  background:var(--surface-2);color:var(--ink-muted);
+  font-size:var(--t-xs);font-weight:500;
+  display:grid;place-items:center;font-variant-numeric:tabular-nums;
+}
+.steps label{display:flex;gap:.8rem;align-items:flex-start;cursor:pointer;flex:1;min-width:0;}
 .steps .text{display:block;flex:1;min-width:0;line-height:1.55;overflow-wrap:anywhere;}
-.steps input:checked ~ .text{color:var(--ink-faint);}
+.steps input:checked ~ .text{color:var(--ink-light);}
 .steps input:checked ~ .text strong,
-.steps input:checked ~ .text .set{color:var(--ink-faint);font-weight:400;}
+.steps input:checked ~ .text .val{color:var(--ink-light);font-weight:400;}
 
-/* ---------- Měřicí pruh ---------- */
-.gaugebar{display:grid;gap:.45rem;min-width:0;}
-.gaugebar-nums{
-  display:flex;justify-content:space-between;gap:1rem;
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.12em;
-  text-transform:uppercase;color:var(--ink-faint);font-variant-numeric:tabular-nums;
-}
-.gaugebar-rule{height:3px;background:var(--tint-2);border:1px solid var(--rule-soft);}
-.gaugebar-fill{height:100%;background:var(--fix);width:0;transition:width .45s cubic-bezier(.22,.61,.36,1);}
-
-/* ---------- Ovládací prvky ---------- */
-.act{
-  font-family:var(--instrument);font-size:var(--t-xs);font-weight:400;
-  letter-spacing:.14em;text-transform:uppercase;
-  color:var(--on-fix);background:var(--fix);
-  border:1px solid var(--fix);padding:.6rem 1.1rem;cursor:pointer;
-  transition:opacity .15s ease;
-}
-.act:hover{opacity:.86;}
-.act.line{background:transparent;color:var(--ink-strong);border-color:var(--rule);}
-.act.line:hover{background:var(--tint);opacity:1;border-color:var(--navy);}
-.acts{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;}
-
-.back{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.16em;
-  text-transform:uppercase;color:var(--ink-soft);background:none;border:0;
-  padding:0;cursor:pointer;justify-self:start;
-}
-.back:hover{color:var(--fix-ink);}
+.progress{display:grid;gap:.5rem;min-width:0;}
+.progress .row{display:flex;justify-content:space-between;gap:1rem;font-size:var(--t-sm);color:var(--ink-muted);}
+.progress .row b{color:var(--ink-strong);font-weight:500;font-variant-numeric:tabular-nums;}
 
 /* ---------- Doplňovaná místa ---------- */
 .gap{
-  background:var(--fix-wash);color:var(--fix-ink);
-  border-bottom:1px solid var(--fix);padding:0 .22rem;white-space:nowrap;
+  background:var(--accent-soft);color:var(--accent-ink);
+  border-radius:4px;padding:.05rem .3rem;white-space:nowrap;font-weight:400;
 }
-.set{font-weight:400;color:var(--ink-strong);}
+.val{font-weight:500;color:var(--ink-strong);}
 
 /* ---------- Tabulky ---------- */
-.tablewrap{overflow-x:auto;border:1px solid var(--rule);background:var(--panel);min-width:0;}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card);min-width:0;}
 table{border-collapse:collapse;width:100%;font-size:var(--t-sm);min-width:460px;}
-th,td{text-align:left;padding:.65rem .9rem;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.5;}
-th{
-  font-family:var(--instrument);font-weight:400;font-size:var(--t-xs);
-  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
-  white-space:nowrap;border-bottom-color:var(--rule);
-}
+th,td{text-align:left;padding:.7rem .95rem;border-bottom:1px solid var(--line-soft);vertical-align:top;line-height:1.55;}
+th{font-weight:500;color:var(--ink-muted);font-size:var(--t-xs);white-space:nowrap;
+   background:var(--surface);border-bottom-color:var(--line);}
 tr:last-child td{border-bottom:0;}
-td.fig{font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.06em;
-  font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-soft);}
+td.nw{white-space:nowrap;color:var(--ink-muted);font-variant-numeric:tabular-nums;}
 
 /* ---------- Poznámka ---------- */
-.mark{
-  border-left:2px solid var(--fix);background:var(--tint);
-  padding:.9rem 1.15rem;display:grid;gap:.4rem;min-width:0;
+.note{
+  background:var(--accent-soft);border-radius:var(--r);
+  padding:1rem 1.2rem;display:grid;gap:.4rem;min-width:0;
 }
-.mark .stamp{color:var(--fix-ink);}
+.note .label{color:var(--accent-ink);font-weight:700;}
+.note p{color:var(--ink);}
 
-/* ---------- Barevné vzorky ---------- */
-.swatches{display:grid;gap:0;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));
-  border:1px solid var(--rule);min-width:0;}
-.swatch{border-right:1px solid var(--rule);min-width:0;}
-.swatch:last-child{border-right:0;}
-.swatch .chip{height:62px;}
-.swatch .meta{padding:.5rem .6rem;display:grid;gap:.05rem;background:var(--panel);}
-.swatch .meta b{font-size:var(--t-sm);color:var(--ink-strong);font-weight:700;}
-.swatch .meta span{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.05em;
-  color:var(--ink-faint);
-}
+/* ---------- Vzorky ---------- */
+.swatches{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));min-width:0;max-width:none;}
+.swatch{border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line);}
+.swatch .chip{height:58px;}
+.swatch .meta{padding:.55rem .7rem;display:grid;gap:.05rem;background:var(--card);}
+.swatch .meta b{font-size:var(--t-sm);color:var(--ink-strong);font-weight:500;}
+.swatch .meta span{font-size:var(--t-xs);color:var(--ink-muted);font-variant-numeric:tabular-nums;}
 
 /* ---------- Šablony ---------- */
-.tpl{border:1px solid var(--rule);background:var(--panel);min-width:0;}
+.tpl{border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden;min-width:0;}
 .tpl-head{
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  padding:.6rem .6rem .6rem 1.1rem;border-bottom:1px solid var(--rule);
-  background:var(--tint);
+  padding:.7rem .7rem .7rem 1.15rem;border-bottom:1px solid var(--line);background:var(--surface);
 }
 .tpl-body{
-  padding:1.1rem;white-space:pre-wrap;font-family:var(--instrument);
-  font-size:var(--t-sm);line-height:1.75;overflow-x:auto;color:var(--ink);
-  letter-spacing:0;text-transform:none;
+  padding:1.15rem;white-space:pre-wrap;font-size:var(--t-sm);
+  line-height:1.7;overflow-x:auto;color:var(--ink);
 }
 
 /* ---------- Formulář ---------- */
 .form{display:grid;gap:1rem;min-width:0;}
 @media (min-width:640px){.form.two{grid-template-columns:1fr 1fr;}}
-.field{display:grid;gap:.3rem;min-width:0;}
-.field label{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.12em;
-  text-transform:uppercase;color:var(--ink-soft);
-}
+.field{display:grid;gap:.35rem;min-width:0;}
+.field label{font-size:var(--t-sm);font-weight:500;color:var(--ink-strong);}
 .field input{
-  font-family:var(--body);font-size:var(--t-base);font-weight:300;
-  color:var(--ink);background:var(--panel);
-  border:0;border-bottom:1px solid var(--rule);border-radius:0;
-  padding:.45rem .1rem;width:100%;
-  transition:border-color .15s ease;
+  font-family:var(--body);font-size:var(--t-base);font-weight:300;color:var(--ink);
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:.6rem .75rem;width:100%;
+  transition:border-color .16s ease,box-shadow .16s ease;
 }
-.field input::placeholder{color:var(--ink-faint);opacity:.75;}
-.field input:focus{outline:none;border-bottom-color:var(--fix);border-bottom-width:1.5px;}
+.field input::placeholder{color:var(--ink-light);}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
 fieldset{border:0;padding:0;margin:0;display:grid;gap:1rem;min-width:0;}
-legend{
-  font-family:var(--instrument);font-size:var(--t-xs);letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink-faint);padding:0;
-  width:100%;border-bottom:1px solid var(--rule);padding-bottom:.5rem;margin-bottom:.35rem;
-}
+legend{font-size:var(--t-sm);font-weight:700;color:var(--ink-strong);padding:0;margin-bottom:.15rem;}
 
 /* ---------- Hlášení ---------- */
-.signal{
+.toast{
   position:fixed;left:50%;bottom:1.75rem;transform:translateX(-50%) translateY(160%);
-  background:var(--ink-strong);color:var(--paper);
-  padding:.65rem 1.15rem;font-family:var(--instrument);font-size:var(--t-xs);
-  letter-spacing:.1em;text-transform:uppercase;
-  box-shadow:0 6px 24px rgba(25,70,105,.18);z-index:90;
-  transition:transform .3s cubic-bezier(.22,.61,.36,1);max-width:90vw;text-align:center;
+  background:var(--ink-strong);color:var(--bg);
+  padding:.7rem 1.2rem;border-radius:var(--r-sm);font-size:var(--t-sm);
+  box-shadow:var(--shadow-lg);z-index:90;
+  transition:transform .32s cubic-bezier(.22,.61,.36,1);max-width:90vw;text-align:center;
 }
-.signal.up{transform:translateX(-50%) translateY(0);}
+.toast.up{transform:translateX(-50%) translateY(0);}
 
-/* ---------- Nástup obsahu ---------- */
-@keyframes rise{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:none;}}
-.view > *{animation:rise .42s cubic-bezier(.22,.61,.36,1) both;}
-.view > *:nth-child(2){animation-delay:.05s;}
-.view > *:nth-child(3){animation-delay:.09s;}
-.view > *:nth-child(4){animation-delay:.13s;}
-.view > *:nth-child(n+5){animation-delay:.16s;}
+.back{
+  background:none;border:0;padding:0;cursor:pointer;font-family:var(--body);
+  font-size:var(--t-sm);font-weight:500;color:var(--ink-muted);justify-self:start;
+}
+.back:hover{color:var(--accent-ink);}
+
+@keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.view > *{animation:rise .38s cubic-bezier(.22,.61,.36,1) both;}
+.view > *:nth-child(2){animation-delay:.04s;}
+.view > *:nth-child(3){animation-delay:.08s;}
+.view > *:nth-child(n+4){animation-delay:.11s;}
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important;}
   html{scroll-behavior:auto;}
 }
 
-/* ---------- Tisk ---------- */
 @media print{
-  :root{--paper:#fff;--panel:#fff;--tint:#F7F8FE;--ink:#22384B;--ink-strong:#194669;--rule:#C2D2E0;--graticule:transparent;}
-  body{background-image:none;font-size:10pt;}
-  .margin,.act,.back,.helm,.seelink,.signal{display:none!important;}
+  :root{--bg:#fff;--card:#fff;--surface:#F7F8FE;--ink:#2A3F52;--ink-strong:#194669;--line:#D8E2EC;}
+  .side,.btn,.back,.toggle,.helper,.toast,.chev{display:none!important;}
   .app{grid-template-columns:1fr;}
-  .sheet{padding:0;}
+  .main{padding:0;}
   .view{max-width:none;}
   .view > *{animation:none;}
-  .plate,.log,.tpl,.mark,.steps li,.leg{break-inside:avoid;}
+  .phase-body{display:block!important;}
+  .card,.tasks,.tpl,.note,.steps > li,.phase{break-inside:avoid;box-shadow:none;}
   h1,h2{break-after:avoid;}
 }
 </style>
 
 <div class="app">
 
-  <aside class="margin">
-    <div class="ensign">
+  <aside class="side">
+    <div class="logo">
       <svg viewBox="0 0 32 32" class="ic" aria-hidden="true">
         <path class="stroke" d="M4 24h24l-3.5 4.5h-17z"/>
         <path class="stroke" d="M16 22V5l-8 17z"/>
         <path class="detail" d="M18 22V9l7 13z"/>
       </svg>
-      <b id="ensignName">Four Bros</b>
+      <b id="logoName">Four Bros</b>
     </div>
 
-    <div class="helm" role="group" aria-label="Zobrazit jako" id="helm"></div>
+    <div class="toggle" role="group" aria-label="Zobrazit jako" id="toggle"></div>
 
-    <nav class="index" id="index" aria-label="Obsah"></nav>
+    <nav class="menu" id="menu" aria-label="Hlavní nabídka"></nav>
 
-    <div class="margin-foot">
-      <p class="instr">Onboarding</p>
-      <p class="instr" id="footRead">—</p>
+    <div class="side-foot">
+      <div class="side-progress">
+        <div class="row"><span>Hotovo</span><b id="sideNum">0 / 0</b></div>
+        <div class="bar"><i id="sideBar"></i></div>
+      </div>
     </div>
   </aside>
 
-  <main class="sheet" id="sheet"></main>
+  <main class="main" id="main"></main>
 </div>
 
-<div class="signal" id="signal" role="status" aria-live="polite"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
@@ -667,27 +537,30 @@ legend{
    ============================================================ */
 var ICON = {
   home:'<path class="stroke" d="M3.5 10.5 12 3.5l8.5 7"/><path class="stroke" d="M5.5 9.5V20h13V9.5"/><path class="detail" d="M10 20v-5h4v5"/>',
-  course:'<path class="stroke" d="M3.5 18.5c3-6 6-6 9 0"/><path class="stroke" d="M12.5 18.5c3-6 6-6 8 0"/><circle class="detail-fill" cx="8" cy="8.5" r="2"/><path class="stroke" d="M8 10.5v4"/>',
+  steps:'<path class="stroke" d="M9.5 6.4h10.5M9.5 12h10.5M9.5 17.6h10.5"/>' +
+        '<path class="detail" d="m3.2 6.4 1.3 1.3 2.6-2.7"/>' +
+        '<path class="stroke" d="m3.2 12 1.3 1.3 2.6-2.7M3.2 17.6l1.3 1.3 2.6-2.7"/>',
   guide:'<path class="stroke" d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path class="stroke" d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/><path class="detail" d="M15.5 9h2.5M15.5 12.5h2.5"/>',
   brand:'<circle class="stroke" cx="12" cy="12" r="8.5"/><path class="stroke" d="M12 3.5v17"/><path class="detail" d="M15.5 8.5 18 12l-2.5 3.5"/>',
   people:'<circle class="stroke" cx="9" cy="8" r="3.3"/><path class="stroke" d="M3 20c0-3.2 2.7-5.3 6-5.3s6 2.1 6 5.3"/><circle class="detail" cx="17" cy="9.5" r="2.2"/>',
   docs:'<path class="stroke" d="M6 3h8l5 5v13H6z"/><path class="stroke" d="M14 3v5h5"/><path class="detail" d="M9 15l2 2 4-4"/>',
-  tpl:'<rect class="stroke" x="3.5" y="4.5" width="17" height="15"/><path class="stroke" d="M3.5 9h17"/><path class="detail" d="M7 13h6M7 16h9"/>',
+  tpl:'<rect class="stroke" x="3.5" y="4.5" width="17" height="15" rx="2"/><path class="stroke" d="M3.5 9h17"/><path class="detail" d="M7 13h6M7 16h9"/>',
   cog:'<circle class="stroke" cx="12" cy="12" r="3"/><path class="stroke" d="M12 2.5v2.6M12 18.9v2.6M21.5 12h-2.6M5.1 12H2.5M18.7 5.3l-1.8 1.8M7.1 16.9l-1.8 1.8M18.7 18.7l-1.8-1.8M7.1 7.1 5.3 5.3"/>',
-  mail:'<rect class="stroke" x="3" y="5.5" width="18" height="13"/><path class="detail" d="m4 7 8 6 8-6"/>',
-  laptop:'<rect class="stroke" x="3.5" y="5" width="17" height="11.5"/><path class="stroke" d="M2 20h20"/><circle class="detail-fill" cx="12" cy="10.5" r="1.7"/>',
+  mail:'<rect class="stroke" x="3" y="5.5" width="18" height="13" rx="2"/><path class="detail" d="m4.5 7.5 7.5 5.5 7.5-5.5"/>',
+  laptop:'<rect class="stroke" x="3.5" y="5" width="17" height="11.5" rx="1.5"/><path class="stroke" d="M2 20h20"/><circle class="detail-fill" cx="12" cy="10.5" r="1.8"/>',
   clock:'<circle class="stroke" cx="12" cy="12" r="8.5"/><path class="detail" d="M12 7.5V12l3 2"/>',
   chat:'<path class="stroke" d="M20.5 12c0 4.1-3.8 7.4-8.5 7.4-1 0-2-.15-2.9-.42L4 20.5l1.6-3.7A7 7 0 0 1 3.5 12c0-4.1 3.8-7.4 8.5-7.4s8.5 3.3 8.5 7.4z"/><path class="detail" d="M9 11.5h6"/>',
-  card:'<rect class="stroke" x="3" y="5.5" width="18" height="13"/><path class="detail" d="M6.5 14.5h5"/><circle class="stroke" cx="16.5" cy="10.5" r="1.8"/>',
+  card:'<rect class="stroke" x="3" y="5.5" width="18" height="13" rx="2"/><path class="detail" d="M6.5 14.5h5"/><circle class="stroke" cx="16.5" cy="10.5" r="1.8"/>',
   folder:'<path class="stroke" d="M3.5 6.5A1.5 1.5 0 0 1 5 5h4l2 2.5h8a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18z"/><path class="detail" d="M9 13.5h6"/>',
   health:'<path class="stroke" d="M3.5 12h4l2-4 3 8 2.5-5 1.5 3h4"/><path class="detail" d="M19 8.5V5.5M17.5 7h3"/>',
-  money:'<rect class="stroke" x="3" y="6" width="18" height="12"/><circle class="detail" cx="12" cy="12" r="2.6"/>',
-  shield:'<path class="stroke" d="M12 3.5 19 6v6c0 4-3 7-7 8.5C8 19 5 16 5 12V6z"/><path class="detail" d="M9.5 12l1.8 1.8 3.5-3.6"/>',
+  money:'<rect class="stroke" x="3" y="6" width="18" height="12" rx="2"/><circle class="detail" cx="12" cy="12" r="2.6"/>',
   handshake:'<path class="stroke" d="M3.5 10.5 7 7l3.5 2.5L14 7l6.5 3.5"/><path class="stroke" d="M20.5 10.5V16l-4 2.5-4.5-3.5-4.5 3.5L3.5 16v-5.5"/><path class="detail" d="M10.5 13.5 12 15l1.5-1.5"/>'
 };
 function svg(name){
   return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">' + (ICON[name] || '') + '</svg>';
 }
+var CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+  '<path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 /* ============================================================
    2. NASTAVITELNÉ ÚDAJE
@@ -702,17 +575,17 @@ var SETTINGS = [
     { key:'emailTvar',  label:'Tvar pracovního e-mailu',  ph:'jmeno.prijmeni@fourbros.cz', def:'jmeno.prijmeni@fourbros.cz' }
   ]},
   { group:'Systémy a nástroje', items:[
-    { key:'crm',        label:'CRM / hlavní systém',      ph:'název systému' },
-    { key:'disk',       label:'Kde se ukládají dokumenty',ph:'sdílený disk / cloud' },
-    { key:'chat',       label:'Komunikační nástroj',      ph:'Teams, Slack…' },
-    { key:'dochazka',   label:'Docházka a dovolená',      ph:'název systému' },
-    { key:'brandSlozka',label:'Složka s logy a šablonami',ph:'odkaz nebo cesta' }
+    { key:'crm',        label:'CRM / hlavní systém',       ph:'název systému' },
+    { key:'disk',       label:'Kde se ukládají dokumenty', ph:'sdílený disk / cloud' },
+    { key:'chat',       label:'Komunikační nástroj',       ph:'Teams, Slack…' },
+    { key:'dochazka',   label:'Docházka a dovolená',       ph:'název systému' },
+    { key:'brandSlozka',label:'Složka s logy a šablonami', ph:'odkaz nebo cesta' }
   ]},
   { group:'Praktické', items:[
-    { key:'dressCode',  label:'Dress code',               ph:'business casual' },
-    { key:'parkovani',  label:'Parkování',                ph:'kde a jak' },
-    { key:'obed',       label:'Obědy',                    ph:'kantýna, stravenky…' },
-    { key:'pracDoba',   label:'Pracovní doba',            ph:'8:30–17:00, pružná' }
+    { key:'dressCode',  label:'Dress code',    ph:'business casual' },
+    { key:'parkovani',  label:'Parkování',     ph:'kde a jak' },
+    { key:'obed',       label:'Obědy',         ph:'kantýna, stravenky…' },
+    { key:'pracDoba',   label:'Pracovní doba', ph:'8:30–17:00, pružná' }
   ]}
 ];
 
@@ -725,11 +598,11 @@ var PROFILE = [
 ];
 
 /* ============================================================
-   3. KURZ — fáze a úkoly
+   3. FÁZE A ÚKOLY
    ============================================================ */
 var PHASES = [
   {
-    id:'pred', title:'Před nástupem', when:'D−14 → D−1', tag:'D−14', from:-14, to:-1,
+    id:'pred', title:'Před nástupem', when:'2 týdny předem', from:-14, to:-1,
     intro:'V den nástupu je všechno připravené a nový člověk ví, kam a v kolik má přijít. Nic z toho se nedá stihnout ráno v den D.',
     tasks:[
       { id:'p1',  who:'HR',      t:'Pracovní smlouva vyhotovena a podepsána — nejpozději v den nástupu' },
@@ -753,7 +626,7 @@ var PHASES = [
     ]
   },
   {
-    id:'den1', title:'První den', when:'Den 1', tag:'D+0', from:0, to:0,
+    id:'den1', title:'První den', when:'Den 1', from:0, to:0,
     intro:'Nový člověk odchází domů s pocitem, že udělal správně, když nabídku přijal. Nepřetěžuj ho informacemi — polovinu si stejně nezapamatuje.',
     agenda:[
       ['9:00','Přivítání, káva, klid. Nezačínej papíry.','HR'],
@@ -781,7 +654,7 @@ var PHASES = [
     ]
   },
   {
-    id:'tyden1', title:'První týden', when:'Dny 2 → 5', tag:'D+5', from:1, to:7,
+    id:'tyden1', title:'První týden', when:'Dny 2–5', from:1, to:7,
     intro:'Nový člověk rozumí tomu, co firma dělá a komu, zná svoje nástroje a odvedl první skutečnou práci.',
     tasks:[
       { id:'t1', who:'HR',      t:'Přihlášení na ČSSZ podáno — <strong>do 8 kalendářních dnů</strong> od nástupu' },
@@ -795,7 +668,7 @@ var PHASES = [
     ]
   },
   {
-    id:'dni30', title:'Prvních 30 dní', when:'Dny 6 → 30', tag:'D+30', from:8, to:30,
+    id:'dni30', title:'Prvních 30 dní', when:'Dny 6–30', from:8, to:30,
     intro:'Nový člověk pracuje samostatně na vymezené části agendy a ví, podle čeho se pozná, že to dělá dobře.',
     tasks:[
       { id:'m1', who:'Manažer', t:'Hodnoticí 1:1 ve 30. dni proběhlo a je z něj zápis', guide:'jednanajedna' },
@@ -808,7 +681,7 @@ var PHASES = [
     ]
   },
   {
-    id:'dni60', title:'60 dní', when:'Dny 31 → 60', tag:'D+60', from:31, to:60,
+    id:'dni60', title:'60 dní', when:'Dny 31–60', from:31, to:60,
     intro:'Nejvíc opomíjená fáze. První měsíc má každý pod kontrolou, na konci zkušebky se rozhoduje — ale právě tady se dá ještě otočit špatně nastartovaný nástup.',
     tasks:[
       { id:'s1', who:'Manažer', t:'1:1 v 60. dni — kontrola cílů z 30. dne', guide:'jednanajedna' },
@@ -819,7 +692,7 @@ var PHASES = [
     ]
   },
   {
-    id:'dni90', title:'Rozhodnutí', when:'Konec zkušební doby', tag:'D+90', from:61, to:95,
+    id:'dni90', title:'Konec zkušební doby', when:'Kolem 90. dne', from:61, to:95,
     intro:'Jasné, doložené a včas sdělené rozhodnutí. Ať už jakékoliv. Nesmí to být pro nikoho překvapení.',
     tasks:[
       { id:'z1', who:'Manažer', t:'Hodnoticí rozhovor na konci zkušební doby proběhl, existuje zápis' },
@@ -831,7 +704,7 @@ var PHASES = [
     ]
   },
   {
-    id:'rok', title:'Šest měsíců a první rok', when:'6 → 12 měsíců', tag:'D+365', from:96, to:400,
+    id:'rok', title:'Šest měsíců a první rok', when:'6–12 měsíců', from:96, to:400,
     intro:'Z nováčka je kolega, který sám zaškoluje další. Tady onboarding definitivně končí.',
     tasks:[
       { id:'r1', who:'Manažer', t:'Hodnoticí rozhovor v 6. měsíci — výkon, spokojenost, další směr' },
@@ -989,7 +862,7 @@ var TEMPLATES = [
   { id:'uvitaci', title:'Uvítací e-mail — 3 až 5 dní před nástupem', body:
 'Předmět: Těšíme se na tebe — praktické informace k nástupu\n\n'+
 'Ahoj {{jmeno}},\n\n'+
-'za pár dní se vidíme na palubě. Ať máš první den klidný, posílám všechno praktické dopředu.\n\n'+
+'za pár dní se vidíme. Ať máš první den klidný, posílám všechno praktické dopředu.\n\n'+
 'KDY A KAM\n{{nastup}}, adresa {{adresa}}. Zazvoň na recepci, budu tam na tebe čekat.\n\n'+
 'CO S SEBOU\n· občanský průkaz\n· číslo bankovního účtu\n· zápočtový list od předchozího zaměstnavatele\n· potvrzení o vstupní lékařské prohlídce\n\n'+
 'JAK TO BUDE VYPADAT\nDopoledne tě provedeme firmou, předáme techniku a vyřídíme papíry. V poledne jdeme na oběd s týmem. Odpoledne se potkáš s {{manazer}} a projdete si, co tě čeká první měsíc.\n\n'+
@@ -1028,7 +901,6 @@ var TEMPLATES = [
    6. STAV
    ============================================================ */
 var STORE_KEY = 'fourbros-onboarding-app-v1';
-
 var state = { role:'novacek', config:{}, profile:{}, done:{} };
 
 SETTINGS.forEach(function(g){
@@ -1058,7 +930,6 @@ function save(){
   try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){ /* soukromý režim */ }
 }
 
-/* --- Sdílení odkazem --- */
 function b64enc(str){
   var bytes = new TextEncoder().encode(str);
   var bin = '';
@@ -1068,8 +939,7 @@ function b64enc(str){
 function b64dec(s){
   var b = s.replace(/-/g,'+').replace(/_/g,'/');
   while(b.length % 4){ b += '='; }
-  var bytes = Uint8Array.from(atob(b), function(c){ return c.charCodeAt(0); });
-  return new TextDecoder().decode(bytes);
+  return new TextDecoder().decode(Uint8Array.from(atob(b), function(c){ return c.charCodeAt(0); }));
 }
 
 function readShared(){
@@ -1084,8 +954,8 @@ function readShared(){
 }
 
 function shareLink(){
-  var payload = b64enc(JSON.stringify({ config:state.config, profile:state.profile }));
-  return location.origin + location.pathname + '#/uvod?s=' + payload;
+  return location.origin + location.pathname + '#/uvod?s=' +
+    b64enc(JSON.stringify({ config:state.config, profile:state.profile }));
 }
 
 /* ============================================================
@@ -1108,16 +978,14 @@ function valueOf(key){
   return (v == null || v === '') ? null : v;
 }
 
-/* Doplní {{klic}} vyplněnou hodnotou, jinak zvýrazní, že chybí. */
 function fillIn(text){
   return String(text).replace(/\{\{(\w+)\}\}/g, function(_, key){
     var v = valueOf(key);
-    return v ? '<span class="set">' + esc(v) + '</span>'
+    return v ? '<span class="val">' + esc(v) + '</span>'
              : '<span class="gap">' + esc(labelFor(key)) + '</span>';
   });
 }
 
-/* Verze pro prostý text šablon. */
 function fillInPlain(text){
   return String(text).replace(/\{\{(\w+)\}\}/g, function(_, key){
     var v = valueOf(key);
@@ -1141,10 +1009,12 @@ function dayOffset(){
   return Math.round((now - start) / 86400000);
 }
 
-function dayStamp(){
+function dayText(){
   var d = dayOffset();
   if(d === null){ return '—'; }
-  return d < 0 ? 'D−' + Math.abs(d) : 'D+' + d;
+  if(d < 0){ return 'za ' + Math.abs(d) + ' dní'; }
+  if(d === 0){ return 'dnes'; }
+  return d + '. den';
 }
 
 function currentPhase(){
@@ -1178,12 +1048,12 @@ function guideStats(g){
   return { total:g.steps.length, done:done };
 }
 
-function signal(msg){
-  var el = document.getElementById('signal');
+function toast(msg){
+  var el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('up');
-  clearTimeout(signal._t);
-  signal._t = setTimeout(function(){ el.classList.remove('up'); }, 2400);
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ el.classList.remove('up'); }, 2400);
 }
 
 /* ============================================================
@@ -1191,7 +1061,7 @@ function signal(msg){
    ============================================================ */
 var ROUTES = [
   { id:'uvod',      label:'Přehled',    icon:'home',   render:viewUvod },
-  { id:'plan',      label:'Kurz',       icon:'course', render:viewPlan },
+  { id:'plan',      label:'Postup',     icon:'steps',  render:viewPlan },
   { id:'navody',    label:'Návody',     icon:'guide',  render:viewNavody },
   { id:'znacka',    label:'Značka',     icon:'brand',  render:viewZnacka },
   { id:'lide',      label:'Kdo je kdo', icon:'people', render:viewLide },
@@ -1200,41 +1070,15 @@ var ROUTES = [
   { id:'nastaveni', label:'Nastavení',  icon:'cog',    render:viewNastaveni }
 ];
 
-/* Přístrojový oblouk — 270° s mezerou dole, jako na budíku.
-   Úhly měřím ve stupních od horní osy po směru hodinových ručiček.
-   Dráha má pathLength="100", takže postup v procentech je přímo dashoffset. */
-var GAUGE = { cx:77, cy:77, r:57, start:-135, sweep:270 };
+var RING_R = 56;
+var RING_C = 2 * Math.PI * RING_R;
 
-function gaugePoint(deg, rad){
-  var a = deg * Math.PI / 180;
-  return [GAUGE.cx + Math.sin(a) * rad, GAUGE.cy - Math.cos(a) * rad];
-}
-
-function gaugeArc(rad){
-  var p0 = gaugePoint(GAUGE.start, rad);
-  var p1 = gaugePoint(GAUGE.start + GAUGE.sweep, rad);
-  return 'M' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) +
-         'A' + rad + ' ' + rad + ' 0 ' + (GAUGE.sweep > 180 ? 1 : 0) + ' 1 ' +
-         p1[0].toFixed(2) + ' ' + p1[1].toFixed(2);
-}
-
-function gaugeSvg(pct){
-  var ticks = '';
-  for(var i = 0; i <= 12; i++){
-    var deg = GAUGE.start + GAUGE.sweep * (i / 12);
-    var major = i % 3 === 0;
-    var a = gaugePoint(deg, GAUGE.r + 6);
-    var b = gaugePoint(deg, GAUGE.r + (major ? 13 : 9));
-    ticks += '<line class="ticks"' + (major ? ' stroke-width="1.4"' : '') +
-             ' x1="' + a[0].toFixed(2) + '" y1="' + a[1].toFixed(2) +
-             '" x2="' + b[0].toFixed(2) + '" y2="' + b[1].toFixed(2) + '"/>';
-  }
-  var d = gaugeArc(GAUGE.r);
-  return '<svg viewBox="0 0 154 154" aria-hidden="true">' +
-    ticks +
-    '<path class="track" d="' + d + '"/>' +
-    '<path class="arc" data-arc d="' + d + '" pathLength="100" ' +
-      'stroke-dasharray="100" stroke-dashoffset="' + (100 - pct) + '"/>' +
+function ringSvg(pct){
+  return '<svg viewBox="0 0 132 132" aria-hidden="true">' +
+    '<circle class="track" cx="66" cy="66" r="' + RING_R + '"/>' +
+    '<circle class="fill" data-ring cx="66" cy="66" r="' + RING_R + '" ' +
+      'stroke-dasharray="' + RING_C.toFixed(1) + '" ' +
+      'stroke-dashoffset="' + (RING_C * (1 - pct / 100)).toFixed(1) + '"/>' +
   '</svg>';
 }
 
@@ -1245,64 +1089,64 @@ function viewUvod(){
   var jmeno = state.profile.jmeno;
 
   var title = state.role === 'novacek'
-    ? (jmeno ? 'Vítej, ' + esc(jmeno.split(' ')[0]) : 'Vítej na palubě')
+    ? (jmeno ? 'Vítej, ' + esc(jmeno.split(' ')[0]) : 'Vítej v týmu')
     : (jmeno ? esc(jmeno) : 'Onboarding');
 
   var lede = state.role === 'novacek'
-    ? 'Tvůj kurz prvními měsíci. Odškrtávej si, co máš za sebou — postup se ukládá a příště naváže tam, kde jsi skončil.'
+    ? 'Tvůj průvodce prvními měsíci. Odškrtávej si, co máš za sebou — postup se ukládá a příště naváže tam, kde jsi skončil.'
     : 'Vyplň jednou Nastavení, pošli odkaz novému člověku a sleduj, jak mu to jde.';
 
   var h = '';
 
-  h += '<header class="plate plate--corners">';
-  h +=   '<div class="instrument">';
-  h +=     '<div class="stack-tight">';
-  h +=       '<p class="stamp">' + (state.profile.pozice ? esc(state.profile.pozice) : 'Onboarding od A po Z') + '</p>';
+  h += '<section class="card raised">';
+  h +=   '<div class="hero">';
+  h +=     '<div class="head">';
+  h +=       '<p class="label">' + (state.profile.pozice ? esc(state.profile.pozice) : 'Onboarding od A po Z') + '</p>';
   h +=       '<h1>' + title + '</h1>';
   h +=       '<p class="lede">' + lede + '</p>';
   h +=     '</div>';
-  h +=     '<div class="gauge">' + gaugeSvg(pct) +
-             '<div class="gauge-read"><b data-arcpct>' + pct + '</b><span>% kurzu</span></div></div>';
+  h +=     '<div class="ring">' + ringSvg(pct) +
+             '<div class="ring-num"><b data-ringpct>' + pct + '</b><span>% hotovo</span></div></div>';
   h +=   '</div>';
-  h +=   '<dl class="readouts">';
-  h +=     readout('Poloha', dayStamp());
-  h +=     readout('Úsek', phase ? phase.title : 'Doplň datum', true);
-  h +=     readout('Kroky', s.done + ' / ' + s.total);
-  h +=     readout('Návody', String(GUIDES.length));
+  h +=   '<dl class="stats">';
+  h +=     stat('Kde jsi', dayText());
+  h +=     stat('Aktuální fáze', phase ? phase.title : 'Doplň datum', true);
+  h +=     stat('Splněné kroky', s.done + ' / ' + s.total);
+  h +=     stat('Návodů', String(GUIDES.length));
   h +=   '</dl>';
-  h += '</header>';
+  h += '</section>';
 
   var next = [];
   PHASES.forEach(function(p){
     p.tasks.forEach(function(t){
-      if(!state.done['t:' + t.id] && next.length < 5){ next.push({ p:p, t:t }); }
+      if(!state.done['t:' + t.id] && next.length < 5){ next.push(t); }
     });
   });
 
   if(next.length){
-    h += '<section class="stack">';
-    h +=   '<div class="masthead"><h2>Nejbližší kroky</h2><div class="rule"></div></div>';
-    h +=   '<ul class="log">';
-    next.forEach(function(n){ h += entryRow(n.t, n.p); });
+    h += '<section class="group">';
+    h +=   '<h2>Co je na řadě</h2>';
+    h +=   '<ul class="tasks">';
+    next.forEach(function(t){ h += taskRow(t); });
     h +=   '</ul>';
     h += '</section>';
   } else if(s.total){
-    h += '<div class="mark"><p class="stamp">V cíli</p><p>Všechny kroky jsou odškrtnuté. Onboarding je za tebou.</p></div>';
+    h += '<div class="note"><p class="label">Hotovo</p><p>Všechny kroky jsou odškrtnuté. Onboarding je za tebou.</p></div>';
   }
 
-  h += '<section class="stack">';
-  h +=   '<div class="masthead"><h2>Kde začít</h2><div class="rule"></div></div>';
-  h +=   '<div class="plates">';
-  h +=     jumpPlate('plan','course','Projít kurz','Sedm úseků od příprav před nástupem po první rok.');
-  h +=     jumpPlate('navody','guide','Otevřít návody','Krok za krokem: systémy, podpis, docházka, schůzky.');
-  h +=     jumpPlate('lide','people','Na co se koho ptát','Buddy, nadřízený, HR a IT — kdo řeší co.');
-  h +=     jumpPlate('znacka','brand','Naše značka','Pravidla pro každého, kdo píše klientovi.');
+  h += '<section class="group">';
+  h +=   '<h2>Kde začít</h2>';
+  h +=   '<div class="tiles">';
+  h +=     jumpTile('plan','steps','Projít postup','Sedm fází od příprav před nástupem po první rok.');
+  h +=     jumpTile('navody','guide','Otevřít návody','Krok za krokem: systémy, podpis, docházka, schůzky.');
+  h +=     jumpTile('lide','people','Na co se koho ptát','Buddy, nadřízený, HR a IT — kdo řeší co.');
+  h +=     jumpTile('znacka','brand','Naše značka','Pravidla pro každého, kdo píše klientovi.');
   h +=   '</div>';
   h += '</section>';
 
   if(!state.profile.nastup || !state.config.crm){
-    h += '<div class="mark">';
-    h +=   '<p class="stamp">Ještě není vyplněno</p>';
+    h += '<div class="note">';
+    h +=   '<p class="label">Ještě není vyplněno</p>';
     h +=   '<p>Aplikace doplňuje konkrétní jména a systémy do všech textů. Vyplň je jednou v <a href="#/nastaveni">Nastavení</a> a propíšou se všude — včetně šablon e-mailů.</p>';
     h += '</div>';
   }
@@ -1310,74 +1154,72 @@ function viewUvod(){
   return h;
 }
 
-function readout(label, value, small){
-  return '<div class="readout"><dt>' + esc(label) + '</dt>' +
-         '<dd' + (small ? ' class="small"' : '') + '>' + esc(value) + '</dd></div>';
+function stat(label, value, isText){
+  return '<div class="stat"><dt>' + esc(label) + '</dt>' +
+         '<dd' + (isText ? ' class="text"' : '') + '>' + esc(value) + '</dd></div>';
 }
 
-function jumpPlate(route, icon, title, desc){
-  return '<a class="chart" href="#/' + route + '" style="text-decoration:none">' +
-    '<div class="top"><div class="disc">' + svg(icon) + '</div><h3>' + esc(title) + '</h3></div>' +
+function jumpTile(route, icon, title, desc){
+  return '<a class="tile" href="#/' + route + '" style="text-decoration:none">' +
+    '<div class="top"><div class="badge">' + svg(icon) + '</div><h3>' + esc(title) + '</h3></div>' +
     '<p>' + esc(desc) + '</p></a>';
 }
 
-/* ---------- Kurz ---------- */
+/* ---------- Postup ---------- */
 function viewPlan(){
   var cur = currentPhase();
   var h = '';
 
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Kurz</p>';
-  h +=   '<h1>Sedm úseků nástupu</h1>';
-  h +=   '<p class="lede">Od dvou týdnů před nástupem po konec prvního roku. Odškrtnuté kroky se ukládají v tomhle prohlížeči.</p>';
-  h +=   '<div class="rule"></div>';
+  h += '<div class="head">';
+  h +=   '<h1>Postup nástupu</h1>';
+  h +=   '<p class="lede">Sedm fází od dvou týdnů před nástupem po konec prvního roku. Klikni na fázi a rozbal si její kroky.</p>';
   h += '</div>';
 
-  h += '<ol class="course">';
-  PHASES.forEach(function(p){
+  h += '<ul class="phases">';
+  PHASES.forEach(function(p, i){
     var st = phaseStats(p);
-    var isNow = cur && cur.id === p.id;
-    var isDone = st.done === st.total && st.total > 0;
+    var isNow = cur ? cur.id === p.id : i === 0;
+    var isDone = st.total > 0 && st.done === st.total;
 
-    h += '<li class="leg' + (isNow ? ' now' : '') + (isDone ? ' done' : '') + '">';
-    h +=   '<div class="leg-mark"><span class="leg-dot"><i></i></span>' +
-             '<span class="leg-day">' + esc(p.tag) + '</span></div>';
+    h += '<li><details class="phase' + (isNow ? ' current' : '') + '" data-phase="' + esc(p.id) + '"' +
+         (isNow ? ' open' : '') + '>';
+    h +=   '<summary>';
+    h +=     '<div style="flex:1;min-width:0"><h3>' + esc(p.title) + '</h3>' +
+               '<span class="when">' + esc(p.when) + '</span></div>';
+    if(isNow){ h += '<span class="pill now">Aktuálně</span>'; }
+    else if(isDone){ h += '<span class="pill ok">Hotovo</span>'; }
+    h +=     '<span class="count" data-count>' + st.done + '/' + st.total + '</span>';
+    h +=     CHEV;
+    h +=   '</summary>';
 
-    h +=   '<div class="leg-head">';
-    h +=     '<h2>' + esc(p.title) + '</h2>';
-    if(isNow){ h += '<span class="here">Jste tady</span>'; }
-    h +=     '<span class="leg-tally">' + st.done + '/' + st.total + ' · ' + esc(p.when) + '</span>';
-    h +=   '</div>';
-
+    h +=   '<div class="phase-body">';
     if(p.intro){ h += '<p>' + esc(p.intro) + '</p>'; }
-
     if(p.agenda){
       h += '<div class="tablewrap"><table>';
       h += '<thead><tr><th>Čas</th><th>Co se děje</th><th>Kdo vede</th></tr></thead><tbody>';
       p.agenda.forEach(function(r){
-        h += '<tr><td class="fig">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
+        h += '<tr><td class="nw">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
       });
       h += '</tbody></table></div>';
     }
-
-    h +=   '<ul class="log">';
-    p.tasks.forEach(function(t){ h += entryRow(t, null); });
-    h +=   '</ul>';
-    h += '</li>';
+    h +=     '<ul class="tasks">';
+    p.tasks.forEach(function(t){ h += taskRow(t); });
+    h +=     '</ul>';
+    h +=   '</div>';
+    h += '</details></li>';
   });
-  h += '</ol>';
+  h += '</ul>';
 
   return h;
 }
 
-function entryRow(t, phase){
+function taskRow(t){
   var checked = state.done['t:' + t.id] ? ' checked' : '';
-  var h = '<li><div class="entry">';
-  h += '<label class="entry-main"><input type="checkbox" data-task="' + esc(t.id) + '"' + checked + '>';
+  var h = '<li><div class="task">';
+  h += '<label class="task-main"><input type="checkbox" data-task="' + esc(t.id) + '"' + checked + '>';
   h += '<span class="text">' + fillIn(t.t) + '</span></label>';
-  h += '<div class="entry-sub"><span class="owner">' + esc(t.who) + '</span>';
-  if(phase){ h += '<span class="owner">' + esc(phase.tag) + '</span>'; }
-  if(t.guide){ h += '<button class="seelink" data-goguide="' + esc(t.guide) + '">Návod</button>'; }
+  h += '<div class="task-sub"><span class="pill">' + esc(t.who) + '</span>';
+  if(t.guide){ h += '<button class="helper" data-goguide="' + esc(t.guide) + '">Návod</button>'; }
   h += '</div></div></li>';
   return h;
 }
@@ -1390,21 +1232,20 @@ function viewNavody(params){
   }
 
   var h = '';
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Návody</p>';
-  h +=   '<h1>Krok za krokem</h1>';
+  h += '<div class="head">';
+  h +=   '<h1>Návody</h1>';
   h +=   '<p class="lede">Otevři si návod, projdi kroky a odškrtávej. Hodí se i za měsíc, když si nebudeš jistý.</p>';
-  h +=   '<div class="rule"></div>';
   h += '</div>';
 
-  h += '<div class="plates">';
+  h += '<div class="tiles">';
   GUIDES.forEach(function(g){
     var st = guideStats(g);
     var full = st.done === st.total;
-    h += '<button class="chart" data-goguide="' + esc(g.id) + '">';
-    h +=   '<div class="top"><div class="disc">' + svg(g.icon) + '</div>';
+    h += '<button class="tile" data-goguide="' + esc(g.id) + '">';
+    h +=   '<div class="top"><div class="badge">' + svg(g.icon) + '</div>';
     h +=     '<h3>' + esc(g.title) + '</h3>';
-    h +=     '<span class="tally' + (full ? ' full' : '') + '">' + (full ? 'hotovo' : st.done + '/' + st.total) + '</span>';
+    h +=     (full ? '<span class="pill ok">Hotovo</span>'
+                   : '<span class="n">' + st.done + '/' + st.total + '</span>');
     h +=   '</div>';
     h +=   '<p>' + esc(g.lead) + '</p>';
     h += '</button>';
@@ -1420,15 +1261,14 @@ function viewGuide(g){
 
   h += '<button class="back" data-goguide="">← Všechny návody</button>';
 
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Návod</p>';
+  h += '<div class="head">';
   h +=   '<h1>' + esc(g.title) + '</h1>';
   h +=   '<p class="lede">' + esc(g.lead) + '</p>';
   h += '</div>';
 
-  h += '<div class="gaugebar">';
-  h +=   '<div class="gaugebar-nums"><span>Postup</span><span data-barlabel>' + st.done + ' / ' + st.total + '</span></div>';
-  h +=   '<div class="gaugebar-rule"><div class="gaugebar-fill" data-barfill style="width:' + pct + '%"></div></div>';
+  h += '<div class="progress">';
+  h +=   '<div class="row"><span>Postup</span><b data-barlabel>' + st.done + ' / ' + st.total + '</b></div>';
+  h +=   '<div class="bar"><i data-barfill style="width:' + pct + '%"></i></div>';
   h += '</div>';
 
   h += '<ol class="steps">';
@@ -1440,30 +1280,28 @@ function viewGuide(g){
   });
   h += '</ol>';
 
-  h += '<div class="acts"><button class="act line" data-print>Vytisknout návod</button></div>';
+  h += '<div class="btns"><button class="btn ghost" data-print>Vytisknout návod</button></div>';
   return h;
 }
 
 /* ---------- Značka ---------- */
 function viewZnacka(){
   var h = '';
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Modul do prvního týdne</p>';
+  h += '<div class="head">';
   h +=   '<h1>Naše značka</h1>';
   h +=   '<p class="lede">Každý, kdo pošle klientovi e-mail nebo prezentaci, tvoří značku. Třicet minut, které ušetří spoustu předělávání.</p>';
-  h +=   '<div class="rule"></div>';
   h += '</div>';
 
-  h += '<div class="plate tint"><p>Logo je stylizovaná loďka plující po moři, kde číslice 4 tvoří zároveň plachtu. Odráží náš přístup — <strong>s klientem jsme za všech okolností na jedné lodi.</strong> Tuhle větu by měl umět říct každý.</p></div>';
+  h += '<div class="card soft"><p>Logo je stylizovaná loďka plující po moři, kde číslice 4 tvoří zároveň plachtu. Odráží náš přístup — <strong>s klientem jsme za všech okolností na jedné lodi.</strong> Tuhle větu by měl umět říct každý.</p></div>';
 
-  h += '<section class="stack">';
-  h +=   '<div class="masthead"><h2>Paleta</h2><div class="rule"></div></div>';
+  h += '<section class="group">';
+  h +=   '<h2>Paleta</h2>';
   h +=   '<div class="swatches">';
-  [['#194669','Four Bros Navy','194669'],
-   ['#F7F8FE','Alice Blue','F7F8FE'],
-   ['#F4F4F4','Light Grey','F4F4F4'],
-   ['#FFFFFF','Pure White','FFFFFF'],
-   ['#7E17E0','Electric Violet','7E17E0 · max 5 %']].forEach(function(c){
+  [['#194669','Four Bros Navy','#194669'],
+   ['#F7F8FE','Alice Blue','#F7F8FE'],
+   ['#F4F4F4','Light Grey','#F4F4F4'],
+   ['#FFFFFF','Pure White','#FFFFFF'],
+   ['#7E17E0','Electric Violet','max 5 %']].forEach(function(c){
     h += '<div class="swatch"><div class="chip" style="background:' + c[0] + '"></div>' +
          '<div class="meta"><b>' + c[1] + '</b><span>' + c[2] + '</span></div></div>';
   });
@@ -1471,14 +1309,14 @@ function viewZnacka(){
   h += '</section>';
 
   h += '<div class="duo">';
-  h +=   '<div class="plate"><h3>Pět pravidel</h3><ol>' +
+  h +=   '<div class="card"><h3>Pět pravidel</h3><ol>' +
            '<li><strong>Bílá vládne.</strong> Většinu plochy vždy pokrývá čistě bílá.</li>' +
            '<li><strong>Fialová je koření.</strong> Electric Violet jen na tlačítka a zvýraznění, nikdy víc než 5 % plochy.</li>' +
            '<li><strong>Nadpisy Serenity, text Roboto.</strong> Základní řez odstavce je Light.</li>' +
            '<li><strong>Loga se nesahá.</strong> Neměnit proporce, nerotovat, nepřidávat stíny ani průhlednost.</li>' +
            '<li><strong>Kolem loga je volno.</strong> Ochranná zóna ¼ výšky loga, minimální velikost 66 × 33 px.</li>' +
          '</ol></div>';
-  h +=   '<div class="plate"><h3>Kde co najdeš</h3><ul>' +
+  h +=   '<div class="card"><h3>Kde co najdeš</h3><ul>' +
            '<li>Brand manuál, loga, favicona, slogan, ikony a brushe: ' + fillIn('{{brandSlozka}}') + '</li>' +
            '<li>Fonty Serenity a Roboto k instalaci</li>' +
            '<li>Šablona prezentace a e-mailový podpis</li>' +
@@ -1486,9 +1324,9 @@ function viewZnacka(){
          '</ul></div>';
   h += '</div>';
 
-  h += '<div class="mark"><p class="stamp">Pravidlo pro každý výstup</p><p>Než pošleš první materiál klientovi, projdi si brand manuál. Kontroluj své výstupy s pravidly v příručce — používáním našich barev a písem budeš mít jistotu, že držíš kurz.</p></div>';
+  h += '<div class="note"><p class="label">Pravidlo pro každý výstup</p><p>Než pošleš první materiál klientovi, projdi si brand manuál. Kontroluj své výstupy s pravidly v příručce — používáním našich barev a písem budeš mít jistotu, že držíš kurz.</p></div>';
 
-  h += '<div class="acts"><button class="act" data-goguide="brand">Otevřít návod ke značce</button></div>';
+  h += '<div class="btns"><button class="btn" data-goguide="brand">Otevřít návod ke značce</button></div>';
   return h;
 }
 
@@ -1502,27 +1340,25 @@ function viewLide(){
   ];
 
   var h = '';
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Orientace</p>';
-  h +=   '<h1>Na co se koho ptát</h1>';
+  h += '<div class="head">';
+  h +=   '<h1>Kdo je kdo</h1>';
   h +=   '<p class="lede">Nejrychlejší způsob, jak se zorientovat: vědět, kdo je od čeho. Když si nejsi jistý, ptej se buddyho — to je přesně jeho role.</p>';
-  h +=   '<div class="rule"></div>';
   h += '</div>';
 
   h += '<div class="duo">';
   people.forEach(function(r){
-    h += '<div class="plate">' +
-           '<div class="top" style="display:flex;align-items:center;gap:.8rem">' +
-             '<div class="disc">' + svg('people') + '</div>' +
+    h += '<div class="card">' +
+           '<div class="top" style="display:flex;align-items:center;gap:.8rem;min-width:0">' +
+             '<div class="badge">' + svg('people') + '</div>' +
              '<div style="min-width:0"><h3>' + esc(r[0]) + '</h3>' +
-             '<p class="instr" style="text-transform:none;letter-spacing:.02em">' + fillIn(r[1]) + '</p></div>' +
+             '<p style="font-size:var(--t-sm);color:var(--ink-muted)">' + fillIn(r[1]) + '</p></div>' +
            '</div>' +
            '<p>' + esc(r[2]) + '</p></div>';
   });
   h += '</div>';
 
-  h += '<section class="stack">';
-  h +=   '<div class="masthead"><h2>Kdo za co odpovídá</h2><div class="rule"></div></div>';
+  h += '<section class="group">';
+  h +=   '<h2>Kdo za co odpovídá</h2>';
   h +=   '<div class="tablewrap"><table><thead><tr><th>Role</th><th>Co má na starosti</th></tr></thead><tbody>';
   [['HR','Vlastník celého procesu. Dokumenty, přihlášky, koordinace techniky, zpětná vazba v 7., 30. a 90. dni.'],
    ['Přímý nadřízený','Vlastník obsahu práce. Plán 30/60/90, uvedení do týmu, pravidelná 1:1, rozhodnutí o zkušební době.'],
@@ -1534,7 +1370,7 @@ function viewLide(){
   h +=   '</tbody></table></div>';
   h += '</section>';
 
-  h += '<div class="mark"><p class="stamp">Nejčastější důvod nezdaru</p><p>Onboarding selhává tam, kde si všichni myslí, že to dělá někdo jiný. Buddy musí předem vědět, že buddym je, a musí na to mít čas v kapacitě.</p></div>';
+  h += '<div class="note"><p class="label">Nejčastější důvod nezdaru</p><p>Onboarding selhává tam, kde si všichni myslí, že to dělá někdo jiný. Buddy musí předem vědět, že buddym je, a musí na to mít čas v kapacitě.</p></div>';
   return h;
 }
 
@@ -1555,48 +1391,44 @@ function viewTerminy(){
   ];
 
   var h = '';
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Administrativa</p>';
+  h += '<div class="head">';
   h +=   '<h1>Termíny a povinnosti</h1>';
   h +=   '<p class="lede">Přehled toho, co se u nástupu hlídá. Seřazeno podle toho, kdy to musí být splněné.</p>';
-  h +=   '<div class="rule"></div>';
   h += '</div>';
 
   h += '<div class="tablewrap"><table><thead><tr><th>Termín</th><th>Povinnost</th><th>Kdo</th></tr></thead><tbody>';
   rows.forEach(function(r){
-    h += '<tr><td class="fig">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
+    h += '<tr><td class="nw">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
   });
   h += '</tbody></table></div>';
 
-  h += '<div class="mark"><p class="stamp">Ověř si aktuální znění</p><p>Zákoník práce se v posledních letech měnil několikrát — mimo jiné v délce zkušební doby a v informační povinnosti vůči zaměstnanci. Než podle téhle tabulky nastavíš smlouvu, nech si konkrétní lhůty a maximální délku zkušební doby potvrdit od účetní nebo právníka. Tabulka je připomínka, co nesmí zapadnout, ne právní výklad.</p></div>';
+  h += '<div class="note"><p class="label">Ověř si aktuální znění</p><p>Zákoník práce se v posledních letech měnil několikrát — mimo jiné v délce zkušební doby a v informační povinnosti vůči zaměstnanci. Než podle téhle tabulky nastavíš smlouvu, nech si konkrétní lhůty a maximální délku zkušební doby potvrdit od účetní nebo právníka. Tabulka je připomínka, co nesmí zapadnout, ne právní výklad.</p></div>';
 
-  h += '<div class="mark"><p class="stamp">Pozor na výpočet</p><p>Zkušební doba se <strong>prodlužuje</strong> o dobu celodenních překážek v práci a celodenní dovolené. Pokud byl nováček nemocný, konec zkušebky se posouvá — spočítej si to, ať nerozhoduješ o den později, než jde.</p></div>';
+  h += '<div class="card soft"><h3>Pozor na výpočet zkušební doby</h3><p>Zkušební doba se <strong>prodlužuje</strong> o dobu celodenních překážek v práci a celodenní dovolené. Pokud byl nováček nemocný, konec zkušebky se posouvá — spočítej si to, ať nerozhoduješ o den později, než jde.</p></div>';
 
-  h += '<div class="acts"><button class="act line" data-goguide="spis">Co patří do osobního spisu</button>' +
-       '<button class="act line" data-print>Vytisknout</button></div>';
+  h += '<div class="btns"><button class="btn ghost" data-goguide="spis">Co patří do osobního spisu</button>' +
+       '<button class="btn ghost" data-print>Vytisknout</button></div>';
   return h;
 }
 
 /* ---------- Šablony ---------- */
 function viewSablony(){
   var h = '';
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Pro HR</p>';
+  h += '<div class="head">';
   h +=   '<h1>Šablony textů</h1>';
   h +=   '<p class="lede">Doplněné údaji z Nastavení. Zkopíruj, dolaď a odešli.</p>';
-  h +=   '<div class="rule"></div>';
   h += '</div>';
 
   TEMPLATES.forEach(function(t){
     h += '<div class="tpl">';
     h +=   '<div class="tpl-head"><h4>' + esc(t.title) + '</h4>';
-    h +=     '<button class="act line" data-copy="' + esc(t.id) + '">Kopírovat</button></div>';
+    h +=     '<button class="btn ghost" data-copy="' + esc(t.id) + '">Kopírovat</button></div>';
     h +=   '<div class="tpl-body" id="tpl-' + esc(t.id) + '">' + esc(fillInPlain(t.body)) + '</div>';
     h += '</div>';
   });
 
-  h += '<section class="stack">';
-  h +=   '<div class="masthead"><h2>Co měřit</h2><div class="rule"></div></div>';
+  h += '<section class="group">';
+  h +=   '<h2>Co měřit</h2>';
   h +=   '<div class="tablewrap"><table><thead><tr><th>Ukazatel</th><th>Jak ho získáš</th><th>Co znamená</th></tr></thead><tbody>';
   [['Odchody ve zkušební době','Počet za rok / počet nástupů','Nad 20 % zpravidla neselhává člověk, ale výběr nebo onboarding'],
    ['Doba do samostatnosti','Odhad manažera ve dnech','Sleduj trend, ne absolutní číslo'],
@@ -1608,9 +1440,8 @@ function viewSablony(){
   h +=   '</tbody></table></div>';
   h += '</section>';
 
-  h += '<section class="stack">';
-  h +=   '<div class="masthead"><h2>Čeho se vyvarovat</h2><div class="rule"></div></div>';
-  h +=   '<ul>';
+  h += '<section class="group">';
+  h +=   '<h2>Čeho se vyvarovat</h2><ul>';
   ['<strong>Nefunkční technika první den.</strong> Nejčastější stížnost nováčků vůbec. Otestuj přihlášení, ne jen objednávku.',
    '<strong>Manažer je první den na dovolené.</strong> Když to nejde jinak, posuň nástup.',
    '<strong>Den plný prezentací.</strong> Člověk si zapamatuje tři věci. Rozlož informace do týdnů.',
@@ -1628,33 +1459,31 @@ function viewSablony(){
 /* ---------- Nastavení ---------- */
 function viewNastaveni(){
   var h = '';
-  h += '<div class="masthead">';
-  h +=   '<p class="stamp">Nastavení</p>';
-  h +=   '<h1>Vyplň jednou, propíše se všude</h1>';
+  h += '<div class="head">';
+  h +=   '<h1>Nastavení</h1>';
   h +=   '<p class="lede">Cokoliv tady vyplníš, se doplní do všech návodů, úkolů i šablon e-mailů. Nevyplněná místa zůstanou zvýrazněná, abys viděla, co ještě chybí.</p>';
-  h +=   '<div class="rule"></div>';
   h += '</div>';
 
-  h += '<fieldset><legend>Nový kolega</legend><div class="form two">';
+  h += '<div class="card"><fieldset><legend>Nový kolega</legend><div class="form two">';
   PROFILE.forEach(function(f){ h += fieldHtml(f, state.profile[f.key] || '', 'profile'); });
-  h += '</div></fieldset>';
+  h += '</div></fieldset></div>';
 
   SETTINGS.forEach(function(g){
-    h += '<fieldset><legend>' + esc(g.group) + '</legend><div class="form two">';
+    h += '<div class="card"><fieldset><legend>' + esc(g.group) + '</legend><div class="form two">';
     g.items.forEach(function(f){ h += fieldHtml(f, state.config[f.key] || '', 'config'); });
-    h += '</div></fieldset>';
+    h += '</div></fieldset></div>';
   });
 
-  h += '<div class="plate tint">';
+  h += '<div class="card soft">';
   h +=   '<h3>Poslat aplikaci novému člověku</h3>';
   h +=   '<p>Odkaz v sobě nese všechno, co jsi vyplnila. Kdo ho otevře, uvidí rovnou konkrétní jména a systémy — a svůj vlastní postup si odškrtává u sebe.</p>';
-  h +=   '<div class="acts">';
-  h +=     '<button class="act" data-sharelink>Zkopírovat sdílecí odkaz</button>';
-  h +=     '<button class="act line" data-reset>Vymazat odškrtnuté kroky</button>';
+  h +=   '<div class="btns">';
+  h +=     '<button class="btn" data-sharelink>Zkopírovat sdílecí odkaz</button>';
+  h +=     '<button class="btn ghost" data-reset>Vymazat odškrtnuté kroky</button>';
   h +=   '</div>';
   h += '</div>';
 
-  h += '<div class="mark"><p class="stamp">Kde se data ukládají</p><p>Všechno zůstává jen v tomhle prohlížeči — nikam se neodesílá. Když aplikaci otevřeš na jiném počítači, začínáš s prázdným postupem. Odškrtnuté kroky se sdílecím odkazem <strong>nepřenášejí</strong>, jen vyplněné údaje.</p></div>';
+  h += '<div class="note"><p class="label">Kde se data ukládají</p><p>Všechno zůstává jen v tomhle prohlížeči — nikam se neodesílá. Když aplikaci otevřeš na jiném počítači, začínáš s prázdným postupem. Odškrtnuté kroky se sdílecím odkazem <strong>nepřenášejí</strong>, jen vyplněné údaje.</p></div>';
 
   return h;
 }
@@ -1683,29 +1512,30 @@ function routeFor(id){
 function renderChrome(){
   var cur = parseHash().route;
 
-  document.getElementById('helm').innerHTML =
+  document.getElementById('toggle').innerHTML =
     '<button data-role="novacek" aria-pressed="' + (state.role === 'novacek') + '">Nový kolega</button>' +
     '<button data-role="hr" aria-pressed="' + (state.role === 'hr') + '">HR</button>';
 
   var h = '';
   ROUTES.forEach(function(r){
     if(r.hrOnly && state.role !== 'hr'){ return; }
-    var tally = '';
+    var n = '';
     if(r.id === 'plan'){
       var s = taskStats();
-      tally = '<span class="tally">' + s.done + '/' + s.total + '</span>';
+      n = '<span class="n">' + s.done + '/' + s.total + '</span>';
     }
-    if(r.id === 'navody'){ tally = '<span class="tally">' + GUIDES.length + '</span>'; }
+    if(r.id === 'navody'){ n = '<span class="n">' + GUIDES.length + '</span>'; }
     h += '<a href="#/' + r.id + '"' + (r.id === cur ? ' aria-current="page"' : '') + '>' +
-         svg(r.icon) + '<span>' + esc(r.label) + '</span>' + tally + '</a>';
+         svg(r.icon) + '<span>' + esc(r.label) + '</span>' + n + '</a>';
   });
-  document.getElementById('index').innerHTML = h;
+  document.getElementById('menu').innerHTML = h;
 
-  document.getElementById('ensignName').textContent = state.config.firma || 'Four Bros';
+  document.getElementById('logoName').textContent = state.config.firma || 'Four Bros';
 
   var s2 = taskStats();
-  document.getElementById('footRead').textContent =
-    dayStamp() + ' · ' + s2.done + '/' + s2.total;
+  document.getElementById('sideNum').textContent = s2.done + ' / ' + s2.total;
+  document.getElementById('sideBar').style.width =
+    (s2.total ? Math.round(s2.done / s2.total * 100) : 0) + '%';
 }
 
 function render(){
@@ -1713,7 +1543,7 @@ function render(){
   var r = routeFor(p.route);
   if(r.hrOnly && state.role !== 'hr'){ r = ROUTES[0]; }
 
-  document.getElementById('sheet').innerHTML =
+  document.getElementById('main').innerHTML =
     '<div class="view">' + r.render({ id:p.id }) + '</div>';
 
   renderChrome();
@@ -1737,6 +1567,8 @@ document.addEventListener('click', function(e){
 
   var guideBtn = t.closest('[data-goguide]');
   if(guideBtn){
+    /* Uvnitř rozbalovací fáze by kliknutí jinak zavřelo celou sekci. */
+    e.preventDefault();
     var gid = guideBtn.getAttribute('data-goguide');
     location.hash = gid ? '#/navody/' + gid : '#/navody';
     return;
@@ -1744,16 +1576,12 @@ document.addEventListener('click', function(e){
 
   var copyBtn = t.closest('[data-copy]');
   if(copyBtn){
-    var body = document.getElementById('tpl-' + copyBtn.getAttribute('data-copy'));
-    copyText(body.textContent, 'Šablona zkopírována');
+    copyText(document.getElementById('tpl-' + copyBtn.getAttribute('data-copy')).textContent,
+             'Šablona zkopírována');
     return;
   }
 
-  if(t.closest('[data-sharelink]')){
-    copyText(shareLink(), 'Odkaz zkopírován');
-    return;
-  }
-
+  if(t.closest('[data-sharelink]')){ copyText(shareLink(), 'Odkaz zkopírován'); return; }
   if(t.closest('[data-print]')){ window.print(); return; }
 
   if(t.closest('[data-reset]')){
@@ -1761,7 +1589,7 @@ document.addEventListener('click', function(e){
       state.done = {};
       save();
       render();
-      signal('Postup vynulován');
+      toast('Postup vynulován');
     }
     return;
   }
@@ -1788,7 +1616,7 @@ document.addEventListener('change', function(e){
   if(t.matches('[data-scope]')){
     state[t.getAttribute('data-scope')][t.getAttribute('data-key')] = t.value.trim();
     save();
-    document.getElementById('ensignName').textContent = state.config.firma || 'Four Bros';
+    document.getElementById('logoName').textContent = state.config.firma || 'Four Bros';
     return;
   }
 });
@@ -1797,19 +1625,18 @@ document.addEventListener('change', function(e){
 function refresh(){
   renderChrome();
 
-  var p = parseHash();
-
-  document.querySelectorAll('.leg').forEach(function(el, i){
-    var st = phaseStats(PHASES[i]);
-    var tally = el.querySelector('.leg-tally');
-    if(tally && PHASES[i]){
-      tally.textContent = st.done + '/' + st.total + ' · ' + PHASES[i].when;
-    }
-    el.classList.toggle('done', st.total > 0 && st.done === st.total);
+  document.querySelectorAll('[data-phase]').forEach(function(el){
+    var p = PHASES.filter(function(x){ return x.id === el.getAttribute('data-phase'); })[0];
+    if(!p){ return; }
+    var st = phaseStats(p);
+    var count = el.querySelector('[data-count]');
+    if(count){ count.textContent = st.done + '/' + st.total; }
   });
 
-  if(p.route === 'navody' && p.id){
-    var g = GUIDES.filter(function(x){ return x.id === p.id; })[0];
+  var route = parseHash();
+
+  if(route.route === 'navody' && route.id){
+    var g = GUIDES.filter(function(x){ return x.id === route.id; })[0];
     var fill = document.querySelector('[data-barfill]');
     var label = document.querySelector('[data-barlabel]');
     if(g && fill){
@@ -1820,20 +1647,20 @@ function refresh(){
     return;
   }
 
-  var arc = document.querySelector('[data-arc]');
-  if(arc){
+  var ring = document.querySelector('[data-ring]');
+  if(ring){
     var s = taskStats();
     var pct = s.total ? Math.round(s.done / s.total * 100) : 0;
-    arc.setAttribute('stroke-dashoffset', String(100 - pct));
-    var num = document.querySelector('[data-arcpct]');
+    ring.setAttribute('stroke-dashoffset', (RING_C * (1 - pct / 100)).toFixed(1));
+    var num = document.querySelector('[data-ringpct]');
     if(num){ num.textContent = pct; }
-    var kroky = document.querySelectorAll('.readout dd')[2];
+    var kroky = document.querySelectorAll('.stat dd')[2];
     if(kroky){ kroky.textContent = s.done + ' / ' + s.total; }
   }
 }
 
 function copyText(text, msg){
-  var ok = function(){ signal(msg); };
+  var ok = function(){ toast(msg); };
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(ok, function(){ fallbackCopy(text, ok); });
   } else {
@@ -1850,7 +1677,7 @@ function fallbackCopy(text, ok){
   document.body.appendChild(ta);
   ta.select();
   try{ document.execCommand('copy'); ok(); }
-  catch(err){ signal('Kopírování se nepovedlo'); }
+  catch(err){ toast('Kopírování se nepovedlo'); }
   document.body.removeChild(ta);
 }
 
@@ -1864,14 +1691,13 @@ readShared();
 if(!location.hash){ location.hash = '#/uvod'; }
 render();
 
-/* Oblouk vyjede z nuly, aby byl pohyb na první pohled čitelný. */
 if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-  var arc0 = document.querySelector('[data-arc]');
-  if(arc0){
-    var target = arc0.getAttribute('stroke-dashoffset');
-    arc0.setAttribute('stroke-dashoffset', '100');
+  var ring0 = document.querySelector('[data-ring]');
+  if(ring0){
+    var target = ring0.getAttribute('stroke-dashoffset');
+    ring0.setAttribute('stroke-dashoffset', RING_C.toFixed(1));
     requestAnimationFrame(function(){
-      requestAnimationFrame(function(){ arc0.setAttribute('stroke-dashoffset', target); });
+      requestAnimationFrame(function(){ ring0.setAttribute('stroke-dashoffset', target); });
     });
   }
 }
