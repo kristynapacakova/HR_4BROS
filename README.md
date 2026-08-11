@@ -35,10 +35,11 @@ V Nastavení se vybírá typ spolupráce a ten filtruje kroky v celé aplikaci:
 
 - **Zaměstnanec** — pracovní smlouva, vstupní lékařská prohlídka, BOZP s podpisem,
   přihlášení na ČSSZ a zdravotní pojišťovnu, prohlášení poplatníka daně, zápočtový
-  list, mzdový výměr, docházka a dovolená, SettleUp
+  list, mzdový výměr, dovolená
 - **OSVČ** — smlouva o spolupráci, ověření IČO a živnostenského oprávnění, fakturační
   cyklus, mlčenlivost ve smlouvě, smlouva o výpůjčce techniky, fakturace místo mzdy
-- **Společné** — Gmail, Slack, Asana, 1Password, Costlocker, technika, buddy, plán 30/60/90
+- **Společné** — Gmail, Slack, Asana, 1Password, Costlocker, **docházka** (každý vlastní
+  účet, nově v HR portálu), technika, buddy, plán 30/60/90
 
 Dokud typ vybraný není, zobrazují se kroky pro oba a ty specifické nesou odznak
 „Jen Zaměstnanec" nebo „Jen OSVČ". Na obrazovce Přístupy je i srovnávací tabulka.
@@ -81,8 +82,8 @@ nebo právníka — zákoník práce se v této oblasti opakovaně měnil.
 Postup přístupů a seznam nástrojů vychází z **interní procesní mapy Four Bros**,
 obnovené z větve `claude/dazzling-allen-z9AjG` (commit `44d838f` ji odstranil
 z HR aplikace s poznámkou „will be redone separately"). Reálný stack:
-Four Bros Gmail, Asana, 1Password, Slack, Costlocker, SettleUp, docházka
-a fakturace, iGET na vstup do budovy.
+Four Bros Gmail, Asana, 1Password, Slack, Costlocker, docházka a fakturace,
+iGET na vstup do budovy. SettleUp se už nepoužívá.
 
 Smlouvy se **nepodepisují v PandaDocu** — ten se už nepoužívá. Podepisují se
 fyzicky, případně elektronickým podpisem v HR portálu, až bude hotový.

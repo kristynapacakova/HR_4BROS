@@ -771,7 +771,8 @@ var PHASES = [
       { id:'d3',  who:'HR',      only:'zamestnanec', t:'Školení BOZP a PO absolvováno a <strong>podepsáno</strong>' },
       { id:'d3o', who:'HR',      only:'osvc', t:'Poučení o bezpečnosti a únikových východech na pracovišti' },
       { id:'d4',  who:'HR',      only:'zamestnanec', t:'Prohlášení poplatníka daně podepsáno' },
-      { id:'d5',  who:'HR',      only:'zamestnanec', t:'Nováček zaveden do docházky a mzdového systému, doplněny dny dovolené' },
+      { id:'d5h', who:'HR',      t:'Nováček zaveden do <strong>docházky</strong> — vlastní účet, nově v HR portálu' },
+      { id:'d5',  who:'HR',      only:'zamestnanec', t:'Zaveden do mzdového systému a doplněny dny dovolené' },
       { id:'d5o', who:'HR',      only:'osvc', t:'Projitá fakturace — co, kdy a jak vykazovat, aby seděla faktura', guide:'fakturace' },
       { id:'d5v', who:'HR',      t:'Nováček zaveden do {{vykazy}} a přiřazen k projektům', guide:'vykazy' },
       { id:'d6',  who:'Manažer', t:'Předán plán prvních 30 dní — písemně, ne jen ústně' },
@@ -1091,8 +1092,8 @@ var ACCESS_STEPS = [
       { id:'ac3', t:'<strong>Slack</strong> — účet založen, přiřazeny kanály podle role a klientů' },
       { id:'ac4', t:'<strong>Asana</strong> — účet založen a zařazen do <em>týmu</em>, ne jen do organizace' },
       { id:'ac5', t:'<strong>Costlocker</strong> — účet založen, přiřazeny projekty' },
-      { id:'ac6', only:'zamestnanec', t:'<strong>SettleUp</strong> — připraven link nebo QR do společné skupiny' },
-      { id:'ac7', only:'zamestnanec', t:'<strong>Docházka</strong> — účet založen, doplněn počet dní dovolené' },
+      { id:'ac7', t:'<strong>Docházka</strong> — založen <strong>vlastní účet</strong> (nově v HR portálu), sdílené přihlášení se nepoužívá' },
+      { id:'ac7d',only:'zamestnanec', t:'Doplněn počet dní dovolené' },
       { id:'ac7o',only:'osvc', t:'<strong>Fakturace</strong> — nastaven přístup a domluvený fakturační cyklus' },
       { id:'ac8', t:'Ověřeno, že máme <strong>volné licence</strong> ve všech placených nástrojích' },
       { id:'ac9', t:'Všechny přihlašovací údaje uloženy do 1Passwordu' }
@@ -1118,9 +1119,9 @@ var ACCESS_STEPS = [
       { id:'ac17', t:'1Password — Master Password, <strong>Emergency Kit</strong>, vaulty, rozšíření', tool:'onepassword' },
       { id:'ac18', t:'Slack — profil, kanály, aplikace v telefonu', tool:'slack' },
       { id:'ac19', t:'Asana a Costlocker — zaškolení vede teamleader', tool:'asana' },
-      { id:'ac20', only:'zamestnanec', t:'Docházka — projití procesu a dovolené', tool:'dochazka' },
+      { id:'ac20', t:'Docházka — projití procesu na vlastním účtu', tool:'dochazka' },
+      { id:'ac20d',only:'zamestnanec', t:'Dovolená — kde se o ni žádá a kdo ji schvaluje', tool:'dochazka' },
       { id:'ac20o',only:'osvc', t:'Fakturace — projití procesu a fakturačního cyklu', tool:'dochazka' },
-      { id:'ac21', only:'zamestnanec', t:'SettleUp — připojení do skupiny na drobné výdaje' },
       { id:'ac22', t:'Nováček se <strong>přede mnou přihlásil</strong> do všech nástrojů' }
     ]
   }
@@ -1194,12 +1195,14 @@ var TOOLS = [
   },
   {
     id:'dochazka', name:'Docházka a fakturace', tag:'Administrativa',
-    lead:'Krátké, ale nepřeskakuj to — chybějící dny dovolené se řeší až v okamžiku, kdy si o ni nováček požádá.',
+    lead:'Docházku má každý — zaměstnanec i OSVČ. Nově běží v HR portálu a každý má vlastní účet.',
     steps:[
-      'Projděte proces docházky — jak se zapisuje příchod a odchod.',
-      'Projděte proces fakturace, pokud se ho nováček týká (jinak platí u OSVČ).',
-      '<strong>Doplň počet dní dovolené</strong> do systému. Na tohle se zapomíná.',
-      'Ukaž, kde si nováček žádá o dovolenou a kdo mu ji schvaluje.'
+      'Založ <strong>vlastní účet</strong>. Sdílené přihlášení do docházky nepoužíváme, ani u OSVČ.',
+      'Projděte, jak se zapisuje příchod a odchod, a nech nováčka zapsat dnešek.',
+      '<strong>U zaměstnance:</strong> doplň počet dní dovolené do systému. Na tohle se zapomíná nejčastěji.',
+      '<strong>U zaměstnance:</strong> ukaž, kde si žádá o dovolenou a kdo mu ji schvaluje.',
+      '<strong>U OSVČ:</strong> projděte fakturační cyklus — kdy fakturuje a co je podkladem.',
+      'Dokud běží přechod do HR portálu, ověř, ve kterém systému má nováček docházku vést, ať nezapisuje do starého.'
     ]
   }
 ];
@@ -1836,10 +1839,9 @@ function viewPristupy(params){
    ['Zápočtový list','Vyžádat od předchozího zaměstnavatele','Neřeší se'],
    ['Odměna','Mzda a výplatní páska','Faktura podle domluveného cyklu'],
    ['Dovolená','Nárok v dnech, eviduje se','Bez nároku, jen domluvená nedostupnost'],
-   ['Docházka','Eviduje se','Neeviduje se'],
+   ['Docházka','Vlastní účet v HR portálu','Vlastní účet v HR portálu'],
    ['Costlocker','Vykazuje hodiny','Vykazuje hodiny — je z nich faktura'],
    ['Technika','Svěřený majetek, předávací protokol','Vlastní, nebo výpůjčka smlouvou'],
-   ['SettleUp','Ano','Obvykle ne'],
    ['Gmail, Slack, Asana, 1Password','Ano','Ano']
   ].forEach(function(r){
     h += '<tr><td><strong>' + esc(r[0]) + '</strong></td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
