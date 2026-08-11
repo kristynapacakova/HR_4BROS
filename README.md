@@ -22,12 +22,27 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 - **Přehled** — postup v procentech, kolikátý je den onboardingu, aktuální fáze a co je na řadě
 - **Postup** — sedm rozbalovacích fází, celkem 62 odškrtávacích kroků s odznakem role, která je má na starosti
 - **Přístupy** — kompletní postup zajištění přístupů novému kolegovi: založení účtů, fyzické přístupy, nastavení nástrojů krok za krokem a 14 řešených zádrhelů
-- **Návody** — 17 návodů krok za krokem: přihlášení do nástrojů, přístupy do klientských účtů, výkazy hodin, první call s klientem, kontrola výstupů před odesláním, mlčenlivost a klientská data, náš brand manuál, e-mailový podpis a další
+- **Návody** — 18 návodů krok za krokem: přihlášení do nástrojů, přístupy do klientských účtů, výkazy hodin, první call s klientem, kontrola výstupů před odesláním, mlčenlivost a klientská data, náš brand manuál, e-mailový podpis a další
 - **Značka** — pravidla z brand manuálu pro každého, kdo píše klientovi
 - **Kdo je kdo** — posádka Four Bros a na co se koho ptát
 - **Termíny** — zákonné lhůty při nástupu
 - **Šablony** — uvítací e-mail, oznámení týmu, plán 30/60/90, dotazník ve 30. dni (jen v režimu HR)
-- **Nastavení** — firemní údaje a údaje o novém kolegovi
+- **Nastavení** — firemní údaje, údaje o novém kolegovi a **typ spolupráce**
+
+### Zaměstnanec vs. OSVČ
+
+V Nastavení se vybírá typ spolupráce a ten filtruje kroky v celé aplikaci:
+
+- **Zaměstnanec** — pracovní smlouva, vstupní lékařská prohlídka, BOZP s podpisem,
+  přihlášení na ČSSZ a zdravotní pojišťovnu, prohlášení poplatníka daně, zápočtový
+  list, mzdový výměr, docházka a dovolená, SettleUp
+- **OSVČ** — smlouva o spolupráci, ověření IČO a živnostenského oprávnění, fakturační
+  cyklus, mlčenlivost ve smlouvě, smlouva o výpůjčce techniky, fakturace místo mzdy
+- **Společné** — Gmail, Slack, Asana, 1Password, Costlocker, technika, buddy, plán 30/60/90
+
+Dokud typ vybraný není, zobrazují se kroky pro oba a ty specifické nesou odznak
+„Jen Zaměstnanec" nebo „Jen OSVČ". Na obrazovce Přístupy je i srovnávací tabulka.
+Postup v procentech se počítá jen z kroků, které pro daný typ platí.
 
 ### Jak se používá
 

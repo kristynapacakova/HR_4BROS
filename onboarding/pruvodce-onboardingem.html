@@ -275,6 +275,14 @@ li::marker{color:var(--ink-light);}
 .pill.now{background:var(--accent-soft);color:var(--accent-ink);}
 .pill.now::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);}
 .pill.ok{background:var(--accent-soft);color:var(--accent-ink);}
+.pill.only{background:transparent;border:1px solid var(--line);color:var(--ink-muted);}
+
+.mode{
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
+  background:var(--surface);border-radius:var(--r);padding:.75rem 1rem;
+  font-size:var(--t-sm);color:var(--ink-muted);
+}
+.mode > span:last-child{flex:1;min-width:12rem;}
 
 .btn{
   font-family:var(--body);font-size:var(--t-sm);font-weight:500;
@@ -550,6 +558,13 @@ td.nw{white-space:nowrap;color:var(--ink-muted);font-variant-numeric:tabular-num
   padding:.6rem .75rem;width:100%;
   transition:border-color .16s ease,box-shadow .16s ease;
 }
+.field select{
+  font-family:var(--body);font-size:var(--t-base);font-weight:300;color:var(--ink);
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:.6rem .75rem;width:100%;cursor:pointer;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
 .field input::placeholder{color:var(--ink-light);}
 .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
 fieldset{border:0;padding:0;margin:0;display:grid;gap:1rem;min-width:0;}
@@ -692,6 +707,8 @@ var SETTINGS = [
 var PROFILE = [
   { key:'jmeno',   label:'Jméno nového kolegy', ph:'Jan Novák' },
   { key:'pozice',  label:'Pozice',              ph:'název pozice' },
+  { key:'uvazek',  label:'Typ spolupráce',      ph:'vyber',
+    options:[['zamestnanec','Zaměstnanec'],['osvc','OSVČ']] },
   { key:'nastup',  label:'Datum nástupu',       ph:'1. 9. 2026', type:'date' },
   { key:'manazer', label:'Přímý nadřízený',     ph:'jméno' },
   { key:'buddy',   label:'Buddy',               ph:'jméno' }
@@ -705,15 +722,21 @@ var PHASES = [
     id:'pred', title:'Před nástupem', when:'2 týdny předem', from:-14, to:-1,
     intro:'V den nástupu je všechno připravené a nový člověk ví, kam a v kolik má přijít. Nic z toho se nedá stihnout ráno v den D.',
     tasks:[
-      { id:'p1',  who:'HR',      t:'Smlouva vyhotovena a podepsána oběma stranami — <strong>fyzicky</strong>, nebo elektronickým podpisem v HR portálu', guide:'smlouvy' },
+      { id:'p1',  who:'HR',      only:'zamestnanec', t:'<strong>Pracovní smlouva</strong> vyhotovena a podepsána oběma stranami — fyzicky, nebo elektronickým podpisem v HR portálu', guide:'smlouvy' },
+      { id:'p1o', who:'HR',      only:'osvc', t:'<strong>Smlouva o spolupráci</strong> vyhotovena a podepsána — fyzicky, nebo elektronickým podpisem v HR portálu', guide:'smlouvy' },
+      { id:'p1c', who:'HR',      only:'osvc', t:'Ověřeno IČO a doloženo živnostenské oprávnění pro danou činnost' },
+      { id:'p1d', who:'HR',      only:'osvc', t:'Domluven <strong>fakturační cyklus a splatnost</strong> — kdy fakturuje, na jaké údaje, komu posílá', guide:'fakturace' },
+      { id:'p1e', who:'HR',      only:'osvc', t:'Ve smlouvě ošetřena <strong>mlčenlivost a ochrana osobních údajů</strong> klientů' },
       { id:'p1b', who:'Vedení',   t:'Smlouva projita s novým kolegou bod po bodu <strong>ještě před podpisem</strong>' },
-      { id:'p2',  who:'HR',      t:'Vstupní lékařská prohlídka objednána a absolvována <strong>před</strong> vznikem pracovního poměru', guide:'prohlidka' },
-      { id:'p3',  who:'HR',      t:'Mzdový výměr připraven, pokud mzda není přímo ve smlouvě' },
-      { id:'p4',  who:'HR',      t:'Osobní dotazník, prohlášení poplatníka daně, číslo účtu, kontakt pro případ nouze' },
-      { id:'p5',  who:'HR',      t:'Informace o zpracování osobních údajů (GDPR) předána a založena' },
-      { id:'p6',  who:'HR',      t:'Vyžádán zápočtový list od předchozího zaměstnavatele' },
+      { id:'p2',  who:'HR',      only:'zamestnanec', t:'Vstupní lékařská prohlídka objednána a absolvována <strong>před</strong> vznikem pracovního poměru', guide:'prohlidka' },
+      { id:'p3',  who:'HR',      only:'zamestnanec', t:'Mzdový výměr připraven, pokud mzda není přímo ve smlouvě' },
+      { id:'p4',  who:'HR',      only:'zamestnanec', t:'Osobní dotazník, prohlášení poplatníka daně, číslo účtu, kontakt pro případ nouze' },
+      { id:'p4o', who:'HR',      only:'osvc', t:'Fakturační údaje, číslo účtu a kontakt pro případ nouze' },
+      { id:'p5',  who:'HR',      only:'zamestnanec', t:'Informace o zpracování osobních údajů (GDPR) předána a založena' },
+      { id:'p6',  who:'HR',      only:'zamestnanec', t:'Vyžádán zápočtový list od předchozího zaměstnavatele' },
       { id:'p7',  who:'HR',      t:'Založen osobní spis', guide:'spis' },
       { id:'p8',  who:'IT',      t:'Notebook a telefon připraveny, nastaveny a <strong>vyzkoušeny</strong>' },
+      { id:'p8o', who:'HR',      only:'osvc', t:'Pokud dostává firemní techniku, připravena <strong>smlouva o výpůjčce</strong> a předávací protokol' },
       { id:'p9',  who:'IT',      t:'Pracovní e-mail {{emailTvar}} vytvořen, podpis podle brand manuálu', guide:'podpis' },
       { id:'p10', who:'IT',      t:'Přístupy do {{projekty}}, {{disk}}, {{chat}}, {{vykazy}} a {{hesla}}', guide:'systemy' },
       { id:'p11', who:'IT',      t:'Karta, klíče nebo kód od budovy' },
@@ -745,9 +768,12 @@ var PHASES = [
     tasks:[
       { id:'d1',  who:'HR',      t:'Někdo konkrétní čeká na místě v domluvený čas — nikdo nestojí ve dveřích sám' },
       { id:'d2',  who:'IT',      t:'Přihlášení do všech systémů ověřeno přímo s nováčkem', guide:'systemy' },
-      { id:'d3',  who:'HR',      t:'Školení BOZP a PO absolvováno a <strong>podepsáno</strong>' },
-      { id:'d4',  who:'HR',      t:'Prohlášení poplatníka daně podepsáno' },
-      { id:'d5',  who:'HR',      t:'Nováček zaveden do docházky, výkazů hodin a mzdového systému', guide:'vykazy' },
+      { id:'d3',  who:'HR',      only:'zamestnanec', t:'Školení BOZP a PO absolvováno a <strong>podepsáno</strong>' },
+      { id:'d3o', who:'HR',      only:'osvc', t:'Poučení o bezpečnosti a únikových východech na pracovišti' },
+      { id:'d4',  who:'HR',      only:'zamestnanec', t:'Prohlášení poplatníka daně podepsáno' },
+      { id:'d5',  who:'HR',      only:'zamestnanec', t:'Nováček zaveden do docházky a mzdového systému, doplněny dny dovolené' },
+      { id:'d5o', who:'HR',      only:'osvc', t:'Projitá fakturace — co, kdy a jak vykazovat, aby seděla faktura', guide:'fakturace' },
+      { id:'d5v', who:'HR',      t:'Nováček zaveden do {{vykazy}} a přiřazen k projektům', guide:'vykazy' },
       { id:'d6',  who:'Manažer', t:'Předán plán prvních 30 dní — písemně, ne jen ústně' },
       { id:'d7',  who:'Manažer', t:'Zadán první konkrétní úkol na reálném klientovi, dokončitelný do konce týdne' },
       { id:'d8',  who:'Buddy',   t:'Oběd proběhl a nováček ví, komu psát, když si neví rady' },
@@ -759,16 +785,17 @@ var PHASES = [
     id:'tyden1', title:'První týden', when:'Dny 2–5', from:1, to:7,
     intro:'Nový člověk rozumí tomu, co firma dělá a komu, zná svoje nástroje a odvedl první skutečnou práci.',
     tasks:[
-      { id:'t1', who:'HR',      t:'Přihlášení na ČSSZ podáno — <strong>do 8 kalendářních dnů</strong> od nástupu' },
-      { id:'t2', who:'HR',      t:'Přihlášení u zdravotní pojišťovny — <strong>do 8 dnů</strong> od nástupu' },
-      { id:'t3', who:'HR',      t:'Písemná informace o obsahu pracovního poměru předána — <strong>do 7 dnů</strong>' },
+      { id:'t1', who:'HR',      only:'zamestnanec', t:'Přihlášení na ČSSZ podáno — <strong>do 8 kalendářních dnů</strong> od nástupu' },
+      { id:'t2', who:'HR',      only:'zamestnanec', t:'Přihlášení u zdravotní pojišťovny — <strong>do 8 dnů</strong> od nástupu' },
+      { id:'t3', who:'HR',      only:'zamestnanec', t:'Písemná informace o obsahu pracovního poměru předána — <strong>do 7 dnů</strong>' },
       { id:'t4', who:'Manažer', t:'Projito portfolio klientů — kdo jsou, co pro ně děláme a kdo je má na starosti' },
       { id:'t5', who:'Manažer', t:'Nováček se zúčastnil reálného callu s klientem jako pozorovatel', guide:'call' },
       { id:'t9', who:'IT',      t:'Přístupy do klientských účtů (Google Ads, Meta, GA4, Search Console)', guide:'ucty' },
       { id:'t10',who:'HR',      t:'Podepsaná mlčenlivost o klientských datech', guide:'mlcenlivost' },
       { id:'t6', who:'Manažer', t:'Proběhlo první 1:1 — pátek, 20 minut', guide:'jednanajedna' },
       { id:'t7', who:'HR',      t:'Krátký dotaz na spokojenost — tři otázky, ne dotazník na 20 minut' },
-      { id:'t8', who:'HR',      t:'Nováček si první týden sám vykázal hodiny a někdo mu to zkontroloval', guide:'vykazy' }
+      { id:'t8', who:'HR',      t:'Nováček si první týden sám vykázal hodiny a někdo mu to zkontroloval', guide:'vykazy' },
+      { id:'t8o',who:'HR',      only:'osvc', t:'Vystavena a zkontrolována <strong>první faktura</strong> — ať se chyby chytí hned', guide:'fakturace' }
     ]
   },
   {
@@ -824,6 +851,18 @@ var PHASES = [
    4. NÁVODY
    ============================================================ */
 var GUIDES = [
+  { id:'fakturace', icon:'money', title:'Fakturace pro OSVČ',
+    lead:'Místo mzdy chodí faktura. Když se to nastaví hned první měsíc, nikdo se pak nedohaduje.',
+    steps:[
+      'Domluvte <strong>fakturační cyklus</strong> — obvykle měsíčně za uplynulý měsíc — a den, do kterého má faktura dorazit.',
+      'Podkladem je <strong>výkaz v {{vykazy}}</strong>. Hodiny na faktuře musí sedět s vykázanými, jinak to nikdo neodsouhlasí.',
+      'Před vystavením si výkaz projdi a zkontroluj, že máš vykázané všechno — zpětně se to dohledává špatně.',
+      'Na faktuře musí být: tvoje IČO, DIČ pokud jsi plátce DPH, číslo účtu, období, popis práce a splatnost.',
+      'Popis piš srozumitelně — ne „práce", ale co a pro koho.',
+      'Fakturu pošli na domluvenou adresu, ne konkrétnímu člověku do soukromé pošty.',
+      'Když je něco špatně, řeší se to <strong>opravným dokladem</strong>, ne přepsáním a novým odesláním.',
+      'Splatnost si ohlídej sám. Když platba nedorazí, ozvi se — není to nezdvořilost, je to normální součást podnikání.'
+    ]},
   { id:'smlouvy', icon:'docs', title:'Podpis smlouvy',
     lead:'Dvě cesty: fyzicky, nebo elektronicky přes HR portál. Portál se zatím dokončuje, takže reálně podepisujeme fyzicky.',
     steps:[
@@ -1052,8 +1091,9 @@ var ACCESS_STEPS = [
       { id:'ac3', t:'<strong>Slack</strong> — účet založen, přiřazeny kanály podle role a klientů' },
       { id:'ac4', t:'<strong>Asana</strong> — účet založen a zařazen do <em>týmu</em>, ne jen do organizace' },
       { id:'ac5', t:'<strong>Costlocker</strong> — účet založen, přiřazeny projekty' },
-      { id:'ac6', t:'<strong>SettleUp</strong> — připraven link nebo QR do společné skupiny' },
-      { id:'ac7', t:'<strong>Docházka &amp; fakturace</strong> — účet založen, doplněn počet dní dovolené' },
+      { id:'ac6', only:'zamestnanec', t:'<strong>SettleUp</strong> — připraven link nebo QR do společné skupiny' },
+      { id:'ac7', only:'zamestnanec', t:'<strong>Docházka</strong> — účet založen, doplněn počet dní dovolené' },
+      { id:'ac7o',only:'osvc', t:'<strong>Fakturace</strong> — nastaven přístup a domluvený fakturační cyklus' },
       { id:'ac8', t:'Ověřeno, že máme <strong>volné licence</strong> ve všech placených nástrojích' },
       { id:'ac9', t:'Všechny přihlašovací údaje uloženy do 1Passwordu' }
     ]
@@ -1078,8 +1118,9 @@ var ACCESS_STEPS = [
       { id:'ac17', t:'1Password — Master Password, <strong>Emergency Kit</strong>, vaulty, rozšíření', tool:'onepassword' },
       { id:'ac18', t:'Slack — profil, kanály, aplikace v telefonu', tool:'slack' },
       { id:'ac19', t:'Asana a Costlocker — zaškolení vede teamleader', tool:'asana' },
-      { id:'ac20', t:'Docházka a fakturace — projití procesu', tool:'dochazka' },
-      { id:'ac21', t:'SettleUp — připojení do skupiny na drobné výdaje' },
+      { id:'ac20', only:'zamestnanec', t:'Docházka — projití procesu a dovolené', tool:'dochazka' },
+      { id:'ac20o',only:'osvc', t:'Fakturace — projití procesu a fakturačního cyklu', tool:'dochazka' },
+      { id:'ac21', only:'zamestnanec', t:'SettleUp — připojení do skupiny na drobné výdaje' },
       { id:'ac22', t:'Nováček se <strong>přede mnou přihlásil</strong> do všech nástrojů' }
     ]
   }
@@ -1436,9 +1477,10 @@ function currentPhase(){
 }
 
 function phaseStats(p){
+  var list = tasksOf(p);
   var done = 0;
-  p.tasks.forEach(function(t){ if(state.done['t:' + t.id]){ done++; } });
-  return { total:p.tasks.length, done:done };
+  list.forEach(function(t){ if(state.done['t:' + t.id]){ done++; } });
+  return { total:list.length, done:done };
 }
 
 function taskStats(){
@@ -1529,7 +1571,7 @@ function viewUvod(){
 
   var next = [];
   PHASES.forEach(function(p){
-    p.tasks.forEach(function(t){
+    tasksOf(p).forEach(function(t){
       if(!state.done['t:' + t.id] && next.length < 5){ next.push(t); }
     });
   });
@@ -1576,6 +1618,17 @@ function jumpTile(route, icon, title, desc){
     '<p>' + esc(desc) + '</p></a>';
 }
 
+/* Pruh, který říká, pro koho jsou kroky filtrované. */
+function modeBanner(){
+  var u = state.profile.uvazek;
+  if(u){
+    return '<div class="mode"><span class="pill now">' + esc(UVAZEK_LABEL[u]) + '</span>' +
+      '<span>Zobrazené kroky platí pro tenhle typ spolupráce. Přepnout jde v <a href="#/nastaveni">Nastavení</a>.</span></div>';
+  }
+  return '<div class="mode"><span class="pill">Vše</span>' +
+    '<span>Typ spolupráce zatím není vybraný, takže vidíš kroky pro zaměstnance i OSVČ. Vyber ho v <a href="#/nastaveni">Nastavení</a> a seznam se zkrátí.</span></div>';
+}
+
 /* ---------- Postup ---------- */
 function viewPlan(){
   var cur = currentPhase();
@@ -1585,6 +1638,7 @@ function viewPlan(){
   h +=   '<h1>Postup nástupu</h1>';
   h +=   '<p class="lede">Sedm fází od dvou týdnů před nástupem po konec prvního roku. Klikni na fázi a rozbal si její kroky.</p>';
   h += '</div>';
+  h += modeBanner();
 
   h += '<ul class="phases">';
   PHASES.forEach(function(p, i){
@@ -1614,7 +1668,7 @@ function viewPlan(){
       h += '</tbody></table></div>';
     }
     h +=     '<ul class="tasks">';
-    p.tasks.forEach(function(t){ h += taskRow(t); });
+    tasksOf(p).forEach(function(t){ h += taskRow(t); });
     h +=     '</ul>';
     h +=   '</div>';
     h += '</details></li>';
@@ -1629,7 +1683,7 @@ function taskRow(t){
   var h = '<li><div class="task">';
   h += '<label class="task-main"><input type="checkbox" data-task="' + esc(t.id) + '"' + checked + '>';
   h += '<span class="text">' + fillIn(t.t) + '</span></label>';
-  h += '<div class="task-sub"><span class="pill">' + esc(t.who) + '</span>';
+  h += '<div class="task-sub"><span class="pill">' + esc(t.who) + '</span>' + onlyBadge(t);
   if(t.guide){ h += '<button class="helper" data-goguide="' + esc(t.guide) + '">Návod</button>'; }
   h += '</div></div></li>';
   return h;
@@ -1707,6 +1761,7 @@ function viewPristupy(params){
   h +=   '<h1>Přístupy pro nového kolegu</h1>';
   h +=   '<p class="lede">Kompletní postup od založení účtů po první přihlášení. Dole jsou řešení zádrhelů, které se opakují nejčastěji.</p>';
   h += '</div>';
+  h += modeBanner();
 
   h += '<section class="group"><h2>Tři pravidla, ze kterých plyne zbytek</h2>';
   h +=   '<div class="rules">';
@@ -1720,21 +1775,24 @@ function viewPristupy(params){
   h += '<section class="group"><h2>Postup</h2>';
   h +=   '<ul class="phases">';
   ACCESS_STEPS.forEach(function(ph, i){
+    var list = tasksOf(ph);
     var done = 0;
-    ph.tasks.forEach(function(t){ if(state.done['t:' + t.id]){ done++; } });
+    list.forEach(function(t){ if(state.done['t:' + t.id]){ done++; } });
     h += '<li><details class="phase" data-phase="' + esc(ph.id) + '"' + (i === 0 ? ' open' : '') + '>';
     h +=   '<summary><div style="flex:1;min-width:0"><h3>' + esc(ph.title) + '</h3>' +
              '<span class="when">' + esc(ph.when) + ' · ' + esc(ph.who) + '</span></div>';
-    h +=     '<span class="count" data-count>' + done + '/' + ph.tasks.length + '</span>' + CHEV + '</summary>';
+    h +=     '<span class="count" data-count>' + done + '/' + list.length + '</span>' + CHEV + '</summary>';
     h +=   '<div class="phase-body"><p>' + esc(ph.intro) + '</p><ul class="tasks">';
-    ph.tasks.forEach(function(t){
+    list.forEach(function(t){
       var checked = state.done['t:' + t.id] ? ' checked' : '';
       h += '<li><div class="task">';
       h +=   '<label class="task-main"><input type="checkbox" data-task="' + esc(t.id) + '"' + checked + '>';
       h +=   '<span class="text">' + fillIn(t.t) + '</span></label>';
+      h += '<div class="task-sub"><span class="pill">' + esc(ph.who) + '</span>' + onlyBadge(t);
       if(t.tool){
-        h += '<div class="task-sub"><button class="helper" data-gotool="' + esc(t.tool) + '">Postup krok za krokem</button></div>';
+        h += '<button class="helper" data-gotool="' + esc(t.tool) + '">Postup krok za krokem</button>';
       }
+      h += '</div>';
       h += '</div></li>';
     });
     h +=   '</ul></div>';
@@ -1765,6 +1823,28 @@ function viewPristupy(params){
     h += '</ol></details></li>';
   });
   h +=   '</ul>';
+  h += '</section>';
+
+  h += '<section class="group"><h2>Zaměstnanec vs. OSVČ</h2>';
+  h +=   '<p class="lede">Nástroje jsou skoro stejné. Liší se smluvní a mzdová část — a právě tam se dělají chyby.</p>';
+  h +=   '<div class="tablewrap"><table><thead><tr><th>Co</th><th>Zaměstnanec</th><th>OSVČ</th></tr></thead><tbody>';
+  [['Smlouva','Pracovní smlouva','Smlouva o spolupráci'],
+   ['Vstupní lékařská prohlídka','Povinná před nástupem','Neřeší se'],
+   ['BOZP a PO','Povinné školení s podpisem','Poučení o bezpečnosti na pracovišti'],
+   ['ČSSZ a zdravotní pojišťovna','Přihlásí HR do 8 dnů','Řeší si sám'],
+   ['Prohlášení poplatníka daně','Do 30 dnů od nástupu','Neřeší se'],
+   ['Zápočtový list','Vyžádat od předchozího zaměstnavatele','Neřeší se'],
+   ['Odměna','Mzda a výplatní páska','Faktura podle domluveného cyklu'],
+   ['Dovolená','Nárok v dnech, eviduje se','Bez nároku, jen domluvená nedostupnost'],
+   ['Docházka','Eviduje se','Neeviduje se'],
+   ['Costlocker','Vykazuje hodiny','Vykazuje hodiny — je z nich faktura'],
+   ['Technika','Svěřený majetek, předávací protokol','Vlastní, nebo výpůjčka smlouvou'],
+   ['SettleUp','Ano','Obvykle ne'],
+   ['Gmail, Slack, Asana, 1Password','Ano','Ano']
+  ].forEach(function(r){
+    h += '<tr><td><strong>' + esc(r[0]) + '</strong></td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
+  });
+  h +=   '</tbody></table></div>';
   h += '</section>';
 
   h += '<div class="btns"><button class="btn ghost" data-print>Vytisknout celý postup</button></div>';
@@ -2024,12 +2104,37 @@ function viewNastaveni(){
 }
 
 function fieldHtml(f, value, scope){
-  return '<div class="field">' +
-    '<label for="f-' + esc(f.key) + '">' + esc(f.label) + '</label>' +
-    '<input id="f-' + esc(f.key) + '" type="' + (f.type || 'text') + '" value="' + esc(value) + '" ' +
-    'placeholder="' + esc(f.ph || '') + '" data-scope="' + scope + '" data-key="' + esc(f.key) + '">' +
-  '</div>';
+  var control;
+  if(f.options){
+    control = '<select id="f-' + esc(f.key) + '" data-scope="' + scope + '" data-key="' + esc(f.key) + '">' +
+      '<option value="">— nevybráno —</option>' +
+      f.options.map(function(o){
+        return '<option value="' + esc(o[0]) + '"' + (value === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>';
+      }).join('') + '</select>';
+  } else {
+    control = '<input id="f-' + esc(f.key) + '" type="' + (f.type || 'text') + '" value="' + esc(value) + '" ' +
+      'placeholder="' + esc(f.ph || '') + '" data-scope="' + scope + '" data-key="' + esc(f.key) + '">';
+  }
+  return '<div class="field"><label for="f-' + esc(f.key) + '">' + esc(f.label) + '</label>' + control + '</div>';
 }
+
+/* Krok se zobrazí, pokud není vázaný na typ spolupráce, nebo pokud typ sedí.
+   Dokud není typ vybraný, ukazujeme všechno a odlišíme to odznakem. */
+function appliesTo(item){
+  if(!item.only){ return true; }
+  var u = state.profile.uvazek;
+  if(!u){ return true; }
+  return item.only === u;
+}
+
+var UVAZEK_LABEL = { zamestnanec:'Zaměstnanec', osvc:'OSVČ' };
+
+function onlyBadge(item){
+  if(!item.only || state.profile.uvazek){ return ''; }
+  return '<span class="pill only">Jen ' + esc(UVAZEK_LABEL[item.only] || item.only) + '</span>';
+}
+
+function tasksOf(p){ return p.tasks.filter(appliesTo); }
 
 /* ============================================================
    9. ROUTER
@@ -2157,9 +2262,12 @@ document.addEventListener('change', function(e){
   }
 
   if(t.matches('[data-scope]')){
-    state[t.getAttribute('data-scope')][t.getAttribute('data-key')] = t.value.trim();
+    var key = t.getAttribute('data-key');
+    state[t.getAttribute('data-scope')][key] = t.value.trim();
     save();
     document.getElementById('logoName').textContent = state.config.firma || 'Four Bros';
+    /* Typ spolupráce mění, které kroky se zobrazují — je potřeba překreslit. */
+    if(key === 'uvazek'){ render(); }
     return;
   }
 });
@@ -2168,8 +2276,9 @@ document.addEventListener('change', function(e){
 function refresh(){
   renderChrome();
 
+  var allPhases = PHASES.concat(ACCESS_STEPS);
   document.querySelectorAll('[data-phase]').forEach(function(el){
-    var p = PHASES.filter(function(x){ return x.id === el.getAttribute('data-phase'); })[0];
+    var p = allPhases.filter(function(x){ return x.id === el.getAttribute('data-phase'); })[0];
     if(!p){ return; }
     var st = phaseStats(p);
     var count = el.querySelector('[data-count]');
