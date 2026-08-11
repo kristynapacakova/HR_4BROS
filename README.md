@@ -16,10 +16,10 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 ### Obrazovky
 
 - **Přehled** — postup v procentech, kolikátý je den onboardingu, aktuální fáze a co je na řadě
-- **Postup** — sedm rozbalovacích fází, celkem 59 odškrtávacích kroků s odznakem role, která je má na starosti
-- **Návody** — 12 návodů krok za krokem (přihlášení do systémů, e-mailový podpis, docházka a nemoc, první schůzka s klientem, kam co ukládat, vizitky, hodnoticí 1:1 a další)
+- **Postup** — sedm rozbalovacích fází, celkem 62 odškrtávacích kroků s odznakem role, která je má na starosti
+- **Návody** — 16 návodů krok za krokem: přihlášení do nástrojů, přístupy do klientských účtů, výkazy hodin, první call s klientem, kontrola výstupů před odesláním, mlčenlivost a klientská data, náš brand manuál, e-mailový podpis a další
 - **Značka** — pravidla z brand manuálu pro každého, kdo píše klientovi
-- **Kdo je kdo** — na co se ptát buddyho, nadřízeného, HR a IT
+- **Kdo je kdo** — posádka Four Bros a na co se koho ptát
 - **Termíny** — zákonné lhůty při nástupu
 - **Šablony** — uvítací e-mail, oznámení týmu, plán 30/60/90, dotazník ve 30. dni (jen v režimu HR)
 - **Nastavení** — firemní údaje a údaje o novém kolegovi
@@ -56,10 +56,22 @@ Tabulka zákonných termínů slouží jako připomínka, co nesmí zapadnout, n
 výklad. Konkrétní lhůty a maximální délku zkušební doby si nech potvrdit od účetní
 nebo právníka — zákoník práce se v této oblasti opakovaně měnil.
 
+## Obsah je psaný na agenturu
+
+Kroky i návody vycházejí z toho, že Four Bros je full-service marketingová agentura:
+klientské účty (Google Ads, Meta, GA4, Search Console), výkazy odpracovaných hodin,
+cally s klientem, kontrola výstupů před odesláním, mlčenlivost o klientských datech
+a rozdíl mezi naším brand manuálem a brand manuálem klienta.
+
+Posádka na obrazovce „Kdo je kdo" je předvyplněná podle veřejného webu — Víťa, Honza,
+Kristýna, Jessica a Matúš, Radim, Zdenda a Filip. Uprav ji v poli `CREW` v souboru,
+pokud se složení změní.
+
 ## Vizuální styl
 
-Čistý, moderní vzhled: vzdušné bílé plochy, měkce zaoblené karty, jemné stíny
-a vzdušná typografie. Členění nese odstup a plocha, ne rámečky.
+Postranní panel v primární barvě Four Bros Navy, bílá pracovní plocha, měkce zaoblené
+karty a vzdušná typografie. Za hlavičkou přehledu je jemná brushová plocha podle
+kapitoly 7.1 brand manuálu — lehkost, jemné tóny, decentnost.
 
 - **Fáze jsou rozbalovací** — otevřená je ta aktuální, ostatní jsou složené,
   takže se místo zdi 59 zaškrtávátek zobrazí přehledný seznam

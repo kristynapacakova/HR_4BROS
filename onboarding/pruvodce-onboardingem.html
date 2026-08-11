@@ -12,6 +12,7 @@
   --alice:#F7F8FE;
   --lightgrey:#F4F4F4;
   --violet:#7E17E0;
+  --navy-solid:#194669;
 
   /* Plochy a text */
   --bg:#FFFFFF;
@@ -35,6 +36,15 @@
   --shadow:0 1px 3px rgba(25,70,105,.06),0 8px 20px -6px rgba(25,70,105,.09);
   --shadow-lg:0 2px 6px rgba(25,70,105,.07),0 16px 40px -12px rgba(25,70,105,.14);
 
+  /* Postranní panel v primární barvě — Navy je podle manuálu hlavní barva
+     a nespadá do 5% limitu vyhrazeného pro Electric Violet. */
+  --rail:#194669;
+  --rail-ink:#EAF1F7;
+  --rail-ink-dim:#9FBBD1;
+  --rail-hover:rgba(255,255,255,.08);
+  --rail-active:rgba(255,255,255,.14);
+  --rail-line:rgba(255,255,255,.14);
+
   /* Písma (brandbook 5.1–5.4) */
   --display:'Serenity','Serenity Light','Futura','Avenir Next','Century Gothic','Questrial','Trebuchet MS',sans-serif;
   --body:'Roboto','Roboto Light','Helvetica Neue','Segoe UI',Arial,sans-serif;
@@ -45,8 +55,8 @@
   --t-md:1.0625rem;
   --t-lg:1.1875rem;
   --t-xl:1.375rem;
-  --t-2xl:clamp(1.55rem,2.6vw,1.9rem);
-  --t-3xl:clamp(1.9rem,4vw,2.75rem);
+  --t-2xl:clamp(1.6rem,2.8vw,2.05rem);
+  --t-3xl:clamp(2.15rem,4.8vw,3.5rem);
 
   --r-sm:8px;
   --r:12px;
@@ -78,6 +88,12 @@
     --shadow-sm:0 1px 2px rgba(0,0,0,.3);
     --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 20px -6px rgba(0,0,0,.4);
     --shadow-lg:0 2px 6px rgba(0,0,0,.35),0 16px 40px -12px rgba(0,0,0,.5);
+    --rail:#0A1826;
+    --rail-ink:#D7E3ED;
+    --rail-ink-dim:#8CA4B8;
+    --rail-hover:rgba(255,255,255,.06);
+    --rail-active:rgba(255,255,255,.1);
+    --rail-line:rgba(255,255,255,.1);
   }
 }
 :root[data-theme="dark"]{
@@ -100,6 +116,12 @@
   --shadow-sm:0 1px 2px rgba(0,0,0,.3);
   --shadow:0 1px 3px rgba(0,0,0,.3),0 8px 20px -6px rgba(0,0,0,.4);
   --shadow-lg:0 2px 6px rgba(0,0,0,.35),0 16px 40px -12px rgba(0,0,0,.5);
+  --rail:#0A1826;
+  --rail-ink:#D7E3ED;
+  --rail-ink-dim:#8CA4B8;
+  --rail-hover:rgba(255,255,255,.06);
+  --rail-active:rgba(255,255,255,.1);
+  --rail-line:rgba(255,255,255,.1);
 }
 
 *{box-sizing:border-box;}
@@ -128,7 +150,7 @@ h4{font-family:var(--body);font-weight:700;font-size:var(--t-base);color:var(--i
 p{margin:0;max-width:var(--measure);text-wrap:pretty;}
 strong{font-weight:700;color:var(--ink-strong);}
 a{color:var(--accent-ink);text-underline-offset:3px;}
-ul,ol{margin:0;padding-left:1.2rem;display:grid;gap:.45rem;max-width:var(--measure);}
+ul,ol{margin:0;padding-left:1.2rem;display:grid;gap:.45rem;max-width:var(--measure);align-content:start;}
 li::marker{color:var(--ink-light);}
 
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
@@ -146,40 +168,38 @@ li::marker{color:var(--ink-light);}
 @media (min-width:980px){.app{grid-template-columns:var(--side) minmax(0,1fr);}}
 
 .side{
-  min-width:0;background:var(--surface);
-  border-bottom:1px solid var(--line);
+  min-width:0;background:var(--rail);color:var(--rail-ink);
   position:sticky;top:0;z-index:40;
   display:flex;flex-direction:column;gap:.85rem;
   padding:.85rem 1rem;
 }
 @media (min-width:980px){
-  .side{
-    border-bottom:0;border-right:1px solid var(--line);
-    height:100vh;padding:1.5rem 1rem;gap:1.35rem;
-  }
+  .side{height:100vh;padding:1.6rem 1rem;gap:1.5rem;}
 }
+/* Ikony v panelu leží na tmavé ploše, musí mít vlastní barvy. */
+.side .ic .stroke{stroke:var(--rail-ink-dim);}
+.side .ic .detail{stroke:#C99BFF;}
+.side .ic .detail-fill{fill:#C99BFF;}
 
 .logo{display:flex;align-items:center;gap:.6rem;min-width:0;padding:0 .4rem;}
 .logo svg{width:30px;height:30px;flex:none;}
 .logo b{
-  font-family:var(--display);font-size:1.2rem;font-weight:400;color:var(--ink-strong);
+  font-family:var(--display);font-size:1.3rem;font-weight:400;color:#FFFFFF;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em;
 }
 
 .toggle{
-  display:flex;gap:.2rem;background:var(--surface-2);
+  display:flex;gap:.2rem;background:rgba(0,0,0,.22);
   border-radius:var(--r-full);padding:.22rem;min-width:0;
 }
 .toggle button{
   flex:1;font-family:var(--body);font-size:var(--t-sm);font-weight:500;
   background:transparent;border:0;border-radius:var(--r-full);
-  padding:.42rem .5rem;color:var(--ink-muted);cursor:pointer;white-space:nowrap;
-  transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+  padding:.42rem .5rem;color:var(--rail-ink-dim);cursor:pointer;white-space:nowrap;
+  transition:background .16s ease,color .16s ease;
 }
-.toggle button:hover{color:var(--ink-strong);}
-.toggle button[aria-pressed="true"]{
-  background:var(--bg);color:var(--ink-strong);box-shadow:var(--shadow-sm);
-}
+.toggle button:hover{color:#FFFFFF;}
+.toggle button[aria-pressed="true"]{background:#FFFFFF;color:var(--navy-solid);}
 
 .menu{display:flex;gap:.2rem;overflow-x:auto;scrollbar-width:none;min-width:0;}
 .menu::-webkit-scrollbar{display:none;}
@@ -189,36 +209,37 @@ li::marker{color:var(--ink-light);}
 .menu a{
   display:flex;align-items:center;gap:.7rem;
   padding:.6rem .75rem;border-radius:var(--r-sm);
-  color:var(--ink);text-decoration:none;font-size:var(--t-base);
+  color:var(--rail-ink);text-decoration:none;font-size:var(--t-base);
   white-space:nowrap;line-height:1.3;
   transition:background .16s ease,color .16s ease;
 }
-.menu a:hover{background:var(--bg);}
-.menu a[aria-current="page"]{
-  background:var(--bg);color:var(--ink-strong);font-weight:500;box-shadow:var(--shadow-sm);
-}
+.menu a:hover{background:var(--rail-hover);}
+.menu a[aria-current="page"]{background:var(--rail-active);color:#FFFFFF;font-weight:500;}
+.menu a[aria-current="page"] .ic .stroke{stroke:#FFFFFF;}
 .menu a svg{width:19px;height:19px;flex:none;}
 .menu a .n{
-  margin-left:auto;font-size:var(--t-xs);color:var(--ink-light);
+  margin-left:auto;font-size:var(--t-xs);color:var(--rail-ink-dim);
   font-variant-numeric:tabular-nums;
 }
 @media (max-width:979px){.menu a .n{display:none;}}
 
 .side-foot{display:none;}
 @media (min-width:980px){
-  .side-foot{display:grid;gap:.5rem;padding:0 .4rem;}
+  .side-foot{display:grid;gap:.5rem;padding:.9rem .4rem 0;border-top:1px solid var(--rail-line);}
 }
 .side-progress{display:grid;gap:.4rem;}
-.side-progress .row{display:flex;justify-content:space-between;font-size:var(--t-xs);color:var(--ink-muted);}
-.side-progress .row b{color:var(--ink-strong);font-weight:500;font-variant-numeric:tabular-nums;}
+.side-progress .row{display:flex;justify-content:space-between;font-size:var(--t-xs);color:var(--rail-ink-dim);}
+.side-progress .row b{color:#FFFFFF;font-weight:500;font-variant-numeric:tabular-nums;}
 .bar{height:5px;border-radius:var(--r-full);background:var(--surface-2);overflow:hidden;}
+.side .bar{background:rgba(255,255,255,.16);}
+.side .bar > i{background:#C99BFF;}
 .bar > i{display:block;height:100%;border-radius:var(--r-full);background:var(--accent);
   width:0;transition:width .5s cubic-bezier(.22,.61,.36,1);}
 
 .main{min-width:0;padding:clamp(1.5rem,3.5vw,3rem) clamp(1.15rem,3.5vw,3rem) 6rem;}
 .view{max-width:800px;display:grid;gap:clamp(1.75rem,3vw,2.5rem);min-width:0;}
-.group{display:grid;gap:1rem;min-width:0;}
-.head{display:grid;gap:.6rem;min-width:0;}
+.group{display:grid;gap:1rem;min-width:0;align-content:start;}
+.head{display:grid;gap:.6rem;min-width:0;align-content:start;}
 
 /* ============================================================
    PRVKY
@@ -226,9 +247,11 @@ li::marker{color:var(--ink-light);}
 .card{
   background:var(--card);border:1px solid var(--line);border-radius:var(--r);
   padding:clamp(1.15rem,2.4vw,1.5rem);display:grid;gap:.85rem;min-width:0;
+  align-content:start;
 }
 .card.soft{background:var(--surface);border-color:transparent;}
 .card.raised{box-shadow:var(--shadow);border-color:var(--line-soft);}
+.card.hero-card{padding:clamp(1.5rem,3.4vw,2.5rem);gap:1.6rem;}
 
 .duo{display:grid;gap:1rem;min-width:0;}
 @media (min-width:640px){.duo{grid-template-columns:1fr 1fr;}}
@@ -266,22 +289,41 @@ li::marker{color:var(--ink-light);}
 .btn.ghost:hover{background:var(--surface);border-color:var(--ink-light);}
 .btns{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;}
 
+/* ---------- Brushová plocha (brandbook 7.1) ---------- */
+.washed{position:relative;overflow:hidden;}
+.wash{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(58% 78% at 88% 6%, rgba(25,70,105,.13), transparent 68%),
+    radial-gradient(42% 58% at 66% 96%, rgba(126,23,224,.07), transparent 70%),
+    radial-gradient(46% 66% at 104% 56%, rgba(25,70,105,.09), transparent 72%),
+    radial-gradient(38% 52% at 30% -10%, rgba(25,70,105,.05), transparent 70%);
+}
+:root[data-theme="dark"] .wash,
+:root:not([data-theme="light"]) .wash{
+  background-image:
+    radial-gradient(58% 78% at 88% 6%, rgba(120,175,220,.16), transparent 68%),
+    radial-gradient(42% 58% at 66% 96%, rgba(180,114,255,.12), transparent 70%),
+    radial-gradient(46% 66% at 104% 56%, rgba(120,175,220,.10), transparent 72%);
+}
+.washed > *:not(.wash){position:relative;z-index:1;}
+
 /* ---------- Přehled ---------- */
 .hero{
   display:grid;gap:1.5rem;align-items:center;grid-template-columns:minmax(0,1fr);
 }
 @media (min-width:620px){.hero{grid-template-columns:minmax(0,1fr) auto;gap:2rem;}}
 
-.ring{position:relative;width:132px;height:132px;justify-self:center;flex:none;}
+.ring{position:relative;width:148px;height:148px;justify-self:center;flex:none;}
 .ring svg{width:100%;height:100%;transform:rotate(-90deg);}
-.ring .track{fill:none;stroke:var(--surface-2);stroke-width:9;}
+.ring .track{fill:none;stroke:var(--line);stroke-width:10;}
 .ring .fill{
-  fill:none;stroke:var(--accent);stroke-width:9;stroke-linecap:round;
+  fill:none;stroke:var(--accent);stroke-width:10;stroke-linecap:round;
   transition:stroke-dashoffset .9s cubic-bezier(.22,.61,.36,1);
 }
 .ring-num{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:.05rem;}
 .ring-num b{
-  font-family:var(--display);font-size:2rem;font-weight:300;color:var(--ink-strong);
+  font-family:var(--display);font-size:2.4rem;font-weight:300;color:var(--ink-strong);
   line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
 }
 .ring-num span{font-size:var(--t-xs);color:var(--ink-muted);}
@@ -289,8 +331,8 @@ li::marker{color:var(--ink-light);}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;}
 @media (min-width:620px){.stats{grid-template-columns:repeat(4,minmax(0,1fr));}}
 .stat{
-  background:var(--surface);border-radius:var(--r-sm);padding:.8rem .9rem;
-  display:grid;gap:.1rem;min-width:0;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:.85rem .95rem;display:grid;gap:.1rem;min-width:0;
 }
 .stat dt{font-size:var(--t-xs);color:var(--ink-muted);}
 .stat dd{
@@ -329,7 +371,7 @@ li::marker{color:var(--ink-light);}
   border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;}
 .tasks > li{border-bottom:1px solid var(--line-soft);min-width:0;}
 .tasks > li:last-child{border-bottom:0;}
-.task{display:grid;gap:.3rem;padding:.75rem .95rem;min-width:0;transition:background .14s ease;}
+.task{display:grid;gap:.3rem;padding:.75rem .95rem;min-width:0;align-content:start;transition:background .14s ease;}
 .task:hover{background:var(--surface);}
 .task-main{display:flex;gap:.8rem;align-items:flex-start;cursor:pointer;min-width:0;}
 .task .text{display:block;flex:1;min-width:0;line-height:1.5;overflow-wrap:anywhere;}
@@ -360,6 +402,25 @@ input[type="checkbox"]::after{
 }
 input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent);}
 input[type="checkbox"]:checked::after{transform:rotate(-45deg) scale(1);}
+
+/* ---------- Posádka ---------- */
+.crew{display:grid;gap:.6rem;min-width:0;max-width:none;}
+@media (min-width:700px){.crew{grid-template-columns:1fr 1fr;}}
+.mate{
+  display:flex;gap:.9rem;align-items:flex-start;min-width:0;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:.95rem 1.05rem;transition:border-color .16s ease;
+}
+.mate:hover{border-color:var(--ink-light);}
+.mate-mark{
+  width:38px;height:38px;border-radius:var(--r-full);flex:none;
+  background:var(--navy-solid);color:#FFFFFF;
+  display:grid;place-items:center;font-size:var(--t-sm);font-weight:500;
+  letter-spacing:.02em;
+}
+.mate h4{margin:0 0 .1rem;}
+.mate-role{font-weight:300;color:var(--ink-muted);font-size:var(--t-sm);}
+.mate p{font-size:var(--t-sm);color:var(--ink-muted);line-height:1.5;max-width:none;}
 
 /* ---------- Návody ---------- */
 .tiles{display:grid;gap:.75rem;min-width:0;max-width:none;}
@@ -554,6 +615,7 @@ var ICON = {
   folder:'<path class="stroke" d="M3.5 6.5A1.5 1.5 0 0 1 5 5h4l2 2.5h8a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18z"/><path class="detail" d="M9 13.5h6"/>',
   health:'<path class="stroke" d="M3.5 12h4l2-4 3 8 2.5-5 1.5 3h4"/><path class="detail" d="M19 8.5V5.5M17.5 7h3"/>',
   money:'<rect class="stroke" x="3" y="6" width="18" height="12" rx="2"/><circle class="detail" cx="12" cy="12" r="2.6"/>',
+  shield:'<path class="stroke" d="M12 3.4 19 5.9v6c0 4-3 7.1-7 8.6-4-1.5-7-4.6-7-8.6v-6z"/><path class="detail" d="m9.4 11.9 1.8 1.8 3.5-3.6"/>',
   handshake:'<path class="stroke" d="M3.5 10.5 7 7l3.5 2.5L14 7l6.5 3.5"/><path class="stroke" d="M20.5 10.5V16l-4 2.5-4.5-3.5-4.5 3.5L3.5 16v-5.5"/><path class="detail" d="M10.5 13.5 12 15l1.5-1.5"/>'
 };
 function svg(name){
@@ -568,24 +630,26 @@ var CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true"
 var SETTINGS = [
   { group:'Firma a kontakty', items:[
     { key:'firma',      label:'Název firmy',              ph:'Four Bros', def:'Four Bros' },
-    { key:'adresa',     label:'Adresa pracoviště',        ph:'Ulice 1, Praha' },
+    { key:'adresa',     label:'Adresa pracoviště',        ph:'Křídlovická 371/68, Brno', def:'Křídlovická 371/68, 603 00 Brno' },
     { key:'hrJmeno',    label:'HR — jméno',               ph:'Kristýna' },
     { key:'hrKontakt',  label:'HR — e-mail nebo telefon', ph:'hr@fourbros.cz' },
     { key:'itKontakt',  label:'IT podpora — kontakt',     ph:'it@fourbros.cz' },
-    { key:'emailTvar',  label:'Tvar pracovního e-mailu',  ph:'jmeno.prijmeni@fourbros.cz', def:'jmeno.prijmeni@fourbros.cz' }
+    { key:'emailTvar',  label:'Tvar pracovního e-mailu',  ph:'jmeno@fourbros.cz', def:'jmeno@fourbros.cz' }
   ]},
-  { group:'Systémy a nástroje', items:[
-    { key:'crm',        label:'CRM / hlavní systém',       ph:'název systému' },
-    { key:'disk',       label:'Kde se ukládají dokumenty', ph:'sdílený disk / cloud' },
-    { key:'chat',       label:'Komunikační nástroj',       ph:'Teams, Slack…' },
-    { key:'dochazka',   label:'Docházka a dovolená',       ph:'název systému' },
-    { key:'brandSlozka',label:'Složka s logy a šablonami', ph:'odkaz nebo cesta' }
+  { group:'Nástroje', items:[
+    { key:'projekty',   label:'Projektový nástroj',        ph:'Asana, ClickUp, Jira…' },
+    { key:'vykazy',     label:'Výkaz odpracovaných hodin', ph:'název nástroje' },
+    { key:'disk',       label:'Kde se ukládají podklady',  ph:'Google Drive, sdílený disk…' },
+    { key:'chat',       label:'Komunikační nástroj',       ph:'Slack, Teams…' },
+    { key:'dochazka',   label:'Docházka a dovolená',       ph:'název nástroje' },
+    { key:'brandSlozka',label:'Složka s logy a šablonami', ph:'odkaz nebo cesta' },
+    { key:'hesla',      label:'Správce hesel',             ph:'1Password, Bitwarden…' }
   ]},
   { group:'Praktické', items:[
-    { key:'dressCode',  label:'Dress code',    ph:'business casual' },
-    { key:'parkovani',  label:'Parkování',     ph:'kde a jak' },
-    { key:'obed',       label:'Obědy',         ph:'kantýna, stravenky…' },
-    { key:'pracDoba',   label:'Pracovní doba', ph:'8:30–17:00, pružná' }
+    { key:'dressCode',  label:'Dress code',    ph:'jak chodíme oblečení' },
+    { key:'parkovani',  label:'Parkování',     ph:'velké parkoviště u kanceláře', def:'velké parkoviště u kanceláře' },
+    { key:'obed',       label:'Obědy',         ph:'kam chodíme na oběd' },
+    { key:'pracDoba',   label:'Pracovní doba', ph:'pružná, jádro 9–15' }
   ]}
 ];
 
@@ -614,15 +678,16 @@ var PHASES = [
       { id:'p7',  who:'HR',      t:'Založen osobní spis', guide:'spis' },
       { id:'p8',  who:'IT',      t:'Notebook a telefon připraveny, nastaveny a <strong>vyzkoušeny</strong>' },
       { id:'p9',  who:'IT',      t:'Pracovní e-mail {{emailTvar}} vytvořen, podpis podle brand manuálu', guide:'podpis' },
-      { id:'p10', who:'IT',      t:'Přístupy do {{crm}}, {{disk}}, {{chat}} a {{dochazka}}', guide:'systemy' },
+      { id:'p10', who:'IT',      t:'Přístupy do {{projekty}}, {{disk}}, {{chat}}, {{vykazy}} a {{hesla}}', guide:'systemy' },
       { id:'p11', who:'IT',      t:'Karta, klíče nebo kód od budovy' },
       { id:'p12', who:'Manažer', t:'Určen buddy — a buddy o tom ví a souhlasí' },
-      { id:'p13', who:'Manažer', t:'Připraven plán prvních 30 dní — konkrétní úkoly, ne obecné fráze' },
+      { id:'p13', who:'Manažer', t:'Připraven plán prvních 30 dní a vybrán <strong>první klient</strong>, na kterém se zaučí' },
       { id:'p14', who:'Manažer', t:'Pracovní místo fyzicky připraveno — stůl, židle, monitor, uvítací drobnost' },
       { id:'p15', who:'HR',      t:'Uvítací e-mail odeslán <strong>3–5 dní předem</strong>' },
       { id:'p16', who:'HR',      t:'Oznámení týmu odesláno — kdo přijde, na jakou pozici, od kdy' },
       { id:'p17', who:'HR',      t:'Do kalendářů zapsáno: agenda 1. dne, školení BOZP, 1:1 v 7. a 30. dni' },
-      { id:'p18', who:'HR',      t:'Vizitky objednány podle šablony z brand manuálu', guide:'vizitky' }
+      { id:'p18', who:'HR',      t:'Vizitky objednány podle šablony z brand manuálu', guide:'vizitky' },
+      { id:'p19', who:'Manažer', t:'Připraven seznam klientů, ke kterým bude mít přístup, a v jakém rozsahu' }
     ]
   },
   {
@@ -635,9 +700,9 @@ var PHASES = [
       ['10:30','Dokumenty, které nešly vyřídit předem','HR'],
       ['11:00','Školení BOZP a PO — s podpisem do evidence','HR'],
       ['12:00','Oběd s buddym a částí týmu','Buddy'],
-      ['13:30','Kdo jsme, co děláme, kdo jsou naši klienti','HR'],
-      ['14:30','Představení týmu, kdo je kdo a na co se koho ptát','Manažer'],
-      ['15:00','Očekávání, plán na prvních 30 dní, první úkol','Manažer'],
+      ['13:30','Kdo jsme, co děláme a kdo jsou naši klienti','HR'],
+      ['14:30','Představení posádky — kdo je kdo a na co se koho ptát','Manažer'],
+      ['15:00','Očekávání, plán na prvních 30 dní, první klient','Manažer'],
       ['16:00','Prostor na otázky, domluva na zítřek','Buddy']
     ],
     tasks:[
@@ -645,9 +710,9 @@ var PHASES = [
       { id:'d2',  who:'IT',      t:'Přihlášení do všech systémů ověřeno přímo s nováčkem', guide:'systemy' },
       { id:'d3',  who:'HR',      t:'Školení BOZP a PO absolvováno a <strong>podepsáno</strong>' },
       { id:'d4',  who:'HR',      t:'Prohlášení poplatníka daně podepsáno' },
-      { id:'d5',  who:'HR',      t:'Nováček zaveden do docházky a mzdového systému', guide:'dochazka' },
+      { id:'d5',  who:'HR',      t:'Nováček zaveden do docházky, výkazů hodin a mzdového systému', guide:'vykazy' },
       { id:'d6',  who:'Manažer', t:'Předán plán prvních 30 dní — písemně, ne jen ústně' },
-      { id:'d7',  who:'Manažer', t:'Zadán první konkrétní úkol, který jde dokončit do konce týdne' },
+      { id:'d7',  who:'Manažer', t:'Zadán první konkrétní úkol na reálném klientovi, dokončitelný do konce týdne' },
       { id:'d8',  who:'Buddy',   t:'Oběd proběhl a nováček ví, komu psát, když si neví rady' },
       { id:'d9',  who:'HR',      t:'Předán brand manuál a šablony', guide:'brand' },
       { id:'d10', who:'HR',      t:'Nováček přidán do firemního seznamu kontaktů' }
@@ -660,11 +725,13 @@ var PHASES = [
       { id:'t1', who:'HR',      t:'Přihlášení na ČSSZ podáno — <strong>do 8 kalendářních dnů</strong> od nástupu' },
       { id:'t2', who:'HR',      t:'Přihlášení u zdravotní pojišťovny — <strong>do 8 dnů</strong> od nástupu' },
       { id:'t3', who:'HR',      t:'Písemná informace o obsahu pracovního poměru předána — <strong>do 7 dnů</strong>' },
-      { id:'t4', who:'Manažer', t:'Produktové nebo službové zaškolení proběhlo' },
-      { id:'t5', who:'Manažer', t:'Nováček stínoval kolegu při reálné práci s klientem', guide:'schuzka' },
+      { id:'t4', who:'Manažer', t:'Projito portfolio klientů — kdo jsou, co pro ně děláme a kdo je má na starosti' },
+      { id:'t5', who:'Manažer', t:'Nováček se zúčastnil reálného callu s klientem jako pozorovatel', guide:'call' },
+      { id:'t9', who:'IT',      t:'Přístupy do klientských účtů (Google Ads, Meta, GA4, Search Console)', guide:'ucty' },
+      { id:'t10',who:'HR',      t:'Podepsaná mlčenlivost o klientských datech', guide:'mlcenlivost' },
       { id:'t6', who:'Manažer', t:'Proběhlo první 1:1 — pátek, 20 minut', guide:'jednanajedna' },
       { id:'t7', who:'HR',      t:'Krátký dotaz na spokojenost — tři otázky, ne dotazník na 20 minut' },
-      { id:'t8', who:'HR',      t:'Školení GDPR a mlčenlivost, pokud pracuje s klientskými daty' }
+      { id:'t8', who:'HR',      t:'Nováček si první týden sám vykázal hodiny a někdo mu to zkontroloval', guide:'vykazy' }
     ]
   },
   {
@@ -673,8 +740,8 @@ var PHASES = [
     tasks:[
       { id:'m1', who:'Manažer', t:'Hodnoticí 1:1 ve 30. dni proběhlo a je z něj zápis', guide:'jednanajedna' },
       { id:'m2', who:'HR',      t:'Onboarding dotazník odeslán a vyhodnocen' },
-      { id:'m3', who:'Manažer', t:'Povinná školení dokončena a doložena' },
-      { id:'m4', who:'Manažer', t:'Nováček má vlastní agendu, za kterou odpovídá' },
+      { id:'m3', who:'Manažer', t:'Certifikace a školení podle role dokončeny (Google Ads, GA4, Shoptet…)' },
+      { id:'m4', who:'Manažer', t:'Nováček má vlastního klienta nebo vlastní část projektu, za kterou odpovídá' },
       { id:'m5', who:'HR',      t:'Ověřeno, že buddy vztah funguje — pokud ne, vyměnit, ne ignorovat' },
       { id:'m6', who:'Manažer', t:'Domluveny cíle na dalších 30 dní, písemně' },
       { id:'m7', who:'HR',      t:'Pokud se objevil problém — zapsán a řeší se, ne odloženo na zkušebku' }
@@ -685,7 +752,7 @@ var PHASES = [
     intro:'Nejvíc opomíjená fáze. První měsíc má každý pod kontrolou, na konci zkušebky se rozhoduje — ale právě tady se dá ještě otočit špatně nastartovaný nástup.',
     tasks:[
       { id:'s1', who:'Manažer', t:'1:1 v 60. dni — kontrola cílů z 30. dne', guide:'jednanajedna' },
-      { id:'s2', who:'Manažer', t:'Nováček pracuje samostatně, konzultuje jen výjimky' },
+      { id:'s2', who:'Manažer', t:'Nováček komunikuje s klientem samostatně, konzultuje jen výjimky' },
       { id:'s3', who:'Manažer', t:'Pokud výkon neodpovídá — <strong>řečeno nahlas a doloženo</strong>, s termínem na zlepšení' },
       { id:'s4', who:'HR',      t:'Zjištěna zpětná vazba od týmu — jak zapadl' },
       { id:'s5', who:'HR',      t:'Připomenut termín konce zkušební doby manažerovi <strong>2 týdny předem</strong>' }
@@ -708,7 +775,7 @@ var PHASES = [
     intro:'Z nováčka je kolega, který sám zaškoluje další. Tady onboarding definitivně končí.',
     tasks:[
       { id:'r1', who:'Manažer', t:'Hodnoticí rozhovor v 6. měsíci — výkon, spokojenost, další směr' },
-      { id:'r2', who:'HR',      t:'Nabídka rozvoje: školení, certifikace, větší odpovědnost' },
+      { id:'r2', who:'HR',      t:'Nabídka rozvoje: konference, certifikace, vlastní klient, mentoring' },
       { id:'r3', who:'HR',      t:'Dotaz, jestli by chtěl být buddym pro dalšího nováčka' },
       { id:'r4', who:'Manažer', t:'Roční hodnocení podle standardního procesu' },
       { id:'r5', who:'HR',      t:'Poslední ohlédnutí za onboardingem — s ročním odstupem přijdou nejlepší postřehy' }
@@ -720,17 +787,85 @@ var PHASES = [
    4. NÁVODY
    ============================================================ */
 var GUIDES = [
-  { id:'systemy', icon:'laptop', title:'Přihlášení do systémů',
+  { id:'systemy', icon:'laptop', title:'Přihlášení do nástrojů',
     lead:'Projdi si to hned první den, ať nezjistíš v pátek, že se někam nedostaneš.',
     steps:[
       'Přihlas se do pracovního e-mailu {{emailTvar}}. Heslo dostaneš od IT — {{itKontakt}}.',
-      'Změň si heslo hned při prvním přihlášení. Nepoužívej stejné jako soukromě.',
-      'Zapni si dvoufaktorové ověření všude, kde to jde.',
-      'Přihlas se do {{crm}} a zkontroluj, že vidíš to, co máš mít podle své role.',
-      'Otevři {{disk}} a najdi složku svého týmu. Ulož si ji mezi oblíbené.',
+      'Změň si heslo hned při prvním přihlášení a nastav si dvoufaktorové ověření. U klientských účtů je to povinnost, ne doporučení.',
+      'Nainstaluj si správce hesel {{hesla}}. Klientská hesla nikdy neposílej chatem ani e-mailem.',
+      'Otevři {{projekty}} a najdi projekty, na kterých budeš dělat. Zapni si notifikace, ale jen na svoje úkoly.',
+      'Přihlas se do {{vykazy}} a zkus si vykázat dnešek. Ano, i první den se vykazuje.',
       'Nainstaluj si {{chat}} do počítače i do telefonu.',
-      'Přihlas se do {{dochazka}} a zkus si zapsat dnešní den.',
+      'Otevři {{disk}} a najdi složku svého týmu i složku klientů. Ulož si je mezi oblíbené.',
       'Když ti něco nefunguje, napiš na {{itKontakt}} hned — ne za týden.'
+    ]},
+  { id:'ucty', icon:'shield', title:'Přístupy do klientských účtů',
+    lead:'Nejcitlivější věc, se kterou budeš pracovat. Cizí reklamní rozpočty a cizí data.',
+    steps:[
+      'Přístupy ti zařídí projekťák — nikdy si je nevyžaduj u klienta sám bez domluvy.',
+      'Do Google Ads, GA4 a Search Console se hlásíš <strong>svým pracovním účtem</strong>, ne sdíleným loginem.',
+      'Do Meta Business Suite tě klient přidá přes Business Manager. Nikdy se nehlásíš z jeho osobního profilu.',
+      'Zkontroluj si hned, že máš správnou úroveň oprávnění — čtení tam, kde nemáš měnit.',
+      'Než v účtu cokoli změníš, řekni to projekťákovi. U rozpočtů a kampaní platí: raději se zeptej dvakrát.',
+      'Velké zásahy dělej ráno, ne v pátek odpoledne. Když se něco rozbije, ať je kdo to chytí.',
+      'Když odcházíš z projektu, přístupy se odebírají. Řekni si o to sám, nečekej, až si někdo vzpomene.'
+    ]},
+  { id:'vykazy', icon:'clock', title:'Výkazy hodin',
+    lead:'V agentuře je vykázaný čas to, co se fakturuje. Nevykázaná hodina je hodina zadarmo.',
+    steps:[
+      'Hodiny zapisuj v {{vykazy}} <strong>průběžně během dne</strong>, ne zpětně v pátek. Zpětně si nikdo nevzpomene přesně.',
+      'Vykazuj vždy na konkrétního klienta a konkrétní úkol, ne na obecné „práce".',
+      'Popis piš tak, aby mu rozuměl klient — je možné, že ho uvidí ve výkazu.',
+      'Interní věci (porady, školení, administrativa) vykazuj taky. Slouží to nám, ne kontrole.',
+      'Když ti úkol trvá výrazně déle, než bylo odhadnuto, řekni to <strong>hned</strong>, ne až po odevzdání.',
+      'Na konci měsíce si výkaz překontroluj, než se z něj stane faktura.',
+      'Neodhaduj, nezaokrouhluj nahoru. Důvěra klienta stojí na tom, že čísla sedí.'
+    ]},
+  { id:'call', icon:'handshake', title:'První call s klientem',
+    lead:'Poprvé jdeš vždy s kolegou a posloucháš. Až podruhé mluvíš.',
+    steps:[
+      'Před callem si projdi projekt v {{projekty}} a poslední výstupy. Nikdy nejdi „naslepo".',
+      'Zjisti si, co klient prodává a komu. Bez toho nemůžeš nic doporučit.',
+      'Připrav si tři otázky, které chceš zodpovědět, a napiš si je.',
+      'Na callu si dělej poznámky. Paměť po třetím callu v řadě selhává.',
+      'Nesliboval termíny na místě. Řekni „ověřím a dám vědět do konce dne" a dodrž to.',
+      'Do 24 hodin zapiš výstup do {{projekty}} — co bylo domluveno, kdo co udělá a do kdy.',
+      'Pošli klientovi krátké shrnutí e-mailem. V bodech, s termínem dalšího kroku.',
+      'První tři cally rozeber s projekťákem a zeptej se na zpětnou vazbu.'
+    ]},
+  { id:'kontrola', icon:'guide', title:'Než něco pošleš klientovi',
+    lead:'U nás nic neodchází ven bez druhého páru očí. Platí to i pro seniory.',
+    steps:[
+      'Zkontroluj si výstup sám — překlepy, čísla, odkazy, jestli fungují.',
+      'Ověř, že to sedí na <strong>brand manuál klienta</strong>, ne na náš. Každý klient má svůj.',
+      'Dej to ke kontrole kolegovi nebo projekťákovi. Napiš, co přesně má zkontrolovat.',
+      'Na zpětnou vazbu reaguj, i když s ní nesouhlasíš — vysvětli, proč jsi to udělal jinak.',
+      'Až po odsouhlasení posílej klientovi. Nikdy ne „ať to má rychleji".',
+      'Do e-mailu klientovi piš stručně: co posíláš, co od něj potřebuješ a do kdy.',
+      'Finální verzi ulož do {{disk}} do složky klienta, ne jen do e-mailu.'
+    ]},
+  { id:'mlcenlivost', icon:'shield', title:'Mlčenlivost a klientská data',
+    lead:'Víš věci, které konkurence tvého klienta vědět nemá. Ber to vážně.',
+    steps:[
+      'O číslech, obratech ani strategiích klientů se nebavíš mimo firmu. Ani „jen tak" v hospodě.',
+      'Nesdílej screenshoty z klientských účtů na sociálních sítích ani v portfoliu bez souhlasu.',
+      'Klientská data patří do {{disk}} a do jejich účtů — ne na tvůj soukromý disk, USB ani soukromý mail.',
+      'Když děláš pro dva klienty ze stejného oboru, neber si poznatky z jednoho k druhému.',
+      'Osobní údaje koncových zákazníků klienta (e-mailové databáze) zpracováváme jako zpracovatel — nakládej s nimi jen v rozsahu zadání.',
+      'Když ti někdo zvenčí volá a ptá se na klienta, nepotvrzuj ani to, že ho máme. Přepoj na {{hrKontakt}}.',
+      'Když se něco stane — omylem odeslaný e-mail, únik — řekni to <strong>okamžitě</strong>. Zamlčení je horší než chyba.'
+    ]},
+  { id:'brand', icon:'brand', title:'Náš brand manuál',
+    lead:'Děláme značky ostatním. Ta naše musí sedět jako první.',
+    steps:[
+      'Přečti si brand manuál — najdeš ho v {{brandSlozka}}.',
+      'Nainstaluj si fonty Serenity (nadpisy) a Roboto (běžný text).',
+      'Zapamatuj si pravidlo bílé: většinu plochy vždy pokrývá čistě bílá.',
+      'Electric Violet používej jen na tlačítka a zvýraznění — nikdy víc než 5 % plochy.',
+      'Loga se nesahá: neměnit proporce, nerotovat, nepřidávat stíny ani průhlednost.',
+      'Kolem loga nech volný prostor alespoň ¼ jeho výšky, minimální velikost je 66 × 33 px.',
+      'Brushe používej na pozadí — lehkost, jemné tóny, decentnost. Nové varianty smíš vytvořit, když ten styl drží.',
+      'Nepleť si náš brand manuál s brand manuálem klienta. Pro klientské výstupy platí ten jeho.'
     ]},
   { id:'podpis', icon:'mail', title:'E-mailový podpis',
     lead:'Nejčastější kus firemní grafiky, který od tebe klient uvidí.',
@@ -743,59 +878,35 @@ var GUIDES = [
       'Logo v podpisu nesmí být menší než 66 × 33 px, jinak je nečitelné.',
       'Pošli si zkušební e-mail sám sobě a zkontroluj, jak vypadá na mobilu.'
     ]},
-  { id:'brand', icon:'brand', title:'Jak pracovat se značkou',
-    lead:'Každý, kdo pošle klientovi e-mail nebo prezentaci, tvoří značku.',
-    steps:[
-      'Přečti si brand manuál — najdeš ho v {{brandSlozka}}.',
-      'Nainstaluj si fonty Serenity (nadpisy) a Roboto (běžný text).',
-      'Zapamatuj si pravidlo bílé: většinu plochy vždy pokrývá čistě bílá.',
-      'Electric Violet používej jen na tlačítka a zvýraznění — nikdy víc než 5 % plochy.',
-      'Loga se nesahá: neměnit proporce, nerotovat, nepřidávat stíny ani průhlednost.',
-      'Kolem loga nech volný prostor alespoň ¼ jeho výšky.',
-      'Než pošleš první materiál klientovi, dej ho zkontrolovat {{hrJmeno}} nebo kolegovi.'
-    ]},
   { id:'dochazka', icon:'clock', title:'Docházka, dovolená a nemoc',
     lead:'Tři situace, které tě potkají do měsíce. Ať víš, co dělat, dřív než nastanou.',
     steps:[
       'Docházku si zapisuj v {{dochazka}}. Pracovní doba u nás: {{pracDoba}}.',
-      'Dovolenou nahlas dopředu v {{dochazka}} a nech si ji schválit nadřízeným.',
-      'U delší dovolené domluv předem zástup a napiš to do e-mailu, ať to není jen v hlavě.',
-      'Nastav si automatickou odpověď v e-mailu s termínem návratu a kontaktem na zástup.',
-      'Když onemocníš, dej vědět <strong>ráno první den</strong> nadřízenému a na {{hrKontakt}}.',
-      'Neschopenku dnes lékař odesílá elektronicky, ale číslo rozhodnutí pošli na HR.',
+      'Dovolenou nahlas dopředu v {{dochazka}} a nech si ji schválit.',
+      'U dovolené nad tři dny domluv předem zástup na svých klientech a napiš to do {{projekty}}.',
+      'Nastav si automatickou odpověď s termínem návratu a kontaktem na zástup.',
+      'Když onemocníš, dej vědět <strong>ráno první den</strong> projekťákovi a na {{hrKontakt}}.',
+      'Neschopenku lékař odesílá elektronicky, ale číslo rozhodnutí pošli na HR.',
       'Po návratu zkontroluj, že máš nemoc správně zapsanou v {{dochazka}}.'
     ]},
-  { id:'schuzka', icon:'handshake', title:'První schůzka s klientem',
-    lead:'Než půjdeš sám, projdi si tenhle postup. Poprvé jdeš vždy s kolegou.',
-    steps:[
-      'Domluv si stínování — první schůzky absolvuj jako pozorovatel.',
-      'Před schůzkou si v {{crm}} projdi historii klienta. Nikdy nejdi „naslepo".',
-      'Připrav si tři otázky, které chceš zjistit, a napiš si je.',
-      'Materiály tiskni ze schválených šablon — ne z vlastních souborů.',
-      'Na schůzce si dělej poznámky. Paměť po třetí schůzce v řadě selhává.',
-      'Do 24 hodin zapiš výstup do {{crm}} — co bylo domluveno a co je další krok.',
-      'Pošli klientovi shrnutí e-mailem. Krátce, v bodech, s termínem dalšího kroku.',
-      'Projdi si první tři schůzky s nadřízeným a zeptej se na zpětnou vazbu.'
-    ]},
   { id:'dokumenty', icon:'folder', title:'Kam co ukládat',
-    lead:'Pravidlo číslo jedna: nic pracovního nezůstává jen na tvém disku.',
+    lead:'Pravidlo číslo jedna: nic pracovního nezůstává jen u tebe v počítači.',
     steps:[
-      'Všechny pracovní dokumenty patří do {{disk}}, ne na plochu notebooku.',
-      'Klientské informace patří do {{crm}} — tam je hledají i ostatní.',
-      'Pojmenovávej soubory tak, aby jim rozuměl i kolega: datum, klient, obsah.',
-      'Neposílej klientské údaje přes soukromý e-mail ani přes soukromé chaty.',
-      'Citlivé dokumenty neukládej na USB disky.',
-      'Než něco smažeš, zeptej se. Než něco nasdílíš ven, zeptej se dvakrát.',
-      'Když si nejsi jistý, jestli něco smíš poslat, napiš na {{hrKontakt}}.'
+      'Podklady a výstupy patří do {{disk}} do složky klienta, ne na plochu notebooku.',
+      'Zadání, termíny a stav úkolů patří do {{projekty}} — tam je hledají i ostatní.',
+      'Pojmenovávej soubory tak, aby jim rozuměl i kolega: klient, co to je, datum.',
+      'Hesla patří výhradně do {{hesla}}. Nikdy ne do dokumentu, chatu nebo poznámek.',
+      'Když si nejsi jistý, kam něco patří, zeptej se projekťáka — ne ať to skončí jen v mailu.',
+      'Než něco smažeš, zeptej se. Než něco pošleš ven, zeptej se dvakrát.'
     ]},
   { id:'lide', icon:'chat', title:'Na co se koho ptát',
     lead:'Nejrychlejší způsob, jak se zorientovat: vědět, kdo je od čeho.',
     steps:[
       'Nevíš si rady s běžnou prací nebo nepsanými pravidly → buddy {{buddy}}.',
-      'Priority, cíle, zpětná vazba, schvalování → nadřízený {{manazer}}.',
-      'Smlouva, mzda, dovolená, benefity, dokumenty → {{hrJmeno}} na {{hrKontakt}}.',
-      'Technika, hesla, přístupy, nefunkční systém → {{itKontakt}}.',
-      'Loga, šablony, grafika, prezentace → brand manuál a {{brandSlozka}}.',
+      'Cokoliv kolem konkrétního klienta, termínů a zadání → projekťák, který ho má na starosti.',
+      'Priority, tvůj rozvoj, zpětná vazba → nadřízený {{manazer}}.',
+      'Smlouva, mzda, dovolená, dokumenty → {{hrJmeno}} na {{hrKontakt}}.',
+      'Technika, hesla, přístupy → {{itKontakt}}.',
       'Nevíš, koho se zeptat? Zeptej se buddyho. To je přesně jeho role.',
       'Ptej se radši dvakrát než dělat věc dvakrát znovu.'
     ]},
@@ -806,8 +917,8 @@ var GUIDES = [
       'Objednej se u našeho poskytovatele pracovnělékařských služeb — kontakt dostaneš od {{hrJmeno}}.',
       'Vezmi si s sebou žádost, občanský průkaz a výpis z dokumentace od svého lékaře.',
       'Prohlídku absolvuj <strong>před</strong> dnem nástupu, ne až po něm.',
-      'Lékařský posudek odevzdej na HR — bez něj nemůžeš nastoupit na pracoviště.',
-      'Náklady na prohlídku hradí zaměstnavatel, pokud nastoupíš.'
+      'Posudek odevzdej na HR — bez něj nemůžeš nastoupit na pracoviště.',
+      'Náklady hradí zaměstnavatel, pokud nastoupíš.'
     ]},
   { id:'vizitky', icon:'card', title:'Objednání vizitek',
     lead:'Šablona existuje, mění se jen textace. Nevytvářej si vlastní.',
@@ -820,9 +931,9 @@ var GUIDES = [
       'Počítej s tím, že tisk trvá zhruba týden.'
     ]},
   { id:'jednanajedna', icon:'people', title:'Jak vést hodnoticí 1:1',
-    lead:'Pro manažera. Padesát minut, které rozhodují o tom, jestli člověk zůstane.',
+    lead:'Pro nadřízeného. Padesát minut, které rozhodují o tom, jestli člověk zůstane.',
     steps:[
-      'Domluv termín předem a nepřesouvej ho. Přesouvání je signál sám o sobě.',
+      'Domluv termín předem a nepřesouvej ho. Přesouvání je signál samo o sobě.',
       'Začni otevřenou otázkou „jak se máš" a nech mluvit druhého. Neskákej do toho.',
       'Pojmenuj konkrétně, co se povedlo. „Dobrý" není zpětná vazba.',
       'U toho, co nefunguje, popiš situaci a dopad — ne vlastnost člověka.',
@@ -838,6 +949,7 @@ var GUIDES = [
       'Osobní dotazník zaměstnance.',
       'Potvrzení o vstupní lékařské prohlídce.',
       'Podepsané záznamy o školení BOZP a PO.',
+      'Podepsaná mlčenlivost o klientských datech.',
       'Zápočtový list od předchozího zaměstnavatele.',
       'Doklady o vzdělání a odborné způsobilosti.',
       'Zápisy z hodnoticích rozhovorů.',
@@ -849,10 +961,21 @@ var GUIDES = [
       'Výplatní termín a kam chodí výplatní páska: doplň v Nastavení.',
       'Prohlášení poplatníka daně podepiš do 30 dnů od nástupu, jinak přijdeš o slevy.',
       'Přehled benefitů ti předá {{hrJmeno}} — projdi si ho, ať o nic nepřijdeš.',
-      'Pracovní cesty schvaluje předem nadřízený {{manazer}}.',
-      'Účtenky z pracovní cesty sbírej průběžně a odevzdej do konce měsíce.',
+      'Cesty ke klientovi a konference schvaluje předem {{manazer}}.',
+      'Účtenky sbírej průběžně a odevzdej do konce měsíce.',
       'S čímkoli ke mzdě se obracej na {{hrKontakt}}, ne na kolegy.'
     ]}
+];
+
+/* Posádka podle veřejného webu — uprav podle skutečnosti. */
+var CREW = [
+  { name:'Víťa',            role:'CEO',                 area:'Strategie agentury a delivery služeb. Chodí sem, když jde o směr projektu nebo velké rozhodnutí.' },
+  { name:'Honza',           role:'Finance a chod firmy',area:'Fakturace, rozpočty, organizační věci.' },
+  { name:'Kristýna',        role:'Administrativa',      area:'Smlouvy, dokumenty, mzdy, dovolená — všechno papírové.' },
+  { name:'Jessica a Matúš', role:'Vedení projektů',     area:'Zadání, termíny, komunikace s klientem. Tvoje první zastávka u čehokoliv kolem konkrétní zakázky.' },
+  { name:'Radim',           role:'Web development',     area:'Weby, e-shopy, technické věci kolem Shoptetu.' },
+  { name:'Zdenda',          role:'Design',              area:'Grafika, vizuály, kreativa. Sem chodíš pro kontrolu výstupů.' },
+  { name:'Filip',           role:'Analytika',           area:'Klíčová slova, měření, data. Sem chodíš, když potřebuješ čísla.' }
 ];
 
 /* ============================================================
@@ -862,18 +985,19 @@ var TEMPLATES = [
   { id:'uvitaci', title:'Uvítací e-mail — 3 až 5 dní před nástupem', body:
 'Předmět: Těšíme se na tebe — praktické informace k nástupu\n\n'+
 'Ahoj {{jmeno}},\n\n'+
-'za pár dní se vidíme. Ať máš první den klidný, posílám všechno praktické dopředu.\n\n'+
+'za pár dní naskakuješ na palubu. Ať máš první den klidný, posílám všechno praktické dopředu.\n\n'+
 'KDY A KAM\n{{nastup}}, adresa {{adresa}}. Zazvoň na recepci, budu tam na tebe čekat.\n\n'+
 'CO S SEBOU\n· občanský průkaz\n· číslo bankovního účtu\n· zápočtový list od předchozího zaměstnavatele\n· potvrzení o vstupní lékařské prohlídce\n\n'+
-'JAK TO BUDE VYPADAT\nDopoledne tě provedeme firmou, předáme techniku a vyřídíme papíry. V poledne jdeme na oběd s týmem. Odpoledne se potkáš s {{manazer}} a projdete si, co tě čeká první měsíc.\n\n'+
+'JAK TO BUDE VYPADAT\nDopoledne tě provedeme kanceláří, předáme techniku a vyřídíme papíry. V poledne jdeme na oběd s posádkou. Odpoledne se potkáš s {{manazer}}, projdete si, co tě čeká první měsíc, a řekneme ti, na kterém klientovi se zaučíš.\n\n'+
 'TVŮJ PRŮVODCE\nPrvních pár týdnů se ti bude věnovat {{buddy}}. Můžeš se ptát na cokoliv, doslova na cokoliv.\n\n'+
+'Nic si nemusíš připravovat. První den je na to, aby ses rozkoukal.\n\n'+
 'Oblečení u nás {{dressCode}}. Parkovat můžeš {{parkovani}}. Pracovní doba {{pracDoba}}.\n\n'+
 'Kdyby cokoliv, ozvi se na {{hrKontakt}}.\n\nTěšíme se!\n\n{{hrJmeno}}' },
 
   { id:'oznameni', title:'Oznámení týmu', body:
 'Předmět: Od pondělí je nás víc — vítejte {{jmeno}}\n\n'+
 'Ahoj všichni,\n\n'+
-'{{nastup}} k nám nastupuje {{jmeno}} na pozici {{pozice}}. Bude mít na starosti [HLAVNÍ AGENDA] a sedět bude [KDE].\n\n'+
+'{{nastup}} k nám na palubu nastupuje {{jmeno}} na pozici {{pozice}}. Bude mít na starosti [HLAVNÍ AGENDA] a sedět bude [KDE].\n\n'+
 '{{jmeno}} k nám přichází z [ODKUD] a přináší zkušenost s [ČÍM]. Ve volném čase [NĚCO LIDSKÉHO].\n\n'+
 'Buddym mu bude {{buddy}}.\n\n'+
 'V pondělí v poledne jdeme společně na oběd — přidejte se, kdo můžete. A kdybyste ho během prvních týdnů potkali na chodbě, představte se mu. Pro nováčka je deset takových krátkých představení víc než jedna velká prezentace.\n\n'+
@@ -881,8 +1005,8 @@ var TEMPLATES = [
 
   { id:'plan', title:'Plán 30 / 60 / 90 dní — kostra pro manažera', body:
 'PLÁN NÁSTUPU\nJméno: {{jmeno}}          Pozice: {{pozice}}\nNadřízený: {{manazer}}    Buddy: {{buddy}}\nNástup: {{nastup}}        Konec zkušební doby: [DATUM]\n\n'+
-'PRVNÍCH 30 DNÍ — UČÍM SE\nCíl: rozumím tomu, co firma dělá, a zvládám [KONKRÉTNÍ ÚKOL] samostatně.\n· [ÚKOL 1] — hotovo do [DATUM]\n· [ÚKOL 2] — hotovo do [DATUM]\n· Školení: [SEZNAM]\nPoznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]\n\n'+
-'60 DNÍ — PRACUJI SÁM\nCíl: mám vlastní agendu a konzultuji jen výjimky.\n· [ÚKOL 1]\n· [ÚKOL 2]\nPoznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]\n\n'+
+'PRVNÍCH 30 DNÍ — UČÍM SE\nCíl: rozumím tomu, co děláme, znám portfolio klientů a zvládám [KONKRÉTNÍ ÚKOL] samostatně.\nPrvní klient, na kterém se zaučí: [KLIENT]\n· [ÚKOL 1] — hotovo do [DATUM]\n· [ÚKOL 2] — hotovo do [DATUM]\n· Certifikace: [SEZNAM]\nPoznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]\n\n'+
+'60 DNÍ — PRACUJI SÁM\nCíl: mám vlastního klienta nebo část projektu a konzultuji jen výjimky.\n· [ÚKOL 1]\n· [ÚKOL 2]\nPoznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]\n\n'+
 '90 DNÍ — PŘINÁŠÍM VÝSLEDEK\nCíl: můj výkon je srovnatelný s ostatními na stejné pozici.\n· [ÚKOL 1]\n· [ÚKOL 2]\nPoznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]\n\n'+
 'RYTMUS SETKÁVÁNÍ\n1:1 s nadřízeným: 1. měsíc týdně, poté jednou za 14 dní\nHodnoticí rozhovory: 30. den, 60. den, konec zkušební doby' },
 
@@ -890,6 +1014,7 @@ var TEMPLATES = [
 'ONBOARDING PO 30 DNECH — 5 minut, prosím upřímně\n\n'+
 '1. Věděl jsi první den, kam přijít a co tě čeká?           ano / spíš ano / spíš ne / ne\n'+
 '2. Měl jsi hned od začátku funkční techniku a přístupy?    ano / spíš ano / spíš ne / ne\n'+
+'2b. Je ti jasné, jak a co vykazovat za hodiny?             ano / spíš ano / spíš ne / ne\n'+
 '3. Je ti jasné, co se od tebe v práci očekává?             ano / spíš ano / spíš ne / ne\n'+
 '4. Máš se koho zeptat, když si nevíš rady?                 ano / spíš ano / spíš ne / ne\n'+
 '5. Odpovídá realita tomu, co jsme ti říkali na pohovoru?   ano / spíš ano / spíš ne / ne\n'+
@@ -1089,16 +1214,17 @@ function viewUvod(){
   var jmeno = state.profile.jmeno;
 
   var title = state.role === 'novacek'
-    ? (jmeno ? 'Vítej, ' + esc(jmeno.split(' ')[0]) : 'Vítej v týmu')
+    ? (jmeno ? 'Vítej na palubě, ' + esc(jmeno.split(' ')[0]) : 'Vítej na palubě')
     : (jmeno ? esc(jmeno) : 'Onboarding');
 
   var lede = state.role === 'novacek'
-    ? 'Tvůj průvodce prvními měsíci. Odškrtávej si, co máš za sebou — postup se ukládá a příště naváže tam, kde jsi skončil.'
+    ? 'Průvodce prvními měsíci u nás. Odškrtávej si, co máš za sebou — postup se ukládá a příště naváže tam, kde jsi skončil.'
     : 'Vyplň jednou Nastavení, pošli odkaz novému člověku a sleduj, jak mu to jde.';
 
   var h = '';
 
-  h += '<section class="card raised">';
+  h += '<section class="card raised hero-card washed">';
+  h +=   '<div class="wash" aria-hidden="true"></div>';
   h +=   '<div class="hero">';
   h +=     '<div class="head">';
   h +=       '<p class="label">' + (state.profile.pozice ? esc(state.profile.pozice) : 'Onboarding od A po Z') + '</p>';
@@ -1138,9 +1264,9 @@ function viewUvod(){
   h +=   '<h2>Kde začít</h2>';
   h +=   '<div class="tiles">';
   h +=     jumpTile('plan','steps','Projít postup','Sedm fází od příprav před nástupem po první rok.');
-  h +=     jumpTile('navody','guide','Otevřít návody','Krok za krokem: systémy, podpis, docházka, schůzky.');
-  h +=     jumpTile('lide','people','Na co se koho ptát','Buddy, nadřízený, HR a IT — kdo řeší co.');
-  h +=     jumpTile('znacka','brand','Naše značka','Pravidla pro každého, kdo píše klientovi.');
+  h +=     jumpTile('navody','guide','Otevřít návody','Přístupy, výkazy hodin, klientské cally, kontrola výstupů.');
+  h +=     jumpTile('lide','people','Poznat posádku','Kdo je kdo a na co se koho ptát.');
+  h +=     jumpTile('znacka','brand','Naše značka','Děláme značky ostatním — ta naše musí sedět jako první.');
   h +=   '</div>';
   h += '</section>';
 
@@ -1292,7 +1418,7 @@ function viewZnacka(){
   h +=   '<p class="lede">Každý, kdo pošle klientovi e-mail nebo prezentaci, tvoří značku. Třicet minut, které ušetří spoustu předělávání.</p>';
   h += '</div>';
 
-  h += '<div class="card soft"><p>Logo je stylizovaná loďka plující po moři, kde číslice 4 tvoří zároveň plachtu. Odráží náš přístup — <strong>s klientem jsme za všech okolností na jedné lodi.</strong> Tuhle větu by měl umět říct každý.</p></div>';
+  h += '<div class="card washed"><div class="wash" aria-hidden="true"></div><p>Logo je stylizovaná loďka plující po moři, kde číslice 4 tvoří zároveň plachtu. Odráží náš přístup — <strong>s klientem jsme za všech okolností na jedné lodi.</strong> Tuhle větu by měl umět říct každý.</p></div>';
 
   h += '<section class="group">';
   h +=   '<h2>Paleta</h2>';
@@ -1315,6 +1441,7 @@ function viewZnacka(){
            '<li><strong>Nadpisy Serenity, text Roboto.</strong> Základní řez odstavce je Light.</li>' +
            '<li><strong>Loga se nesahá.</strong> Neměnit proporce, nerotovat, nepřidávat stíny ani průhlednost.</li>' +
            '<li><strong>Kolem loga je volno.</strong> Ochranná zóna ¼ výšky loga, minimální velikost 66 × 33 px.</li>' +
+           '<li><strong>Brushe jsou náš podpis.</strong> Jemné tóny a decentnost. Nové varianty smíš vytvořit, když ten styl drží.</li>' +
          '</ol></div>';
   h +=   '<div class="card"><h3>Kde co najdeš</h3><ul>' +
            '<li>Brand manuál, loga, favicona, slogan, ikony a brushe: ' + fillIn('{{brandSlozka}}') + '</li>' +
@@ -1324,7 +1451,7 @@ function viewZnacka(){
          '</ul></div>';
   h += '</div>';
 
-  h += '<div class="note"><p class="label">Pravidlo pro každý výstup</p><p>Než pošleš první materiál klientovi, projdi si brand manuál. Kontroluj své výstupy s pravidly v příručce — používáním našich barev a písem budeš mít jistotu, že držíš kurz.</p></div>';
+  h += '<div class="note"><p class="label">Nepleť si manuály</p><p>Tenhle manuál platí pro <strong>naše</strong> výstupy — web, prezentace, podpisy, vizitky. Pro cokoliv, co jde ven pod hlavičkou klienta, platí <strong>brand manuál klienta</strong>. Když ho nemáš, vyžádej si ho přes projekťáka dřív, než začneš tvořit.</p></div>';
 
   h += '<div class="btns"><button class="btn" data-goguide="brand">Otevřít návod ke značce</button></div>';
   return h;
@@ -1332,21 +1459,20 @@ function viewZnacka(){
 
 /* ---------- Kdo je kdo ---------- */
 function viewLide(){
-  var people = [
-    ['Buddy', '{{buddy}}', 'Běžná práce, nepsaná pravidla, „kde se co bere". Cokoliv, na co se stydíš zeptat šéfa.'],
-    ['Přímý nadřízený', '{{manazer}}', 'Priority, cíle, zpětná vazba, schvalování, plán na dalších 30 dní.'],
-    ['HR', '{{hrJmeno}} — {{hrKontakt}}', 'Smlouva, mzda, dovolená, benefity, dokumenty, cokoliv osobního.'],
-    ['IT podpora', '{{itKontakt}}', 'Technika, hesla, přístupy, nefunkční systém.']
-  ];
-
   var h = '';
   h += '<div class="head">';
-  h +=   '<h1>Kdo je kdo</h1>';
+  h +=   '<h1>Naše posádka</h1>';
   h +=   '<p class="lede">Nejrychlejší způsob, jak se zorientovat: vědět, kdo je od čeho. Když si nejsi jistý, ptej se buddyho — to je přesně jeho role.</p>';
   h += '</div>';
 
-  h += '<div class="duo">';
-  people.forEach(function(r){
+  h += '<section class="group">';
+  h +=   '<h2>Tvoji nejbližší</h2>';
+  h +=   '<div class="duo">';
+  [['Buddy', '{{buddy}}', 'Běžná práce, nepsaná pravidla, „kde se co bere". Cokoliv, na co se stydíš zeptat šéfa.'],
+   ['Přímý nadřízený', '{{manazer}}', 'Priority, tvůj rozvoj, zpětná vazba, plán na dalších 30 dní.'],
+   ['HR a administrativa', '{{hrJmeno}} — {{hrKontakt}}', 'Smlouva, mzda, dovolená, dokumenty, cokoliv osobního.'],
+   ['IT podpora', '{{itKontakt}}', 'Technika, hesla, přístupy, nefunkční nástroj.']
+  ].forEach(function(r){
     h += '<div class="card">' +
            '<div class="top" style="display:flex;align-items:center;gap:.8rem;min-width:0">' +
              '<div class="badge">' + svg('people') + '</div>' +
@@ -1355,15 +1481,32 @@ function viewLide(){
            '</div>' +
            '<p>' + esc(r[2]) + '</p></div>';
   });
-  h += '</div>';
+  h +=   '</div>';
+  h += '</section>';
 
   h += '<section class="group">';
-  h +=   '<h2>Kdo za co odpovídá</h2>';
+  h +=   '<h2>Kdo je kdo ve firmě</h2>';
+  h +=   '<div class="crew">';
+  CREW.forEach(function(c){
+    h += '<div class="mate">' +
+           '<div class="mate-mark" aria-hidden="true">' + esc(initials(c.name)) + '</div>' +
+           '<div style="min-width:0">' +
+             '<h4>' + esc(c.name) + ' <span class="mate-role">' + esc(c.role) + '</span></h4>' +
+             '<p>' + esc(c.area) + '</p>' +
+           '</div>' +
+         '</div>';
+  });
+  h +=   '</div>';
+  h += '</section>';
+
+  h += '<section class="group">';
+  h +=   '<h2>Kdo za co odpovídá při nástupu</h2>';
   h +=   '<div class="tablewrap"><table><thead><tr><th>Role</th><th>Co má na starosti</th></tr></thead><tbody>';
   [['HR','Vlastník celého procesu. Dokumenty, přihlášky, koordinace techniky, zpětná vazba v 7., 30. a 90. dni.'],
-   ['Přímý nadřízený','Vlastník obsahu práce. Plán 30/60/90, uvedení do týmu, pravidelná 1:1, rozhodnutí o zkušební době.'],
+   ['Přímý nadřízený','Vlastník obsahu práce. Plán 30/60/90, první klient, pravidelná 1:1, rozhodnutí o zkušební době.'],
+   ['Projekťák','Zadání a termíny na konkrétních zakázkách, přístupy do klientských účtů, kontrola výstupů.'],
    ['Buddy','Kolega na stejné úrovni, ne šéf. K dispozici od prvního dne, oběd první den a pak jednou týdně první měsíc.'],
-   ['Nový kolega','Dodá dokumenty včas, projde školení, ptá se a ve 30. dni řekne, co je matoucí.']
+   ['Nový kolega','Dodá dokumenty včas, projde školení, vykazuje hodiny, ptá se a ve 30. dni řekne, co je matoucí.']
   ].forEach(function(r){
     h += '<tr><td><strong>' + esc(r[0]) + '</strong></td><td>' + esc(r[1]) + '</td></tr>';
   });
@@ -1372,6 +1515,16 @@ function viewLide(){
 
   h += '<div class="note"><p class="label">Nejčastější důvod nezdaru</p><p>Onboarding selhává tam, kde si všichni myslí, že to dělá někdo jiný. Buddy musí předem vědět, že buddym je, a musí na to mít čas v kapacitě.</p></div>';
   return h;
+}
+
+/* Značka u člena posádky. Dvojice („Jessica a Matúš") dá JM, jedno jméno dvě
+   písmena — samotné „V" by na kolečku působilo prázdně. */
+function initials(name){
+  var parts = String(name).split(/\s+a\s+|\s+/).filter(function(x){ return x && x.length > 1; });
+  if(parts.length === 1){
+    return parts[0].charAt(0).toUpperCase() + parts[0].charAt(1).toLowerCase();
+  }
+  return parts.slice(0, 2).map(function(x){ return x.charAt(0).toUpperCase(); }).join('');
 }
 
 /* ---------- Termíny ---------- */
@@ -1387,7 +1540,8 @@ function viewTerminy(){
     ['Do 8 dnů','Přihlášení u zdravotní pojišťovny','Mzdy'],
     ['Do 30 dnů','Prohlášení poplatníka daně z příjmů — jinak se neuplatní slevy','Mzdy'],
     ['Průběžně','Zápočtový list od předchozího zaměstnavatele','HR'],
-    ['Průběžně','Odborné zkoušky a registrace, jde-li o regulovanou činnost','Manažer']
+    ['Před přístupy','Podepsaná mlčenlivost o klientských datech — dřív, než dostane přístup do účtů','HR'],
+    ['Průběžně','Certifikace podle role (Google Ads, GA4, Shoptet, Mergado)','Manažer']
   ];
 
   var h = '';
