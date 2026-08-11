@@ -5,12 +5,12 @@ import { AppShell } from '@/components/layout/AppShell'
 import Link from 'next/link'
 import { CheckSquare, ChevronRight } from 'lucide-react'
 import {
-  DEMO_USER, DEMO_ADMIN,
   DEMO_TASKS,
   DEMO_TEAM_LEAVES,
   DEMO_TEAM,
   DEMO_EMPLOYEES,
   DEMO_ALL_LEAVE_REQUESTS,
+  getDemoUserById,
 } from '@/lib/mock-data'
 import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
@@ -33,7 +33,8 @@ export default async function DashboardPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
-  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
+  const isTL = session.user.role === 'TL'
+  const user = getDemoUserById(session.user.id)
 
   const tasks = DEMO_TASKS
   const pendingTasks = tasks.filter(t => !t.completed)
@@ -55,7 +56,9 @@ export default async function DashboardPage() {
     return today >= start && today <= end && (l.status === 'APPROVED' || l.status === 'PENDING')
   })
 
-  const pendingLeaveRequests = DEMO_ALL_LEAVE_REQUESTS.filter(l => l.status === 'PENDING')
+  const pendingLeaveRequests = DEMO_ALL_LEAVE_REQUESTS.filter(l =>
+    l.status === 'PENDING' && (isAdmin || (isTL && l.user.department === user.department))
+  )
 
   const LEAVE_TYPE_CZ: Record<string, string> = {
     ANNUAL: 'Dovolená',
@@ -78,7 +81,7 @@ export default async function DashboardPage() {
     .sort((a, b) => a.days - b.days)
 
   return (
-    <AppShell title="Dashboard" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
+    <AppShell title="Dashboard" isAdmin={isAdmin} isTL={isTL} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
       <div className="max-w-5xl mx-auto space-y-5">
 
         {/* Hero greeting with inline stats */}
@@ -90,8 +93,8 @@ export default async function DashboardPage() {
           startDate={startDate.toISOString()}
         />
 
-        {/* Čeká na tebe — admin-only, akční přehled schválení */}
-        {isAdmin && (
+        {/* Čeká na tebe — admin vidí vše, TL jen svůj tým */}
+        {(isAdmin || isTL) && (
           <Link
             href="/admin/leave-requests"
             className="block bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:border-violet/30 transition-colors group"
@@ -105,8 +108,8 @@ export default async function DashboardPage() {
                   <p className="font-headline text-navy leading-tight">Čeká na tebe</p>
                   <p className="text-xs text-slate-400 mt-0.5">
                     {pendingLeaveRequests.length === 0
-                      ? 'Žádné žádosti ke schválení'
-                      : `${pendingLeaveRequests.length} ${pendingLeaveRequests.length === 1 ? 'žádost o dovolenou čeká' : 'žádosti o dovolenou čekají'} na schválení`}
+                      ? isTL ? 'Žádné žádosti od tvého týmu' : 'Žádné žádosti ke schválení'
+                      : `${pendingLeaveRequests.length} ${pendingLeaveRequests.length === 1 ? 'žádost o dovolenou čeká' : 'žádosti o dovolenou čekají'} na schválení${isTL ? ' od tvého týmu' : ''}`}
                   </p>
                 </div>
               </div>

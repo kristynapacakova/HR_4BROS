@@ -4,7 +4,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { formatDate, getDaysBetween } from '@/lib/utils'
 import { CalendarDays, Plus } from 'lucide-react'
 import { LeaveRequestForm } from './LeaveRequestForm'
-import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
+import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS, DEMO_USER, getDemoUserById } from '@/lib/mock-data'
 
 const LEAVE_LABEL: Record<string, string> = {
   DOVOLENA: 'Dovolená', HOMEOFFICE: 'Homeoffice', NEMOC: 'Nemoc',
@@ -48,7 +48,7 @@ export default async function TimeOffPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
-  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
+  const user = getDemoUserById(session.user.id)
   const leaveBalance = DEMO_LEAVE_BALANCE
   const leaveRequests = DEMO_LEAVE_REQUESTS
 

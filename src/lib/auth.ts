@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { DEMO_USER, DEMO_ADMIN } from './mock-data'
+import { DEMO_USER, DEMO_ADMIN, DEMO_TL, DEMO_USER_ICO } from './mock-data'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -19,6 +19,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             email: DEMO_ADMIN.email,
             name: DEMO_ADMIN.name,
             role: DEMO_ADMIN.role,
+          }
+        }
+
+        if (email === DEMO_TL.email) {
+          return {
+            id: DEMO_TL.id,
+            email: DEMO_TL.email,
+            name: DEMO_TL.name,
+            role: DEMO_TL.role,
+          }
+        }
+
+        if (email === DEMO_USER_ICO.email) {
+          return {
+            id: DEMO_USER_ICO.id,
+            email: DEMO_USER_ICO.email,
+            name: DEMO_USER_ICO.name,
+            role: DEMO_USER_ICO.role,
           }
         }
 

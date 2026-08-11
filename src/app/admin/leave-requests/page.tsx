@@ -4,22 +4,25 @@ import { AppShell } from '@/components/layout/AppShell'
 import { formatDate, getLeaveTypeCz, getDaysBetween } from '@/lib/utils'
 import { CalendarDays } from 'lucide-react'
 import { LeaveActionButtons } from './LeaveActionButtons'
-import { DEMO_ALL_LEAVE_REQUESTS } from '@/lib/mock-data'
+import { DEMO_ALL_LEAVE_REQUESTS, DEMO_TL } from '@/lib/mock-data'
 
 export default async function AdminLeaveRequestsPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
-  if (session.user.role !== 'ADMIN') redirect('/dashboard')
+  const isTL = session.user.role === 'TL'
+  if (session.user.role !== 'ADMIN' && !isTL) redirect('/dashboard')
 
-  const leaveRequests = DEMO_ALL_LEAVE_REQUESTS
+  const leaveRequests = isTL
+    ? DEMO_ALL_LEAVE_REQUESTS.filter((r) => r.user.department === DEMO_TL.department)
+    : DEMO_ALL_LEAVE_REQUESTS
 
   const pending = leaveRequests.filter((r) => r.status === 'PENDING')
   const processed = leaveRequests.filter((r) => r.status !== 'PENDING')
 
   return (
     <AppShell
-      title="Žádosti o dovolenou"
-      isAdmin={true}
+      title={isTL ? 'Žádosti o dovolenou — tvůj tým' : 'Žádosti o dovolenou'}
+      isAdmin={session.user.role === 'ADMIN'}
       userName={session.user.name}
       userEmail={session.user.email}
     >

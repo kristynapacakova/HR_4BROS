@@ -48,13 +48,14 @@ const adminItems = [
 
 interface SidebarProps {
   isAdmin: boolean
+  isTL?: boolean
   userName?: string | null
   userEmail?: string | null
   employmentType?: string | null
   onClose?: () => void
 }
 
-export function Sidebar({ isAdmin, userName, userEmail, onClose }: SidebarProps) {
+export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: SidebarProps) {
   const pathname = usePathname()
 
   const navItems = [...staticNavItemsBefore, ...staticNavItemsAfter]
@@ -115,6 +116,15 @@ export function Sidebar({ isAdmin, userName, userEmail, onClose }: SidebarProps)
               <p className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Administrace</p>
             </div>
             {adminItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
+          </>
+        )}
+
+        {isTL && !isAdmin && (
+          <>
+            <div className="pt-5 pb-2">
+              <p className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Tým</p>
+            </div>
+            {navLink('/admin/leave-requests', 'Žádosti o dovolenou', CheckSquare)}
           </>
         )}
       </nav>

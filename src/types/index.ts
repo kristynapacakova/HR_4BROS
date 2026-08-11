@@ -9,7 +9,7 @@ declare module 'next-auth' {
   }
 }
 
-export type UserRole = 'ADMIN' | 'EMPLOYEE'
+export type UserRole = 'ADMIN' | 'TL' | 'EMPLOYEE'
 
 export type LeaveType = 'ANNUAL' | 'SICK' | 'PERSONAL' | 'UNPAID'
 

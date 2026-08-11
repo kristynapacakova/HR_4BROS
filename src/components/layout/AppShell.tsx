@@ -9,12 +9,13 @@ interface AppShellProps {
   children: React.ReactNode
   title: string
   isAdmin: boolean
+  isTL?: boolean
   userName?: string | null
   userEmail?: string | null
   employmentType?: string | null
 }
 
-export function AppShell({ children, title, isAdmin, userName, userEmail, employmentType }: AppShellProps) {
+export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, employmentType }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -35,6 +36,7 @@ export function AppShell({ children, title, isAdmin, userName, userEmail, employ
       >
         <Sidebar
           isAdmin={isAdmin}
+          isTL={isTL}
           userName={userName}
           userEmail={userEmail}
           employmentType={employmentType}

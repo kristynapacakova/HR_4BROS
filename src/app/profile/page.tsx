@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
-import { DEMO_USER, DEMO_ADMIN, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_LEAVE_REQUESTS, getDemoUserById } from '@/lib/mock-data'
 import { ProfileTabs } from './ProfileTabs'
 import { AvatarUpload } from '@/components/AvatarUpload'
 import { PayslipsClient } from '@/app/payslips/PayslipsClient'
@@ -14,10 +14,9 @@ export default async function ProfilePage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
-  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
+  const user = getDemoUserById(session.user.id)
 
-  const userId = isAdmin ? 'demo-admin-1' : 'demo-employee-1'
-  const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === userId)
+  const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === user.id)
 
   const payslipsLabel = user.employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata'
 

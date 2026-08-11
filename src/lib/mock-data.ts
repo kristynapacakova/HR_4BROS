@@ -348,6 +348,62 @@ export const DEMO_ADMIN = {
   taxId: null,
 }
 
+// Team lead — vidí a schvaluje jen svůj tým (oddělení Vývoj)
+export const DEMO_TL = {
+  id: "demo-tl-1",
+  email: "eva.horakova@fourbros.cz",
+  name: "Eva Horáková",
+  role: "TL",
+  department: "Vývoj",
+  position: "Team Lead — Vývoj",
+  employmentType: "HPP",
+  startDate: new Date("2021-04-01"),
+  phone: "+420 777 456 789",
+  address: "Korunní 40",
+  city: "Praha",
+  country: "CZ",
+  birthDate: new Date("1987-11-02"),
+  bankAccount: "9876543210/0800",
+  taxId: "987654321",
+  seniority: "LEAD",
+  monthlyHours: 168,
+  clientHours: 100,
+  monthlySalary: 85000,
+  hourlyRate: null as number | null,
+}
+
+// OSVČ (IČO) demo účet — pro ukázku pohledu spolupracovníka na fakturu
+export const DEMO_USER_ICO = {
+  id: "demo-employee-ico-1",
+  email: "tomas.dvorak@fourbros.cz",
+  name: "Tomáš Dvořák",
+  role: "EMPLOYEE",
+  department: "Obchod",
+  position: "Account Manager",
+  employmentType: "ICO",
+  startDate: new Date("2022-03-15"),
+  phone: "+420 777 321 654",
+  address: "Milady Horákové 12",
+  city: "Praha",
+  country: "CZ",
+  birthDate: new Date("1985-07-22"),
+  bankAccount: "5647382910/0800",
+  taxId: "192837465",
+  seniority: "SENIOR",
+  monthlyHours: 140,
+  clientHours: 110,
+  monthlySalary: null as number | null,
+  hourlyRate: 1200,
+}
+
+// Resolves which demo user record a logged-in session maps to, by id.
+export function getDemoUserById(id: string) {
+  if (id === DEMO_ADMIN.id) return DEMO_ADMIN
+  if (id === DEMO_TL.id) return DEMO_TL
+  if (id === DEMO_USER_ICO.id) return DEMO_USER_ICO
+  return DEMO_USER
+}
+
 // ── Team directory ──────────────────────────────────────────────────────────
 
 export const TEAM_DEPARTMENTS = [

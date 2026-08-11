@@ -47,8 +47,10 @@ function LoginForm() {
           <div className="mb-5 p-3 bg-amber-50 border border-amber-200 rounded-lg">
             <p className="text-amber-800 text-xs font-medium mb-1">Demo verze</p>
             <p className="text-amber-700 text-xs leading-relaxed">
-              Zadejte <strong>admin@fourbros.cz</strong> pro admin přístup nebo{' '}
-              <strong>jan.novak@fourbros.cz</strong> pro zaměstnanecký přístup.
+              <strong>admin@fourbros.cz</strong> — Admin &amp; HR,{' '}
+              <strong>eva.horakova@fourbros.cz</strong> — Team Lead,{' '}
+              <strong>tomas.dvorak@fourbros.cz</strong> — OSVČ,{' '}
+              <strong>jan.novak@fourbros.cz</strong> — zaměstnanec.
               Libovolný jiný e-mail se přihlásí jako zaměstnanec.
             </p>
           </div>
