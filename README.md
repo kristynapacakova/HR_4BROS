@@ -58,13 +58,28 @@ nebo právníka — zákoník práce se v této oblasti opakovaně měnil.
 
 ## Vizuální styl
 
-Vychází z Four Bros Brand Guidelines v1.0 (11-2023):
+Vizuální myšlenka je **navigační mapa**. Vychází ze značky samotné — logo je loďka,
+brand manuál mluví o tom, že jsme „s klientem na jedné lodi" a že správným použitím
+barev „držíte kurz". Onboarding je vytyčený kurz s datem vyplutí a body obratu, takže:
+
+- **Kurz místo seznamu** — fáze nejsou karty pod sebou, ale waypointy vynesené
+  na kurzové čáře, každý se svou značkou dne (`D−14`, `D+30`, `D+90`)
+- **Vlasová kresba** — členění nese linka v primární barvě, ne barevné výplně;
+  bílá zůstává dominantní plochou, jak žádá manuál
+- **Přístrojová typografie** — třetí písmová role vedle Serenity a Roboto: tabulkové
+  číslice s prostrkanou verzálkou pro všechny údaje, počty a časy
+- **Fialová má jediný význam** — Electric Violet označuje výhradně vaši aktuální
+  polohu na kurzu a odškrtnuté kroky. Tím sama od sebe drží limit 5 % plochy
+  a zároveň něco sděluje
+- **Ukazatel postupu** je přístrojový oblouk s ryskami, ne obyčejný pruh
+
+Dodržené kapitoly brand manuálu:
 
 - **Barvy** (4.2) — Four Bros Navy `#194669` nese texty a tvary, Alice Blue `#F7F8FE`
   a Light Grey `#F4F4F4` slouží jako výplně, bílá pokrývá většinu plochy,
   Electric Violet `#7E17E0` jen na tlačítka a zvýraznění pod 5 % plochy
 - **Typografie** (5.4) — nadpisy 1. a 2. úrovně Serenity, 3. úroveň Roboto Bold,
-  odstavce Roboto Light
+  odstavce Roboto Light, řádkování v pásmu 1,5–1,8
 - **Ikony** (6.1) — obrysy v primární barvě, detail v Electric Violet, kruhové pozadí Alice Blue
 
 Fonty Serenity a Roboto nejsou v souboru vložené kvůli licenci. Bez nich se aplikace
