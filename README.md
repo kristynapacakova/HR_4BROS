@@ -8,6 +8,10 @@ Interní HR materiály Four Bros.
 |---|---|
 | [`onboarding/pruvodce-onboardingem.html`](onboarding/pruvodce-onboardingem.html) | Onboardingová aplikace — proklikávací průvodce nástupem od A po Z |
 
+Aplikace je **záměrně samostatná** a nezávislá na HR portálu (větev
+`claude/dazzling-allen-z9AjG`). Funguje sama o sobě, aby se dala používat
+dřív, než bude portál hotový.
+
 ## Onboardingová aplikace
 
 Jeden HTML soubor, který je zároveň celá aplikace. Nepotřebuje server, instalaci ani
@@ -18,7 +22,7 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 - **Přehled** — postup v procentech, kolikátý je den onboardingu, aktuální fáze a co je na řadě
 - **Postup** — sedm rozbalovacích fází, celkem 62 odškrtávacích kroků s odznakem role, která je má na starosti
 - **Přístupy** — kompletní postup zajištění přístupů novému kolegovi: založení účtů, fyzické přístupy, nastavení nástrojů krok za krokem a 14 řešených zádrhelů
-- **Návody** — 16 návodů krok za krokem: přihlášení do nástrojů, přístupy do klientských účtů, výkazy hodin, první call s klientem, kontrola výstupů před odesláním, mlčenlivost a klientská data, náš brand manuál, e-mailový podpis a další
+- **Návody** — 17 návodů krok za krokem: přihlášení do nástrojů, přístupy do klientských účtů, výkazy hodin, první call s klientem, kontrola výstupů před odesláním, mlčenlivost a klientská data, náš brand manuál, e-mailový podpis a další
 - **Značka** — pravidla z brand manuálu pro každého, kdo píše klientovi
 - **Kdo je kdo** — posádka Four Bros a na co se koho ptát
 - **Termíny** — zákonné lhůty při nástupu
@@ -63,7 +67,10 @@ Postup přístupů a seznam nástrojů vychází z **interní procesní mapy Fou
 obnovené z větve `claude/dazzling-allen-z9AjG` (commit `44d838f` ji odstranil
 z HR aplikace s poznámkou „will be redone separately"). Reálný stack:
 Four Bros Gmail, Asana, 1Password, Slack, Costlocker, SettleUp, docházka
-a fakturace, PandaDoc na smlouvy, iGET na vstup do budovy.
+a fakturace, iGET na vstup do budovy.
+
+Smlouvy se **nepodepisují v PandaDocu** — ten se už nepoužívá. Podepisují se
+fyzicky, případně elektronickým podpisem v HR portálu, až bude hotový.
 
 ## Obsah je psaný na agenturu
 

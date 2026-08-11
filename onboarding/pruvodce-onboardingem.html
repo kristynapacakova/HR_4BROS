@@ -679,8 +679,7 @@ var SETTINGS = [
     { key:'chat',       label:'Komunikační nástroj',       ph:'Slack', def:'Slack' },
     { key:'dochazka',   label:'Docházka a dovolená',       ph:'název nástroje' },
     { key:'brandSlozka',label:'Složka s logy a šablonami', ph:'odkaz nebo cesta' },
-    { key:'hesla',      label:'Správce hesel',             ph:'1Password', def:'1Password' },
-    { key:'smlouvy',    label:'Podpis smluv',              ph:'PandaDoc', def:'PandaDoc' }
+    { key:'hesla',      label:'Správce hesel',             ph:'1Password', def:'1Password' }
   ]},
   { group:'Praktické', items:[
     { key:'dressCode',  label:'Dress code',    ph:'jak chodíme oblečení' },
@@ -706,7 +705,8 @@ var PHASES = [
     id:'pred', title:'Před nástupem', when:'2 týdny předem', from:-14, to:-1,
     intro:'V den nástupu je všechno připravené a nový člověk ví, kam a v kolik má přijít. Nic z toho se nedá stihnout ráno v den D.',
     tasks:[
-      { id:'p1',  who:'HR',      t:'Smlouva připravena v {{smlouvy}} a podepsána oběma stranami — nejpozději v den nástupu' },
+      { id:'p1',  who:'HR',      t:'Smlouva vyhotovena a podepsána oběma stranami — <strong>fyzicky</strong>, nebo elektronickým podpisem v HR portálu', guide:'smlouvy' },
+      { id:'p1b', who:'Vedení',   t:'Smlouva projita s novým kolegou bod po bodu <strong>ještě před podpisem</strong>' },
       { id:'p2',  who:'HR',      t:'Vstupní lékařská prohlídka objednána a absolvována <strong>před</strong> vznikem pracovního poměru', guide:'prohlidka' },
       { id:'p3',  who:'HR',      t:'Mzdový výměr připraven, pokud mzda není přímo ve smlouvě' },
       { id:'p4',  who:'HR',      t:'Osobní dotazník, prohlášení poplatníka daně, číslo účtu, kontakt pro případ nouze' },
@@ -824,6 +824,18 @@ var PHASES = [
    4. NÁVODY
    ============================================================ */
 var GUIDES = [
+  { id:'smlouvy', icon:'docs', title:'Podpis smlouvy',
+    lead:'Dvě cesty: fyzicky, nebo elektronicky přes HR portál. Portál se zatím dokončuje, takže reálně podepisujeme fyzicky.',
+    steps:[
+      'Připrav smlouvu podle typu spolupráce — pracovní poměr, nebo smlouva o spolupráci u OSVČ. Podklad ber z výstupu výběrového řízení.',
+      '<strong>Vedení projde smlouvu s novým kolegou bod po bodu</strong> ještě před podpisem. Ne „pošlu ti to, přečti si to" — společně.',
+      'Nech prostor na otázky. Co se nedovysvětlí teď, vrátí se to za tři měsíce jako nedorozumění.',
+      '<strong>Fyzicky:</strong> vytiskni ve dvou vyhotoveních, obě strany podepíšou, jedno si odnese nový kolega, druhé jde do osobního spisu.',
+      '<strong>Elektronicky:</strong> až bude HR portál hotový, půjde smlouva podepsat elektronickým podpisem přímo v něm. Do té doby tuhle cestu nenabízej.',
+      'Zkontroluj, že je smlouva podepsaná <strong>oběma stranami</strong> a že datum podpisu není pozdější než den nástupu.',
+      'Ulož podepsané vyhotovení do osobního spisu ještě týž den, ne „až se to nakupí".',
+      'Zvlášť ohlídej <strong>zkušební dobu</strong> — musí být sjednaná písemně a nelze ji doplnit později.'
+    ]},
   { id:'systemy', icon:'laptop', title:'Přihlášení do nástrojů',
     lead:'Projdi si to hned první den, ať nezjistíš v pátek, že se někam nedostaneš.',
     steps:[
