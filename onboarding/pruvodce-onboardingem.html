@@ -1,0 +1,1435 @@
+<title>Onboarding průvodce — Four Bros</title>
+
+<style>
+/* ============================================================
+   FOUR BROS — ONBOARDING PRŮVODCE
+   Design systém převzat z Four Bros Brand Guidelines v1.0
+   ============================================================ */
+
+:root{
+  /* --- Značkové barvy (brandbook 4.2) --- */
+  --navy:        #194669;
+  --alice:       #F7F8FE;
+  --lightgrey:   #F4F4F4;
+  --white:       #FFFFFF;
+  --violet:      #7E17E0;
+
+  /* --- Odvozené neutrály, posunuté do modra --- */
+  --ground:      #FFFFFF;
+  --surface:     #F7F8FE;
+  --surface-2:   #F4F4F4;
+  --ink:         #1B2F41;
+  --ink-strong:  #194669;
+  --ink-muted:   #5C7387;
+  --hairline:    #DDE5EE;
+  --hairline-soft:#EAF0F6;
+  --accent:      #7E17E0;
+  --accent-soft: #F3E9FE;
+  --accent-ink:  #7E17E0;
+  --on-accent:   #FFFFFF;
+
+  /* --- Typografie --- */
+  --font-display: 'Serenity','Serenity Light','Futura','Avenir Next','Century Gothic','Questrial','Trebuchet MS',sans-serif;
+  --font-body:    'Roboto','Roboto Light','Helvetica Neue','Segoe UI',Arial,sans-serif;
+
+  --step--1: 0.8125rem;
+  --step-0:  1.0625rem;
+  --step-1:  1.1875rem;
+  --step-2:  1.375rem;
+  --step-3:  clamp(1.5rem, 2.4vw, 1.9rem);
+  --step-4:  clamp(1.9rem, 4vw, 2.9rem);
+  --step-5:  clamp(2.4rem, 6vw, 4rem);
+
+  --measure: 68ch;
+  --radius: 3px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:      #0D2032;
+    --surface:     #14304A;
+    --surface-2:   #102942;
+    --ink:         #DCE8F2;
+    --ink-strong:  #FFFFFF;
+    --ink-muted:   #93AAC0;
+    --hairline:    #23486A;
+    --hairline-soft:#1B3A57;
+    --accent:      #B472FF;
+    --accent-soft: #2A1B48;
+    --accent-ink:  #C795FF;
+    --on-accent:   #14082B;
+    --navy:        #DCE8F2;
+    --alice:       #14304A;
+    --lightgrey:   #102942;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:      #0D2032;
+  --surface:     #14304A;
+  --surface-2:   #102942;
+  --ink:         #DCE8F2;
+  --ink-strong:  #FFFFFF;
+  --ink-muted:   #93AAC0;
+  --hairline:    #23486A;
+  --hairline-soft:#1B3A57;
+  --accent:      #B472FF;
+  --accent-soft: #2A1B48;
+  --accent-ink:  #C795FF;
+  --on-accent:   #14082B;
+  --navy:        #DCE8F2;
+  --alice:       #14304A;
+  --lightgrey:   #102942;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-weight:300;
+  font-size:var(--step-0);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Typografická hierarchie (brandbook 5.4) ---------- */
+h1,h2{
+  font-family:var(--font-display);
+  font-weight:300;
+  color:var(--ink-strong);
+  text-wrap:balance;
+  margin:0;
+  letter-spacing:-0.015em;
+  line-height:1.15;
+}
+h1{font-size:var(--step-5);}
+h2{font-size:var(--step-4);}
+h3{
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:var(--step-1);
+  color:var(--ink-strong);
+  margin:0;
+  line-height:1.4;
+  text-wrap:balance;
+}
+h4{
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:var(--step-0);
+  color:var(--ink-strong);
+  margin:0;
+  line-height:1.5;
+}
+p{margin:0;max-width:var(--measure);}
+strong{font-weight:700;color:var(--ink-strong);}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px;}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+.eyebrow{
+  font-size:var(--step--1);
+  font-weight:700;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+  margin:0;
+}
+
+/* ---------- Kostra stránky ---------- */
+.page{
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 clamp(1.25rem,4vw,3rem);
+}
+
+.masthead{
+  border-bottom:1px solid var(--hairline);
+  background:var(--ground);
+}
+.masthead-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1.5rem;
+  flex-wrap:wrap;
+  padding:1.25rem 0;
+}
+.wordmark{
+  font-family:var(--font-display);
+  font-size:1.3rem;
+  letter-spacing:0.02em;
+  color:var(--ink-strong);
+  font-weight:400;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+}
+.wordmark .mark{
+  width:30px;height:30px;flex:none;
+}
+.masthead-meta{
+  font-size:var(--step--1);
+  color:var(--ink-muted);
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  font-weight:400;
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  padding:clamp(3rem,8vw,5.5rem) 0 clamp(2.5rem,5vw,3.5rem);
+  border-bottom:1px solid var(--hairline);
+  display:grid;
+  gap:1.75rem;
+}
+.hero .lead{
+  font-size:var(--step-2);
+  font-weight:300;
+  line-height:1.55;
+  color:var(--ink);
+  max-width:60ch;
+}
+.hero-facts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0 2.5rem;
+  padding-top:.5rem;
+}
+.fact{
+  padding:.9rem 0;
+  border-top:2px solid var(--navy);
+  min-width:9rem;
+}
+.fact dt{
+  font-size:var(--step--1);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+  font-weight:400;
+  margin:0 0 .15rem;
+}
+.fact dd{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:1.55rem;
+  color:var(--ink-strong);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- Rozvržení obsah + navigace ---------- */
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:3rem;
+  padding:clamp(2.5rem,5vw,3.5rem) 0 5rem;
+}
+@media (min-width:1000px){
+  .layout{grid-template-columns:210px minmax(0,1fr);gap:4rem;}
+}
+
+.toc{display:none;}
+@media (min-width:1000px){
+  .toc{
+    display:block;
+    position:sticky;
+    top:2rem;
+    align-self:start;
+    max-height:calc(100vh - 4rem);
+    overflow-y:auto;
+    font-size:var(--step--1);
+  }
+}
+.toc h2{
+  font-family:var(--font-body);
+  font-size:var(--step--1);
+  font-weight:700;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+  margin-bottom:1rem;
+}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:.1rem;}
+.toc a{
+  display:block;
+  padding:.4rem .6rem .4rem .75rem;
+  color:var(--ink);
+  text-decoration:none;
+  border-left:2px solid var(--hairline-soft);
+  line-height:1.35;
+}
+.toc a:hover{border-left-color:var(--navy);background:var(--surface);}
+.toc a.is-current{border-left-color:var(--accent);color:var(--ink-strong);font-weight:400;}
+
+.content{display:grid;gap:clamp(3rem,6vw,4.5rem);min-width:0;}
+
+section{scroll-margin-top:1.5rem;display:grid;gap:1.5rem;}
+.section-head{display:grid;gap:.55rem;}
+.prose{display:grid;gap:1rem;}
+
+/* ---------- Fázová osa ---------- */
+.phase{
+  position:relative;
+  padding-left:2.25rem;
+}
+.phase::before{
+  content:"";
+  position:absolute;
+  left:7px;top:.55rem;bottom:-.5rem;
+  width:1px;
+  background:var(--hairline);
+}
+.phase::after{
+  content:"";
+  position:absolute;
+  left:0;top:.4rem;
+  width:15px;height:15px;
+  border:2px solid var(--navy);
+  border-radius:50%;
+  background:var(--ground);
+}
+.phase:last-of-type::before{display:none;}
+.phase-when{
+  font-family:var(--font-body);
+  font-size:var(--step--1);
+  font-weight:700;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--accent-ink);
+}
+
+/* ---------- Karty ---------- */
+.card{
+  background:var(--surface);
+  border:1px solid var(--hairline-soft);
+  border-radius:var(--radius);
+  padding:clamp(1.25rem,3vw,1.75rem);
+  display:grid;
+  gap:.9rem;
+}
+.card.grey{background:var(--surface-2);}
+.card.plain{background:transparent;}
+
+.grid-2{display:grid;gap:1rem;}
+@media (min-width:680px){.grid-2{grid-template-columns:1fr 1fr;}}
+.grid-3{display:grid;gap:1rem;}
+@media (min-width:680px){.grid-3{grid-template-columns:repeat(3,1fr);}}
+
+/* ---------- Ikony (brandbook 6.1) ---------- */
+.icon-circle{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:var(--alice);
+  border:1px solid var(--hairline-soft);
+  display:grid;place-items:center;
+  flex:none;
+}
+.icon{width:22px;height:22px;display:block;}
+.icon .stroke{fill:none;stroke:var(--navy);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.icon .detail{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.icon .detail-fill{fill:var(--accent);stroke:none;}
+
+.card-head{display:flex;align-items:center;gap:.9rem;}
+
+/* ---------- Odpovědnosti ---------- */
+.roles{display:grid;gap:1rem;}
+@media (min-width:760px){.roles{grid-template-columns:repeat(2,1fr);}}
+.role{
+  border-top:2px solid var(--navy);
+  padding-top:.9rem;
+  display:grid;
+  gap:.5rem;
+}
+.role ul{margin:0;padding-left:1.1rem;display:grid;gap:.3rem;}
+
+/* ---------- Checklisty ---------- */
+.checklist{
+  border:1px solid var(--hairline);
+  border-radius:var(--radius);
+  background:var(--ground);
+  overflow:hidden;
+}
+.checklist-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.9rem 1.15rem;
+  background:var(--surface);
+  border-bottom:1px solid var(--hairline);
+  flex-wrap:wrap;
+}
+.checklist-head h4{margin:0;}
+.progress{
+  font-size:var(--step--1);
+  color:var(--ink-muted);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:0.04em;
+}
+.checklist ul{list-style:none;margin:0;padding:.5rem 0;display:grid;}
+.checklist li{border-bottom:1px solid var(--hairline-soft);}
+.checklist li:last-child{border-bottom:0;}
+.check{
+  display:flex;
+  gap:.8rem;
+  align-items:flex-start;
+  padding:.7rem 1.15rem;
+  cursor:pointer;
+  line-height:1.5;
+}
+.check:hover{background:var(--surface);}
+.check input{
+  appearance:none;
+  -webkit-appearance:none;
+  width:19px;height:19px;
+  margin:.28rem 0 0;
+  flex:none;
+  border:1.5px solid var(--navy);
+  border-radius:2px;
+  background:var(--ground);
+  cursor:pointer;
+  display:grid;
+  place-content:center;
+  transition:background .12s ease, border-color .12s ease;
+}
+.check input::after{
+  content:"";
+  width:10px;height:6px;
+  border-left:2px solid var(--on-accent);
+  border-bottom:2px solid var(--on-accent);
+  transform:rotate(-45deg) scale(0);
+  transition:transform .12s ease;
+}
+.check input:checked{background:var(--accent);border-color:var(--accent);}
+.check input:checked::after{transform:rotate(-45deg) scale(1);}
+.check input:checked + .check-text{color:var(--ink-muted);}
+.check-text{transition:color .12s ease;}
+.check-text .who{
+  display:inline-block;
+  font-size:var(--step--1);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+  border:1px solid var(--hairline);
+  border-radius:2px;
+  padding:0 .35rem;
+  margin-right:.45rem;
+  vertical-align:1px;
+  font-weight:400;
+}
+
+/* ---------- Doplňovací pole ---------- */
+.fill{
+  background:var(--accent-soft);
+  color:var(--accent-ink);
+  border-bottom:1px dashed var(--accent);
+  padding:0 .25rem;
+  font-weight:400;
+  white-space:nowrap;
+}
+
+/* ---------- Šablony ---------- */
+.tpl{
+  border:1px solid var(--hairline);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.tpl-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.75rem .5rem .75rem 1.15rem;
+  background:var(--surface);
+  border-bottom:1px solid var(--hairline);
+}
+.tpl-body{
+  padding:1.15rem;
+  white-space:pre-wrap;
+  font-size:var(--step--1);
+  line-height:1.7;
+  overflow-x:auto;
+}
+.btn{
+  font-family:var(--font-body);
+  font-size:var(--step--1);
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--on-accent);
+  background:var(--accent);
+  border:0;
+  border-radius:2px;
+  padding:.5rem 1rem;
+  cursor:pointer;
+  transition:opacity .15s ease;
+}
+.btn:hover{opacity:.85;}
+
+/* ---------- Tabulky ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--hairline);border-radius:var(--radius);}
+table{border-collapse:collapse;width:100%;font-size:var(--step--1);min-width:520px;}
+th,td{text-align:left;padding:.7rem .9rem;border-bottom:1px solid var(--hairline-soft);vertical-align:top;line-height:1.5;}
+th{
+  background:var(--surface);
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  font-size:var(--step--1);
+  color:var(--ink-strong);
+  white-space:nowrap;
+}
+tr:last-child td{border-bottom:0;}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+/* ---------- Poznámka / upozornění ---------- */
+.note{
+  border-left:3px solid var(--accent);
+  background:var(--surface);
+  padding:1rem 1.25rem;
+  display:grid;
+  gap:.5rem;
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.note .eyebrow{color:var(--accent-ink);}
+
+/* ---------- Seznamy ---------- */
+.prose ul,.card ul,.note ul{margin:0;padding-left:1.15rem;display:grid;gap:.4rem;max-width:var(--measure);}
+.prose ol{margin:0;padding-left:1.3rem;display:grid;gap:.5rem;max-width:var(--measure);}
+li::marker{color:var(--ink-muted);}
+
+/* ---------- Barevné vzorky ---------- */
+.swatches{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));}
+.swatch{border:1px solid var(--hairline);border-radius:var(--radius);overflow:hidden;}
+.swatch .chip{height:56px;}
+.swatch .meta{padding:.55rem .7rem;display:grid;gap:.1rem;font-size:var(--step--1);}
+.swatch .meta b{font-weight:700;color:var(--ink-strong);}
+.swatch .meta span{color:var(--ink-muted);font-variant-numeric:tabular-nums;}
+
+/* ---------- Detaily / rozbalovací ---------- */
+details{border:1px solid var(--hairline);border-radius:var(--radius);background:var(--ground);}
+summary{
+  cursor:pointer;
+  padding:.85rem 1.15rem;
+  font-weight:700;
+  color:var(--ink-strong);
+  list-style:none;
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  align-items:center;
+}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";color:var(--accent-ink);font-weight:400;font-size:1.3rem;line-height:1;}
+details[open] summary::after{content:"–";}
+details .inner{padding:0 1.15rem 1.15rem;display:grid;gap:.8rem;}
+
+/* ---------- Patička ---------- */
+.colophon{
+  border-top:1px solid var(--hairline);
+  padding:2.5rem 0 4rem;
+  display:grid;
+  gap:.6rem;
+  font-size:var(--step--1);
+  color:var(--ink-muted);
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+}
+
+/* ---------- Tisk ---------- */
+@media print{
+  :root{--ground:#fff;--surface:#F7F8FE;--surface-2:#F4F4F4;--ink:#1B2F41;--ink-strong:#194669;--hairline:#C9D6E2;}
+  body{font-size:10.5pt;}
+  .toc,.btn,.masthead-meta{display:none!important;}
+  .layout{grid-template-columns:1fr;padding-top:1rem;}
+  section{break-inside:auto;page-break-inside:auto;}
+  h2{break-after:avoid;}
+  .card,.checklist,.tpl,.note{break-inside:avoid;}
+  details{border:0;}
+  details .inner{display:block!important;}
+  details summary::after{display:none;}
+  a{color:inherit;text-decoration:none;}
+}
+</style>
+
+<header class="masthead">
+  <div class="page masthead-inner">
+    <div class="wordmark">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path class="stroke" d="M4 24h24l-3.5 4.5h-17z"/>
+        <path class="stroke" d="M16 22V5l-8 17z"/>
+        <path class="detail" d="M18 22V9l7 13z"/>
+      </svg>
+      <span>Four&nbsp;Bros</span>
+    </div>
+    <p class="masthead-meta">Interní materiál HR · verze <span class="fill">1.0</span> · <span class="fill">08/2026</span></p>
+  </div>
+</header>
+
+<div class="page">
+
+  <div class="hero">
+    <p class="eyebrow">Onboarding od A po Z</p>
+    <h1>Průvodce nástupem nového člověka</h1>
+    <p class="lead">Kompletní scénář prvních dvanácti měsíců — co zařídit před nástupem, jak vypadá první den, co se má stát do 30, 60 a 90 dní a kde onboarding končí. Jeden dokument pro HR, manažera i buddyho.</p>
+    <dl class="hero-facts">
+      <div class="fact">
+        <dt>Začíná</dt>
+        <dd>D−14</dd>
+      </div>
+      <div class="fact">
+        <dt>Rozhodný bod</dt>
+        <dd>90 dní</dd>
+      </div>
+      <div class="fact">
+        <dt>Končí</dt>
+        <dd>12 měsíců</dd>
+      </div>
+      <div class="fact">
+        <dt>Zapojené role</dt>
+        <dd>4</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="layout">
+
+    <nav class="toc" aria-label="Obsah průvodce">
+      <h2>Obsah</h2>
+      <ol>
+        <li><a href="#jak-pracovat">Jak průvodce používat</a></li>
+        <li><a href="#role">Kdo za co odpovídá</a></li>
+        <li><a href="#pred-nastupem">Před nástupem · D−14</a></li>
+        <li><a href="#prvni-den">První den · D1</a></li>
+        <li><a href="#prvni-tyden">První týden</a></li>
+        <li><a href="#30-dni">Prvních 30 dní</a></li>
+        <li><a href="#60-dni">60 dní</a></li>
+        <li><a href="#90-dni">90 dní · zkušebka</a></li>
+        <li><a href="#pul-roku">6 a 12 měsíců</a></li>
+        <li><a href="#znacka">Onboarding do značky</a></li>
+        <li><a href="#administrativa">Administrativa</a></li>
+        <li><a href="#sablony">Šablony textů</a></li>
+        <li><a href="#mereni">Co měřit</a></li>
+        <li><a href="#chyby">Časté chyby</a></li>
+      </ol>
+    </nav>
+
+    <main class="content">
+
+      <!-- ============ JAK PRACOVAT ============ -->
+      <section id="jak-pracovat">
+        <div class="section-head">
+          <p class="eyebrow">Úvod</p>
+          <h2>Jak průvodce používat</h2>
+        </div>
+        <div class="prose">
+          <p>Průvodce je psaný jako scénář, ne jako směrnice. Projdi ho odshora dolů pokaždé, když víš o novém nástupu — každá fáze má vlastní checklist, který si můžeš odškrtávat přímo tady ve stránce.</p>
+          <ul>
+            <li><strong>Fialově podbarvená místa</strong> jsou k doplnění — jméno systému, odkaz, konkrétní člověk. Doplň je jednou a máš hotovou firemní verzi.</li>
+            <li><strong>Odškrtnutí se ukládají</strong> do tvého prohlížeče. Pro každý nástup si otevři stránku v novém profilu nebo si checklisty vytiskni.</li>
+            <li><strong>Tisk je připravený</strong> — <em>Ctrl/Cmd + P</em> vytiskne čistou verzi bez navigace a tlačítek.</li>
+          </ul>
+        </div>
+        <div class="note">
+          <p class="eyebrow">Jedno pravidlo nad ostatními</p>
+          <p>Onboarding nezačíná v den nástupu a nekončí předáním notebooku. Nejvíc odchodů ve zkušební době vzniká z toho, že člověk první týden neví, co má dělat, a nemá se koho zeptat. Buddy a jasný plán na prvních 30 dní řeší víc než sebelepší uvítací balíček.</p>
+        </div>
+      </section>
+
+      <!-- ============ ROLE ============ -->
+      <section id="role">
+        <div class="section-head">
+          <p class="eyebrow">Odpovědnosti</p>
+          <h2>Kdo za co odpovídá</h2>
+          <p>Onboarding selhává tam, kde si všichni myslí, že to dělá někdo jiný. Tohle je rozdělení, které platí u každého nástupu.</p>
+        </div>
+        <div class="roles">
+          <div class="role">
+            <h3>HR</h3>
+            <p>Vlastník celého procesu. Hlídá termíny a nese odpovědnost za to, že proces proběhne.</p>
+            <ul>
+              <li>Smlouva, dokumenty, přihlášky, lékařská prohlídka</li>
+              <li>Koordinace techniky a přístupů s <span class="fill">[IT / externí správce]</span></li>
+              <li>Uvítací e-mail, agenda prvního dne, představení firmě</li>
+              <li>Zpětná vazba v 7., 30., 90. dni</li>
+              <li>Rozhodnutí o zkušební době připraví jako podklad pro manažera</li>
+            </ul>
+          </div>
+          <div class="role">
+            <h3>Přímý nadřízený</h3>
+            <p>Vlastník obsahu práce. Bez něj je onboarding jen administrativa.</p>
+            <ul>
+              <li>Plán prvních 30/60/90 dní — konkrétní úkoly a očekávání</li>
+              <li>Uvedení do týmu a do zakázek</li>
+              <li>Pravidelné 1:1 (první měsíc týdně, pak jednou za dva týdny)</li>
+              <li>Průběžná zpětná vazba — žádné překvapení na konci zkušebky</li>
+              <li>Rozhodnutí o pokračování po zkušební době</li>
+            </ul>
+          </div>
+          <div class="role">
+            <h3>Buddy</h3>
+            <p>Kolega na stejné úrovni, ne šéf. Od něj se člověk ptá na to, na co se stydí zeptat nadřízeného.</p>
+            <ul>
+              <li>Je k dispozici první den od rána</li>
+              <li>Provede firmou, ukáže kuchyňku, systémy, nepsaná pravidla</li>
+              <li>Obědvá s nováčkem první den a pak alespoň jednou týdně první měsíc</li>
+              <li>Není to role navíc zdarma — počítej mu s ní v kapacitě</li>
+            </ul>
+          </div>
+          <div class="role">
+            <h3>Nováček</h3>
+            <p>Má taky své úkoly. Řekni mu je nahlas, ať ví, co se od něj čeká.</p>
+            <ul>
+              <li>Dodá dokumenty do <span class="fill">[termín]</span> před nástupem</li>
+              <li>Projde povinná školení</li>
+              <li>Ptá se — vysloveně mu to dej za úkol</li>
+              <li>V 30. dni přinese svůj pohled: co je matoucí, co chybí</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PŘED NÁSTUPEM ============ -->
+      <section id="pred-nastupem" class="phase">
+        <p class="phase-when">Fáze 1 · D−14 až D−1</p>
+        <div class="section-head">
+          <h2>Před nástupem</h2>
+          <p>Cíl fáze: v den nástupu je všechno připravené a člověk ví, kam a v kolik má přijít. Nic z toho se nedá stihnout ráno v den D.</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-head">
+              <div class="icon-circle">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="stroke" d="M6 3h8l5 5v13H6z"/>
+                  <path class="stroke" d="M14 3v5h5"/>
+                  <path class="detail" d="M9 15l2 2 4-4"/>
+                </svg>
+              </div>
+              <h3>Papíry</h3>
+            </div>
+            <p>Smlouva, prohlídka, přihlášky. Musí být hotové dřív, než člověk poprvé usedne k práci.</p>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div class="icon-circle">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect class="stroke" x="3" y="5" width="18" height="12" rx="1.5"/>
+                  <path class="stroke" d="M2 20h20"/>
+                  <circle class="detail-fill" cx="12" cy="11" r="2"/>
+                </svg>
+              </div>
+              <h3>Technika</h3>
+            </div>
+            <p>Notebook, telefon, účty, přístupy. Otestované — ne jen objednané.</p>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div class="icon-circle">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="stroke" cx="9" cy="8" r="3.5"/>
+                  <path class="stroke" d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/>
+                  <path class="detail" d="M17 8.5h5M19.5 6v5"/>
+                </svg>
+              </div>
+              <h3>Lidé</h3>
+            </div>
+            <p>Buddy je určený a ví o tom. Tým ví, kdo přijde a proč.</p>
+          </div>
+        </div>
+
+        <div class="checklist" data-checklist="pred-nastupem">
+          <div class="checklist-head">
+            <h4>Checklist — před nástupem</h4>
+            <p class="progress" data-progress>0 / 0 hotovo</p>
+          </div>
+          <ul>
+            <li><label class="check"><input type="checkbox" data-key="pre-01"><span class="check-text"><span class="who">HR</span>Pracovní smlouva vyhotovena a podepsána — nejpozději v den nástupu, ideálně dřív</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-02"><span class="check-text"><span class="who">HR</span>Vstupní lékařská prohlídka objednána a absolvována <strong>před</strong> vznikem pracovního poměru</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-03"><span class="check-text"><span class="who">HR</span>Mzdový výměr připraven (pokud mzda není přímo ve smlouvě)</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-04"><span class="check-text"><span class="who">HR</span>Osobní dotazník, prohlášení poplatníka daně, číslo účtu, kontakt pro případ nouze</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-05"><span class="check-text"><span class="who">HR</span>Informace o zpracování osobních údajů (GDPR) předána a založena</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-06"><span class="check-text"><span class="who">HR</span>Zápočtový list od předchozího zaměstnavatele vyžádán</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-07"><span class="check-text"><span class="who">HR</span>Založen osobní spis — v <span class="fill">[systém / sdílený disk]</span></span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-08"><span class="check-text"><span class="who">IT</span>Notebook a telefon připraveny, nastaveny a <strong>vyzkoušeny</strong></span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-09"><span class="check-text"><span class="who">IT</span>Pracovní e-mail <span class="fill">[jmeno.prijmeni@fourbros.cz]</span> a podpis podle brand manuálu</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-10"><span class="check-text"><span class="who">IT</span>Přístupy do <span class="fill">[CRM]</span>, <span class="fill">[sdílený disk]</span>, <span class="fill">[komunikační nástroj]</span>, <span class="fill">[docházka]</span></span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-11"><span class="check-text"><span class="who">IT</span>Karta / klíče / kód od <span class="fill">[budova, patro]</span></span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-12"><span class="check-text"><span class="who">Manažer</span>Určen buddy — a buddy o tom ví a souhlasí</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-13"><span class="check-text"><span class="who">Manažer</span>Připraven plán prvních 30 dní — konkrétní úkoly, ne obecné fráze</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-14"><span class="check-text"><span class="who">Manažer</span>Pracovní místo fyzicky připraveno — stůl, židle, monitor, uvítací drobnost</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-15"><span class="check-text"><span class="who">HR</span>Uvítací e-mail odeslán <strong>3–5 dní předem</strong> (šablona níže)</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-16"><span class="check-text"><span class="who">HR</span>Oznámení týmu odesláno — kdo přijde, na jakou pozici, od kdy</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-17"><span class="check-text"><span class="who">HR</span>Do kalendářů zapsáno: agenda 1. dne, školení BOZP, 1:1 v 7. a 30. dni</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="pre-18"><span class="check-text"><span class="who">HR</span>Vizitky objednány podle šablony z brand manuálu (mění se jen textace)</span></label></li>
+          </ul>
+        </div>
+
+        <div class="note">
+          <p class="eyebrow">Pozor na pořadí</p>
+          <p>Vstupní lékařská prohlídka i podpis smlouvy musí proběhnout <strong>před</strong> tím, než člověk začne pracovat. Stejně tak školení BOZP a PO — bez něj nesmí nastoupit na pracoviště. Není to formalita: při úrazu se to řeší jako první.</p>
+        </div>
+      </section>
+
+      <!-- ============ PRVNÍ DEN ============ -->
+      <section id="prvni-den" class="phase">
+        <p class="phase-when">Fáze 2 · Den 1</p>
+        <div class="section-head">
+          <h2>První den</h2>
+          <p>Cíl fáze: člověk odchází domů s pocitem, že udělal správně, když nabídku přijal. Nepřetěžuj ho informacemi — polovinu si stejně nezapamatuje.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Čas</th><th>Co se děje</th><th>Kdo vede</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">9:00</td><td>Přivítání v recepci, káva, klid. Nezačínej papíry.</td><td>HR</td></tr>
+              <tr><td class="num">9:15</td><td>Prohlídka prostor — kde se sedí, jí, tiskne, parkuje</td><td>Buddy</td></tr>
+              <tr><td class="num">9:45</td><td>Předání techniky, přihlášení do systémů, nastavení podpisu</td><td>IT / HR</td></tr>
+              <tr><td class="num">10:30</td><td>Dokumenty, které nešly vyřídit předem</td><td>HR</td></tr>
+              <tr><td class="num">11:00</td><td>Školení BOZP a PO — s podpisem do evidence</td><td><span class="fill">[BOZP technik]</span></td></tr>
+              <tr><td class="num">12:00</td><td>Oběd s buddym a částí týmu</td><td>Buddy</td></tr>
+              <tr><td class="num">13:30</td><td>Kdo jsme, co děláme, kdo jsou naši klienti</td><td>HR / manažer</td></tr>
+              <tr><td class="num">14:30</td><td>Představení týmu, kdo je kdo a na co se koho ptát</td><td>Manažer</td></tr>
+              <tr><td class="num">15:00</td><td>Očekávání, plán na prvních 30 dní, první úkol</td><td>Manažer</td></tr>
+              <tr><td class="num">16:00</td><td>Prostor na otázky, domluva na zítřek</td><td>Buddy</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="checklist" data-checklist="prvni-den">
+          <div class="checklist-head">
+            <h4>Checklist — první den</h4>
+            <p class="progress" data-progress>0 / 0 hotovo</p>
+          </div>
+          <ul>
+            <li><label class="check"><input type="checkbox" data-key="d1-01"><span class="check-text"><span class="who">HR</span>Někdo konkrétní čeká v recepci v domluvený čas — nikdo nestojí ve dveřích sám</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-02"><span class="check-text"><span class="who">IT</span>Přihlášení do všech systémů ověřeno přímo s nováčkem</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-03"><span class="check-text"><span class="who">HR</span>Školení BOZP a PO absolvováno a <strong>podepsáno</strong></span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-04"><span class="check-text"><span class="who">HR</span>Prohlášení poplatníka daně podepsáno (nejpozději do 30 dnů od nástupu)</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-05"><span class="check-text"><span class="who">HR</span>Nováček zaveden do docházky a mzdového systému</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-06"><span class="check-text"><span class="who">Manažer</span>Předán plán prvních 30 dní — písemně, ne jen ústně</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-07"><span class="check-text"><span class="who">Manažer</span>Zadán první konkrétní úkol, který jde dokončit do konce týdne</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-08"><span class="check-text"><span class="who">Buddy</span>Oběd proběhl a nováček ví, komu má psát, když si neví rady</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-09"><span class="check-text"><span class="who">HR</span>Předán brand manuál a šablony (prezentace, podpis, dokumenty)</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="d1-10"><span class="check-text"><span class="who">HR</span>Nováček přidán do firemního seznamu kontaktů a na web, pokud tam patří</span></label></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ PRVNÍ TÝDEN ============ -->
+      <section id="prvni-tyden" class="phase">
+        <p class="phase-when">Fáze 3 · Dny 2–5</p>
+        <div class="section-head">
+          <h2>První týden</h2>
+          <p>Cíl fáze: člověk rozumí tomu, co firma dělá a komu, zná svoje nástroje a odvedl první skutečnou práci.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Co se má stát</h3>
+            <ul>
+              <li>Produktové nebo službové zaškolení — <span class="fill">[co konkrétně prodáváme / děláme]</span></li>
+              <li>Průchod klíčovými systémy: <span class="fill">[CRM]</span>, <span class="fill">[nástroj]</span></li>
+              <li>Stínování kolegy — alespoň jeden reálný klientský kontakt</li>
+              <li>Dokončení prvního úkolu z pondělí</li>
+              <li>Pátek: 1:1 s manažerem, 20 minut, „jak to jde"</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Na co se v 1:1 ptát</h3>
+            <ul>
+              <li>Co tě zatím nejvíc překvapilo?</li>
+              <li>Je něco, co ti brání v práci — přístup, informace, nástroj?</li>
+              <li>Sedí to, co jsme ti slibovali na pohovoru, s tím, co vidíš?</li>
+              <li>Víš, na koho se obrátit, když si nevíš rady?</li>
+              <li>Co bys potřeboval do příštího týdne?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="checklist" data-checklist="prvni-tyden">
+          <div class="checklist-head">
+            <h4>Checklist — první týden</h4>
+            <p class="progress" data-progress>0 / 0 hotovo</p>
+          </div>
+          <ul>
+            <li><label class="check"><input type="checkbox" data-key="w1-01"><span class="check-text"><span class="who">HR</span>Přihlášení na ČSSZ podáno — <strong>do 8 kalendářních dnů</strong> od nástupu</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="w1-02"><span class="check-text"><span class="who">HR</span>Přihlášení u zdravotní pojišťovny — <strong>do 8 dnů</strong> od nástupu</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="w1-03"><span class="check-text"><span class="who">HR</span>Písemná informace o obsahu pracovního poměru předána — <strong>do 7 dnů</strong> (§ 37 zákoníku práce)</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="w1-04"><span class="check-text"><span class="who">Manažer</span>Produktové / službové zaškolení proběhlo</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="w1-05"><span class="check-text"><span class="who">Manažer</span>Nováček stínoval kolegu při reálné práci s klientem</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="w1-06"><span class="check-text"><span class="who">Manažer</span>Proběhlo první 1:1 — pátek, 20 minut</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="w1-07"><span class="check-text"><span class="who">HR</span>Krátký dotaz na spokojenost („jak první týden?") — 3 otázky, ne dotazník na 20 minut</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="w1-08"><span class="check-text"><span class="who">HR</span>Interní školení GDPR a mlčenlivost, pokud pracuje s klientskými daty</span></label></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ 30 DNÍ ============ -->
+      <section id="30-dni" class="phase">
+        <p class="phase-when">Fáze 4 · Dny 6–30</p>
+        <div class="section-head">
+          <h2>Prvních 30 dní</h2>
+          <p>Cíl fáze: člověk pracuje samostatně na vymezené části agendy a ví, podle čeho se pozná, že to dělá dobře.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Obsah fáze</h3>
+            <ul>
+              <li>Převzetí vlastní agendy — <span class="fill">[co konkrétně]</span></li>
+              <li>Dokončená povinná školení: <span class="fill">[AML]</span>, <span class="fill">[GDPR]</span>, <span class="fill">[odborné zkoušky]</span></li>
+              <li>Účast na poradách týmu jako plnohodnotný člen</li>
+              <li>Týdenní 1:1 s manažerem</li>
+              <li>Oběd nebo káva s buddym alespoň jednou týdně</li>
+            </ul>
+          </div>
+          <div class="card grey">
+            <h3>Hodnoticí 1:1 ve 30. dni</h3>
+            <p>Nejdůležitější rozhovor celého onboardingu. Vede manažer, HR dodá strukturu.</p>
+            <ul>
+              <li>Co už zvládá samostatně</li>
+              <li>Kde ještě potřebuje podporu</li>
+              <li>Konkrétní očekávání na dalších 30 dní</li>
+              <li>Jasně řečeno, zda je vývoj v pořádku, nebo ne</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="checklist" data-checklist="30-dni">
+          <div class="checklist-head">
+            <h4>Checklist — 30 dní</h4>
+            <p class="progress" data-progress>0 / 0 hotovo</p>
+          </div>
+          <ul>
+            <li><label class="check"><input type="checkbox" data-key="m1-01"><span class="check-text"><span class="who">Manažer</span>Hodnoticí 1:1 ve 30. dni proběhlo a je z něj zápis</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m1-02"><span class="check-text"><span class="who">HR</span>Onboarding dotazník odeslán a vyhodnocen (šablona níže)</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m1-03"><span class="check-text"><span class="who">Manažer</span>Povinná školení dokončena a doložena</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m1-04"><span class="check-text"><span class="who">Manažer</span>Nováček má vlastní agendu, za kterou odpovídá</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m1-05"><span class="check-text"><span class="who">HR</span>Ověřeno, že buddy vztah funguje — pokud ne, vyměnit, ne ignorovat</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m1-06"><span class="check-text"><span class="who">Manažer</span>Domluveny cíle na dalších 30 dní, písemně</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m1-07"><span class="check-text"><span class="who">HR</span>Pokud se objevil problém — zapsán a řeší se, ne odloženo na zkušebku</span></label></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ 60 DNÍ ============ -->
+      <section id="60-dni" class="phase">
+        <p class="phase-when">Fáze 5 · Dny 31–60</p>
+        <div class="section-head">
+          <h2>60 dní</h2>
+          <p>Cíl fáze: člověk odvádí výkon srovnatelný s ostatními na stejné pozici. Případné problémy jsou pojmenované a pracuje se na nich.</p>
+        </div>
+        <div class="prose">
+          <p>Tahle fáze bývá nejvíc opomíjená — první měsíc má každý pod kontrolou, na konci zkušebky se rozhoduje, ale mezitím se často nedělá nic. Přitom právě tady se dá ještě otočit špatně nastartovaný nástup.</p>
+        </div>
+        <div class="checklist" data-checklist="60-dni">
+          <div class="checklist-head">
+            <h4>Checklist — 60 dní</h4>
+            <p class="progress" data-progress>0 / 0 hotovo</p>
+          </div>
+          <ul>
+            <li><label class="check"><input type="checkbox" data-key="m2-01"><span class="check-text"><span class="who">Manažer</span>1:1 v 60. dni — kontrola cílů z 30. dne</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m2-02"><span class="check-text"><span class="who">Manažer</span>Nováček pracuje samostatně, konzultuje jen výjimky</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m2-03"><span class="check-text"><span class="who">Manažer</span>Pokud výkon neodpovídá — <strong>řečeno nahlas a doloženo</strong>, s termínem na zlepšení</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m2-04"><span class="check-text"><span class="who">HR</span>Zjištěna zpětná vazba od týmu — jak zapadl</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m2-05"><span class="check-text"><span class="who">HR</span>Připomenut termín konce zkušební doby manažerovi <strong>2 týdny předem</strong></span></label></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ 90 DNÍ ============ -->
+      <section id="90-dni" class="phase">
+        <p class="phase-when">Fáze 6 · Konec zkušební doby</p>
+        <div class="section-head">
+          <h2>90 dní — rozhodnutí</h2>
+          <p>Cíl fáze: jasné, doložené a včas sdělené rozhodnutí. Ať už jakékoliv.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Když to funguje</h3>
+            <ul>
+              <li>Řekni to nahlas a konkrétně — co se povedlo</li>
+              <li>Onboarding tím nekončí, jen se mění frekvence 1:1</li>
+              <li>Domluv cíle na zbytek roku</li>
+              <li>Zeptej se, co by dnes na onboardingu změnil — teď má nejlepší odstup</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Když to nefunguje</h3>
+            <ul>
+              <li>Nesmí to být překvapení — problém byl pojmenovaný v 30. i 60. dni</li>
+              <li>Rozhodnutí komunikuj osobně, ne e-mailem</li>
+              <li>Zrušení ve zkušební době lze bez udání důvodu, písemně; poměr končí dnem doručení, pokud není uveden pozdější den</li>
+              <li>Nelze zrušit v době prvních 14 dnů dočasné pracovní neschopnosti</li>
+              <li>Udělej si vlastní rozbor: byla to chyba výběru, nebo onboardingu?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="checklist" data-checklist="90-dni">
+          <div class="checklist-head">
+            <h4>Checklist — 90 dní</h4>
+            <p class="progress" data-progress>0 / 0 hotovo</p>
+          </div>
+          <ul>
+            <li><label class="check"><input type="checkbox" data-key="m3-01"><span class="check-text"><span class="who">Manažer</span>Hodnoticí rozhovor na konci zkušební doby proběhl, existuje zápis</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m3-02"><span class="check-text"><span class="who">Manažer</span>Rozhodnutí o pokračování padlo <strong>před</strong> uplynutím zkušební doby</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m3-03"><span class="check-text"><span class="who">HR</span>Výstupní dotazník k onboardingu — co bychom měli dělat jinak</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m3-04"><span class="check-text"><span class="who">HR</span>Buddy role formálně ukončena a poděkováno</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m3-05"><span class="check-text"><span class="who">Manažer</span>Nastaveny cíle na zbytek roku a rytmus pravidelných 1:1</span></label></li>
+            <li><label class="check"><input type="checkbox" data-key="m3-06"><span class="check-text"><span class="who">HR</span>Zápis do osobního spisu — onboarding uzavřen</span></label></li>
+          </ul>
+        </div>
+
+        <div class="note">
+          <p class="eyebrow">Hlídej si termín</p>
+          <p>Zkušební doba se <strong>prodlužuje</strong> o dobu celodenních překážek v práci a celodenní dovolené. Pokud byl nováček nemocný, konec zkušebky se posouvá — spočítej si to, ať nerozhoduješ o den později, než jde.</p>
+        </div>
+      </section>
+
+      <!-- ============ 6 A 12 MĚSÍCŮ ============ -->
+      <section id="pul-roku" class="phase">
+        <p class="phase-when">Fáze 7 · 6 a 12 měsíců</p>
+        <div class="section-head">
+          <h2>Šest měsíců a první rok</h2>
+          <p>Cíl fáze: z nováčka je kolega, který sám zaškoluje další. Tady onboarding definitivně končí.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>V 6 měsících</h3>
+            <ul>
+              <li>Hodnoticí rozhovor — výkon, spokojenost, další směr</li>
+              <li>Nabídka rozvoje: školení, certifikace, větší odpovědnost</li>
+              <li>Otázka, jestli by chtěl být buddym pro dalšího nováčka</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>V 12 měsících</h3>
+            <ul>
+              <li>Roční hodnocení podle standardního procesu</li>
+              <li>Revize mzdy, pokud to <span class="fill">[firemní pravidla]</span> umožňují</li>
+              <li>Poslední ohlédnutí za onboardingem — s ročním odstupem přijdou nejlepší postřehy</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ZNAČKA ============ -->
+      <section id="znacka">
+        <div class="section-head">
+          <p class="eyebrow">Modul do prvního týdne</p>
+          <h2>Onboarding do značky</h2>
+          <p>Každý, kdo pošle klientovi e‑mail nebo prezentaci, tvoří značku Four Bros. Tenhle modul zabere 30 minut a ušetří spoustu předělávání.</p>
+        </div>
+
+        <div class="prose">
+          <p>Logo je stylizovaná loďka plující po moři, kde číslice 4 tvoří zároveň plachtu. Odráží náš přístup — <strong>s klientem jsme za všech okolností na jedné lodi</strong>. Tuhle větu by měl umět říct každý.</p>
+        </div>
+
+        <h3>Barvy, které smí použít</h3>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background:#194669"></div>
+            <div class="meta"><b>Four Bros Navy</b><span>#194669</span></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background:#F7F8FE;border-bottom:1px solid #DDE5EE"></div>
+            <div class="meta"><b>Alice Blue</b><span>#F7F8FE</span></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background:#F4F4F4;border-bottom:1px solid #DDE5EE"></div>
+            <div class="meta"><b>Light Grey</b><span>#F4F4F4</span></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background:#FFFFFF;border:1px solid #DDE5EE;border-bottom:1px solid #DDE5EE"></div>
+            <div class="meta"><b>Pure White</b><span>#FFFFFF</span></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background:#7E17E0"></div>
+            <div class="meta"><b>Electric Violet</b><span>#7E17E0 · max 5 %</span></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Pět pravidel, která musí znát</h3>
+            <ol style="margin:0;padding-left:1.2rem;display:grid;gap:.4rem;">
+              <li><strong>Bílá vládne.</strong> Většinu plochy vždy pokrývá čistě bílá.</li>
+              <li><strong>Fialová je koření.</strong> Electric Violet jen na tlačítka a zvýraznění, nikdy víc než 5 % plochy.</li>
+              <li><strong>Nadpisy Serenity, text Roboto.</strong> Základní řez odstavce je Light.</li>
+              <li><strong>Logo se nesahá.</strong> Neměnit proporce, nerotovat, nepřidávat stíny ani průhlednost.</li>
+              <li><strong>Kolem loga je volno.</strong> Ochranná zóna je ¼ výšky loga, minimální velikost 66 × 33 px.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h3>Co dostane první den</h3>
+            <ul>
+              <li>Brand manuál v PDF</li>
+              <li>Odkaz na loga, faviconu, slogan, ikony a brushe: <span class="fill">[odkaz na sdílenou složku]</span></li>
+              <li>Fonty Serenity a Roboto k instalaci</li>
+              <li>Šablona prezentace a e‑mailový podpis</li>
+              <li>Objednané vizitky podle firemní šablony</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="note">
+          <p class="eyebrow">Věta do uvítacího e‑mailu</p>
+          <p>„Než pošleš první materiál klientovi, projdi si brand manuál. Kontroluj své výstupy s pravidly v příručce — používáním našich barev a písem budeš mít jistotu, že držíš kurz."</p>
+        </div>
+      </section>
+
+      <!-- ============ ADMINISTRATIVA ============ -->
+      <section id="administrativa">
+        <div class="section-head">
+          <p class="eyebrow">Termíny a povinnosti</p>
+          <h2>Administrativa na jednom místě</h2>
+          <p>Přehled zákonných termínů, které se u nástupu hlídají. Seřazeno podle toho, kdy je potřeba je splnit.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Termín</th><th>Povinnost</th><th>Kdo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">Před nástupem</td><td>Vstupní lékařská prohlídka — u pracovního poměru vždy, před vznikem poměru</td><td>HR</td></tr>
+              <tr><td class="num">Před nástupem</td><td>Písemná pracovní smlouva — nejpozději v den nástupu</td><td>HR</td></tr>
+              <tr><td class="num">Před nástupem</td><td>Písemné sjednání zkušební doby — nelze doplnit později</td><td>HR</td></tr>
+              <tr><td class="num">Den nástupu</td><td>Školení BOZP a PO před zahájením výkonu práce, s podpisem</td><td>HR</td></tr>
+              <tr><td class="num">Den nástupu</td><td>Mzdový výměr, pokud mzda není přímo ve smlouvě</td><td>HR</td></tr>
+              <tr><td class="num">Do 7 dnů</td><td>Písemná informace o právech a povinnostech z pracovního poměru (§ 37 ZP)</td><td>HR</td></tr>
+              <tr><td class="num">Do 8 dnů</td><td>Přihlášení zaměstnance na ČSSZ (formulář ONZ)</td><td>Mzdy</td></tr>
+              <tr><td class="num">Do 8 dnů</td><td>Přihlášení u zdravotní pojišťovny</td><td>Mzdy</td></tr>
+              <tr><td class="num">Do 30 dnů</td><td>Prohlášení poplatníka daně z příjmů — jinak se neuplatní slevy</td><td>Mzdy</td></tr>
+              <tr><td class="num">Průběžně</td><td>Zápočtový list od předchozího zaměstnavatele</td><td>HR</td></tr>
+              <tr><td class="num">Průběžně</td><td>Odborné zkoušky a registrace, pokud jde o regulovanou činnost</td><td>Manažer</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          <p class="eyebrow">Ověř si aktuální znění</p>
+          <p>Zákoník práce se v posledních letech měnil několikrát — mimo jiné v délce zkušební doby a v informační povinnosti vůči zaměstnanci. Než podle téhle tabulky nastavíš smlouvu, nech si konkrétní lhůty a maximální délku zkušební doby potvrdit od <span class="fill">[účetní / právník]</span>. Tabulka slouží jako připomínka, co nesmíš zapomenout, ne jako právní výklad.</p>
+        </div>
+
+        <details>
+          <summary>Co patří do osobního spisu</summary>
+          <div class="inner">
+            <ul>
+              <li>Pracovní smlouva a všechny dodatky</li>
+              <li>Mzdový výměr</li>
+              <li>Osobní dotazník</li>
+              <li>Potvrzení o vstupní lékařské prohlídce</li>
+              <li>Podepsané záznamy o školení BOZP a PO</li>
+              <li>Zápočtový list od předchozího zaměstnavatele</li>
+              <li>Doklady o vzdělání a odborné způsobilosti</li>
+              <li>Zápisy z hodnoticích rozhovorů</li>
+            </ul>
+            <p><strong>Do spisu nepatří</strong> kopie občanského průkazu pořízená jen tak pro jistotu, informace o zdravotním stavu nad rámec posudku o způsobilosti k práci a cokoliv, co nepotřebuješ k plnění povinností zaměstnavatele. Platí zásada minimalizace — čím míň, tím lépe.</p>
+          </div>
+        </details>
+      </section>
+
+      <!-- ============ ŠABLONY ============ -->
+      <section id="sablony">
+        <div class="section-head">
+          <p class="eyebrow">Hotové texty</p>
+          <h2>Šablony</h2>
+          <p>Zkopíruj, doplň fialová místa, odešli. Ušetří to nejvíc času ze všeho v tomhle průvodci.</p>
+        </div>
+
+        <div class="tpl">
+          <div class="tpl-head">
+            <h4>Uvítací e‑mail — 3 až 5 dní před nástupem</h4>
+            <button class="btn" type="button" data-copy>Kopírovat</button>
+          </div>
+          <div class="tpl-body" data-tpl>Předmět: Těšíme se na tebe v pondělí — praktické informace
+
+Ahoj [JMÉNO],
+
+za pár dní se vidíme na palubě. Ať máš první den klidný, posílám všechno praktické dopředu.
+
+KDY A KAM
+[DATUM] v [ČAS], adresa [ADRESA]. Zazvoň na [RECEPCE / KONTAKT], budu tam na tebe čekat.
+
+CO S SEBOU
+· občanský průkaz
+· číslo bankovního účtu
+· zápočtový list od předchozího zaměstnavatele
+· potvrzení o vstupní lékařské prohlídce
+· [DALŠÍ DOKUMENTY]
+
+JAK TO BUDE VYPADAT
+Dopoledne tě provedeme firmou, předáme techniku a vyřídíme papíry. V poledne jdeme na oběd s týmem. Odpoledne se potkáš s [JMÉNO NADŘÍZENÉHO] a projdete si, co tě čeká první měsíc.
+
+TVŮJ PRŮVODCE
+Prvních pár týdnů se ti bude věnovat [JMÉNO BUDDYHO], [POZICE]. Můžeš se ho ptát na cokoliv, doslova na cokoliv.
+
+Oblečení u nás [DRESS CODE]. Parkovat můžeš [PARKOVÁNÍ].
+
+Kdyby cokoliv, piš nebo volej na [TELEFON].
+
+Těšíme se!
+
+[PODPIS]</div>
+        </div>
+
+        <div class="tpl">
+          <div class="tpl-head">
+            <h4>Oznámení týmu</h4>
+            <button class="btn" type="button" data-copy>Kopírovat</button>
+          </div>
+          <div class="tpl-body" data-tpl>Předmět: Od pondělí je nás víc — vítejte [JMÉNO]
+
+Ahoj všichni,
+
+v pondělí [DATUM] k nám nastupuje [JMÉNO] na pozici [POZICE] do týmu [TÝM]. Bude mít na starosti [HLAVNÍ AGENDA] a sedět bude [KDE].
+
+[JMÉNO] k nám přichází z [ODKUD] a přináší zkušenost s [ČÍM]. Ve volném čase [NĚCO LIDSKÉHO].
+
+Buddym mu bude [JMÉNO BUDDYHO].
+
+V pondělí ve [ČAS] jdeme společně na oběd — přidejte se, kdo můžete. A kdybyste ho během prvních týdnů potkali na chodbě, představte se mu. Pro nováčka je deset takových krátkých představení víc než jedna velká prezentace.
+
+[PODPIS]</div>
+        </div>
+
+        <div class="tpl">
+          <div class="tpl-head">
+            <h4>Plán prvních 30 / 60 / 90 dní — kostra pro manažera</h4>
+            <button class="btn" type="button" data-copy>Kopírovat</button>
+          </div>
+          <div class="tpl-body" data-tpl>PLÁN NÁSTUPU
+Jméno: [JMÉNO]          Pozice: [POZICE]
+Nadřízený: [JMÉNO]      Buddy: [JMÉNO]
+Nástup: [DATUM]         Konec zkušební doby: [DATUM]
+
+PRVNÍCH 30 DNÍ — UČÍM SE
+Cíl: rozumím tomu, co firma dělá, a zvládám [KONKRÉTNÍ ÚKOL] samostatně.
+· [ÚKOL 1] — hotovo do [DATUM]
+· [ÚKOL 2] — hotovo do [DATUM]
+· Školení: [SEZNAM]
+Poznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]
+
+60 DNÍ — PRACUJI SÁM
+Cíl: mám vlastní agendu a konzultuji jen výjimky.
+· [ÚKOL 1]
+· [ÚKOL 2]
+Poznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]
+
+90 DNÍ — PŘINÁŠÍM VÝSLEDEK
+Cíl: můj výkon je srovnatelný s ostatními na stejné pozici.
+· [ÚKOL 1]
+· [ÚKOL 2]
+Poznám, že se daří, když: [MĚŘITELNÝ UKAZATEL]
+
+RYTMUS SETKÁVÁNÍ
+1:1 s nadřízeným: 1. měsíc týdně, poté jednou za 14 dní
+Hodnoticí rozhovory: 30. den, 60. den, konec zkušební doby</div>
+        </div>
+
+        <div class="tpl">
+          <div class="tpl-head">
+            <h4>Dotazník ve 30. dni</h4>
+            <button class="btn" type="button" data-copy>Kopírovat</button>
+          </div>
+          <div class="tpl-body" data-tpl>ONBOARDING PO 30 DNECH — 5 minut, prosím upřímně
+
+1. Věděl jsi první den, kam přijít a co tě čeká?          ano / spíš ano / spíš ne / ne
+2. Měl jsi hned od začátku funkční techniku a přístupy?   ano / spíš ano / spíš ne / ne
+3. Je ti jasné, co se od tebe v práci očekává?            ano / spíš ano / spíš ne / ne
+4. Máš se koho zeptat, když si nevíš rady?                ano / spíš ano / spíš ne / ne
+5. Odpovídá realita tomu, co jsme ti říkali na pohovoru?  ano / spíš ano / spíš ne / ne
+6. Doporučil bys teď Four Bros známému jako zaměstnavatele? 0–10
+
+7. Co ti první měsíc nejvíc pomohlo?
+8. Co tě naopak nejvíc brzdilo nebo mátlo?
+9. Kdybys mohl na našem nástupu změnit jednu věc, co by to bylo?</div>
+        </div>
+
+        <div class="tpl">
+          <div class="tpl-head">
+            <h4>Struktura hodnoticího 1:1</h4>
+            <button class="btn" type="button" data-copy>Kopírovat</button>
+          </div>
+          <div class="tpl-body" data-tpl>HODNOTICÍ 1:1 — [30. / 60. / 90. DEN]
+Datum: [DATUM]   Vede: [JMÉNO]
+
+1. JAK SE MÁŠ (5 min)
+   Otevřená otázka, nech mluvit druhého. Neskákej do toho.
+
+2. CO SE POVEDLO (10 min)
+   Konkrétně, jmenovitě. „Dobrý" není zpětná vazba.
+   · [PŘÍKLAD 1]
+   · [PŘÍKLAD 2]
+
+3. CO POTŘEBUJE ZLEPŠIT (10 min)
+   Popiš chování a dopad, ne vlastnost člověka.
+   · [SITUACE] → [DOPAD] → [CO PŘÍŠTĚ JINAK]
+
+4. CO POTŘEBUJE ODE MĚ (10 min)
+   Co ti brání? Co bych měl dělat jinak já?
+
+5. DOHODA (5 min)
+   · Do příště: [CO, DO KDY]
+   · Další setkání: [DATUM]
+
+Zápis do osobního spisu: [ANO / NE]</div>
+        </div>
+      </section>
+
+      <!-- ============ MĚŘENÍ ============ -->
+      <section id="mereni">
+        <div class="section-head">
+          <p class="eyebrow">Vyhodnocení</p>
+          <h2>Co měřit</h2>
+          <p>Aby se dalo říct, jestli onboarding funguje, stačí čtyři čísla. Vyhodnocuj je jednou za půl roku.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Ukazatel</th><th>Jak ho získáš</th><th>Co znamená</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Odchody ve zkušební době</td><td>Počet za rok / počet nástupů</td><td>Nad 20 % zpravidla neselhává člověk, ale výběr nebo onboarding</td></tr>
+              <tr><td>Doba do samostatnosti</td><td>Odhad manažera ve dnech</td><td>Sleduj trend, ne absolutní číslo</td></tr>
+              <tr><td>Spokojenost ve 30. dni</td><td>Otázka 6 z dotazníku (0–10)</td><td>Pod 7 se ptej proč, konkrétně</td></tr>
+              <tr><td>Splněné checklisty</td><td>Kolik kroků skutečně proběhlo</td><td>Ukáže, kde se proces láme v praxi</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ CHYBY ============ -->
+      <section id="chyby">
+        <div class="section-head">
+          <p class="eyebrow">Zkušenost</p>
+          <h2>Čeho se vyvarovat</h2>
+        </div>
+        <div class="prose">
+          <ul>
+            <li><strong>Nefunkční technika první den.</strong> Nejčastější stížnost nováčků vůbec. Otestuj přihlášení, ne jen objednávku.</li>
+            <li><strong>Manažer je první den na dovolené.</strong> Když to nejde jinak, posuň nástup.</li>
+            <li><strong>Den plný prezentací.</strong> Člověk si zapamatuje tři věci. Rozlož informace do týdnů.</li>
+            <li><strong>Buddy, který o tom neví.</strong> Zeptej se předem a dej mu na to čas v kapacitě.</li>
+            <li><strong>Žádný úkol první týden.</strong> Nuda a pocit zbytečnosti odradí rychleji než náročná práce.</li>
+            <li><strong>Zpětná vazba až na konci zkušebky.</strong> Pokud se to člověk dozví po třech měsících, je to selhání manažera, ne jeho.</li>
+            <li><strong>Onboarding jen pro nové lidi.</strong> Kdo mění pozici uvnitř firmy, potřebuje ho taky — jen kratší.</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="colophon">
+    <p><strong>Onboarding průvodce Four Bros</strong> — interní materiál HR</p>
+    <p>Vizuální podoba vychází z Four Bros Brand Guidelines v1.0 (11‑2023): barevná paleta 4.2, typografická hierarchie 5.4, styl ikon 6.1.</p>
+    <p>Pokud se ti nadpisy nezobrazují v písmu Serenity a text v Roboto, nemáš je nainstalované — stáhni je z firemní složky s fonty.</p>
+    <p>Verze <span class="fill">1.0</span> · aktualizováno <span class="fill">08/2026</span> · spravuje <span class="fill">[jméno]</span></p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* --- Ukládání odškrtnutých položek --- */
+  var STORE = "fourbros-onboarding-v1";
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(STORE) || "{}") || {}; }catch(e){ state = {}; }
+
+  function persist(){
+    try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){ /* soukromý režim */ }
+  }
+
+  function updateProgress(list){
+    var boxes = list.querySelectorAll('input[type="checkbox"]');
+    var done = list.querySelectorAll('input[type="checkbox"]:checked').length;
+    var out = list.querySelector("[data-progress]");
+    if(out){ out.textContent = done + " / " + boxes.length + " hotovo"; }
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-checklist]"), function(list){
+    Array.prototype.forEach.call(list.querySelectorAll('input[type="checkbox"]'), function(box){
+      var key = box.getAttribute("data-key");
+      if(state[key]){ box.checked = true; }
+      box.addEventListener("change", function(){
+        state[key] = box.checked;
+        persist();
+        updateProgress(list);
+      });
+    });
+    updateProgress(list);
+  });
+
+  /* --- Kopírování šablon --- */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-copy]"), function(btn){
+    btn.addEventListener("click", function(){
+      var body = btn.closest(".tpl").querySelector("[data-tpl]");
+      var text = body.textContent;
+      var done = function(){
+        var label = btn.textContent;
+        btn.textContent = "Zkopírováno";
+        setTimeout(function(){ btn.textContent = label; }, 1600);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){ /* nepodařilo se */ }
+    document.body.removeChild(ta);
+  }
+
+  /* --- Zvýraznění aktuální sekce v obsahu --- */
+  var links = document.querySelectorAll(".toc a");
+  var map = {};
+  Array.prototype.forEach.call(links, function(a){
+    map[a.getAttribute("href").slice(1)] = a;
+  });
+
+  if("IntersectionObserver" in window){
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var a = map[entry.target.id];
+        if(!a){ return; }
+        if(entry.isIntersecting){
+          Array.prototype.forEach.call(links, function(l){ l.classList.remove("is-current"); });
+          a.classList.add("is-current");
+        }
+      });
+    }, { rootMargin: "-10% 0px -75% 0px" });
+
+    Array.prototype.forEach.call(document.querySelectorAll("main section[id]"), function(s){
+      observer.observe(s);
+    });
+  }
+})();
+</script>
