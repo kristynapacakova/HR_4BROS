@@ -278,11 +278,22 @@ li::marker{color:var(--ink-light);}
 .pill.only{background:transparent;border:1px solid var(--line);color:var(--ink-muted);}
 
 .mode{
-  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
-  background:var(--surface);border-radius:var(--r);padding:.75rem 1rem;
-  font-size:var(--t-sm);color:var(--ink-muted);
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+  background:var(--surface);border-radius:var(--r);padding:.8rem 1rem;
+  font-size:var(--t-sm);color:var(--ink-muted);min-width:0;
 }
-.mode > span:last-child{flex:1;min-width:12rem;}
+.mode-label{font-weight:500;color:var(--ink-strong);white-space:nowrap;}
+.mode-hint{flex:1;min-width:11rem;}
+
+.seg{display:flex;gap:.2rem;background:var(--surface-2);border-radius:var(--r-full);padding:.22rem;min-width:0;}
+.seg button{
+  font-family:var(--body);font-size:var(--t-sm);font-weight:500;
+  background:transparent;border:0;border-radius:var(--r-full);
+  padding:.4rem .85rem;color:var(--ink-muted);cursor:pointer;white-space:nowrap;
+  transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.seg button:hover{color:var(--ink-strong);}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink-strong);box-shadow:var(--shadow-sm);}
 
 .btn{
   font-family:var(--body);font-size:var(--t-sm);font-weight:500;
@@ -708,7 +719,7 @@ var PROFILE = [
   { key:'jmeno',   label:'Jméno nového kolegy', ph:'Jan Novák' },
   { key:'pozice',  label:'Pozice',              ph:'název pozice' },
   { key:'uvazek',  label:'Typ spolupráce',      ph:'vyber',
-    options:[['zamestnanec','Zaměstnanec'],['osvc','OSVČ']] },
+    options:[['zamestnanec','Zaměstnanec (HPP)'],['osvc','OSVČ']] },
   { key:'nastup',  label:'Datum nástupu',       ph:'1. 9. 2026', type:'date' },
   { key:'manazer', label:'Přímý nadřízený',     ph:'jméno' },
   { key:'buddy',   label:'Buddy',               ph:'jméno' }
@@ -1582,6 +1593,7 @@ function viewUvod(){
   if(next.length){
     h += '<section class="group">';
     h +=   '<h2>Co je na řadě</h2>';
+    h +=   modeSwitch();
     h +=   '<ul class="tasks">';
     next.forEach(function(t){ h += taskRow(t); });
     h +=   '</ul>';
@@ -1621,15 +1633,23 @@ function jumpTile(route, icon, title, desc){
     '<p>' + esc(desc) + '</p></a>';
 }
 
-/* Pruh, který říká, pro koho jsou kroky filtrované. */
-function modeBanner(){
-  var u = state.profile.uvazek;
-  if(u){
-    return '<div class="mode"><span class="pill now">' + esc(UVAZEK_LABEL[u]) + '</span>' +
-      '<span>Zobrazené kroky platí pro tenhle typ spolupráce. Přepnout jde v <a href="#/nastaveni">Nastavení</a>.</span></div>';
-  }
-  return '<div class="mode"><span class="pill">Vše</span>' +
-    '<span>Typ spolupráce zatím není vybraný, takže vidíš kroky pro zaměstnance i OSVČ. Vyber ho v <a href="#/nastaveni">Nastavení</a> a seznam se zkrátí.</span></div>';
+/* Přepínač typu spolupráce. Stojí nad každým seznamem kroků, aby ho
+   nikdo nemusel hledat v Nastavení. */
+function modeSwitch(){
+  var u = state.profile.uvazek || '';
+  var h = '<div class="mode">';
+  h +=   '<span class="mode-label">Zobrazit kroky pro</span>';
+  h +=   '<div class="seg" role="group" aria-label="Typ spolupráce">';
+  [['','Vše'],['zamestnanec','Zaměstnanec (HPP)'],['osvc','OSVČ']].forEach(function(o){
+    h += '<button type="button" data-uvazek="' + o[0] + '" aria-pressed="' +
+         (u === o[0]) + '">' + esc(o[1]) + '</button>';
+  });
+  h +=   '</div>';
+  h +=   '<span class="mode-hint">' + (u
+          ? 'Kroky, které se tohohle typu netýkají, jsou skryté.'
+          : 'Vidíš kroky pro oba typy. Vyber jeden a seznam se zkrátí.') + '</span>';
+  h += '</div>';
+  return h;
 }
 
 /* ---------- Postup ---------- */
@@ -1641,7 +1661,7 @@ function viewPlan(){
   h +=   '<h1>Postup nástupu</h1>';
   h +=   '<p class="lede">Sedm fází od dvou týdnů před nástupem po konec prvního roku. Klikni na fázi a rozbal si její kroky.</p>';
   h += '</div>';
-  h += modeBanner();
+  h += modeSwitch();
 
   h += '<ul class="phases">';
   PHASES.forEach(function(p, i){
@@ -1764,7 +1784,7 @@ function viewPristupy(params){
   h +=   '<h1>Přístupy pro nového kolegu</h1>';
   h +=   '<p class="lede">Kompletní postup od založení účtů po první přihlášení. Dole jsou řešení zádrhelů, které se opakují nejčastěji.</p>';
   h += '</div>';
-  h += modeBanner();
+  h += modeSwitch();
 
   h += '<section class="group"><h2>Tři pravidla, ze kterých plyne zbytek</h2>';
   h +=   '<div class="rules">';
@@ -2129,7 +2149,7 @@ function appliesTo(item){
   return item.only === u;
 }
 
-var UVAZEK_LABEL = { zamestnanec:'Zaměstnanec', osvc:'OSVČ' };
+var UVAZEK_LABEL = { zamestnanec:'Zaměstnanec (HPP)', osvc:'OSVČ' };
 
 function onlyBadge(item){
   if(!item.only || state.profile.uvazek){ return ''; }
@@ -2213,6 +2233,14 @@ document.addEventListener('click', function(e){
     e.preventDefault();
     var gid = guideBtn.getAttribute('data-goguide');
     location.hash = gid ? '#/navody/' + gid : '#/navody';
+    return;
+  }
+
+  var uvBtn = t.closest('[data-uvazek]');
+  if(uvBtn){
+    state.profile.uvazek = uvBtn.getAttribute('data-uvazek') || '';
+    save();
+    render();
     return;
   }
 

@@ -31,7 +31,9 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 
 ### Zaměstnanec vs. OSVČ
 
-V Nastavení se vybírá typ spolupráce a ten filtruje kroky v celé aplikaci:
+Nad každým seznamem kroků — na Přehledu, Postupu i Přístupech — je přepínač
+**Vše / Zaměstnanec (HPP) / OSVČ**. Přepnutí okamžitě přefiltruje kroky. Totéž pole
+je i v Nastavení a obě místa jsou provázaná.
 
 - **Zaměstnanec** — pracovní smlouva, vstupní lékařská prohlídka, BOZP s podpisem,
   přihlášení na ČSSZ a zdravotní pojišťovnu, prohlášení poplatníka daně, zápočtový
@@ -41,9 +43,10 @@ V Nastavení se vybírá typ spolupráce a ten filtruje kroky v celé aplikaci:
 - **Společné** — Gmail, Slack, Asana, 1Password, Costlocker, **docházka** (každý vlastní
   účet, nově v HR portálu), technika, buddy, plán 30/60/90
 
-Dokud typ vybraný není, zobrazují se kroky pro oba a ty specifické nesou odznak
-„Jen Zaměstnanec" nebo „Jen OSVČ". Na obrazovce Přístupy je i srovnávací tabulka.
-Postup v procentech se počítá jen z kroků, které pro daný typ platí.
+Ve volbě **Vše** se zobrazují kroky pro oba typy a ty specifické nesou odznak
+„Jen Zaměstnanec (HPP)" nebo „Jen OSVČ" — je tak vidět, co se přepnutím skryje.
+Na obrazovce Přístupy je i srovnávací tabulka. Postup v procentech se počítá jen
+z kroků, které pro daný typ platí.
 
 ### Jak se používá
 
