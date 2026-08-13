@@ -28,6 +28,7 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 - **Kdo je kdo** — posádka Four Bros a na co se koho ptát
 - **Termíny** — zákonné lhůty při nástupu
 - **Šablony** — uvítací e-mail, oznámení týmu, plán 30/60/90, dotazník ve 30. dni (jen v režimu HR)
+- **Dokončení** — kontrola, že je vše hotové, a založení účtu pro nového kolegu
 - **Nastavení** — firemní údaje a nástroje
 
 ### Zaměstnanec vs. OSVČ
@@ -49,6 +50,26 @@ Ve volbě **Vše** se zobrazují kroky pro oba typy a ty specifické nesou odzna
 Na obrazovce Přístupy je i srovnávací tabulka. Postup v procentech se počítá jen
 z kroků, které pro daný typ platí.
 
+### Jak celý průchod funguje
+
+Aplikace je zároveň sběračem dat. Co se během onboardingu vyplní, slouží najednou
+pro **smlouvu** i pro **profil v HR portálu** — pole potřebná do smlouvy nesou
+na obrazovce Profil odznak „do smlouvy".
+
+Průchod končí obrazovkou **Dokončení**, kde se hlídají tři podmínky:
+
+1. Povinné údaje o kolegovi jsou vyplněné (jméno, e-mail, pozice, datum nástupu, typ spolupráce)
+2. Všechny kroky na obrazovce Přístupy jsou odškrtané
+3. Všechny kroky fáze První den jsou odškrtané
+
+Dokud některá neplatí, je tlačítko **Onboarding hotový — vytvořit účet pro …**
+zamčené a u každé podmínky je vidět, co konkrétně chybí. Účet tak nevznikne
+s poloviční smlouvou. Po dokončení se stav uloží i s datem a dá se znovu otevřít.
+
+**Mzda se nepřenáší sdílecím odkazem.** Pole označená jako citlivá se do odkazu
+nekódují, protože odkaz se dá přeposlat dál. V datech účtu, která jdou do portálu,
+mzda je.
+
 ### Napojení na HR portál
 
 Obrazovka **Profil** sbírá údaje ve struktuře, která odpovídá modelu `User`
@@ -64,7 +85,9 @@ Tlačítko **Zkopírovat profil pro portál** vrátí JSON připravený k vlože
             "phone": …, "birthDate": …, "address": …, "city": …, "country": "CZ",
             "bankAccount": …, "taxId": …, "role": "EMPLOYEE" },
   "emergencyContact": { "name": …, "phone": …, "relationship": … },
-  "onboardingTasks": [ { "title": …, "completed": …, "order": … } ] }
+  "contract": { "scope": …, "compensation": …, "probationPeriod": …, "workplace": … },
+  "onboardingTasks": [ { "title": …, "completed": …, "order": … } ],
+  "onboardingCompletedAt": "2026-08-13T…" }
 ```
 
 Kroky onboardingu jdou do `onboardingTasks` očištěné od HTML a se zástupnými

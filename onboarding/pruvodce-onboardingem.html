@@ -457,6 +457,38 @@ input[type="checkbox"]:checked::after{transform:rotate(-45deg) scale(1);}
 }
 .qa-body li::marker{color:var(--accent-ink);font-weight:500;}
 
+/* ---------- Podmínky dokončení ---------- */
+.gates{display:grid;gap:.6rem;list-style:none;padding-left:0;max-width:none;min-width:0;}
+.gate{
+  display:flex;gap:.9rem;align-items:center;min-width:0;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:.95rem 1.1rem;
+}
+.gate.ok{border-color:var(--accent);}
+.gate-mark{
+  width:26px;height:26px;border-radius:var(--r-full);flex:none;
+  border:1.5px solid var(--ink-light);display:grid;place-items:center;
+  font-size:var(--t-sm);color:var(--on-accent);
+}
+.gate.ok .gate-mark{background:var(--accent);border-color:var(--accent);}
+.gate h4{margin:0 0 .1rem;}
+.gate p{font-size:var(--t-sm);color:var(--ink-muted);max-width:none;}
+.gate > div{flex:1;}
+.gate-link{
+  font-size:var(--t-sm);font-weight:500;color:var(--accent-ink);
+  text-decoration:none;white-space:nowrap;flex:none;
+}
+.gate-link:hover{text-decoration:underline;}
+
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+.btn[disabled]:hover{background:var(--accent);border-color:var(--accent);}
+
+.tagline{
+  font-size:var(--t-xs);font-weight:400;color:var(--accent-ink);
+  background:var(--accent-soft);border-radius:var(--r-full);
+  padding:.02rem .4rem;margin-left:.3rem;white-space:nowrap;
+}
+
 /* ---------- Posádka ---------- */
 .crew{display:grid;gap:.6rem;min-width:0;max-width:none;}
 @media (min-width:700px){.crew{grid-template-columns:1fr 1fr;}}
@@ -724,19 +756,25 @@ var SETTINGS = [
    vyplněný profil dal přenést beze změn. */
 var PROFILE_GROUPS = [
   { group:'Základní', items:[
-    { key:'jmeno',   label:'Jméno a příjmení',  ph:'Jan Novák' },
+    { key:'jmeno',   label:'Jméno a příjmení',  ph:'Jan Novák', contract:true },
     { key:'email',   label:'Pracovní e-mail',   ph:'jan@fourbros.cz' },
-    { key:'pozice',  label:'Pozice',            ph:'PPC specialista' },
+    { key:'pozice',  label:'Pozice',            ph:'PPC specialista', contract:true },
     { key:'tym',     label:'Tým',               ph:'PPC, web, kreativa…' },
     { key:'uvazek',  label:'Typ spolupráce',    ph:'vyber',
       options:[['zamestnanec','Zaměstnanec (HPP)'],['osvc','OSVČ']] },
-    { key:'nastup',  label:'Datum nástupu',     ph:'1. 9. 2026', type:'date' }
+    { key:'nastup',  label:'Datum nástupu',     ph:'1. 9. 2026', type:'date', contract:true }
   ]},
   { group:'Osobní údaje', items:[
     { key:'telefon',   label:'Telefon',        ph:'+420 …' },
-    { key:'narozeni',  label:'Datum narození', ph:'', type:'date' },
-    { key:'bydliste',  label:'Ulice a číslo',  ph:'ulice a číslo popisné' },
-    { key:'mesto',     label:'Město',          ph:'Brno' }
+    { key:'narozeni',  label:'Datum narození', ph:'', type:'date', contract:true },
+    { key:'bydliste',  label:'Ulice a číslo',  ph:'ulice a číslo popisné', contract:true },
+    { key:'mesto',     label:'Město',          ph:'Brno', contract:true }
+  ]},
+  { group:'Do smlouvy', items:[
+    { key:'rozsah',    label:'Rozsah spolupráce', ph:'plný úvazek, 30 h týdně…', contract:true },
+    { key:'odmena',    label:'Mzda nebo sazba',   ph:'částka', contract:true, sensitive:true },
+    { key:'zkusebni',  label:'Zkušební doba',     ph:'3 měsíce', contract:true },
+    { key:'mistoVykonu', label:'Místo výkonu práce', ph:'Brno, Křídlovická 371/68', contract:true }
   ]},
   { group:'Platba a daně', items:[
     { key:'ucet', label:'Číslo účtu', ph:'123456789/0100' },
@@ -1398,7 +1436,7 @@ var TEMPLATES = [
    6. STAV
    ============================================================ */
 var STORE_KEY = 'fourbros-onboarding-app-v1';
-var state = { role:'novacek', config:{}, profile:{}, done:{} };
+var state = { role:'novacek', config:{}, profile:{}, done:{}, completedAt:null };
 
 SETTINGS.forEach(function(g){
   g.items.forEach(function(f){ if(f.def){ state.config[f.key] = f.def; } });
@@ -1420,6 +1458,7 @@ function load(){
     if(saved.config){ merge(state.config, saved.config); }
     if(saved.profile){ merge(state.profile, saved.profile); }
     if(saved.done){ state.done = saved.done; }
+    if(saved.completedAt){ state.completedAt = saved.completedAt; }
   }catch(e){ /* úložiště nedostupné */ }
 }
 
@@ -1451,8 +1490,14 @@ function readShared(){
 }
 
 function shareLink(){
+  /* Mzdu do odkazu nedáváme — odkaz se dá přeposlat dál. */
+  var safe = {};
+  Object.keys(state.profile).forEach(function(k){
+    var f = PROFILE.filter(function(x){ return x.key === k; })[0];
+    if(!f || !f.sensitive){ safe[k] = state.profile[k]; }
+  });
   return location.origin + location.pathname + '#/uvod?s=' +
-    b64enc(JSON.stringify({ config:state.config, profile:state.profile }));
+    b64enc(JSON.stringify({ config:state.config, profile:safe }));
 }
 
 /* ============================================================
@@ -1567,6 +1612,7 @@ var ROUTES = [
   { id:'lide',      label:'Kdo je kdo', icon:'people', render:viewLide },
   { id:'terminy',   label:'Termíny',    icon:'docs',   render:viewTerminy },
   { id:'sablony',   label:'Šablony',    icon:'tpl',    render:viewSablony, hrOnly:true },
+  { id:'dokonceni', label:'Dokončení',  icon:'shield', render:viewDokonceni },
   { id:'nastaveni', label:'Nastavení',  icon:'cog',    render:viewNastaveni }
 ];
 
@@ -1792,6 +1838,108 @@ function viewProfil(){
   h += '</div>';
 
   return h;
+}
+
+/* ---------- Dokončení ---------- */
+
+/* Bez těchhle údajů nemá smysl účet zakládat. */
+var REQUIRED = ['jmeno','email','pozice','nastup','uvazek'];
+
+function readiness(){
+  var missing = REQUIRED.filter(function(k){
+    var v = state.profile[k];
+    return v == null || v === '';
+  });
+
+  var acc = { total:0, done:0 };
+  ACCESS_STEPS.forEach(function(p){
+    var st = phaseStats(p);
+    acc.total += st.total;
+    acc.done += st.done;
+  });
+
+  var den1 = PHASES.filter(function(p){ return p.id === 'den1'; })[0];
+  var d = den1 ? phaseStats(den1) : { total:0, done:0 };
+
+  return {
+    profil:  { ok: missing.length === 0, missing:missing },
+    pristupy:{ ok: acc.total > 0 && acc.done === acc.total, done:acc.done, total:acc.total },
+    denjedna:{ ok: d.total > 0 && d.done === d.total, done:d.done, total:d.total }
+  };
+}
+
+function accountPayload(){
+  var base = portalPayload();
+  base._action = 'createAccount';
+  base.contract = {
+    scope: state.profile.rozsah || null,
+    compensation: state.profile.odmena || null,
+    probationPeriod: state.profile.zkusebni || null,
+    workplace: state.profile.mistoVykonu || null
+  };
+  base.onboardingCompletedAt = state.completedAt || null;
+  return base;
+}
+
+function viewDokonceni(){
+  var r = readiness();
+  var jmeno = state.profile.jmeno;
+  var allOk = r.profil.ok && r.pristupy.ok && r.denjedna.ok;
+  var done = !!state.completedAt;
+
+  var h = '';
+  h += '<div class="head">';
+  h +=   '<h1>Dokončení onboardingu</h1>';
+  h +=   '<p class="lede">Až projdeš s novým kolegou přístupy i procesy, tady se onboarding uzavře a založí se účet v HR portálu.</p>';
+  h += '</div>';
+
+  if(done){
+    h += '<div class="card raised washed"><div class="wash" aria-hidden="true"></div>';
+    h +=   '<h3>Onboarding uzavřen</h3>';
+    h +=   '<p>Účet pro <strong>' + esc(jmeno || 'nového kolegu') + '</strong> byl označen jako založený ' +
+             esc(formatDate(state.completedAt.slice(0, 10))) + '.</p>';
+    h +=   '<div class="btns"><button class="btn ghost" data-account>Zkopírovat data účtu znovu</button>' +
+             '<button class="btn ghost" data-reopen>Znovu otevřít</button></div>';
+    h += '</div>';
+    return h;
+  }
+
+  h += '<section class="group"><h2>Co musí být hotové</h2>';
+  h +=   '<ul class="gates">';
+  h +=     gateRow(r.profil.ok, 'Povinné údaje o kolegovi',
+             r.profil.ok ? 'Vyplněno' : 'Chybí: ' + r.profil.missing.map(function(k){
+               return labelFor(k);
+             }).join(', '), 'profil');
+  h +=     gateRow(r.pristupy.ok, 'Přístupy projité s kolegou',
+             r.pristupy.done + ' z ' + r.pristupy.total + ' kroků', 'pristupy');
+  h +=     gateRow(r.denjedna.ok, 'První den a procesy',
+             r.denjedna.done + ' z ' + r.denjedna.total + ' kroků', 'plan');
+  h +=   '</ul>';
+  h += '</section>';
+
+  h += '<div class="card' + (allOk ? ' raised washed' : ' soft') + '">';
+  if(allOk){ h += '<div class="wash" aria-hidden="true"></div>'; }
+  h +=   '<h3>' + (allOk ? 'Všechno je hotové' : 'Zatím to nejde uzavřít') + '</h3>';
+  h +=   '<p>' + (allOk
+          ? 'Onboarding můžeš uzavřít a založit účet. Data se zkopírují ve formátu, který portál přijme.'
+          : 'Dokonči body výše. Tlačítko se odemkne, jakmile bude všechno odškrtnuté — ať účet nevznikne s poloviční smlouvou.') + '</p>';
+  h +=   '<div class="btns">';
+  h +=     '<button class="btn" data-finish' + (allOk ? '' : ' disabled') + '>' +
+             'Onboarding hotový — vytvořit účet' + (jmeno ? ' pro ' + esc(jmeno) : '') + '</button>';
+  h +=   '</div>';
+  h += '</div>';
+
+  h += '<div class="note"><p class="label">Co tlačítko udělá</p><p>Označí onboarding za dokončený a připraví data účtu — profil, smluvní údaje i seznam odškrtaných kroků. Dokud není HR portál hotový, data se zkopírují do schránky a vloží se ručně. Až portál poběží, půjde založit účet přímo odsud.</p></div>';
+
+  return h;
+}
+
+function gateRow(ok, title, detail, route){
+  return '<li class="gate' + (ok ? ' ok' : '') + '">' +
+    '<span class="gate-mark" aria-hidden="true">' + (ok ? '✓' : '') + '</span>' +
+    '<div style="min-width:0"><h4>' + esc(title) + '</h4>' +
+    '<p>' + esc(detail) + '</p></div>' +
+    '<a class="gate-link" href="#/' + route + '">Otevřít</a></li>';
 }
 
 /* ---------- Postup ---------- */
@@ -2275,7 +2423,8 @@ function fieldHtml(f, value, scope){
     control = '<input id="f-' + esc(f.key) + '" type="' + (f.type || 'text') + '" value="' + esc(value) + '" ' +
       'placeholder="' + esc(f.ph || '') + '" data-scope="' + scope + '" data-key="' + esc(f.key) + '">';
   }
-  return '<div class="field"><label for="f-' + esc(f.key) + '">' + esc(f.label) + '</label>' + control + '</div>';
+  var mark = f.contract ? ' <span class="tagline">do smlouvy</span>' : '';
+  return '<div class="field"><label for="f-' + esc(f.key) + '">' + esc(f.label) + mark + '</label>' + control + '</div>';
 }
 
 /* Krok se zobrazí, pokud není vázaný na typ spolupráce, nebo pokud typ sedí.
@@ -2377,6 +2526,29 @@ document.addEventListener('click', function(e){
   var uvBtn = t.closest('[data-uvazek]');
   if(uvBtn){
     state.profile.uvazek = uvBtn.getAttribute('data-uvazek') || '';
+    save();
+    render();
+    return;
+  }
+
+  if(t.closest('[data-finish]')){
+    var btn = t.closest('[data-finish]');
+    if(btn.hasAttribute('disabled')){ return; }
+    state.completedAt = new Date().toISOString();
+    save();
+    copyText(JSON.stringify(accountPayload(), null, 2),
+             'Onboarding uzavřen, data účtu zkopírována');
+    render();
+    return;
+  }
+
+  if(t.closest('[data-account]')){
+    copyText(JSON.stringify(accountPayload(), null, 2), 'Data účtu zkopírována');
+    return;
+  }
+
+  if(t.closest('[data-reopen]')){
+    state.completedAt = null;
     save();
     render();
     return;
