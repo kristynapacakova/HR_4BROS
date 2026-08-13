@@ -20,6 +20,7 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 ### Obrazovky
 
 - **Přehled** — postup v procentech, kolikátý je den onboardingu, aktuální fáze a co je na řadě
+- **Profil** — údaje o novém kolegovi ve struktuře HR portálu, ukazatel vyplněnosti a export dat
 - **Postup** — sedm rozbalovacích fází, celkem 62 odškrtávacích kroků s odznakem role, která je má na starosti
 - **Přístupy** — kompletní postup zajištění přístupů novému kolegovi: založení účtů, fyzické přístupy, nastavení nástrojů krok za krokem a 14 řešených zádrhelů
 - **Návody** — 18 návodů krok za krokem: přihlášení do nástrojů, přístupy do klientských účtů, výkazy hodin, první call s klientem, kontrola výstupů před odesláním, mlčenlivost a klientská data, náš brand manuál, e-mailový podpis a další
@@ -27,7 +28,7 @@ připojení — stačí ho otevřít v prohlížeči nebo poslat odkazem.
 - **Kdo je kdo** — posádka Four Bros a na co se koho ptát
 - **Termíny** — zákonné lhůty při nástupu
 - **Šablony** — uvítací e-mail, oznámení týmu, plán 30/60/90, dotazník ve 30. dni (jen v režimu HR)
-- **Nastavení** — firemní údaje, údaje o novém kolegovi a **typ spolupráce**
+- **Nastavení** — firemní údaje a nástroje
 
 ### Zaměstnanec vs. OSVČ
 
@@ -47,6 +48,38 @@ Ve volbě **Vše** se zobrazují kroky pro oba typy a ty specifické nesou odzna
 „Jen Zaměstnanec (HPP)" nebo „Jen OSVČ" — je tak vidět, co se přepnutím skryje.
 Na obrazovce Přístupy je i srovnávací tabulka. Postup v procentech se počítá jen
 z kroků, které pro daný typ platí.
+
+### Napojení na HR portál
+
+Obrazovka **Profil** sbírá údaje ve struktuře, která odpovídá modelu `User`
+a `EmergencyContact` v HR portálu — jméno, e-mail, pozice, tým, datum nástupu,
+telefon, datum narození, adresa, číslo účtu, DIČ a nouzový kontakt. Vyplňuje se
+postupně během onboardingu.
+
+Tlačítko **Zkopírovat profil pro portál** vrátí JSON připravený k vložení:
+
+```json
+{ "employmentType": "zamestnanec",
+  "user": { "name": …, "email": …, "position": …, "department": …, "startDate": …,
+            "phone": …, "birthDate": …, "address": …, "city": …, "country": "CZ",
+            "bankAccount": …, "taxId": …, "role": "EMPLOYEE" },
+  "emergencyContact": { "name": …, "phone": …, "relationship": … },
+  "onboardingTasks": [ { "title": …, "completed": …, "order": … } ] }
+```
+
+Kroky onboardingu jdou do `onboardingTasks` očištěné od HTML a se zástupnými
+značkami už nahrazenými, takže odpovídají modelu `OnboardingTask`. Respektují
+i filtr HPP/OSVČ.
+
+**Přenos je zatím ruční — zkopírovat a vložit.** Aplikace běží v zabezpečeném
+rámci, který nedovoluje odchozí požadavky, takže sama data odeslat nemůže.
+Portál je navíc na demo datech: `POST /api/admin/employees` vrací `{ demo: true }`
+a nic nezapisuje. Až bude portál hotový, dá se tenhle formulář nasadit přímo
+do něj a zápis bude automatický.
+
+Model `User` nemá pole pro typ spolupráce a role zná jen `ADMIN` a `EMPLOYEE` —
+pro OSVČ bude potřeba schéma rozšířit. V exportu je proto `employmentType`
+zvlášť, mimo objekt `user`.
 
 ### Jak se používá
 

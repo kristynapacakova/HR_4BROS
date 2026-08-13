@@ -553,6 +553,11 @@ td.nw{white-space:nowrap;color:var(--ink-muted);font-variant-numeric:tabular-num
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
   padding:.7rem .7rem .7rem 1.15rem;border-bottom:1px solid var(--line);background:var(--surface);
 }
+.payload{
+  margin:0;padding:1rem;background:var(--surface-2);border-radius:var(--r-sm);
+  font-size:var(--t-xs);line-height:1.6;overflow-x:auto;max-height:22rem;overflow-y:auto;
+  color:var(--ink);white-space:pre;
+}
 .tpl-body{
   padding:1.15rem;white-space:pre-wrap;font-size:var(--t-sm);
   line-height:1.7;overflow-x:auto;color:var(--ink);
@@ -715,15 +720,43 @@ var SETTINGS = [
   ]}
 ];
 
-var PROFILE = [
-  { key:'jmeno',   label:'Jméno nového kolegy', ph:'Jan Novák' },
-  { key:'pozice',  label:'Pozice',              ph:'název pozice' },
-  { key:'uvazek',  label:'Typ spolupráce',      ph:'vyber',
-    options:[['zamestnanec','Zaměstnanec (HPP)'],['osvc','OSVČ']] },
-  { key:'nastup',  label:'Datum nástupu',       ph:'1. 9. 2026', type:'date' },
-  { key:'manazer', label:'Přímý nadřízený',     ph:'jméno' },
-  { key:'buddy',   label:'Buddy',               ph:'jméno' }
+/* Pole odpovídají modelu User a EmergencyContact v HR portálu, aby se
+   vyplněný profil dal přenést beze změn. */
+var PROFILE_GROUPS = [
+  { group:'Základní', items:[
+    { key:'jmeno',   label:'Jméno a příjmení',  ph:'Jan Novák' },
+    { key:'email',   label:'Pracovní e-mail',   ph:'jan@fourbros.cz' },
+    { key:'pozice',  label:'Pozice',            ph:'PPC specialista' },
+    { key:'tym',     label:'Tým',               ph:'PPC, web, kreativa…' },
+    { key:'uvazek',  label:'Typ spolupráce',    ph:'vyber',
+      options:[['zamestnanec','Zaměstnanec (HPP)'],['osvc','OSVČ']] },
+    { key:'nastup',  label:'Datum nástupu',     ph:'1. 9. 2026', type:'date' }
+  ]},
+  { group:'Osobní údaje', items:[
+    { key:'telefon',   label:'Telefon',        ph:'+420 …' },
+    { key:'narozeni',  label:'Datum narození', ph:'', type:'date' },
+    { key:'bydliste',  label:'Ulice a číslo',  ph:'ulice a číslo popisné' },
+    { key:'mesto',     label:'Město',          ph:'Brno' }
+  ]},
+  { group:'Platba a daně', items:[
+    { key:'ucet', label:'Číslo účtu', ph:'123456789/0100' },
+    { key:'dic',  label:'DIČ nebo IČO', ph:'CZ12345678' }
+  ]},
+  { group:'Kontakt pro případ nouze', items:[
+    { key:'nouzeJmeno', label:'Jméno',  ph:'jméno blízké osoby' },
+    { key:'nouzeTel',   label:'Telefon', ph:'+420 …' },
+    { key:'nouzeVztah', label:'Vztah',   ph:'partner, rodič…' }
+  ]},
+  { group:'Kdo se o něj stará', items:[
+    { key:'manazer', label:'Přímý nadřízený', ph:'jméno' },
+    { key:'buddy',   label:'Buddy',           ph:'jméno' }
+  ]}
 ];
+
+var PROFILE = [];
+PROFILE_GROUPS.forEach(function(g){
+  g.items.forEach(function(f){ PROFILE.push(f); });
+});
 
 /* ============================================================
    3. FÁZE A ÚKOLY
@@ -1526,6 +1559,7 @@ function toast(msg){
    ============================================================ */
 var ROUTES = [
   { id:'uvod',      label:'Přehled',    icon:'home',   render:viewUvod },
+  { id:'profil',    label:'Profil',     icon:'people', render:viewProfil },
   { id:'plan',      label:'Postup',     icon:'steps',  render:viewPlan },
   { id:'navody',    label:'Návody',     icon:'guide',  render:viewNavody },
   { id:'pristupy',  label:'Přístupy',   icon:'key',    render:viewPristupy },
@@ -1649,6 +1683,114 @@ function modeSwitch(){
           ? 'Kroky, které se tohohle typu netýkají, jsou skryté.'
           : 'Vidíš kroky pro oba typy. Vyber jeden a seznam se zkrátí.') + '</span>';
   h += '</div>';
+  return h;
+}
+
+/* ---------- Profil ---------- */
+
+/* Převede vyplněná pole na tvar, který odpovídá modelu User a
+   EmergencyContact v HR portálu. */
+function portalPayload(){
+  var v = function(k){ var x = state.profile[k]; return (x == null || x === '') ? null : x; };
+  var tasks = [];
+  var order = 0;
+  PHASES.concat(ACCESS_STEPS).forEach(function(p){
+    tasksOf(p).forEach(function(t){
+      tasks.push({
+        title: String(t.t).replace(/<[^>]+>/g, '').replace(/\{\{(\w+)\}\}/g, function(_, k){
+          return valueOf(k) || '…';
+        }),
+        completed: !!state.done['t:' + t.id],
+        order: order++
+      });
+    });
+  });
+
+  return {
+    _source: 'Onboarding Four Bros',
+    _version: 1,
+    _exportedAt: new Date().toISOString(),
+    employmentType: v('uvazek'),
+    user: {
+      name: v('jmeno'),
+      email: v('email'),
+      position: v('pozice'),
+      department: v('tym'),
+      startDate: v('nastup'),
+      phone: v('telefon'),
+      birthDate: v('narozeni'),
+      address: v('bydliste'),
+      city: v('mesto'),
+      country: 'CZ',
+      bankAccount: v('ucet'),
+      taxId: v('dic'),
+      role: 'EMPLOYEE'
+    },
+    emergencyContact: (v('nouzeJmeno') || v('nouzeTel')) ? {
+      name: v('nouzeJmeno'),
+      phone: v('nouzeTel'),
+      relationship: v('nouzeVztah')
+    } : null,
+    onboardingTasks: tasks
+  };
+}
+
+function profileStats(){
+  var filled = 0;
+  PROFILE.forEach(function(f){
+    var x = state.profile[f.key];
+    if(x != null && x !== ''){ filled++; }
+  });
+  return { total:PROFILE.length, filled:filled };
+}
+
+function viewProfil(){
+  var st = profileStats();
+  var pct = st.total ? Math.round(st.filled / st.total * 100) : 0;
+  var missing = PROFILE.filter(function(f){
+    var x = state.profile[f.key];
+    return x == null || x === '';
+  });
+
+  var h = '';
+  h += '<div class="head">';
+  h +=   '<h1>Profil nového kolegy</h1>';
+  h +=   '<p class="lede">Vyplňuje se postupně během onboardingu — něco víš dopředu, něco doplníš první den. Údaje se propisují do návodů, úkolů i šablon e-mailů.</p>';
+  h += '</div>';
+
+  h += '<div class="card raised"><div class="progress">';
+  h +=   '<div class="row"><span>Vyplněno</span><b>' + st.filled + ' z ' + st.total + ' · ' + pct + ' %</b></div>';
+  h +=   '<div class="bar"><i style="width:' + pct + '%"></i></div>';
+  h += '</div>';
+  if(missing.length){
+    h += '<p style="font-size:var(--t-sm);color:var(--ink-muted)">Zbývá doplnit: ' +
+         missing.map(function(f){ return '<span class="gap">' + esc(f.label) + '</span>'; }).join(' ') + '</p>';
+  } else {
+    h += '<p style="font-size:var(--t-sm);color:var(--accent-ink)">Profil je kompletní.</p>';
+  }
+  h += '</div>';
+
+  PROFILE_GROUPS.forEach(function(g){
+    h += '<div class="card"><fieldset><legend>' + esc(g.group) + '</legend><div class="form two">';
+    g.items.forEach(function(f){ h += fieldHtml(f, state.profile[f.key] || '', 'profile'); });
+    h += '</div></fieldset></div>';
+  });
+
+  h += '<div class="card soft">';
+  h +=   '<h3>Přenos do HR portálu</h3>';
+  h +=   '<p>Tlačítko zkopíruje profil ve formátu, který odpovídá datovému modelu portálu — jméno, kontakt, banka, nouzový kontakt a stav odškrtaných kroků. V portálu se pak jen vloží.</p>';
+  h +=   '<div class="btns">';
+  h +=     '<button class="btn" data-portal>Zkopírovat profil pro portál</button>';
+  h +=     '<button class="btn ghost" data-portalview>Zobrazit data</button>';
+  h +=   '</div>';
+  h +=   '<pre class="payload" data-payload hidden>' + esc(JSON.stringify(portalPayload(), null, 2)) + '</pre>';
+  h += '</div>';
+
+  h += '<div class="note">';
+  h +=   '<p class="label">Zatím se to nepropojí samo</p>';
+  h +=   '<p>Tahle aplikace běží v zabezpečeném rámci, který nedovoluje odesílat data ven — profil se proto přenáší zkopírováním. Až bude HR portál hotový, dá se tenhle formulář nasadit přímo do něj a pak už bude zápis do databáze automatický.</p>';
+  h += '</div>';
+
   return h;
 }
 
@@ -2098,12 +2240,8 @@ function viewNastaveni(){
   var h = '';
   h += '<div class="head">';
   h +=   '<h1>Nastavení</h1>';
-  h +=   '<p class="lede">Cokoliv tady vyplníš, se doplní do všech návodů, úkolů i šablon e-mailů. Nevyplněná místa zůstanou zvýrazněná, abys viděla, co ještě chybí.</p>';
+  h +=   '<p class="lede">Firemní údaje a nástroje. Doplní se do všech návodů, úkolů i šablon e-mailů. Údaje o novém kolegovi najdeš na obrazovce <a href="#/profil">Profil</a>.</p>';
   h += '</div>';
-
-  h += '<div class="card"><fieldset><legend>Nový kolega</legend><div class="form two">';
-  PROFILE.forEach(function(f){ h += fieldHtml(f, state.profile[f.key] || '', 'profile'); });
-  h += '</div></fieldset></div>';
 
   SETTINGS.forEach(function(g){
     h += '<div class="card"><fieldset><legend>' + esc(g.group) + '</legend><div class="form two">';
@@ -2241,6 +2379,17 @@ document.addEventListener('click', function(e){
     state.profile.uvazek = uvBtn.getAttribute('data-uvazek') || '';
     save();
     render();
+    return;
+  }
+
+  if(t.closest('[data-portal]')){
+    copyText(JSON.stringify(portalPayload(), null, 2), 'Profil zkopírován');
+    return;
+  }
+
+  if(t.closest('[data-portalview]')){
+    var pre = document.querySelector('[data-payload]');
+    if(pre){ pre.hidden = !pre.hidden; }
     return;
   }
 
