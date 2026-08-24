@@ -7,7 +7,6 @@ import {
   loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT,
   type TeamProfileOverride, type PhotoPosition,
 } from '@/lib/team-profile-client'
-import { Medailonek } from '../Medailonek'
 import { PhotoPositionEditor } from '../PhotoPositionEditor'
 import { formatBirthday } from '../TeamClient'
 
@@ -167,9 +166,30 @@ export function MemberProfileClient({
       <div className="flex items-center justify-center gap-2 sm:gap-4">
         <SideNavTile member={prev} override={profiles[prev.id]} direction="prev" />
 
-        <div className="flex-1 max-w-xl bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sm:p-8 flex flex-col items-center text-center">
+        <div className="relative flex-1 max-w-xl rounded-2xl shadow-sm overflow-hidden p-6 sm:p-8 flex flex-col items-center text-center bg-[#EAF3FB]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/watercolor.png" alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" />
+
           <div className="relative">
-            <Medailonek photo={override.photo} photoPos={override.photoPos} emoji={member.emoji} name={member.name} size={140} />
+            <div
+              className="rounded-full overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#F7F8FE] flex-shrink-0"
+              style={{ width: 140, height: 140 }}
+            >
+              {override.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={override.photo}
+                  alt={member.name}
+                  className="w-full h-full object-cover"
+                  style={{
+                    objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
+                    transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
+                  }}
+                />
+              ) : (
+                <span style={{ fontSize: 58 }}>{member.emoji}</span>
+              )}
+            </div>
             {isMe && (
               <div className="absolute bottom-2 right-2 flex gap-1.5">
                 {override.photo && (
@@ -193,10 +213,10 @@ export function MemberProfileClient({
             )}
           </div>
 
-          <h1 className="text-2xl font-headline font-bold text-navy mt-3">{member.name}</h1>
-          <p className="text-slate-500 mt-0.5">{member.position}</p>
+          <h1 className="relative text-2xl font-headline font-bold text-navy mt-3">{member.name}</h1>
+          <p className="relative text-slate-500 mt-0.5">{member.position}</p>
 
-          <div className="flex flex-wrap gap-1.5 justify-center mt-3">
+          <div className="relative flex flex-wrap gap-1.5 justify-center mt-3">
             <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${DEPT_COLORS[member.department] ?? 'bg-slate-100 text-slate-600'}`}>
               <Users2 className="w-3 h-3" />
               {member.department}
