@@ -19,6 +19,7 @@ import {
   Coins,
   FilePen,
   GraduationCap,
+  Dumbbell,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -41,6 +42,7 @@ const adminItems = [
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
   { label: 'Přehled odměn', href: '/admin/odmeny', icon: Coins },
   { label: 'Vzdělávací budget', href: '/admin/vzdelavani', icon: GraduationCap },
+  { label: 'Sportovní benefit', href: '/admin/benefity', icon: Dumbbell },
   { label: 'Smlouvy', href: '/admin/smlouvy', icon: FilePen },
   { label: 'Majetek', href: '/admin/assets', icon: Laptop },
   { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },

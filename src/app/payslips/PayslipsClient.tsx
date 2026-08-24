@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell } from 'lucide-react'
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
+import { DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, type BenefitType } from '@/lib/mock-data'
+import { loadBenefitSelections, loadSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 
 const MONTH_NAMES = [
   'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
@@ -105,6 +107,7 @@ export function PayslipsClient({
   employmentType,
   pageTitle,
   sickDays = 0,
+  employeeId,
 }: {
   payslips: Payslip[]
   salaryInfo: SalaryInfo
@@ -112,8 +115,32 @@ export function PayslipsClient({
   pageTitle: string
   /** Dny nemoci v aktuálním měsíci — zobrazí rozpis srážky */
   sickDays?: number
+  employeeId?: string
 }) {
   const [showSickDetail, setShowSickDetail] = useState(false)
+  const [benefitType, setBenefitType] = useState<BenefitType | null>(null)
+  const [approvedThisMonth, setApprovedThisMonth] = useState(false)
+
+  useEffect(() => {
+    if (!employeeId) return
+    const refresh = () => {
+      const selections = loadBenefitSelections(DEMO_BENEFIT_SELECTION)
+      setBenefitType(selections[employeeId] ?? null)
+      const now = new Date()
+      const requests = loadSportRequests(DEMO_SPORT_REQUESTS)
+      setApprovedThisMonth(requests.some(r =>
+        r.employeeId === employeeId && r.status === 'APPROVED' &&
+        r.month === now.getMonth() + 1 && r.year === now.getFullYear()
+      ))
+    }
+    refresh()
+    window.addEventListener(BENEFIT_CHANGED_EVENT, refresh)
+    window.addEventListener('storage', refresh)
+    return () => {
+      window.removeEventListener(BENEFIT_CHANGED_EVENT, refresh)
+      window.removeEventListener('storage', refresh)
+    }
+  }, [employeeId])
 
   const sorted = [...payslips].sort((a, b) => (b.year - a.year) || (b.month - a.month))
 
@@ -167,6 +194,24 @@ export function PayslipsClient({
               </p>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Sportovní benefit — dopad na odměnu tento měsíc */}
+      {benefitType === 'SPORT_CONTRIBUTION' && approvedThisMonth && (
+        <div className="flex items-center gap-3 bg-green-50 border border-green-100 rounded-2xl px-5 py-4">
+          <Dumbbell className="w-5 h-5 text-green-600 flex-shrink-0" />
+          <p className="text-sm text-green-800">
+            <strong>Příspěvek na sport schválen.</strong> +{fmt(SPORT_CONTRIBUTION_AMOUNT, 'CZK')} bylo připočteno k odměně za tento měsíc.
+          </p>
+        </div>
+      )}
+      {benefitType === 'MULTISPORT' && isICO && (
+        <div className="flex items-center gap-3 bg-amber-50 border border-amber-100 rounded-2xl px-5 py-4">
+          <Dumbbell className="w-5 h-5 text-amber-600 flex-shrink-0" />
+          <p className="text-sm text-amber-800">
+            <strong>Multisport karta.</strong> Firma přispívá {fmt(SPORT_CONTRIBUTION_AMOUNT, 'CZK')}, zbytek {fmt(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT, 'CZK')} je odečteno z odměny za tento měsíc.
+          </p>
         </div>
       )}
 

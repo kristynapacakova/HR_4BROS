@@ -81,6 +81,7 @@ export default async function ProfilePage() {
               employmentType={user.employmentType ?? 'HPP'}
               pageTitle={payslipsLabel}
               sickDays={sickDaysThisMonth}
+              employeeId={user.id}
             />
           }
           timeOffPanel={

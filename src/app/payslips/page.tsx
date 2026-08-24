@@ -25,6 +25,7 @@ export default async function PayslipsPage() {
         salaryInfo={DEMO_SALARY_INFO}
         employmentType={user.employmentType ?? 'HPP'}
         pageTitle={pageTitle}
+        employeeId={user.id}
       />
     </AppShell>
   )
