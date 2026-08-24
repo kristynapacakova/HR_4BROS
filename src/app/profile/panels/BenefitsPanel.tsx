@@ -1,9 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Dumbbell, GraduationCap, CheckCircle2, Clock, XCircle, Plus, Link2 } from 'lucide-react'
-import { DEMO_EDU_BUDGETS, DEMO_EDU_REQUESTS, DEFAULT_EDU_BUDGET, type EduRequest } from '@/lib/mock-data'
+import { useEffect, useRef, useState } from 'react'
+import { Dumbbell, GraduationCap, CheckCircle2, Clock, XCircle, Plus, Link2, Upload, HeartPulse } from 'lucide-react'
+import {
+  DEMO_EDU_BUDGETS, DEMO_EDU_REQUESTS, DEFAULT_EDU_BUDGET, type EduRequest,
+  DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST,
+  type SportBenefitRequest,
+} from '@/lib/mock-data'
 import { loadEduRequests, saveEduRequests, loadEduBudgetOverrides, EDU_CHANGED_EVENT } from '@/lib/edu-budget-client'
+import { loadBenefitSelections, loadSportRequests, saveSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
+
+const MONTH_NAMES_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec']
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
@@ -27,7 +34,7 @@ function StatusBadge({ status }: { status: EduRequest['status'] }) {
   )
 }
 
-export function BenefitsPanel({ employeeId, employeeName }: { employeeId: string; employeeName: string }) {
+export function BenefitsPanel({ employeeId, employeeName, employmentType }: { employeeId: string; employeeName: string; employmentType?: string | null }) {
   const [allRequests, setAllRequests] = useState<EduRequest[]>([])
   const [budgetTotal, setBudgetTotal] = useState(DEFAULT_EDU_BUDGET)
   const [addOpen, setAddOpen] = useState(false)
@@ -35,22 +42,60 @@ export function BenefitsPanel({ employeeId, employeeName }: { employeeId: string
   const [amount, setAmount] = useState('')
   const [url, setUrl] = useState('')
 
+  const [benefitType, setBenefitType] = useState<'MULTISPORT' | 'SPORT_CONTRIBUTION' | null>(null)
+  const [sportRequests, setSportRequests] = useState<SportBenefitRequest[]>([])
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const isICO = employmentType === 'ICO'
+
   const refresh = () => {
     setAllRequests(loadEduRequests(DEMO_EDU_REQUESTS))
     const overrides = loadEduBudgetOverrides()
     setBudgetTotal(overrides[employeeId] ?? DEMO_EDU_BUDGETS[employeeId] ?? DEFAULT_EDU_BUDGET)
+    const selections = loadBenefitSelections(DEMO_BENEFIT_SELECTION)
+    setBenefitType(selections[employeeId] ?? null)
+    setSportRequests(loadSportRequests(DEMO_SPORT_REQUESTS))
   }
 
   useEffect(() => {
     refresh()
     window.addEventListener(EDU_CHANGED_EVENT, refresh)
+    window.addEventListener(BENEFIT_CHANGED_EVENT, refresh)
     window.addEventListener('storage', refresh)
     return () => {
       window.removeEventListener(EDU_CHANGED_EVENT, refresh)
+      window.removeEventListener(BENEFIT_CHANGED_EVENT, refresh)
       window.removeEventListener('storage', refresh)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [employeeId])
+
+  const now = new Date()
+  const currentMonth = now.getMonth() + 1
+  const currentYear = now.getFullYear()
+
+  const mySportRequests = sportRequests
+    .filter(r => r.employeeId === employeeId)
+    .sort((a, b) => (b.year - a.year) || (b.month - a.month))
+
+  const currentMonthRequest = mySportRequests.find(r => r.month === currentMonth && r.year === currentYear)
+
+  const submitSportRequest = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const newReq: SportBenefitRequest = {
+      id: `sport-${Date.now()}`,
+      employeeId,
+      employeeName,
+      month: currentMonth,
+      year: currentYear,
+      receiptName: file.name,
+      status: 'PENDING',
+      requestedAt: new Date().toISOString().slice(0, 10),
+    }
+    saveSportRequests([newReq, ...sportRequests])
+    e.target.value = ''
+  }
 
   const myRequests = allRequests
     .filter(r => r.employeeId === employeeId)
@@ -85,27 +130,105 @@ export function BenefitsPanel({ employeeId, employeeName }: { employeeId: string
   return (
     <div className="space-y-5">
 
-      {/* Multisportka */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+      {/* Sportovní benefit — Multisport karta, nebo příspěvek na sport */}
+      {benefitType === null && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
-              <Dumbbell className="w-5 h-5 text-green-600" />
+            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
+              <Dumbbell className="w-5 h-5 text-slate-400" />
             </div>
             <div>
-              <h3 className="font-headline font-semibold text-navy">Multisport karta</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Neomezený vstup do sportovišť po celé ČR</p>
+              <h3 className="font-headline font-semibold text-navy">Sportovní benefit</h3>
+              <p className="text-xs text-slate-400 mt-0.5">HR ti zatím nenastavilo Multisport kartu ani příspěvek na sport.</p>
             </div>
           </div>
-          <span className="flex items-center gap-1.5 text-xs font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-full">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            Aktivní od 1. 2. 2026
-          </span>
         </div>
-        <p className="text-xs text-slate-400 mt-4">
-          Kartu ti vydá HR při nástupu. Ztrátu nebo změnu nahlas na HR — doprovodnou kartu pro partnera/ku lze dokoupit.
-        </p>
-      </div>
+      )}
+
+      {benefitType === 'MULTISPORT' && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                <Dumbbell className="w-5 h-5 text-green-600" />
+              </div>
+              <div>
+                <h3 className="font-headline font-semibold text-navy">Multisport karta</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Neomezený vstup do sportovišť po celé ČR</p>
+              </div>
+            </div>
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-full">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              Aktivní
+            </span>
+          </div>
+          {isICO ? (
+            <p className="text-xs text-slate-400 mt-4">
+              Firma přispívá {fmt(SPORT_CONTRIBUTION_AMOUNT)} měsíčně, zbytek ({fmt(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT)}) se ti odečte z odměny za daný měsíc — najdeš to v záložce <strong>Moje odměna</strong>.
+            </p>
+          ) : (
+            <p className="text-xs text-slate-400 mt-4">
+              Kartu ti vydá HR při nástupu. Cena karty se ti standardně strhává ze mzdy. Ztrátu nebo změnu nahlas na HR.
+            </p>
+          )}
+        </div>
+      )}
+
+      {benefitType === 'SPORT_CONTRIBUTION' && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+              <HeartPulse className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <h3 className="font-headline font-semibold text-navy">Příspěvek na sport</h3>
+              <p className="text-xs text-slate-400 mt-0.5">{fmt(SPORT_CONTRIBUTION_AMOUNT)} měsíčně po nahrání dokladu a schválení HR</p>
+            </div>
+          </div>
+
+          <p className="text-sm text-navy mb-2">
+            {MONTH_NAMES_CZ[currentMonth - 1]} {currentYear}
+          </p>
+
+          {currentMonthRequest ? (
+            <div className="flex items-center justify-between gap-3 bg-slate-50 rounded-xl px-4 py-3">
+              <div className="min-w-0">
+                <p className="text-sm text-navy truncate">{currentMonthRequest.receiptName}</p>
+                <p className="text-xs text-slate-400">{new Date(currentMonthRequest.requestedAt).toLocaleDateString('cs-CZ')}</p>
+              </div>
+              <StatusBadge status={currentMonthRequest.status} />
+            </div>
+          ) : (
+            <div>
+              <input ref={fileRef} type="file" accept="image/*,.pdf" className="hidden" onChange={submitSportRequest} />
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
+              >
+                <Upload className="w-4 h-4 flex-shrink-0" />
+                Nahrát doklad za tento měsíc
+              </button>
+            </div>
+          )}
+
+          {mySportRequests.length > 0 && (
+            <div className="divide-y divide-slate-50 border-t border-slate-100 mt-4 pt-1">
+              {mySportRequests.filter(r => r.id !== currentMonthRequest?.id).map(r => (
+                <div key={r.id} className="py-2.5 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm text-navy truncate">{MONTH_NAMES_CZ[r.month - 1]} {r.year} — {r.receiptName}</p>
+                  </div>
+                  <StatusBadge status={r.status} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          <p className="text-xs text-slate-400 mt-3">
+            Po schválení HR se ti {fmt(SPORT_CONTRIBUTION_AMOUNT)} připočte k odměně za daný měsíc.
+          </p>
+        </div>
+      )}
 
       {/* Vzdělávací budget */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">

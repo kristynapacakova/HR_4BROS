@@ -437,6 +437,39 @@ export const DEMO_EDU_REQUESTS: EduRequest[] = [
   { id: "edu4", employeeId: DEMO_USER_ICO.id, employeeName: DEMO_USER_ICO.name, title: "Kurz: Vyjednávání s klienty", amount: 2900, url: "https://akademie.cz/vyjednavani", status: "PENDING", requestedAt: "2026-08-05" },
 ]
 
+// ── Sportovní benefit ───────────────────────────────────────────────────────
+// HR nastaví každému člověku buď Multisport kartu, nebo příspěvek na sport.
+// Příspěvek na sport (600 Kč/měsíc) žádá zaměstnanec/OSVČ s dokladem, HR schvaluje.
+// Multisport u zaměstnanců se strhává ze mzdy standardně (mimo appku).
+// Multisport u OSVČ: firma přispívá 600 Kč, zbytek ceny karty se odečte z odměny za daný měsíc.
+
+export type BenefitType = 'MULTISPORT' | 'SPORT_CONTRIBUTION'
+
+export const SPORT_CONTRIBUTION_AMOUNT = 600
+export const MULTISPORT_MONTHLY_COST = 990
+
+export const DEMO_BENEFIT_SELECTION: Record<string, BenefitType> = {
+  [DEMO_USER.id]: 'MULTISPORT',
+  [DEMO_USER_ICO.id]: 'MULTISPORT',
+  [DEMO_TL.id]: 'SPORT_CONTRIBUTION',
+}
+
+export interface SportBenefitRequest {
+  id: string
+  employeeId: string
+  employeeName: string
+  month: number
+  year: number
+  receiptName: string
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  requestedAt: string
+}
+
+export const DEMO_SPORT_REQUESTS: SportBenefitRequest[] = [
+  { id: "sport1", employeeId: DEMO_TL.id, employeeName: DEMO_TL.name, month: 7, year: 2026, receiptName: "doklad_fitness_cerven.pdf", status: "APPROVED", requestedAt: "2026-07-03" },
+  { id: "sport2", employeeId: DEMO_TL.id, employeeName: DEMO_TL.name, month: 8, year: 2026, receiptName: "doklad_fitness_srpen.pdf", status: "PENDING", requestedAt: "2026-08-04" },
+]
+
 // ── Team directory ──────────────────────────────────────────────────────────
 
 export const TEAM_DEPARTMENTS = [

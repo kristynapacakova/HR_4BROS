@@ -253,7 +253,7 @@ export function ProfileTabs({
       {tab === 'dochazka' && timeOffPanel}
 
       {/* Benefity */}
-      {tab === 'benefity' && <BenefitsPanel employeeId={user.id} employeeName={user.name} />}
+      {tab === 'benefity' && <BenefitsPanel employeeId={user.id} employeeName={user.name} employmentType={user.employmentType} />}
 
       {/* Dokumenty a smlouvy */}
       {tab === 'dokumenty' && documentsPanel}

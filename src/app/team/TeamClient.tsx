@@ -82,20 +82,45 @@ function Avatar({ member, photo, size = 48 }: { member: Member; photo?: string |
   )
 }
 
-// Dominant medailonek photo — fills the top of the card, portrait aspect.
-function MedailonekPhoto({ member, photo }: { member: Member; photo?: string | null }) {
-  if (photo) {
-    return (
-      <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden flex-shrink-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={photo} alt={member.name} className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent pointer-events-none" />
-      </div>
-    )
-  }
+// Watercolor-blob background behind the circular photo, in brand blues/violet.
+function WatercolorSplash() {
   return (
-    <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-[#F3EAFD] via-[#F7F8FE] to-[#EEF3FC]">
-      <span style={{ fontSize: '3.5rem' }}>{member.emoji}</span>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div
+        className="absolute -left-4 top-1 w-[85%] h-[70%] rounded-[45%] rotate-[-8deg]"
+        style={{ background: 'linear-gradient(135deg, #BFE1F0, #DCEBF7)', filter: 'blur(2px)', opacity: 0.9 }}
+      />
+      <div
+        className="absolute -right-6 top-6 w-[60%] h-[55%] rounded-[45%] rotate-[10deg]"
+        style={{ background: 'linear-gradient(135deg, #9BC9E0, #C9E4F2)', filter: 'blur(3px)', opacity: 0.65 }}
+      />
+      <div
+        className="absolute left-6 -bottom-2 w-[55%] h-[40%] rounded-[45%] rotate-[4deg]"
+        style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(4px)', opacity: 0.12 }}
+      />
+    </div>
+  )
+}
+
+// Dominant medailonek — circular photo on a watercolor splash, name + position below.
+function Medailonek({ member, photo }: { member: Member; photo?: string | null }) {
+  return (
+    <div className="w-full rounded-xl overflow-hidden bg-white flex-shrink-0">
+      <div className="relative w-full aspect-[4/3] flex items-center justify-center">
+        <WatercolorSplash />
+        <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#F7F8FE]">
+          {photo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={photo} alt={member.name} className="w-full h-full object-cover" />
+          ) : (
+            <span style={{ fontSize: '2.5rem' }}>{member.emoji}</span>
+          )}
+        </div>
+      </div>
+      <div className="text-center pt-2 pb-1">
+        <p className="font-headline font-bold text-navy tracking-wide uppercase text-sm truncate">{member.name}</p>
+        <p className="text-[11px] text-slate-400 uppercase tracking-widest mt-0.5 truncate">{member.position}</p>
+      </div>
     </div>
   )
 }
@@ -314,14 +339,8 @@ export function TeamClient({ members, departments, isAdmin, viewerEmail }: {
               onClick={() => setOpenId(member.id)}
               className="text-left bg-white rounded-2xl border border-slate-100 shadow-sm p-3 flex flex-col gap-3 hover:shadow-[0_8px_32px_rgba(25,70,105,0.08)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              {/* Dominant medailonek photo, name overlaid at bottom */}
-              <div className="relative">
-                <MedailonekPhoto member={member} photo={photo} />
-                <div className="absolute inset-x-0 bottom-0 px-3.5 pb-3">
-                  <p className={`font-headline font-semibold truncate ${photo ? 'text-white' : 'text-navy'}`}>{member.name}</p>
-                  <p className={`text-sm truncate ${photo ? 'text-white/80' : 'text-slate-500'}`}>{member.position}</p>
-                </div>
-              </div>
+              {/* Dominant medailonek: circular photo on watercolor splash, name + position below */}
+              <Medailonek member={member} photo={photo} />
 
               <div className="px-1.5 pb-1.5 flex flex-col gap-3">
                 {/* Badges */}
