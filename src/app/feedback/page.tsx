@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
 import { FeedbackForm } from './FeedbackForm'
-import { ShieldCheck, Eye, EyeOff, MessageSquareHeart } from 'lucide-react'
+import { ShieldCheck, MessageSquareHeart } from 'lucide-react'
 
 export default async function FeedbackPage() {
   const session = await auth()
@@ -35,27 +35,8 @@ export default async function FeedbackPage() {
           </div>
         </div>
 
-        {/* Anonymity info */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex gap-3">
-            <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <EyeOff className="w-4 h-4 text-slate-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-navy">Anonymní</p>
-              <p className="text-xs text-slate-400 mt-0.5">HR vidí jen zprávu, tvé jméno zůstane skryté</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex gap-3">
-            <div className="w-8 h-8 bg-violet/10 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Eye className="w-4 h-4 text-violet" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-navy">Se jménem</p>
-              <p className="text-xs text-slate-400 mt-0.5">HR vidí i tvoje jméno, může tě zpětně kontaktovat</p>
-            </div>
-          </div>
-        </div>
+        {/* Form */}
+        <FeedbackForm userName={user?.name || session.user.email || ''} />
 
         {/* Guarantee */}
         <div className="flex items-start gap-3 bg-green-50 border border-green-100 rounded-2xl px-5 py-4">
@@ -64,9 +45,6 @@ export default async function FeedbackPage() {
             <strong>Garantujeme bezpečí.</strong> Anonymní zprávy nelze dohledat. Nikdo tě za upřímný feedback nebude postihovat.
           </p>
         </div>
-
-        {/* Form */}
-        <FeedbackForm userName={user?.name || session.user.email || ''} />
 
       </div>
     </AppShell>
