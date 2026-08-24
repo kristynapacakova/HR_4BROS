@@ -197,60 +197,83 @@ export function PayslipsClient({
         </div>
       )}
 
-      {/* Sportovní benefit — dopad na odměnu tento měsíc */}
-      {benefitType === 'SPORT_CONTRIBUTION' && approvedThisMonth && (
-        <div className="flex items-center gap-3 bg-green-50 border border-green-100 rounded-2xl px-5 py-4">
-          <Dumbbell className="w-5 h-5 text-green-600 flex-shrink-0" />
-          <p className="text-sm text-green-800">
-            <strong>Příspěvek na sport schválen.</strong> +{fmt(SPORT_CONTRIBUTION_AMOUNT, 'CZK')} bylo připočteno k odměně za tento měsíc.
-          </p>
-        </div>
-      )}
-      {benefitType === 'MULTISPORT' && isICO && (
-        <div className="flex items-center gap-3 bg-amber-50 border border-amber-100 rounded-2xl px-5 py-4">
-          <Dumbbell className="w-5 h-5 text-amber-600 flex-shrink-0" />
-          <p className="text-sm text-amber-800">
-            <strong>Multisport karta.</strong> Firma přispívá {fmt(SPORT_CONTRIBUTION_AMOUNT, 'CZK')}, zbytek {fmt(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT, 'CZK')} je odečteno z odměny za tento měsíc.
-          </p>
-        </div>
-      )}
+      {/* Rozpis odměny tento měsíc — hrubá mzda, benefit, nemoc, čistá k výplatě */}
+      {latestReal && (benefitType || (!isICO && sickDays > 0)) && (() => {
+        const sick = !isICO && sickDays > 0 ? computeSickPay(salaryInfo.currentSalary, sickDays) : null
+        const benefitAmount =
+          benefitType === 'SPORT_CONTRIBUTION' && approvedThisMonth ? SPORT_CONTRIBUTION_AMOUNT :
+          benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
+          0
+        const adjustedNet = latestReal.netAmount + benefitAmount - (sick?.deduction ?? 0)
 
-      {/* Nemoc v tomto měsíci — rozpis srážky */}
-      {!isICO && sickDays > 0 && (() => {
-        const r = computeSickPay(salaryInfo.currentSalary, sickDays)
         return (
-          <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-5">
-            <button onClick={() => setShowSickDetail(s => !s)} className="w-full flex items-center gap-3 text-left">
-              <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
-                <Stethoscope className="w-4 h-4 text-red-400" />
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <p className="text-sm font-semibold text-navy mb-3">Rozpis odměny — {MONTH_NAMES[latestReal.month - 1]} {latestReal.year}</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-slate-500">Hrubá mzda</span>
+                <span className="font-medium text-navy">{fmt(latestReal.grossAmount, latestReal.currency)}</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-navy">Nemoc tento měsíc — {sickDays} {sickDays === 1 ? 'den' : sickDays < 5 ? 'dny' : 'dní'}</p>
-                <p className="text-xs text-slate-400">Očekávaná srážka ze mzdy: <span className="font-semibold text-red-500">−{fmt(r.deduction, 'CZK')}</span></p>
-              </div>
-              <ChevronDown className={`w-4 h-4 text-slate-300 transition-transform ${showSickDetail ? 'rotate-180' : ''}`} />
-            </button>
-            {showSickDetail && (
-              <div className="mt-4 rounded-2xl bg-[#F7F8FE] p-4 space-y-1.5 text-sm">
-                {[
-                  ['Průměrný hodinový výdělek', `${fmt(r.avgHourly, 'CZK')}/h`],
-                  ['Po redukci (90/60/30 %)', `${fmt(r.reduced, 'CZK')}/h`],
-                  ['Náhrada mzdy (60 % redukovaného)', `${fmt(r.compensationHourly, 'CZK')}/h`],
-                  ['Náhrada za den (8 h)', fmt(r.compensationDay, 'CZK')],
-                  [`Hrazeno zaměstnavatelem (1.–14. den)`, `${r.employerDays} dní → ${fmt(r.compensationTotal, 'CZK')}`],
-                  ...(r.csszDays > 0 ? [['Od 15. dne platí ČSSZ (nemocenské)', `${r.csszDays} dní`]] : []),
-                ].map(([label, value]) => (
-                  <div key={label as string} className="flex items-center justify-between gap-4">
-                    <span className="text-slate-500">{label}</span>
-                    <span className="font-semibold text-navy whitespace-nowrap">{value}</span>
-                  </div>
-                ))}
-                <div className="flex items-center justify-between gap-4 pt-2 border-t border-slate-200">
-                  <span className="text-slate-500 font-medium">Srážka oproti běžné mzdě</span>
-                  <span className="font-bold text-red-500">−{fmt(r.deduction, 'CZK')}</span>
+
+              {benefitType === 'SPORT_CONTRIBUTION' && (
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500 flex items-center gap-1.5">
+                    <Dumbbell className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                    Příspěvek na sport {approvedThisMonth ? '' : '(čeká na schválení)'}
+                  </span>
+                  <span className={`font-medium ${approvedThisMonth ? 'text-green-600' : 'text-slate-400'}`}>
+                    {approvedThisMonth ? `+${fmt(SPORT_CONTRIBUTION_AMOUNT, 'CZK')}` : '—'}
+                  </span>
                 </div>
+              )}
+
+              {benefitType === 'MULTISPORT' && isICO && (
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500 flex items-center gap-1.5">
+                    <Dumbbell className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+                    Multisport — doplatek nad příspěvek firmy
+                  </span>
+                  <span className="font-medium text-red-500">
+                    −{fmt(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT, 'CZK')}
+                  </span>
+                </div>
+              )}
+
+              {sick && (
+                <div>
+                  <button onClick={() => setShowSickDetail(s => !s)} className="w-full flex items-center justify-between gap-4 text-left">
+                    <span className="text-slate-500 flex items-center gap-1.5">
+                      <Stethoscope className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
+                      Nemoc — {sickDays} {sickDays === 1 ? 'den' : sickDays < 5 ? 'dny' : 'dní'}
+                      <ChevronDown className={`w-3.5 h-3.5 text-slate-300 transition-transform ${showSickDetail ? 'rotate-180' : ''}`} />
+                    </span>
+                    <span className="font-medium text-red-500">−{fmt(sick.deduction, 'CZK')}</span>
+                  </button>
+                  {showSickDetail && (
+                    <div className="mt-3 rounded-2xl bg-[#F7F8FE] p-4 space-y-1.5">
+                      {[
+                        ['Průměrný hodinový výdělek', `${fmt(sick.avgHourly, 'CZK')}/h`],
+                        ['Po redukci (90/60/30 %)', `${fmt(sick.reduced, 'CZK')}/h`],
+                        ['Náhrada mzdy (60 % redukovaného)', `${fmt(sick.compensationHourly, 'CZK')}/h`],
+                        ['Náhrada za den (8 h)', fmt(sick.compensationDay, 'CZK')],
+                        [`Hrazeno zaměstnavatelem (1.–14. den)`, `${sick.employerDays} dní → ${fmt(sick.compensationTotal, 'CZK')}`],
+                        ...(sick.csszDays > 0 ? [['Od 15. dne platí ČSSZ (nemocenské)', `${sick.csszDays} dní`]] : []),
+                      ].map(([label, value]) => (
+                        <div key={label as string} className="flex items-center justify-between gap-4">
+                          <span className="text-slate-500">{label}</span>
+                          <span className="font-semibold text-navy whitespace-nowrap">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex items-center justify-between gap-4 pt-2.5 border-t border-slate-200">
+                <span className="text-navy font-semibold">Čistá k výplatě</span>
+                <span className="font-bold text-navy">{fmt(adjustedNet, latestReal.currency)}</span>
               </div>
-            )}
+            </div>
           </div>
         )
       })()}
