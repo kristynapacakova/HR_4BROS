@@ -52,6 +52,11 @@ export function daysUntilBirthday(raw: string | null): number | null {
   return Math.ceil((next.getTime() - now.getTime()) / 86400000)
 }
 
+function firstSentence(text: string): string {
+  const match = text.match(/^.*?[.!?…](?=\s|$)/)
+  return (match ? match[0] : text).trim()
+}
+
 export function TeamClient({ members, departments }: {
   members: Member[]
   departments: string[]
@@ -109,7 +114,7 @@ export function TeamClient({ members, departments }: {
       <p className="text-sm text-slate-400">{sorted.length} {sorted.length === 1 ? 'člen' : sorted.length < 5 ? 'členové' : 'členů'}</p>
 
       {/* Cards grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
         {sorted.map(member => {
           const days = daysUntilBirthday(member.birthday)
           const birthdaySoon = days !== null && days <= 30
@@ -122,7 +127,7 @@ export function TeamClient({ members, departments }: {
             >
               {/* Photo + name — watercolor medailonek is reserved for the detail page */}
               <div className="w-full flex flex-col items-center pt-2">
-                <div className="relative w-20 h-20 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center">
+                <div className="relative w-16 h-16 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center">
                   {override?.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -135,37 +140,39 @@ export function TeamClient({ members, departments }: {
                       }}
                     />
                   ) : (
-                    <span style={{ fontSize: 34 }}>{member.emoji}</span>
+                    <span style={{ fontSize: 28 }}>{member.emoji}</span>
                   )}
                 </div>
-                <div className="text-center mt-2">
-                  <p className="font-headline font-bold text-navy tracking-wide uppercase text-sm truncate">{member.name}</p>
-                  <p className="text-[11px] text-slate-400 uppercase tracking-widest mt-0.5 truncate">{member.position}</p>
+                <div className="text-center mt-2 w-full">
+                  <p className="font-headline font-bold text-navy tracking-wide uppercase text-xs truncate">{member.name}</p>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5 truncate">{member.position}</p>
                 </div>
               </div>
 
-              <div className="px-1.5 pb-1.5 flex flex-col gap-3">
+              <div className="px-1 pb-1.5 flex flex-col gap-2">
                 {/* Badges */}
-                <div className="flex flex-wrap gap-1.5 justify-center">
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${DEPT_COLORS[member.department] ?? 'bg-slate-100 text-slate-600'}`}>
-                    <Users2 className="w-3 h-3" />
+                <div className="flex flex-wrap gap-1 justify-center">
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${DEPT_COLORS[member.department] ?? 'bg-slate-100 text-slate-600'}`}>
+                    <Users2 className="w-2.5 h-2.5" />
                     {member.department}
                   </span>
                   {member.seniority && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
-                      <Briefcase className="w-3 h-3" />
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600">
+                      <Briefcase className="w-2.5 h-2.5" />
                       {SENIORITY_LABEL[member.seniority] ?? member.seniority}
                     </span>
                   )}
                 </div>
 
                 {(override?.bio ?? member.bio) && (
-                  <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 text-center">{override?.bio ?? member.bio}</p>
+                  <p className="text-[11px] text-slate-400 leading-relaxed truncate text-center" title={override?.bio ?? member.bio ?? undefined}>
+                    {firstSentence(override?.bio ?? member.bio ?? '')}
+                  </p>
                 )}
 
-                <div className={`flex items-center gap-2 text-xs rounded-full px-3 py-2 justify-center ${birthdaySoon ? 'bg-violet/10 text-violet font-medium' : 'bg-slate-50 text-slate-400'}`}>
-                  <Cake className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span>
+                <div className={`flex items-center gap-1.5 text-[10px] rounded-full px-2.5 py-1.5 justify-center ${birthdaySoon ? 'bg-violet/10 text-violet font-medium' : 'bg-slate-50 text-slate-400'}`}>
+                  <Cake className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">
                     {member.birthday ? formatBirthday(member.birthday) : 'Narozeniny neuvedeny'}
                     {birthdaySoon && days !== null && (
                       <span className="ml-1">· za {days === 0 ? 'dnes!' : `${days} dní`}</span>

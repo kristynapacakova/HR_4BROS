@@ -118,7 +118,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
       </div>
 
       {/* Guarantee */}
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2 -mt-2">
         <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
         <p className="text-sm text-green-700">
           <strong>Garantujeme bezpečí.</strong> Anonymní zprávy nelze dohledat. Nikdo tě za upřímný feedback nebude postihovat.
