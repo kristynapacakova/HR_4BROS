@@ -1,34 +1,37 @@
-import { FileText, Download, FileCheck, FileSignature, ShieldCheck, FileKey } from 'lucide-react'
+import { FileText, Download, FileCheck, Clock } from 'lucide-react'
 import { DEMO_DOCUMENTS, DEMO_CONTRACTS, CONTRACT_TEMPLATES } from '@/lib/mock-data'
 import { PayslipYearPicker } from '@/app/documents/PayslipYearPicker'
 import { DocumentsSigningClient } from '@/app/documents/DocumentsSigningClient'
 
-const TAG_CONFIG: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
-  SMLOUVA: { label: 'Smlouva',  color: 'bg-blue-50 text-blue-700',   Icon: FileSignature },
-  DODATEK: { label: 'Dodatek',  color: 'bg-violet/10 text-violet',   Icon: FileText },
-  GDPR:    { label: 'GDPR',     color: 'bg-green-50 text-green-700', Icon: ShieldCheck },
-  NDA:     { label: 'NDA',      color: 'bg-amber-50 text-amber-700', Icon: FileKey },
+const TAG_LABEL: Record<string, string> = {
+  SMLOUVA: 'Smlouva',
+  DODATEK: 'Dodatek',
+  GDPR: 'GDPR',
+  NDA: 'NDA',
 }
 
 const TAG_ORDER = ['SMLOUVA', 'DODATEK', 'GDPR', 'NDA']
 
 type Doc = typeof DEMO_DOCUMENTS[number]
 
-function ContractRow({ doc }: { doc: Doc }) {
-  const cfg = TAG_CONFIG[doc.tag ?? ''] ?? { label: doc.tag ?? '—', color: 'bg-slate-50 text-slate-600', Icon: FileText }
-  const { Icon } = cfg
+function ContractRow({ doc }: { doc: Doc & { pendingSigner?: string } }) {
+  const label = TAG_LABEL[doc.tag ?? ''] ?? doc.tag ?? '—'
   return (
     <div className="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
-      <div className={`p-2.5 rounded-full flex-shrink-0 ${cfg.color}`}>
-        <Icon className="w-5 h-5" />
+      <div className="p-2.5 rounded-full flex-shrink-0 bg-alice text-navy">
+        <FileText className="w-5 h-5" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-navy truncate">{doc.name}</p>
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${cfg.color}`}>{cfg.label}</span>
+          <span className="text-xs text-slate-400">{label}</span>
+          <span className="text-slate-300">·</span>
           {doc.signedAt
-            ? <span className="text-xs text-green-600 flex items-center gap-1"><FileCheck className="w-3 h-3" />Podepsáno</span>
-            : <span className="text-xs text-slate-400">Čeká na podpis</span>
+            ? <span className="text-xs text-green-600 flex items-center gap-1 font-medium"><FileCheck className="w-3 h-3" />Podepsáno</span>
+            : <span className="text-xs text-amber-600 flex items-center gap-1 font-medium">
+                <Clock className="w-3 h-3" />
+                {doc.pendingSigner ? `Čeká na podpis — ${doc.pendingSigner}` : 'Čeká na podpis'}
+              </span>
           }
         </div>
       </div>
@@ -73,19 +76,9 @@ export function DocumentsPanel({ isHPP }: { isHPP: boolean }) {
 
       {/* Smlouvy */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-          <div>
-            <h3 className="font-headline font-semibold text-navy">Smlouvy</h3>
-            <p className="text-xs text-slate-400 mt-0.5">{contracts.length} dokumentů</p>
-          </div>
-          <div className="flex gap-1.5 flex-wrap justify-end">
-            {TAG_ORDER.map(tag => {
-              const cfg = TAG_CONFIG[tag]
-              return (
-                <span key={tag} className={`text-xs px-2 py-0.5 rounded-full font-medium ${cfg.color}`}>{cfg.label}</span>
-              )
-            })}
-          </div>
+        <div className="px-6 py-4 border-b border-slate-100">
+          <h3 className="font-headline font-semibold text-navy">Smlouvy</h3>
+          <p className="text-xs text-slate-400 mt-0.5">{contracts.length} dokumentů</p>
         </div>
         {contracts.length === 0 ? (
           <div className="px-6 py-10 text-center text-slate-400 text-sm">Žádné dokumenty</div>
