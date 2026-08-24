@@ -1,8 +1,7 @@
 'use client'
 
-import { useRef } from 'react'
 import { formatDate, getDaysBetween } from '@/lib/utils'
-import { CalendarDays, Plus, Home, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CalendarDays, Plus, Home } from 'lucide-react'
 import { LeaveRequestForm } from '@/app/time-off/LeaveRequestForm'
 import { DEMO_LEAVE_BALANCE, DEMO_LEAVE_REQUESTS } from '@/lib/mock-data'
 import { SickNoteUpload } from './SickNoteUpload'
@@ -142,47 +141,16 @@ function HolidayTable({ year, holidays, today }: {
     arr.push(h)
     byMonth.set(h.date.getMonth(), arr)
   }
-  const months = Array.from(byMonth.keys()).sort((a, b) => a - b)
-  const scrollRef = useRef<HTMLDivElement>(null)
-
-  const scrollByCard = (dir: 1 | -1) => {
-    const el = scrollRef.current
-    if (!el) return
-    const card = el.querySelector<HTMLElement>('[data-month-card]')
-    const step = card ? card.offsetWidth + 20 : 300
-    el.scrollBy({ left: dir * step, behavior: 'smooth' })
-  }
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 className="font-headline font-semibold text-navy">Státní svátky {year}</h3>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400">{holidays.length} svátků</span>
-          <button
-            onClick={() => scrollByCard(-1)}
-            className="p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors"
-            aria-label="Předchozí měsíce"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => scrollByCard(1)}
-            className="p-1.5 rounded-full text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors"
-            aria-label="Další měsíce"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+        <span className="text-xs text-slate-400">{holidays.length} svátků</span>
       </div>
-      <div
-        ref={scrollRef}
-        className="p-6 flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none"
-      >
-        {months.map(m => (
-          <div key={m} data-month-card className="flex-shrink-0 w-[260px] snap-start">
-            <MonthMini year={year} month={m} holidays={byMonth.get(m)!} today={today} />
-          </div>
+      <div className="p-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {Array.from({ length: 12 }, (_, m) => (
+          <MonthMini key={m} year={year} month={m} holidays={byMonth.get(m) ?? []} today={today} />
         ))}
       </div>
     </div>
@@ -201,11 +169,11 @@ function MonthMini({ year, month, holidays, today }: {
     .concat(Array.from({ length: daysInMonth }, (_, i) => i + 1))
 
   return (
-    <div className="rounded-2xl bg-[#F7F8FE] p-4">
-      <p className="text-sm font-semibold text-navy mb-3">{MONTH_NAMES_CZ[month]}</p>
-      <div className="grid grid-cols-7 gap-y-1 text-center">
+    <div className="rounded-xl bg-[#F7F8FE] p-2.5">
+      <p className="text-xs font-semibold text-navy mb-1.5">{MONTH_NAMES_CZ[month]}</p>
+      <div className="grid grid-cols-7 gap-y-0.5 text-center">
         {DOW_LABELS.map(d => (
-          <span key={d} className="text-[9px] font-medium text-slate-400 uppercase">{d}</span>
+          <span key={d} className="text-[7px] font-medium text-slate-400 uppercase">{d[0]}</span>
         ))}
         {cells.map((day, i) => {
           if (day === null) return <span key={`b${i}`} />
@@ -214,11 +182,10 @@ function MonthMini({ year, month, holidays, today }: {
           const isWeekend = date.getDay() === 0 || date.getDay() === 6
           const isToday = date.toDateString() === today.toDateString()
           const isPast = date < today && !isToday
-          const isFriOrMon = holiday && (date.getDay() === 5 || date.getDay() === 1)
           return (
-            <div key={day} className="relative flex items-center justify-center py-1" title={holiday?.name}>
+            <div key={day} className="flex items-center justify-center py-[1px]" title={holiday?.name}>
               <span
-                className={`w-6 h-6 flex items-center justify-center rounded-full text-[11px] font-medium ${
+                className={`w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-medium ${
                   isToday ? 'bg-violet text-white' :
                   holiday ? 'bg-white text-violet font-bold shadow-sm' :
                   isWeekend ? 'text-slate-300' :
@@ -227,25 +194,6 @@ function MonthMini({ year, month, holidays, today }: {
               >
                 {day}
               </span>
-              {isFriOrMon && !isToday && (
-                <span className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-green-400" />
-              )}
-            </div>
-          )
-        })}
-      </div>
-      <div className="mt-3 pt-3 border-t border-white space-y-1">
-        {holidays.map(h => {
-          const isFriOrMon = h.date.getDay() === 5 || h.date.getDay() === 1
-          return (
-            <div key={h.date.toISOString()} className="flex items-center justify-between gap-2 text-xs">
-              <span className="text-slate-500 truncate">{h.date.getDate()}. {h.name}</span>
-              {isFriOrMon && (
-                <span className="flex items-center gap-1 text-[10px] text-green-600 font-medium flex-shrink-0">
-                  <span className="w-1 h-1 rounded-full bg-green-400" />
-                  Prodloužený víkend
-                </span>
-              )}
             </div>
           )
         })}
