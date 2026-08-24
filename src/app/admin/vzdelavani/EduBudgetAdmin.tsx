@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { GraduationCap, CheckCircle2, XCircle, Clock } from 'lucide-react'
+import { GraduationCap, CheckCircle2, XCircle, Clock, Link2 } from 'lucide-react'
 import type { EduRequest } from '@/lib/mock-data'
 import {
   loadEduRequests, saveEduRequests,
@@ -134,7 +134,14 @@ export function EduBudgetAdmin({
               <div key={r.id} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-navy">{r.employeeName}</p>
-                  <p className="text-sm text-slate-600">{r.title} — {fmt(r.amount)}</p>
+                  <p className="text-sm text-slate-600">
+                    {r.title} — {fmt(r.amount)}
+                    {r.url && (
+                      <a href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet hover:text-violet-dark ml-1.5 align-middle">
+                        <Link2 className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </p>
                   <p className="text-xs text-slate-400">{new Date(r.requestedAt).toLocaleDateString('cs-CZ')}</p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">

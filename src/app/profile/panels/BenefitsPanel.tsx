@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Dumbbell, GraduationCap, CheckCircle2, Clock, XCircle, Plus } from 'lucide-react'
+import { Dumbbell, GraduationCap, CheckCircle2, Clock, XCircle, Plus, Link2 } from 'lucide-react'
 import { DEMO_EDU_BUDGETS, DEMO_EDU_REQUESTS, DEFAULT_EDU_BUDGET, type EduRequest } from '@/lib/mock-data'
 import { loadEduRequests, saveEduRequests, loadEduBudgetOverrides, EDU_CHANGED_EVENT } from '@/lib/edu-budget-client'
 
@@ -33,6 +33,7 @@ export function BenefitsPanel({ employeeId, employeeName }: { employeeId: string
   const [addOpen, setAddOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
+  const [url, setUrl] = useState('')
 
   const refresh = () => {
     setAllRequests(loadEduRequests(DEMO_EDU_REQUESTS))
@@ -70,12 +71,14 @@ export function BenefitsPanel({ employeeId, employeeName }: { employeeId: string
       employeeName,
       title: title.trim(),
       amount: amt,
+      url: url.trim() || null,
       status: 'PENDING',
       requestedAt: new Date().toISOString().slice(0, 10),
     }
     saveEduRequests([newReq, ...allRequests])
     setTitle('')
     setAmount('')
+    setUrl('')
     setAddOpen(false)
   }
 
@@ -136,7 +139,14 @@ export function BenefitsPanel({ employeeId, employeeName }: { employeeId: string
               <div key={r.id} className="py-3 flex items-center justify-between gap-3">
                 <div className="min-w-0 flex items-center gap-2 flex-wrap">
                   <div className="min-w-0">
-                    <p className="text-sm text-navy truncate">{r.title}</p>
+                    <p className="text-sm text-navy truncate">
+                      {r.title}
+                      {r.url && (
+                        <a href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet hover:text-violet-dark ml-1.5 align-middle">
+                          <Link2 className="w-3 h-3" />
+                        </a>
+                      )}
+                    </p>
                     <p className="text-[11px] text-slate-400">{new Date(r.requestedAt).toLocaleDateString('cs-CZ')}</p>
                   </div>
                   <StatusBadge status={r.status} />
@@ -175,6 +185,16 @@ export function BenefitsPanel({ employeeId, employeeName }: { employeeId: string
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 required
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Odkaz (volitelné)</label>
+              <input
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://…"
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               />
             </div>

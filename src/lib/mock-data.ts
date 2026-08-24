@@ -424,6 +424,7 @@ export interface EduRequest {
   employeeName: string
   title: string
   amount: number
+  url?: string | null
   status: 'PENDING' | 'APPROVED' | 'REJECTED'
   requestedAt: string
   note?: string | null
@@ -432,8 +433,8 @@ export interface EduRequest {
 export const DEMO_EDU_REQUESTS: EduRequest[] = [
   { id: "edu1", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Kniha: Refactoring UI", amount: 1290, status: "APPROVED", requestedAt: "2026-03-12" },
   { id: "edu2", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Kurz: Copywriting Akademie", amount: 3490, status: "APPROVED", requestedAt: "2026-05-28" },
-  { id: "edu3", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Konference React Summit", amount: 4500, status: "PENDING", requestedAt: "2026-08-10" },
-  { id: "edu4", employeeId: DEMO_USER_ICO.id, employeeName: DEMO_USER_ICO.name, title: "Kurz: Vyjednávání s klienty", amount: 2900, status: "PENDING", requestedAt: "2026-08-05" },
+  { id: "edu3", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Konference React Summit", amount: 4500, url: "https://reactsummit.cz", status: "PENDING", requestedAt: "2026-08-10" },
+  { id: "edu4", employeeId: DEMO_USER_ICO.id, employeeName: DEMO_USER_ICO.name, title: "Kurz: Vyjednávání s klienty", amount: 2900, url: "https://akademie.cz/vyjednavani", status: "PENDING", requestedAt: "2026-08-05" },
 ]
 
 // ── Team directory ──────────────────────────────────────────────────────────
