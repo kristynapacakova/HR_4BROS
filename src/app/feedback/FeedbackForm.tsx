@@ -114,11 +114,10 @@ export function FeedbackForm({ userName }: { userName: string }) {
           placeholder="Napiš cokoliv, co ti leží na srdci..."
           className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none leading-relaxed"
         />
-        <p className="text-xs text-slate-400 mt-1.5 text-right">{message.length} znaků</p>
       </div>
 
       {/* Guarantee */}
-      <div className="flex items-start gap-2 -mt-2">
+      <div className="flex items-start gap-2">
         <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
         <p className="text-sm text-green-700">
           <strong>Garantujeme bezpečí.</strong> Anonymní zprávy nelze dohledat. Nikdo tě za upřímný feedback nebude postihovat.
