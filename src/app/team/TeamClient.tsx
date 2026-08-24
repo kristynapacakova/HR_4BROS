@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Cake, Briefcase, Users2 } from 'lucide-react'
 import { loadTeamProfiles, TEAM_PROFILE_CHANGED_EVENT, type TeamProfileOverride } from '@/lib/team-profile-client'
-import { Medailonek } from './Medailonek'
 
 interface Member {
   id: string
@@ -113,10 +112,25 @@ export function TeamClient({ members, departments }: {
               href={`/team/${member.id}`}
               className="text-left bg-white rounded-2xl border border-slate-100 shadow-sm p-3 flex flex-col gap-3 hover:shadow-[0_8px_32px_rgba(25,70,105,0.08)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              {/* Dominant medailonek: circular photo on watercolor splash, name + position below */}
-              <div className="w-full flex flex-col items-center">
-                <Medailonek photo={override?.photo} photoPos={override?.photoPos} emoji={member.emoji} name={member.name} size={88} />
-                <div className="text-center -mt-1">
+              {/* Photo + name — watercolor medailonek is reserved for the detail page */}
+              <div className="w-full flex flex-col items-center pt-2">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-alice shadow-sm bg-[#F7F8FE] flex items-center justify-center">
+                  {override?.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={override.photo}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                      style={{
+                        objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
+                        transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
+                      }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: 34 }}>{member.emoji}</span>
+                  )}
+                </div>
+                <div className="text-center mt-2">
                   <p className="font-headline font-bold text-navy tracking-wide uppercase text-sm truncate">{member.name}</p>
                   <p className="text-[11px] text-slate-400 uppercase tracking-widest mt-0.5 truncate">{member.position}</p>
                 </div>
