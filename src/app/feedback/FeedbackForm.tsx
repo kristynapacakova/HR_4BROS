@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { FEEDBACK_CATEGORIES } from '@/lib/mock-data'
-import { Send, CheckCircle2, EyeOff, Eye, Paperclip, X } from 'lucide-react'
+import { Send, CheckCircle2, EyeOff, Eye, Paperclip, X, ShieldCheck } from 'lucide-react'
 
 function fmtSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`
@@ -115,6 +115,14 @@ export function FeedbackForm({ userName }: { userName: string }) {
           className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none leading-relaxed"
         />
         <p className="text-xs text-slate-400 mt-1.5 text-right">{message.length} znaků</p>
+      </div>
+
+      {/* Guarantee */}
+      <div className="flex items-start gap-2">
+        <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-green-700">
+          <strong>Garantujeme bezpečí.</strong> Anonymní zprávy nelze dohledat. Nikdo tě za upřímný feedback nebude postihovat.
+        </p>
       </div>
 
       {/* Attachment */}

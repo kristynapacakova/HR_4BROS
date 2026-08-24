@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
 import { FeedbackForm } from './FeedbackForm'
-import { ShieldCheck, MessageSquareHeart } from 'lucide-react'
+import { MessageSquareHeart } from 'lucide-react'
 
 export default async function FeedbackPage() {
   const session = await auth()
@@ -37,14 +37,6 @@ export default async function FeedbackPage() {
 
         {/* Form */}
         <FeedbackForm userName={user?.name || session.user.email || ''} />
-
-        {/* Guarantee */}
-        <div className="flex items-start gap-2 px-1">
-          <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-green-700">
-            <strong>Garantujeme bezpečí.</strong> Anonymní zprávy nelze dohledat. Nikdo tě za upřímný feedback nebude postihovat.
-          </p>
-        </div>
 
       </div>
     </AppShell>
