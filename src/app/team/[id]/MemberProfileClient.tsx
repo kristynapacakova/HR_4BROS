@@ -238,7 +238,7 @@ export function MemberProfileClient({
       </div>
 
       {/* Příběh */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+      <div className="pt-5 border-t border-slate-200/70">
         <div className="flex items-center justify-between mb-2">
           <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">Příběh</p>
           {isMe && !editingBio && (
@@ -274,7 +274,7 @@ export function MemberProfileClient({
       </div>
 
       {/* Galerie */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+      <div className="pt-5 border-t border-slate-200/70">
         <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3">Fotky</p>
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
           {gallery.map((src, i) => (

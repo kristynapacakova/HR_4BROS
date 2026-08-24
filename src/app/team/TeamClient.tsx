@@ -22,6 +22,10 @@ const SENIORITY_LABEL: Record<string, string> = {
   JUNIOR: 'Junior', MEDIOR: 'Medior', SENIOR: 'Senior', LEAD: 'Lead',
 }
 
+const SENIORITY_ORDER: Record<string, number> = {
+  LEAD: 0, SENIOR: 2, MEDIOR: 3, JUNIOR: 4,
+}
+
 const DEPT_COLORS: Record<string, string> = {
   Creative: 'bg-violet/10 text-violet',
   Performance: 'bg-blue-50 text-blue-700',
@@ -71,13 +75,17 @@ export function TeamClient({ members, departments }: {
 
   const filtered = dept === 'Všichni' ? members : members.filter(m => m.department === dept)
 
+  // Řazení dle role/funkce: vedení a Team Leadi nahoře, pak HR tým, pak ostatní podle seniority.
+  const rankOf = (m: Member) => {
+    if (m.seniority === 'LEAD') return 0
+    if (m.department === 'HR') return 1
+    return SENIORITY_ORDER[m.seniority ?? ''] ?? 5
+  }
+
   const sorted = [...filtered].sort((a, b) => {
-    const da = daysUntilBirthday(a.birthday)
-    const db = daysUntilBirthday(b.birthday)
-    const aSoon = da !== null && da <= 30
-    const bSoon = db !== null && db <= 30
-    if (aSoon && !bSoon) return -1
-    if (!aSoon && bSoon) return 1
+    const ra = rankOf(a)
+    const rb = rankOf(b)
+    if (ra !== rb) return ra - rb
     return a.name.localeCompare(b.name, 'cs')
   })
 
@@ -114,7 +122,7 @@ export function TeamClient({ members, departments }: {
             >
               {/* Photo + name — watercolor medailonek is reserved for the detail page */}
               <div className="w-full flex flex-col items-center pt-2">
-                <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-alice shadow-sm bg-[#F7F8FE] flex items-center justify-center">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center">
                   {override?.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
