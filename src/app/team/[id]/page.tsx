@@ -29,8 +29,8 @@ export default async function TeamMemberPage({ params }: { params: { id: string 
     >
       <MemberProfileClient
         member={member}
-        prev={{ id: prev.id, name: prev.name }}
-        next={{ id: next.id, name: next.name }}
+        prev={{ id: prev.id, name: prev.name, emoji: prev.emoji }}
+        next={{ id: next.id, name: next.name, emoji: next.emoji }}
         viewerEmail={session.user.email ?? null}
       />
     </AppShell>
