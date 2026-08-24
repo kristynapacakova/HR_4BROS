@@ -12,6 +12,7 @@ export interface TeamProfileOverride {
   bio?: string | null
   interests?: string[]
   helpWith?: string | null
+  personality?: string | null // 16 Personalities kód, např. "INFJ"
   gallery?: string[]
 }
 
