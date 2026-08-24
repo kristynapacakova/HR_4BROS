@@ -1,15 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { FEEDBACK_CATEGORIES } from '@/lib/mock-data'
-import { Send, CheckCircle2, EyeOff, Eye } from 'lucide-react'
+import { Send, CheckCircle2, EyeOff, Eye, Paperclip, X } from 'lucide-react'
+
+function fmtSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 
 export function FeedbackForm({ userName }: { userName: string }) {
   const [anonymous, setAnonymous] = useState(true)
   const [category, setCategory] = useState('')
   const [message, setMessage] = useState('')
+  const [attachment, setAttachment] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,8 +39,11 @@ export function FeedbackForm({ userName }: { userName: string }) {
           {anonymous ? 'Odeslali jste anonymně.' : `Odeslali jste pod jménem ${userName}.`}
         </p>
         <p className="text-sm text-slate-400">HR tým se vaší zprávou bude zabývat.</p>
+        {attachment && (
+          <p className="text-xs text-slate-400 mt-2">Příloha: {attachment.name} ({fmtSize(attachment.size)})</p>
+        )}
         <button
-          onClick={() => { setSent(false); setMessage(''); setCategory('') }}
+          onClick={() => { setSent(false); setMessage(''); setCategory(''); setAttachment(null) }}
           className="mt-6 text-sm text-violet hover:text-violet-dark transition-colors font-medium"
         >
           Odeslat další zprávu
@@ -104,6 +115,40 @@ export function FeedbackForm({ userName }: { userName: string }) {
           className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none leading-relaxed"
         />
         <p className="text-xs text-slate-400 mt-1.5 text-right">{message.length} znaků</p>
+      </div>
+
+      {/* Attachment */}
+      <div>
+        <label className="block text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Příloha (volitelné)</label>
+        <input
+          ref={fileRef}
+          type="file"
+          className="hidden"
+          onChange={(e) => setAttachment(e.target.files?.[0] ?? null)}
+        />
+        {attachment ? (
+          <div className="flex items-center gap-2.5 px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+            <Paperclip className="w-4 h-4 text-slate-400 flex-shrink-0" />
+            <span className="flex-1 min-w-0 truncate text-navy">{attachment.name}</span>
+            <span className="text-xs text-slate-400 flex-shrink-0">{fmtSize(attachment.size)}</span>
+            <button
+              type="button"
+              onClick={() => { setAttachment(null); if (fileRef.current) fileRef.current.value = '' }}
+              className="text-slate-300 hover:text-red-500 transition-colors flex-shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
+          >
+            <Paperclip className="w-4 h-4 flex-shrink-0" />
+            Přidat přílohu — PDF, foto nebo jiný soubor
+          </button>
+        )}
       </div>
 
       <button
