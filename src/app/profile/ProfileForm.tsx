@@ -23,6 +23,8 @@ interface ProfileFormProps {
   employment?: {
     startDate?: Date | null
     currentSalary?: number | null
+    contractTermType?: 'URCITA' | 'NEURCITA' | null
+    contractEndDate?: Date | null
   }
 }
 
@@ -201,6 +203,17 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
               </select>
             </div>
             <Field label="Nástup" value={employment?.startDate ? new Date(employment.startDate).toLocaleDateString('cs-CZ') : '—'} readOnly />
+            <Field
+              label="Typ smlouvy"
+              value={
+                employment?.contractTermType === 'URCITA'
+                  ? `Na dobu určitou — do ${employment.contractEndDate ? new Date(employment.contractEndDate).toLocaleDateString('cs-CZ') : '—'}`
+                  : employment?.contractTermType === 'NEURCITA'
+                    ? 'Na dobu neurčitou'
+                    : '—'
+              }
+              readOnly
+            />
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1">Nástupní plat (Kč)</label>
               <input

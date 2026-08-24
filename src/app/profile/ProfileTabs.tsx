@@ -117,7 +117,12 @@ export function ProfileTabs({
         <div className="space-y-6">
           <ProfileForm
             user={user}
-            employment={{ startDate: (user as { startDate?: Date | null }).startDate, currentSalary: hrData?.monthlySalary ?? null }}
+            employment={{
+              startDate: (user as { startDate?: Date | null }).startDate,
+              currentSalary: hrData?.monthlySalary ?? null,
+              contractTermType: (user as { contractTermType?: 'URCITA' | 'NEURCITA' }).contractTermType ?? null,
+              contractEndDate: (user as { contractEndDate?: Date | null }).contractEndDate ?? null,
+            }}
           />
 
           {/* HR údaje — viditelné jen pro TL / admina / HR */}

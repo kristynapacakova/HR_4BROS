@@ -328,6 +328,8 @@ export const DEMO_USER = {
   clientHours: 120,
   monthlySalary: 65000,
   hourlyRate: null as number | null,
+  contractTermType: "URCITA" as "URCITA" | "NEURCITA",
+  contractEndDate: new Date("2026-11-15") as Date | null,
 }
 
 export const DEMO_ADMIN = {
@@ -617,6 +619,8 @@ export const DEMO_EMPLOYEES = [
     monthlySalary: 65000,
     hourlyRate: null as number | null,
     leaveBalances: [{ annualTotal: 20, annualUsed: 5 }],
+    contractTermType: "URCITA" as "URCITA" | "NEURCITA",
+    contractEndDate: new Date("2026-11-15") as Date | null,
   },
   {
     id: "demo-employee-2",
@@ -632,6 +636,8 @@ export const DEMO_EMPLOYEES = [
     monthlySalary: 28000,
     hourlyRate: null as number | null,
     leaveBalances: [{ annualTotal: 20, annualUsed: 8 }],
+    contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
+    contractEndDate: null as Date | null,
   },
   {
     id: "demo-employee-3",
@@ -647,6 +653,8 @@ export const DEMO_EMPLOYEES = [
     monthlySalary: null as number | null,
     hourlyRate: 1200,
     leaveBalances: [{ annualTotal: 20, annualUsed: 12 }],
+    contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
+    contractEndDate: null as Date | null,
   },
 ]
 
