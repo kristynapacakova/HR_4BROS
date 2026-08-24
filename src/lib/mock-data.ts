@@ -440,29 +440,30 @@ export const DEMO_EDU_REQUESTS: EduRequest[] = [
 // ── Team directory ──────────────────────────────────────────────────────────
 
 export const TEAM_DEPARTMENTS = [
-  'Creative', 'Performance', 'Account', 'Sales', 'Backoffice', 'HR',
+  'Creative', 'Performance', 'Account', 'Sales', 'Backoffice', 'HR', 'Vývoj',
 ]
 
 export const DEMO_TEAM: {
-  id: string; name: string; position: string; department: string
+  id: string; name: string; email: string; position: string; department: string
   seniority: string | null; employmentType: string; birthday: string | null
   bio: string | null; emoji: string
 }[] = [
-  { id: "t1",  name: "Petra Nováková",    position: "HR Manager",           department: "HR",          seniority: "SENIOR", employmentType: "HPP", birthday: "1988-03-15", bio: "Mám ráda lidi, kávu a pořádek.", emoji: "🌿" },
-  { id: "t2",  name: "Jan Novák",          position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻" },
-  { id: "t3",  name: "Marie Svobodová",    position: "Social Media Manager", department: "Performance", seniority: "JUNIOR", employmentType: "DPP", birthday: "1997-11-03", bio: "Tvořím obsah, který lidi zastaví při scrollování.", emoji: "📱" },
-  { id: "t4",  name: "Tomáš Dvořák",       position: "Account Manager",      department: "Account",     seniority: "SENIOR", employmentType: "ICO", birthday: "1985-07-22", bio: "Klienti jsou základ. Rád řeším výzvy.", emoji: "🤝" },
-  { id: "t5",  name: "Lucie Kratochvílová",position: "Art Director",         department: "Creative",    seniority: "SENIOR", employmentType: "ICO", birthday: "1991-02-08", bio: "Vizuál je moje řeč. Pixely jsou moji přátelé.", emoji: "🎨" },
-  { id: "t6",  name: "Ondřej Mašek",       position: "Performance Specialist",department:"Performance", seniority: "MEDIOR", employmentType: "ICO", birthday: "1993-09-14", bio: "PPC, data a ROAS. Čísla mě baví.", emoji: "📊" },
-  { id: "t7",  name: "Klára Horáková",     position: "Copywriter",           department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "1999-04-01", bio: "Slova jsou moje superschopnost.", emoji: "✍️" },
-  { id: "t8",  name: "Martin Beneš",       position: "Sales Manager",        department: "Sales",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀" },
-  { id: "t9",  name: "Veronika Jelínková", position: "Project Manager",      department: "Account",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋" },
-  { id: "t10", name: "Pavel Šimánek",      position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬" },
-  { id: "t11", name: "Adéla Procházková",  position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍" },
-  { id: "t12", name: "Jakub Veselý",       position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️" },
-  { id: "t13", name: "Michaela Červenková",position: "Office Manager",       department: "Backoffice",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠" },
-  { id: "t14", name: "Radek Pospíšil",     position: "Business Developer",   department: "Sales",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼" },
-  { id: "t15", name: "Tereza Müllerová",   position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧" },
+  { id: "t1",  name: "Petra Nováková",    email: DEMO_ADMIN.email,     position: "HR Manager",           department: "HR",          seniority: "SENIOR", employmentType: "HPP", birthday: "1988-03-15", bio: "Mám ráda lidi, kávu a pořádek.", emoji: "🌿" },
+  { id: "t2",  name: "Jan Novák",          email: DEMO_USER.email,      position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻" },
+  { id: "t3",  name: "Marie Svobodová",    email: "marie.svobodova@fourbros.cz", position: "Social Media Manager", department: "Performance", seniority: "JUNIOR", employmentType: "DPP", birthday: "1997-11-03", bio: "Tvořím obsah, který lidi zastaví při scrollování.", emoji: "📱" },
+  { id: "t4",  name: "Tomáš Dvořák",       email: DEMO_USER_ICO.email,  position: "Account Manager",      department: "Account",     seniority: "SENIOR", employmentType: "ICO", birthday: "1985-07-22", bio: "Klienti jsou základ. Rád řeším výzvy.", emoji: "🤝" },
+  { id: "t5",  name: "Lucie Kratochvílová",email: "lucie.kratochvilova@fourbros.cz", position: "Art Director",         department: "Creative",    seniority: "SENIOR", employmentType: "ICO", birthday: "1991-02-08", bio: "Vizuál je moje řeč. Pixely jsou moji přátelé.", emoji: "🎨" },
+  { id: "t6",  name: "Ondřej Mašek",       email: "ondrej.masek@fourbros.cz", position: "Performance Specialist",department:"Performance", seniority: "MEDIOR", employmentType: "ICO", birthday: "1993-09-14", bio: "PPC, data a ROAS. Čísla mě baví.", emoji: "📊" },
+  { id: "t7",  name: "Klára Horáková",     email: "klara.horakova@fourbros.cz", position: "Copywriter",           department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "1999-04-01", bio: "Slova jsou moje superschopnost.", emoji: "✍️" },
+  { id: "t8",  name: "Martin Beneš",       email: "martin.benes@fourbros.cz", position: "Sales Manager",        department: "Sales",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀" },
+  { id: "t9",  name: "Veronika Jelínková", email: "veronika.jelinkova@fourbros.cz", position: "Project Manager",      department: "Account",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋" },
+  { id: "t10", name: "Pavel Šimánek",      email: "pavel.simanek@fourbros.cz", position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬" },
+  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍" },
+  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️" },
+  { id: "t13", name: "Michaela Červenková",email: "michaela.cervenkova@fourbros.cz", position: "Office Manager",       department: "Backoffice",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠" },
+  { id: "t14", name: "Radek Pospíšil",     email: "radek.pospisil@fourbros.cz", position: "Business Developer",   department: "Sales",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼" },
+  { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧" },
+  { id: "t16", name: "Eva Horáková",       email: DEMO_TL.email,        position: "Team Lead — Vývoj",    department: "Vývoj",       seniority: "LEAD",   employmentType: "HPP", birthday: "1987-11-02", bio: "Vedu tým vývojářů a mám ráda, když věci dávají smysl.", emoji: "🧭" },
 ]
 
 // tag: SMLOUVA | DODATEK | GDPR | NDA  (for contracts section)

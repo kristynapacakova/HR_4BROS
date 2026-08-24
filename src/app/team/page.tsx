@@ -19,7 +19,7 @@ export default async function TeamPage() {
       userEmail={session.user.email}
       employmentType={user.employmentType}
     >
-      <TeamClient members={DEMO_TEAM} departments={TEAM_DEPARTMENTS} isAdmin={isAdmin} />
+      <TeamClient members={DEMO_TEAM} departments={TEAM_DEPARTMENTS} isAdmin={isAdmin} viewerEmail={session.user.email ?? null} />
     </AppShell>
   )
 }
