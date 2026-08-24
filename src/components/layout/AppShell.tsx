@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import { VersionWatcher } from './VersionWatcher'
+
+const COLLAPSED_KEY = 'fb-sidebar-collapsed'
 
 interface AppShellProps {
   children: React.ReactNode
@@ -17,6 +19,19 @@ interface AppShellProps {
 
 export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, employmentType }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+
+  useEffect(() => {
+    try { setCollapsed(localStorage.getItem(COLLAPSED_KEY) === '1') } catch { /* noop */ }
+  }, [])
+
+  const toggleCollapsed = () => {
+    setCollapsed((c) => {
+      const next = !c
+      try { localStorage.setItem(COLLAPSED_KEY, next ? '1' : '0') } catch { /* noop */ }
+      return next
+    })
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#F6F4FB]">
@@ -30,7 +45,7 @@ export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, 
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-56 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-auto ${
+        className={`fixed inset-y-0 left-0 z-50 ${collapsed ? 'lg:w-[72px]' : 'lg:w-56'} w-56 transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-auto ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -41,6 +56,8 @@ export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, 
           userEmail={userEmail}
           employmentType={employmentType}
           onClose={() => setSidebarOpen(false)}
+          collapsed={collapsed}
+          onToggleCollapsed={toggleCollapsed}
         />
       </aside>
 
