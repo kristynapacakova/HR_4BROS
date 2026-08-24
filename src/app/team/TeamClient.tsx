@@ -80,19 +80,21 @@ export function TeamClient({ members, departments }: {
 
   const filtered = dept === 'Všichni' ? members : members.filter(m => m.department === dept)
 
-  // Řazení dle role/funkce: vedení a Team Leadi nahoře, pak HR tým, pak ostatní podle seniority.
-  const rankOf = (m: Member) => {
-    if (m.seniority === 'LEAD') return 0
-    if (m.department === 'HR') return 1
-    return SENIORITY_ORDER[m.seniority ?? ''] ?? 5
-  }
+  // Řazení uvnitř oddělení: Team Leadi nahoře, pak podle seniority, pak abecedně.
+  const rankOf = (m: Member) => (m.seniority === 'LEAD' ? 0 : SENIORITY_ORDER[m.seniority ?? ''] ?? 5)
 
-  const sorted = [...filtered].sort((a, b) => {
+  const sortGroup = (arr: Member[]) => [...arr].sort((a, b) => {
     const ra = rankOf(a)
     const rb = rankOf(b)
     if (ra !== rb) return ra - rb
     return a.name.localeCompare(b.name, 'cs')
   })
+
+  // Oddělení do sekcí — HR (vedení) první, pak zbytek v pořadí TEAM_DEPARTMENTS.
+  const deptOrder = ['HR', ...departments.filter(d => d !== 'HR')]
+  const groups = deptOrder
+    .map(d => ({ dept: d, members: sortGroup(filtered.filter(m => m.department === d)) }))
+    .filter(g => g.members.length > 0)
 
   return (
     <div className="space-y-5">
@@ -111,11 +113,18 @@ export function TeamClient({ members, departments }: {
         ))}
       </div>
 
-      <p className="text-sm text-slate-400">{sorted.length} {sorted.length === 1 ? 'člen' : sorted.length < 5 ? 'členové' : 'členů'}</p>
+      <p className="text-sm text-slate-400">{filtered.length} {filtered.length === 1 ? 'člen' : filtered.length < 5 ? 'členové' : 'členů'}</p>
 
-      {/* Cards grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
-        {sorted.map(member => {
+      {/* Sekce podle oddělení */}
+      {groups.map(group => (
+        <div key={group.dept} className="space-y-3">
+          <div className="flex items-center gap-2">
+            <h3 className="font-headline text-navy text-sm">{group.dept}</h3>
+            <span className="text-xs text-slate-400">{group.members.length}</span>
+            <div className="flex-1 h-px bg-slate-100" />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
+            {group.members.map(member => {
           const days = daysUntilBirthday(member.birthday)
           const birthdaySoon = days !== null && days <= 30
           const override = profiles[member.id]
@@ -181,9 +190,11 @@ export function TeamClient({ members, departments }: {
                 </div>
               </div>
             </Link>
-          )
-        })}
-      </div>
+              )
+            })}
+          </div>
+        </div>
+      ))}
 
       <p className="text-xs text-slate-400 text-center pt-2">Klikni na kolegu a podívej se na jeho medailonek. Svůj vlastní si můžeš upravit.</p>
     </div>
