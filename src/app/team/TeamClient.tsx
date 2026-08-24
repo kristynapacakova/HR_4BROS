@@ -82,6 +82,24 @@ function Avatar({ member, photo, size = 48 }: { member: Member; photo?: string |
   )
 }
 
+// Dominant medailonek photo — fills the top of the card, portrait aspect.
+function MedailonekPhoto({ member, photo }: { member: Member; photo?: string | null }) {
+  if (photo) {
+    return (
+      <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden flex-shrink-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={photo} alt={member.name} className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent pointer-events-none" />
+      </div>
+    )
+  }
+  return (
+    <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-[#F3EAFD] via-[#F7F8FE] to-[#EEF3FC]">
+      <span style={{ fontSize: '3.5rem' }}>{member.emoji}</span>
+    </div>
+  )
+}
+
 function MemberDetailModal({
   member, override, isMe, onClose, onSave,
 }: {
@@ -294,43 +312,45 @@ export function TeamClient({ members, departments, isAdmin, viewerEmail }: {
             <button
               key={member.id}
               onClick={() => setOpenId(member.id)}
-              className="text-left bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-3 hover:shadow-[0_8px_32px_rgba(25,70,105,0.08)] hover:-translate-y-0.5 transition-all duration-200"
+              className="text-left bg-white rounded-2xl border border-slate-100 shadow-sm p-3 flex flex-col gap-3 hover:shadow-[0_8px_32px_rgba(25,70,105,0.08)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              {/* Photo + name — photo dominant */}
-              <div className="flex items-center gap-3">
-                <Avatar member={member} photo={photo} size={56} />
-                <div className="min-w-0">
-                  <p className="font-headline font-semibold text-navy truncate">{member.name}</p>
-                  <p className="text-sm text-slate-500 truncate">{member.position}</p>
+              {/* Dominant medailonek photo, name overlaid at bottom */}
+              <div className="relative">
+                <MedailonekPhoto member={member} photo={photo} />
+                <div className="absolute inset-x-0 bottom-0 px-3.5 pb-3">
+                  <p className={`font-headline font-semibold truncate ${photo ? 'text-white' : 'text-navy'}`}>{member.name}</p>
+                  <p className={`text-sm truncate ${photo ? 'text-white/80' : 'text-slate-500'}`}>{member.position}</p>
                 </div>
               </div>
 
-              {/* Badges */}
-              <div className="flex flex-wrap gap-1.5">
-                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${DEPT_COLORS[member.department] ?? 'bg-slate-100 text-slate-600'}`}>
-                  <Users2 className="w-3 h-3" />
-                  {member.department}
-                </span>
-                {member.seniority && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
-                    <Briefcase className="w-3 h-3" />
-                    {SENIORITY_LABEL[member.seniority] ?? member.seniority}
+              <div className="px-1.5 pb-1.5 flex flex-col gap-3">
+                {/* Badges */}
+                <div className="flex flex-wrap gap-1.5">
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${DEPT_COLORS[member.department] ?? 'bg-slate-100 text-slate-600'}`}>
+                    <Users2 className="w-3 h-3" />
+                    {member.department}
                   </span>
-                )}
-              </div>
-
-              {(profiles[member.id]?.bio ?? member.bio) && (
-                <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">{profiles[member.id]?.bio ?? member.bio}</p>
-              )}
-
-              <div className={`flex items-center gap-2 text-xs rounded-full px-3 py-2 ${birthdaySoon ? 'bg-violet/10 text-violet font-medium' : 'bg-slate-50 text-slate-400'}`}>
-                <Cake className="w-3.5 h-3.5 flex-shrink-0" />
-                <span>
-                  {member.birthday ? formatBirthday(member.birthday) : 'Narozeniny neuvedeny'}
-                  {birthdaySoon && days !== null && (
-                    <span className="ml-1">· za {days === 0 ? 'dnes!' : `${days} dní`}</span>
+                  {member.seniority && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                      <Briefcase className="w-3 h-3" />
+                      {SENIORITY_LABEL[member.seniority] ?? member.seniority}
+                    </span>
                   )}
-                </span>
+                </div>
+
+                {(profiles[member.id]?.bio ?? member.bio) && (
+                  <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">{profiles[member.id]?.bio ?? member.bio}</p>
+                )}
+
+                <div className={`flex items-center gap-2 text-xs rounded-full px-3 py-2 ${birthdaySoon ? 'bg-violet/10 text-violet font-medium' : 'bg-slate-50 text-slate-400'}`}>
+                  <Cake className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>
+                    {member.birthday ? formatBirthday(member.birthday) : 'Narozeniny neuvedeny'}
+                    {birthdaySoon && days !== null && (
+                      <span className="ml-1">· za {days === 0 ? 'dnes!' : `${days} dní`}</span>
+                    )}
+                  </span>
+                </div>
               </div>
             </button>
           )
