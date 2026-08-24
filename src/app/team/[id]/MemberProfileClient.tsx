@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ChevronLeft, ChevronRight, Cake, Briefcase, Users2, Camera, Pencil, Plus, X, Sparkles, HeartHandshake } from 'lucide-react'
 import {
-  loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT,
+  loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, PERSONALITY_TYPES,
   type TeamProfileOverride, type PhotoPosition,
 } from '@/lib/team-profile-client'
 import { PhotoPositionEditor } from '../PhotoPositionEditor'
@@ -37,25 +37,6 @@ const DEPT_COLORS: Record<string, string> = {
   Vývoj: 'bg-indigo-50 text-indigo-700',
 }
 
-const PERSONALITY_TYPES: Record<string, { name: string; desc: string }> = {
-  INTJ: { name: 'Architekt', desc: 'Strategický myslitel s plánem na vše.' },
-  INTP: { name: 'Logik', desc: 'Nenasytný hladovec po poznání.' },
-  ENTJ: { name: 'Velitel', desc: 'Odvážný a vynalézavý vůdce.' },
-  ENTP: { name: 'Hádavec', desc: 'Chytrý a zvídavý myslitel, miluje výzvy.' },
-  INFJ: { name: 'Obhájce', desc: 'Tichý idealista s pevnými principy.' },
-  INFP: { name: 'Mediátor', desc: 'Poetický a laskavý altruista.' },
-  ENFJ: { name: 'Protagonista', desc: 'Charismatický a inspirativní vůdce.' },
-  ENFP: { name: 'Aktivista', desc: 'Nadšený a kreativní duch svobodný.' },
-  ISTJ: { name: 'Logistik', desc: 'Praktický a spolehlivý organizátor.' },
-  ISFJ: { name: 'Ochránce', desc: 'Oddaný a vřelý strážce.' },
-  ESTJ: { name: 'Výkonný ředitel', desc: 'Skvělý manažer věcí i lidí.' },
-  ESFJ: { name: 'Konzul', desc: 'Pečující a společenský organizátor.' },
-  ISTP: { name: 'Virtuóz', desc: 'Odvážný experimentátor se vším náčiním.' },
-  ISFP: { name: 'Dobrodruh', desc: 'Flexibilní a okouzlující umělec.' },
-  ESTP: { name: 'Podnikatel', desc: 'Chytrý, energický a vnímavý.' },
-  ESFP: { name: 'Bavič', desc: 'Spontánní, energický a nadšený.' },
-}
-
 function readFileAsDataUrl(file: File, maxSize: number, cb: (dataUrl: string) => void) {
   const img = new Image()
   const reader = new FileReader()
@@ -82,7 +63,7 @@ function SideNavTile({ member, override, direction }: {
   return (
     <Link
       href={`/team/${member.id}`}
-      className="hidden sm:flex flex-shrink-0 w-28 lg:w-32 flex-col items-center gap-2 group"
+      className="hidden sm:flex flex-shrink-0 flex-col items-center text-center gap-2 group"
     >
       <div className="relative w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden ring-2 ring-white shadow-md bg-[#F7F8FE] flex items-center justify-center group-hover:ring-violet/40 group-hover:scale-105 transition-all">
         {override?.photo ? (
@@ -100,12 +81,12 @@ function SideNavTile({ member, override, direction }: {
           <span className="text-2xl">{member.emoji}</span>
         )}
       </div>
-      <p className="text-sm font-medium text-slate-600 text-center leading-tight group-hover:text-navy transition-colors w-full">
-        {direction === 'prev' && <ChevronLeft className="w-3 h-3 inline-block -mt-0.5" />}
-        {member.name}
-        {direction === 'next' && <ChevronRight className="w-3 h-3 inline-block -mt-0.5" />}
+      <p className="flex items-center justify-center gap-1 text-sm font-medium text-slate-600 leading-tight whitespace-nowrap group-hover:text-navy transition-colors">
+        {direction === 'prev' && <ChevronLeft className="w-3.5 h-3.5 flex-shrink-0" />}
+        <span>{member.name}</span>
+        {direction === 'next' && <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />}
       </p>
-      <p className="text-[10px] text-slate-400 text-center leading-tight w-full">{member.position}</p>
+      <p className="text-[11px] text-slate-400 text-center leading-tight whitespace-nowrap">{member.position}</p>
     </Link>
   )
 }
@@ -204,59 +185,52 @@ export function MemberProfileClient({
 
         {/* One cohesive profile card */}
         <div className="flex-1 min-w-0 bg-white rounded-2xl shadow-sm overflow-hidden">
-          {/* Watercolor banner, photo centered directly on it */}
-          <div className="relative h-40 sm:h-48">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/watercolor.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-              <div className="relative">
-                <div
-                  className="rounded-full overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#F7F8FE] flex-shrink-0"
-                  style={{ width: 104, height: 104 }}
-                >
-                  {override.photo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={override.photo}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                      style={{
-                        objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
-                        transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
-                      }}
-                    />
-                  ) : (
-                    <span style={{ fontSize: 42 }}>{member.emoji}</span>
-                  )}
-                </div>
-                {isMe && (
-                  <div className="absolute -bottom-1 -right-1 flex gap-1">
-                    {override.photo && (
-                      <button
-                        onClick={() => setPositioning(true)}
-                        className="w-7 h-7 rounded-full bg-white text-navy shadow flex items-center justify-center hover:bg-slate-50 transition-colors"
-                        title="Upravit pozici fotky"
-                      >
-                        <Pencil className="w-3 h-3" />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => photoInputRef.current?.click()}
-                      className="w-7 h-7 rounded-full bg-violet text-white shadow flex items-center justify-center hover:bg-violet-dark transition-colors"
-                      title="Nahrát fotku"
-                    >
-                      <Camera className="w-3 h-3" />
-                    </button>
-                    <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={onPhotoPick} />
-                  </div>
+          {/* Photo + name + badges */}
+          <div className="pt-8 pb-5 px-6 flex flex-col items-center text-center">
+            <div className="relative">
+              <div
+                className="rounded-full overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#F7F8FE] flex-shrink-0"
+                style={{ width: 104, height: 104 }}
+              >
+                {override.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={override.photo}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                    style={{
+                      objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
+                      transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: 42 }}>{member.emoji}</span>
                 )}
               </div>
+              {isMe && (
+                <div className="absolute -bottom-1 -right-1 flex gap-1">
+                  {override.photo && (
+                    <button
+                      onClick={() => setPositioning(true)}
+                      className="w-7 h-7 rounded-full bg-white text-navy shadow flex items-center justify-center hover:bg-slate-50 transition-colors"
+                      title="Upravit pozici fotky"
+                    >
+                      <Pencil className="w-3 h-3" />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => photoInputRef.current?.click()}
+                    className="w-7 h-7 rounded-full bg-violet text-white shadow flex items-center justify-center hover:bg-violet-dark transition-colors"
+                    title="Nahrát fotku"
+                  >
+                    <Camera className="w-3 h-3" />
+                  </button>
+                  <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={onPhotoPick} />
+                </div>
+              )}
             </div>
-          </div>
 
-          {/* Name + badges */}
-          <div className="pt-5 pb-5 px-6 text-center">
-            <h1 className="text-2xl font-headline font-bold text-navy">{member.name}</h1>
+            <h1 className="text-2xl font-headline font-bold text-navy mt-3">{member.name}</h1>
             <p className="text-slate-500 mt-0.5">{member.position}</p>
 
             <div className="flex flex-wrap gap-1.5 justify-center mt-3">
@@ -280,28 +254,13 @@ export function MemberProfileClient({
                 >
                   <Sparkles className="w-3 h-3" />
                   {override.personality} · {PERSONALITY_TYPES[override.personality].name}
-                  <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-52 bg-navy text-white text-[11px] leading-snug rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                  <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-64 bg-navy text-white text-[11px] leading-snug rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 text-left">
                     <strong className="block mb-0.5">{override.personality} — {PERSONALITY_TYPES[override.personality].name}</strong>
                     {PERSONALITY_TYPES[override.personality].desc}
                   </span>
                 </span>
               )}
             </div>
-
-            {isMe && (
-              <div className="mt-2">
-                <select
-                  value={override.personality ?? ''}
-                  onChange={(e) => save({ personality: e.target.value || null })}
-                  className="text-xs text-slate-400 bg-transparent border-none focus:outline-none cursor-pointer hover:text-violet transition-colors"
-                >
-                  <option value="">+ Přidat výsledek 16 Personalities</option>
-                  {Object.entries(PERSONALITY_TYPES).map(([code, t]) => (
-                    <option key={code} value={code}>{code} — {t.name}</option>
-                  ))}
-                </select>
-              </div>
-            )}
           </div>
 
           {/* Příběh */}
@@ -407,7 +366,7 @@ export function MemberProfileClient({
           <div className="px-6 pb-5 pt-5 border-t border-slate-100">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-medium text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
-                <HeartHandshake className="w-3.5 h-3.5 text-green-500" /> S čím se na mě můžete obrátit
+                <HeartHandshake className="w-3.5 h-3.5 text-green-500" /> S čím se na mě můžeš obrátit
               </p>
               {isMe && !editingHelp && (
                 <button onClick={() => setEditingHelp(true)} className="flex items-center gap-1 text-xs text-violet hover:text-violet-dark transition-colors">

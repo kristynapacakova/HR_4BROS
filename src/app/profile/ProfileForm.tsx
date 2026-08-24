@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { EMPLOYMENT_TYPES } from '@/lib/mock-data'
+import { EMPLOYMENT_TYPES, DEMO_TEAM } from '@/lib/mock-data'
+import { loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, PERSONALITY_TYPES } from '@/lib/team-profile-client'
 
 interface UserData {
   name: string | null
@@ -49,6 +50,9 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
   const [insurance, setInsurance] = useState('111')
   const [startingSalary, setStartingSalary] = useState('')
   const [bozpLastDone, setBozpLastDone] = useState<string | null>(null)
+  const [personality, setPersonality] = useState<string>('')
+
+  const teamMemberId = DEMO_TEAM.find((m) => m.email.toLowerCase() === user.email.toLowerCase())?.id ?? null
 
   const isEmployee = ['HPP', 'DPP', 'DPC'].includes(user.employmentType ?? '')
   const [formData, setFormData] = useState({
@@ -68,6 +72,23 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
       setBozpLastDone(localStorage.getItem(BOZP_KEY))
     } catch { /* noop */ }
   }, [])
+
+  useEffect(() => {
+    if (!teamMemberId) return
+    const refresh = () => setPersonality(loadTeamProfiles()[teamMemberId]?.personality ?? '')
+    refresh()
+    window.addEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+    window.addEventListener('storage', refresh)
+    return () => {
+      window.removeEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+      window.removeEventListener('storage', refresh)
+    }
+  }, [teamMemberId])
+
+  const updatePersonality = (code: string) => {
+    setPersonality(code)
+    if (teamMemberId) saveTeamProfile(teamMemberId, { personality: code || null })
+  }
 
   const markBozpDone = () => {
     const today = new Date().toISOString().slice(0, 10)
@@ -134,6 +155,25 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
             readOnly
           />
           <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
+          {teamMemberId && (
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">16 Personalities</label>
+              <select
+                value={personality}
+                onChange={(e) => updatePersonality(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg text-sm transition-all bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              >
+                <option value="">— nevyplněno —</option>
+                {Object.entries(PERSONALITY_TYPES).map(([code, t]) => (
+                  <option key={code} value={code}>{code} — {t.name}</option>
+                ))}
+              </select>
+              <p className="text-[10px] text-slate-400 mt-1">
+                Zobrazí se na tvé kartě v Týmu Four Bros. Test najdeš na{' '}
+                <a href="https://www.16personalities.com/cz" target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">16personalities.com</a>.
+              </p>
+            </div>
+          )}
         </div>
       </Section>
 
