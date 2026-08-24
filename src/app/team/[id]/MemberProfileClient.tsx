@@ -166,7 +166,7 @@ export function MemberProfileClient({
       <div className="flex items-center justify-center gap-2 sm:gap-4">
         <SideNavTile member={prev} override={profiles[prev.id]} direction="prev" />
 
-        <div className="relative flex-1 max-w-xl rounded-2xl shadow-sm overflow-hidden p-6 sm:p-8 flex flex-col items-center text-center bg-[#EAF3FB]">
+        <div className="relative flex-1 max-w-xl rounded-2xl overflow-hidden p-6 sm:p-8 flex flex-col items-center text-center bg-white">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/watercolor.png" alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" />
 
