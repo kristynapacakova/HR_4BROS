@@ -258,9 +258,9 @@ export function MemberProfileClient({
         <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3">Fotky</p>
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
           {gallery.map((src, i) => (
-            <div key={i} className="relative aspect-square rounded-lg overflow-hidden group">
+            <div key={i} className="relative aspect-square rounded-lg overflow-hidden group bg-[#F7F8FE]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt="" className="w-full h-full object-cover" />
+              <img src={src} alt="" className="w-full h-full object-contain" />
               {isMe && (
                 <button
                   onClick={() => removeGalleryPhoto(i)}
