@@ -18,9 +18,9 @@ export default async function ProfilePage() {
 
   const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === user.id)
 
-  const payslipsLabel = user.employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata'
+  const payslipsLabel = 'Moje odměna'
 
-  // Dny nemoci v aktuálním měsíci → rozpis srážky v Moje výplata
+  // Dny nemoci v aktuálním měsíci → rozpis srážky v Moje odměna
   const now = new Date()
   const sickDaysThisMonth = DEMO_LEAVE_REQUESTS
     .filter(r => (r.type === 'NEMOC' || r.type === 'SICK') && r.status !== 'REJECTED')

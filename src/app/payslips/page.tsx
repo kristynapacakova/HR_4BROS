@@ -10,7 +10,7 @@ export default async function PayslipsPage() {
 
   const isAdmin = session.user.role === 'ADMIN'
   const user = getDemoUserById(session.user.id)
-  const pageTitle = user.employmentType === 'ICO' ? 'Moje fakturace' : 'Moje výplata'
+  const pageTitle = 'Moje odměna'
 
   return (
     <AppShell

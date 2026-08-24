@@ -360,7 +360,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
                   </p>
                 )}
                 <p className="text-[11px] text-slate-400">
-                  Podrobný rozpis srážky uvidíš i v záložce <strong>Moje výplata</strong> po zpracování žádosti.
+                  Podrobný rozpis srážky uvidíš i v záložce <strong>Moje odměna</strong> po zpracování žádosti.
                 </p>
               </div>
             )

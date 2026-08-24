@@ -72,7 +72,7 @@ export function ProfileTabs({
   const tabs = [
     { id: 'udaje', label: 'Osobní údaje', icon: UserIcon },
     { id: 'majetek', label: 'Majetek', icon: Laptop },
-    { id: 'vyplata', label: payslipsLabel ?? 'Moje výplata', icon: Banknote },
+    { id: 'vyplata', label: payslipsLabel ?? 'Moje odměna', icon: Banknote },
     { id: 'dochazka', label: 'Docházka', icon: CalendarDays },
     { id: 'benefity', label: 'Benefity', icon: Gift },
     { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
@@ -245,7 +245,7 @@ export function ProfileTabs({
         </div>
       )}
 
-      {/* Moje výplata */}
+      {/* Moje odměna */}
       {tab === 'vyplata' && payslipsPanel}
 
       {/* Moje docházka */}
