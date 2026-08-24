@@ -69,7 +69,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
             <EyeOff className="w-4 h-4 flex-shrink-0" />
             <div>
               <p className="text-sm font-medium leading-tight">Anonymně</p>
-              <p className={`text-xs mt-0.5 ${anonymous ? 'text-white/60' : 'text-slate-400'}`}>Jméno skryto</p>
+              <p className={`text-xs mt-0.5 leading-snug ${anonymous ? 'text-white/60' : 'text-slate-400'}`}>HR uvidí jen zprávu</p>
             </div>
           </button>
           <button
@@ -82,7 +82,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
             <Eye className="w-4 h-4 flex-shrink-0" />
             <div>
               <p className="text-sm font-medium leading-tight">Se jménem</p>
-              <p className={`text-xs mt-0.5 ${!anonymous ? 'text-white/60' : 'text-slate-400'}`}>{userName.split(' ')[0]}</p>
+              <p className={`text-xs mt-0.5 leading-snug ${!anonymous ? 'text-white/60' : 'text-slate-400'}`}>HR uvidí i jméno — {userName.split(' ')[0]}</p>
             </div>
           </button>
         </div>
