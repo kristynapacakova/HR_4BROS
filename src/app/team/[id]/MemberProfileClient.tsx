@@ -63,7 +63,7 @@ function SideNavTile({ member, override, direction }: {
   return (
     <Link
       href={`/team/${member.id}`}
-      className="hidden sm:flex flex-shrink-0 flex-col items-center text-center gap-2 group"
+      className="hidden sm:flex flex-shrink-0 flex-col items-center text-center gap-2 group mt-11"
     >
       <div className="relative w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden ring-2 ring-white shadow-md bg-[#F7F8FE] flex items-center justify-center group-hover:ring-violet/40 group-hover:scale-105 transition-all">
         {override?.photo ? (
@@ -180,7 +180,7 @@ export function MemberProfileClient({
         <ArrowLeft className="w-4 h-4" /> Zpět na tým
       </Link>
 
-      <div className="flex items-center gap-3 lg:gap-5">
+      <div className="flex items-start gap-3 lg:gap-5">
         <SideNavTile member={prev} override={profiles[prev.id]} direction="prev" />
 
         {/* One cohesive profile card */}

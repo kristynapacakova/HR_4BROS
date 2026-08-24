@@ -39,9 +39,9 @@ export default async function FeedbackPage() {
         <FeedbackForm userName={user?.name || session.user.email || ''} />
 
         {/* Guarantee */}
-        <div className="flex items-start gap-3 bg-green-50 border border-green-100 rounded-2xl px-5 py-4">
-          <ShieldCheck className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-green-800">
+        <div className="flex items-start gap-2 px-1">
+          <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-green-700">
             <strong>Garantujeme bezpečí.</strong> Anonymní zprávy nelze dohledat. Nikdo tě za upřímný feedback nebude postihovat.
           </p>
         </div>
