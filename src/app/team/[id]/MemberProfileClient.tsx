@@ -57,14 +57,14 @@ function readFileAsDataUrl(file: File, maxSize: number, cb: (dataUrl: string) =>
 }
 
 function SideNavTile({ member, override, direction }: {
-  member: { id: string; name: string; emoji: string }
+  member: { id: string; name: string; position: string; emoji: string }
   override?: TeamProfileOverride
   direction: 'prev' | 'next'
 }) {
   return (
     <Link
       href={`/team/${member.id}`}
-      className="flex-shrink-0 w-20 sm:w-24 flex flex-col items-center gap-1.5 group"
+      className="flex-shrink-0 w-24 sm:w-28 flex flex-col items-center gap-1.5 group"
     >
       <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden ring-2 ring-white shadow-sm bg-[#F7F8FE] flex items-center justify-center group-hover:ring-violet/30 transition-all">
         {override?.photo ? (
@@ -82,11 +82,12 @@ function SideNavTile({ member, override, direction }: {
           <span className="text-xl">{member.emoji}</span>
         )}
       </div>
-      <p className="text-[11px] text-slate-500 text-center leading-tight group-hover:text-navy transition-colors truncate w-full">
+      <p className="text-xs font-medium text-slate-600 text-center leading-tight group-hover:text-navy transition-colors w-full">
         {direction === 'prev' && <ChevronLeft className="w-3 h-3 inline-block -mt-0.5" />}
-        {member.name.split(' ')[0]}
+        {member.name}
         {direction === 'next' && <ChevronRight className="w-3 h-3 inline-block -mt-0.5" />}
       </p>
+      <p className="text-[10px] text-slate-400 text-center leading-tight w-full">{member.position}</p>
     </Link>
   )
 }
@@ -95,8 +96,8 @@ export function MemberProfileClient({
   member, prev, next, viewerEmail,
 }: {
   member: Member
-  prev: { id: string; name: string; emoji: string }
-  next: { id: string; name: string; emoji: string }
+  prev: { id: string; name: string; position: string; emoji: string }
+  next: { id: string; name: string; position: string; emoji: string }
   viewerEmail: string | null
 }) {
   const [profiles, setProfiles] = useState<Record<string, TeamProfileOverride>>({})
