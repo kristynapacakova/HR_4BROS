@@ -26,6 +26,7 @@ interface Asset {
 interface AssetType { value: string; label: string }
 interface AssetCondition { value: string; label: string }
 interface User {
+  id: string
   name: string; email: string; phone: string | null; address: string | null
   city: string | null; bankAccount: string | null; department: string | null
   position: string | null; country: string | null; employmentType?: string | null
@@ -252,7 +253,7 @@ export function ProfileTabs({
       {tab === 'dochazka' && timeOffPanel}
 
       {/* Benefity */}
-      {tab === 'benefity' && <BenefitsPanel />}
+      {tab === 'benefity' && <BenefitsPanel employeeId={user.id} employeeName={user.name} />}
 
       {/* Dokumenty a smlouvy */}
       {tab === 'dokumenty' && documentsPanel}

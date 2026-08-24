@@ -404,6 +404,38 @@ export function getDemoUserById(id: string) {
   return DEMO_USER
 }
 
+// ── Vzdělávací budget ──────────────────────────────────────────────────────
+// Roční částka na kurzy/knihy/konference, kterou nastavuje HR/admin za osobu.
+// Žádost podá zaměstnanec nebo OSVČ, po schválení HR se odečte z budgetu.
+
+export const DEMO_EDU_BUDGETS: Record<string, number> = {
+  [DEMO_USER.id]: 10000,
+  [DEMO_USER_ICO.id]: 8000,
+  [DEMO_TL.id]: 12000,
+  [DEMO_ADMIN.id]: 12000,
+  "demo-employee-2": 8000,
+  "demo-employee-3": 8000,
+}
+export const DEFAULT_EDU_BUDGET = 10000
+
+export interface EduRequest {
+  id: string
+  employeeId: string
+  employeeName: string
+  title: string
+  amount: number
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  requestedAt: string
+  note?: string | null
+}
+
+export const DEMO_EDU_REQUESTS: EduRequest[] = [
+  { id: "edu1", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Kniha: Refactoring UI", amount: 1290, status: "APPROVED", requestedAt: "2026-03-12" },
+  { id: "edu2", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Kurz: Copywriting Akademie", amount: 3490, status: "APPROVED", requestedAt: "2026-05-28" },
+  { id: "edu3", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Konference React Summit", amount: 4500, status: "PENDING", requestedAt: "2026-08-10" },
+  { id: "edu4", employeeId: DEMO_USER_ICO.id, employeeName: DEMO_USER_ICO.name, title: "Kurz: Vyjednávání s klienty", amount: 2900, status: "PENDING", requestedAt: "2026-08-05" },
+]
+
 // ── Team directory ──────────────────────────────────────────────────────────
 
 export const TEAM_DEPARTMENTS = [
