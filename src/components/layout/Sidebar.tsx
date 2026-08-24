@@ -93,12 +93,14 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose, collapsed
   }
 
   return (
-    <div className="relative flex flex-col h-full bg-white border-r border-slate-100 overflow-hidden">
-      {/* Soft violet glow accent */}
-      <div
-        className="absolute -top-24 -left-20 w-64 h-64 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.08), transparent 70%)', filter: 'blur(40px)' }}
-      />
+    <div className="relative flex flex-col h-full bg-white border-r border-slate-100">
+      <div className="absolute inset-0 flex flex-col overflow-hidden pointer-events-none">
+        {/* Soft violet glow accent */}
+        <div
+          className="absolute -top-24 -left-20 w-64 h-64 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.08), transparent 70%)', filter: 'blur(40px)' }}
+        />
+      </div>
 
       {/* Logo header */}
       <div className={cn('relative flex items-center border-b border-slate-100', collapsed ? 'justify-center px-2 py-5' : 'justify-between px-5 py-5')}>
@@ -114,17 +116,14 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose, collapsed
         )}
       </div>
 
-      {/* Collapse toggle — desktop only */}
+      {/* Collapse handle — floats on the sidebar's edge, desktop only */}
       {onToggleCollapsed && (
         <button
           onClick={onToggleCollapsed}
           title={collapsed ? 'Rozbalit menu' : 'Zúžit na ikonky'}
-          className={cn(
-            'hidden lg:flex items-center text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors relative',
-            collapsed ? 'justify-center py-2 border-b border-slate-100' : 'justify-end px-3 py-1.5 border-b border-slate-100'
-          )}
+          className="hidden lg:flex absolute top-9 -right-3 z-20 w-6 h-6 rounded-full bg-white border border-slate-200 shadow-sm items-center justify-center text-slate-400 hover:text-violet hover:border-violet/40 hover:scale-110 transition-all"
         >
-          {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+          {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
         </button>
       )}
 
