@@ -10,6 +10,8 @@ export interface TeamProfileOverride {
   photo?: string | null
   photoPos?: PhotoPosition
   bio?: string | null
+  interests?: string[]
+  helpWith?: string | null
   gallery?: string[]
 }
 
