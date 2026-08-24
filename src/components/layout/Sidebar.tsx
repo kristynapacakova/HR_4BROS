@@ -121,9 +121,9 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose, collapsed
         <button
           onClick={onToggleCollapsed}
           title={collapsed ? 'Rozbalit menu' : 'Zúžit na ikonky'}
-          className="hidden lg:flex absolute top-9 -right-3 z-20 w-6 h-6 rounded-full bg-white border border-slate-200 shadow-sm items-center justify-center text-slate-400 hover:text-violet hover:border-violet/40 hover:scale-110 transition-all"
+          className="hidden lg:flex absolute top-9 -right-2.5 z-20 w-5 h-5 rounded-full bg-white border border-slate-200 items-center justify-center text-slate-400 hover:text-violet hover:border-violet/40 transition-colors"
         >
-          {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+          {collapsed ? <ChevronRight className="w-2.5 h-2.5" /> : <ChevronLeft className="w-2.5 h-2.5" />}
         </button>
       )}
 
