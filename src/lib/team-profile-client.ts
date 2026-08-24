@@ -1,7 +1,14 @@
 'use client'
 
+export interface PhotoPosition {
+  x: number // 0-100, % from left
+  y: number // 0-100, % from top
+  zoom: number // 100-300, %
+}
+
 export interface TeamProfileOverride {
   photo?: string | null
+  photoPos?: PhotoPosition
   bio?: string | null
   gallery?: string[]
 }
