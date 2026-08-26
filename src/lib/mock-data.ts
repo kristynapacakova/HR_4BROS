@@ -197,6 +197,8 @@ export interface ExpenseRequest {
   employeeName: string
   title: string
   amount: number
+  /** PLUS = chce si nechat proplatit (přičte se), MINUS = chce si nechat strhnout z faktury (odečte se) */
+  sign: 'PLUS' | 'MINUS'
   currency: string
   category: string
   receiptName: string
@@ -369,6 +371,8 @@ export const DEMO_ADMIN = {
   birthDate: null,
   bankAccount: null,
   taxId: null,
+  contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
+  contractEndDate: null as Date | null,
 }
 
 // Team lead — vidí a schvaluje jen svůj tým (oddělení Vývoj)
@@ -393,6 +397,8 @@ export const DEMO_TL = {
   clientHours: 100,
   monthlySalary: 85000,
   hourlyRate: null as number | null,
+  contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
+  contractEndDate: null as Date | null,
 }
 
 // OSVČ (IČO) demo účet — pro ukázku pohledu spolupracovníka na fakturu
@@ -417,11 +423,13 @@ export const DEMO_USER_ICO = {
   clientHours: 110,
   monthlySalary: null as number | null,
   hourlyRate: 1200,
+  contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
+  contractEndDate: null as Date | null,
 }
 
 export const DEMO_EXPENSE_REQUESTS: ExpenseRequest[] = [
-  { id: "exp1", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Taxi na klientské jednání", amount: 350, currency: "CZK", category: "CESTOVNÉ", receiptName: "uctenka_taxi.pdf", month: 8, year: 2026, status: "PENDING", requestedAt: "2026-08-20" },
-  { id: "exp2", employeeId: DEMO_USER_ICO.id, employeeName: DEMO_USER_ICO.name, title: "Oběd s klientem", amount: 890, currency: "CZK", category: "REPREZENTACE", receiptName: "uctenka_obed.jpg", month: 7, year: 2026, status: "APPROVED", requestedAt: "2026-07-20" },
+  { id: "exp1", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Taxi na klientské jednání", amount: 350, sign: "PLUS", currency: "CZK", category: "CESTOVNÉ", receiptName: "uctenka_taxi.pdf", month: 8, year: 2026, status: "PENDING", requestedAt: "2026-08-20" },
+  { id: "exp2", employeeId: DEMO_USER_ICO.id, employeeName: DEMO_USER_ICO.name, title: "Oběd s klientem", amount: 890, sign: "PLUS", currency: "CZK", category: "REPREZENTACE", receiptName: "uctenka_obed.jpg", month: 7, year: 2026, status: "APPROVED", requestedAt: "2026-07-20" },
 ]
 
 // Resolves which demo user record a logged-in session maps to, by id.

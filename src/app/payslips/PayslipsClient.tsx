@@ -19,6 +19,10 @@ function fmt(amount: number, currency: string) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency, maximumFractionDigits: 0 }).format(amount)
 }
 
+function signedAmount(exp: ExpenseRequest) {
+  return exp.sign === 'MINUS' ? -exp.amount : exp.amount
+}
+
 interface Payslip {
   id: string
   month: number
@@ -58,7 +62,7 @@ function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
     benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
     0
   const icoExpensesTotal = isICO ? ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0) : 0
-  const monthExpensesTotal = monthExpenses.reduce((s, e) => s + e.amount, 0)
+  const monthExpensesTotal = monthExpenses.reduce((s, e) => s + signedAmount(e), 0)
   const hasBreakdown = isICO || sportAmount !== 0 || monthExpensesTotal !== 0
 
   return (
@@ -125,7 +129,9 @@ function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
             {monthExpenses.map((exp) => (
               <div key={exp.id} className="flex items-center justify-between gap-4">
                 <span className="text-slate-500">{exp.title}</span>
-                <span className="font-medium text-green-600">+{fmt(exp.amount, exp.currency)}</span>
+                <span className={`font-medium ${exp.sign === 'MINUS' ? 'text-red-500' : 'text-green-600'}`}>
+                  {exp.sign === 'MINUS' ? '−' : '+'}{fmt(exp.amount, exp.currency)}
+                </span>
               </div>
             ))}
           </div>
@@ -212,6 +218,9 @@ export function PayslipsClient({
   const [expTitle, setExpTitle] = useState('')
   const [expAmount, setExpAmount] = useState('')
   const [expCategory, setExpCategory] = useState('SPORT')
+  const [expSign, setExpSign] = useState<'PLUS' | 'MINUS'>('PLUS')
+  const [expSectionOpen, setExpSectionOpen] = useState(false)
+  const [expSectionTouched, setExpSectionTouched] = useState(false)
   const expFileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -226,7 +235,16 @@ export function PayslipsClient({
         r.month === now.getMonth() + 1 && r.year === now.getFullYear()
       ))
       setAllSportRequests(requests)
-      setExpenseRequests(loadExpenseRequests(DEMO_EXPENSE_REQUESTS))
+      const allExpenses = loadExpenseRequests(DEMO_EXPENSE_REQUESTS)
+      setExpenseRequests(allExpenses)
+      setExpSectionTouched((touched) => {
+        if (touched) return touched
+        const hasThisMonth = allExpenses.some((r) =>
+          r.employeeId === employeeId && r.month === now.getMonth() + 1 && r.year === now.getFullYear()
+        )
+        setExpSectionOpen(hasThisMonth)
+        return true
+      })
     }
     refresh()
     window.addEventListener(BENEFIT_CHANGED_EVENT, refresh)
@@ -244,9 +262,8 @@ export function PayslipsClient({
   const myExpenses = expenseRequests
     .filter(r => r.employeeId === employeeId)
     .sort((a, b) => b.requestedAt.localeCompare(a.requestedAt))
-  const approvedExpensesThisMonth = myExpenses.filter(r =>
-    r.status === 'APPROVED' && r.month === now.getMonth() + 1 && r.year === now.getFullYear()
-  )
+  const myExpensesThisMonth = myExpenses.filter(r => r.month === now.getMonth() + 1 && r.year === now.getFullYear())
+  const approvedExpensesThisMonth = myExpensesThisMonth.filter(r => r.status === 'APPROVED')
 
   const submitExpense = (e: React.FormEvent) => {
     e.preventDefault()
@@ -274,6 +291,7 @@ export function PayslipsClient({
         employeeName: employeeName ?? '',
         title: expTitle.trim(),
         amount: amt,
+        sign: expSign,
         currency: 'CZK',
         category: expCategory,
         receiptName: file.name,
@@ -284,7 +302,7 @@ export function PayslipsClient({
       }
       saveExpenseRequests([newReq, ...expenseRequests])
     }
-    setExpTitle(''); setExpAmount(''); setExpCategory('SPORT'); setAddingExpense(false)
+    setExpTitle(''); setExpAmount(''); setExpCategory('SPORT'); setExpSign('PLUS'); setAddingExpense(false)
     if (expFileRef.current) expFileRef.current.value = ''
   }
 
@@ -345,6 +363,155 @@ export function PayslipsClient({
         </div>
       )}
 
+      {/* Doklady k proplacení — sbalitelné, samo se rozbalí když je letos co řešit */}
+      {employeeId && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setExpSectionOpen((o) => !o)}
+            className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Receipt className="w-4 h-4 text-violet flex-shrink-0" />
+              <p className="text-sm font-semibold text-navy">Doklady k proplacení</p>
+              {myExpensesThisMonth.length > 0 && (
+                <span className="bg-violet/10 text-violet text-xs font-medium px-2 py-0.5 rounded-full">{myExpensesThisMonth.length}</span>
+              )}
+            </div>
+            <ChevronDown className={`w-4 h-4 text-slate-300 flex-shrink-0 transition-transform ${expSectionOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {expSectionOpen && (
+            <div className="px-5 pb-5">
+              <p className="text-xs text-slate-400 mb-4">
+                Nahraj doklad — příspěvek na sport, náklad ke klientovi, cestovné apod. Zvol, jestli si to chceš nechat
+                proplatit (+), nebo naopak nechat strhnout z {isICO ? 'faktury' : 'odměny'} (−). Po schválení HR se to
+                promítne do {isICO ? 'faktury' : 'odměny'} za daný měsíc. Doklad na sport najdeš pak i v záložce Benefity.
+              </p>
+
+              {myExpenses.length > 0 && (
+                <div className="divide-y divide-slate-50 border-t border-slate-100 mb-3">
+                  {myExpenses.map((exp) => (
+                    <div key={exp.id} className="py-3 flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-sm text-navy truncate">{exp.title}</p>
+                        <p className="text-[11px] text-slate-400">{exp.receiptName} · {MONTH_NAMES[exp.month - 1]} {exp.year}</p>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className={`text-sm font-semibold ${exp.sign === 'MINUS' ? 'text-red-500' : 'text-navy'}`}>
+                          {exp.sign === 'MINUS' ? '−' : '+'}{fmt(exp.amount, exp.currency)}
+                        </span>
+                        {exp.status === 'APPROVED' && (
+                          <span className="flex items-center gap-1 text-[11px] font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
+                            <CheckCircle2 className="w-3 h-3" /> Schváleno
+                          </span>
+                        )}
+                        {exp.status === 'REJECTED' && (
+                          <span className="flex items-center gap-1 text-[11px] font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                            <XCircle className="w-3 h-3" /> Zamítnuto
+                          </span>
+                        )}
+                        {exp.status === 'PENDING' && (
+                          <span className="flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                            <Clock className="w-3 h-3" /> Čeká na HR
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {!addingExpense ? (
+                <button
+                  onClick={() => setAddingExpense(true)}
+                  className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
+                >
+                  <Upload className="w-4 h-4 flex-shrink-0" />
+                  Nahrát doklad k proplacení
+                </button>
+              ) : (
+                <form onSubmit={submitExpense} className="space-y-3 pt-1">
+                  {expCategory !== 'SPORT' && (
+                    <div>
+                      <label className="block text-xs font-medium text-slate-500 mb-1">Typ položky</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setExpSign('PLUS')}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+                            expSign === 'PLUS' ? 'border-green-500 bg-green-50 text-green-700' : 'border-slate-200 text-slate-500'
+                          }`}
+                        >
+                          + Chci proplatit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setExpSign('MINUS')}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+                            expSign === 'MINUS' ? 'border-red-400 bg-red-50 text-red-600' : 'border-slate-200 text-slate-500'
+                          }`}
+                        >
+                          − Strhnout z {isICO ? 'faktury' : 'odměny'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Co to bylo</label>
+                    <input
+                      type="text"
+                      value={expTitle}
+                      onChange={(e) => setExpTitle(e.target.value)}
+                      placeholder="např. Oběd s klientem"
+                      required
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-500 mb-1">Částka (Kč)</label>
+                      <input
+                        type="number"
+                        min={1}
+                        value={expAmount}
+                        onChange={(e) => setExpAmount(e.target.value)}
+                        required
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-500 mb-1">Kam to spadá</label>
+                      <select
+                        value={expCategory}
+                        onChange={(e) => setExpCategory(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                      >
+                        {EXPENSE_CATEGORIES.map((c) => (
+                          <option key={c.value} value={c.value}>{c.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Doklad</label>
+                    <input ref={expFileRef} type="file" accept="image/*,.pdf" required className="w-full text-sm" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button type="submit" className="px-4 py-2 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
+                      Odeslat ke schválení
+                    </button>
+                    <button type="button" onClick={() => setAddingExpense(false)} className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-navy transition-colors">
+                      Zrušit
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Rozpis odměny tento měsíc — základ, doplňkové položky, benefit, nemoc, k výplatě */}
       {latestReal && (isICO || benefitType || approvedExpensesThisMonth.length > 0 || (!isICO && sickDays > 0)) && (() => {
         const sick = !isICO && sickDays > 0 ? computeSickPay(salaryInfo.currentSalary, sickDays) : null
@@ -353,7 +520,7 @@ export function PayslipsClient({
           benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
           0
         const icoExpensesTotal = isICO ? ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0) : 0
-        const approvedExpensesTotal = approvedExpensesThisMonth.reduce((s, e) => s + e.amount, 0)
+        const approvedExpensesTotal = approvedExpensesThisMonth.reduce((s, e) => s + signedAmount(e), 0)
         const adjustedNet = latestReal.netAmount + benefitAmount + icoExpensesTotal + approvedExpensesTotal - (sick?.deduction ?? 0)
 
         return (
@@ -407,10 +574,12 @@ export function PayslipsClient({
               {approvedExpensesThisMonth.map((exp) => (
                 <div key={exp.id} className="flex items-center justify-between gap-4">
                   <span className="text-slate-500 flex items-center gap-1.5">
-                    <Receipt className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                    <Receipt className={`w-3.5 h-3.5 flex-shrink-0 ${exp.sign === 'MINUS' ? 'text-red-400' : 'text-green-500'}`} />
                     {exp.title}
                   </span>
-                  <span className="font-medium text-green-600">+{fmt(exp.amount, exp.currency)}</span>
+                  <span className={`font-medium ${exp.sign === 'MINUS' ? 'text-red-500' : 'text-green-600'}`}>
+                    {exp.sign === 'MINUS' ? '−' : '+'}{fmt(exp.amount, exp.currency)}
+                  </span>
                 </div>
               ))}
 
@@ -488,111 +657,6 @@ export function PayslipsClient({
         )}
       </div>
 
-      {/* Proplacené výdaje — doklad na proplacení (oběd s klientem, taxi…), HR schvaluje */}
-      {employeeId && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-          <div className="flex items-center gap-2 mb-1">
-            <Receipt className="w-4 h-4 text-violet" />
-            <p className="text-sm font-semibold text-navy">Doklady k proplacení</p>
-          </div>
-          <p className="text-xs text-slate-400 mb-4">
-            Nahraj doklad — příspěvek na sport, náklad ke klientovi, cestovné apod. Po schválení HR se částka přičte
-            k {isICO ? 'faktuře' : 'odměně'} za daný měsíc. Doklad na sport najdeš pak i v záložce Benefity.
-          </p>
-
-          {myExpenses.length > 0 && (
-            <div className="divide-y divide-slate-50 border-t border-slate-100 mb-3">
-              {myExpenses.map((exp) => (
-                <div key={exp.id} className="py-3 flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-sm text-navy truncate">{exp.title}</p>
-                    <p className="text-[11px] text-slate-400">{exp.receiptName} · {MONTH_NAMES[exp.month - 1]} {exp.year}</p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-sm font-semibold text-navy">{fmt(exp.amount, exp.currency)}</span>
-                    {exp.status === 'APPROVED' && (
-                      <span className="flex items-center gap-1 text-[11px] font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
-                        <CheckCircle2 className="w-3 h-3" /> Schváleno
-                      </span>
-                    )}
-                    {exp.status === 'REJECTED' && (
-                      <span className="flex items-center gap-1 text-[11px] font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
-                        <XCircle className="w-3 h-3" /> Zamítnuto
-                      </span>
-                    )}
-                    {exp.status === 'PENDING' && (
-                      <span className="flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                        <Clock className="w-3 h-3" /> Čeká na HR
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {!addingExpense ? (
-            <button
-              onClick={() => setAddingExpense(true)}
-              className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
-            >
-              <Upload className="w-4 h-4 flex-shrink-0" />
-              Nahrát doklad k proplacení
-            </button>
-          ) : (
-            <form onSubmit={submitExpense} className="space-y-3 pt-1">
-              <div>
-                <label className="block text-xs font-medium text-slate-500 mb-1">Co to bylo</label>
-                <input
-                  type="text"
-                  value={expTitle}
-                  onChange={(e) => setExpTitle(e.target.value)}
-                  placeholder="např. Oběd s klientem"
-                  required
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Částka (Kč)</label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={expAmount}
-                    onChange={(e) => setExpAmount(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Kategorie</label>
-                  <select
-                    value={expCategory}
-                    onChange={(e) => setExpCategory(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-                  >
-                    {EXPENSE_CATEGORIES.map((c) => (
-                      <option key={c.value} value={c.value}>{c.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-500 mb-1">Doklad</label>
-                <input ref={expFileRef} type="file" accept="image/*,.pdf" required className="w-full text-sm" />
-              </div>
-              <div className="flex items-center gap-2">
-                <button type="submit" className="px-4 py-2 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
-                  Odeslat ke schválení
-                </button>
-                <button type="button" onClick={() => setAddingExpense(false)} className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-navy transition-colors">
-                  Zrušit
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      )}
     </div>
   )
 }
