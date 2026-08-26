@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Camera } from 'lucide-react'
+import { Camera, Pencil } from 'lucide-react'
 import { loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, type PhotoPosition } from '@/lib/team-profile-client'
+import { PhotoPositionEditor } from '@/app/team/PhotoPositionEditor'
 
 const AVATAR_KEY = 'fb-avatar'
 
@@ -40,6 +41,7 @@ function readAvatar(teamMemberId?: string): { photo: string | null; pos?: PhotoP
 /** Profilová fotka je sdílená s medailonkem v Týmu Four Bros — jedna fotka pro obě místa. */
 export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamMemberId?: string }) {
   const [avatar, setAvatar] = useState<{ photo: string | null; pos?: PhotoPosition }>({ photo: null })
+  const [positioning, setPositioning] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -68,34 +70,60 @@ export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamM
   }
 
   return (
-    <button
-      type="button"
-      onClick={() => inputRef.current?.click()}
-      className="relative flex-shrink-0 group"
-      title="Změnit profilovou fotku"
-    >
-      <div className="absolute -inset-1 rounded-full opacity-30" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }} />
-      {avatar.photo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={avatar.photo}
-          alt="Profilová fotka"
-          className="relative w-16 h-16 rounded-full object-cover"
-          style={avatar.pos ? {
-            objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
-            transform: `scale(${avatar.pos.zoom / 100})`,
-          } : undefined}
-        />
-      ) : (
-        <div className="relative w-16 h-16 bg-navy rounded-full flex items-center justify-center">
-          <span className="text-white font-headline text-2xl font-bold">{initial}</span>
-        </div>
+    <div className="relative flex-shrink-0 group">
+      <div className="absolute -inset-1 rounded-full opacity-30 pointer-events-none" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }} />
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className="relative block"
+        title="Nahrát novou fotku"
+      >
+        {avatar.photo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={avatar.photo}
+            alt="Profilová fotka"
+            className="relative w-16 h-16 rounded-full object-cover"
+            style={avatar.pos ? {
+              objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
+              transform: `scale(${avatar.pos.zoom / 100})`,
+            } : undefined}
+          />
+        ) : (
+          <div className="relative w-16 h-16 bg-navy rounded-full flex items-center justify-center">
+            <span className="text-white font-headline text-2xl font-bold">{initial}</span>
+          </div>
+        )}
+      </button>
+      {avatar.photo && teamMemberId && (
+        <button
+          type="button"
+          onClick={() => setPositioning(true)}
+          className="absolute -bottom-0.5 -left-0.5 w-6 h-6 rounded-full bg-white text-navy flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+          title="Upravit pozici fotky"
+        >
+          <Pencil className="w-3 h-3" />
+        </button>
       )}
-      <span className="absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-full bg-violet text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow">
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className="absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-full bg-violet text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+        title="Nahrát novou fotku"
+      >
         <Camera className="w-3 h-3" />
-      </span>
+      </button>
       <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={onPick} />
-    </button>
+
+      {positioning && avatar.photo && teamMemberId && (
+        <PhotoPositionEditor
+          photo={avatar.photo}
+          initial={avatar.pos}
+          onSave={(pos) => { saveTeamProfile(teamMemberId, { photoPos: pos }); setPositioning(false) }}
+          onCancel={() => setPositioning(false)}
+        />
+      )}
+    </div>
   )
 }
 
