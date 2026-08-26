@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { Cake } from 'lucide-react'
 import { loadTeamProfiles, TEAM_PROFILE_CHANGED_EVENT, type TeamProfileOverride } from '@/lib/team-profile-client'
 
 interface Member {
@@ -26,6 +27,15 @@ export function formatBirthday(raw: string | null): string {
   const [, month, day] = raw.split('-')
   const months = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']
   return `${parseInt(day)}. ${months[parseInt(month) - 1]}`
+}
+
+function daysUntilBirthday(raw: string | null): number | null {
+  if (!raw) return null
+  const now = new Date()
+  const [, m, d] = raw.split('-').map(Number)
+  const next = new Date(now.getFullYear(), m - 1, d)
+  if (next < now) next.setFullYear(now.getFullYear() + 1)
+  return Math.ceil((next.getTime() - now.getTime()) / 86400000)
 }
 
 export function TeamClient({ members, departments }: {
@@ -94,16 +104,18 @@ export function TeamClient({ members, departments }: {
             <span className="text-xs text-slate-400">{group.members.length}</span>
             <div className="flex-1 h-px bg-slate-100" />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-y-6 gap-x-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {group.members.map(member => {
           const override = profiles[member.id]
+          const days = daysUntilBirthday(member.birthday)
+          const birthdaySoon = days !== null && days <= 30
           return (
             <Link
               key={member.id}
               href={`/team/${member.id}`}
-              className="group flex flex-col items-center text-center"
+              className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-3 hover:shadow-[0_8px_32px_rgba(25,70,105,0.08)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              <div className="relative w-20 h-20 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center transition-transform group-hover:scale-[1.03]">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center flex-shrink-0">
                 {override?.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -116,11 +128,18 @@ export function TeamClient({ members, departments }: {
                     }}
                   />
                 ) : (
-                  <span style={{ fontSize: 32 }}>{member.emoji}</span>
+                  <span style={{ fontSize: 24 }}>{member.emoji}</span>
                 )}
               </div>
-              <p className="font-headline font-semibold text-navy text-sm mt-3 truncate w-full group-hover:text-violet transition-colors">{member.name}</p>
-              <p className="text-xs text-slate-400 mt-0.5 truncate w-full">{member.position}</p>
+              <div className="min-w-0 flex-1">
+                <p className="font-headline font-semibold text-navy text-sm truncate group-hover:text-violet transition-colors">{member.name}</p>
+                <p className="text-xs text-slate-400 truncate">{member.position}</p>
+                <div className={`inline-flex items-center gap-1 text-[11px] mt-1.5 ${birthdaySoon ? 'text-violet font-medium' : 'text-slate-400'}`}>
+                  <Cake className="w-3 h-3 flex-shrink-0" />
+                  {member.birthday ? formatBirthday(member.birthday) : 'Narozeniny neuvedeny'}
+                  {birthdaySoon && days !== null && <span>· za {days === 0 ? 'dnes!' : `${days} dní`}</span>}
+                </div>
+              </div>
             </Link>
               )
             })}
