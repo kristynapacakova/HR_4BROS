@@ -219,6 +219,8 @@ export function PayslipsClient({
   const [expAmount, setExpAmount] = useState('')
   const [expCategory, setExpCategory] = useState('SPORT')
   const [expSign, setExpSign] = useState<'PLUS' | 'MINUS'>('PLUS')
+  const [expMonth, setExpMonth] = useState(() => new Date().getMonth() + 1)
+  const [expYear, setExpYear] = useState(() => new Date().getFullYear())
   const [expSectionOpen, setExpSectionOpen] = useState(false)
   const [expSectionTouched, setExpSectionTouched] = useState(false)
   const expFileRef = useRef<HTMLInputElement>(null)
@@ -277,8 +279,8 @@ export function PayslipsClient({
         id: `sport-${Date.now()}`,
         employeeId,
         employeeName: employeeName ?? '',
-        month: now.getMonth() + 1,
-        year: now.getFullYear(),
+        month: expMonth,
+        year: expYear,
         receiptName: file.name,
         status: 'PENDING',
         requestedAt: now.toISOString().slice(0, 10),
@@ -295,14 +297,16 @@ export function PayslipsClient({
         currency: 'CZK',
         category: expCategory,
         receiptName: file.name,
-        month: now.getMonth() + 1,
-        year: now.getFullYear(),
+        month: expMonth,
+        year: expYear,
         status: 'PENDING',
         requestedAt: now.toISOString().slice(0, 10),
       }
       saveExpenseRequests([newReq, ...expenseRequests])
     }
-    setExpTitle(''); setExpAmount(''); setExpCategory('SPORT'); setExpSign('PLUS'); setAddingExpense(false)
+    setExpTitle(''); setExpAmount(''); setExpCategory('SPORT'); setExpSign('PLUS')
+    setExpMonth(new Date().getMonth() + 1); setExpYear(new Date().getFullYear())
+    setAddingExpense(false)
     if (expFileRef.current) expFileRef.current.value = ''
   }
 
@@ -489,6 +493,29 @@ export function PayslipsClient({
                       >
                         {EXPENSE_CATEGORIES.map((c) => (
                           <option key={c.value} value={c.value}>{c.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Za jaké období (do kterého měsíce se má propsat)</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <select
+                        value={expMonth}
+                        onChange={(e) => setExpMonth(Number(e.target.value))}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                      >
+                        {MONTH_NAMES.map((name, i) => (
+                          <option key={name} value={i + 1}>{name}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={expYear}
+                        onChange={(e) => setExpYear(Number(e.target.value))}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                      >
+                        {[expYear - 1, expYear, expYear + 1].filter((y, i, arr) => arr.indexOf(y) === i).map((y) => (
+                          <option key={y} value={y}>{y}</option>
                         ))}
                       </select>
                     </div>
