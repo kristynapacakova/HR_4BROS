@@ -156,6 +156,18 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
             value={EMPLOYMENT_TYPES.find((t) => t.value === user.employmentType)?.label || user.employmentType || '—'}
             readOnly
           />
+          <Field label="Nástup" value={employment?.startDate ? new Date(employment.startDate).toLocaleDateString('cs-CZ') : '—'} readOnly />
+          <Field
+            label="Typ smlouvy"
+            value={
+              employment?.contractTermType === 'URCITA'
+                ? `Na dobu určitou — do ${employment.contractEndDate ? new Date(employment.contractEndDate).toLocaleDateString('cs-CZ') : '—'}`
+                : employment?.contractTermType === 'NEURCITA'
+                  ? 'Na dobu neurčitou'
+                  : '—'
+            }
+            readOnly
+          />
           {user.employmentType !== 'ICO' && (
             <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
           )}
@@ -204,18 +216,6 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
                 {INSURANCE_COMPANIES.map(i => <option key={i.code} value={i.code}>{i.code} · {i.name}</option>)}
               </select>
             </div>
-            <Field label="Nástup" value={employment?.startDate ? new Date(employment.startDate).toLocaleDateString('cs-CZ') : '—'} readOnly />
-            <Field
-              label="Typ smlouvy"
-              value={
-                employment?.contractTermType === 'URCITA'
-                  ? `Na dobu určitou — do ${employment.contractEndDate ? new Date(employment.contractEndDate).toLocaleDateString('cs-CZ') : '—'}`
-                  : employment?.contractTermType === 'NEURCITA'
-                    ? 'Na dobu neurčitou'
-                    : '—'
-              }
-              readOnly
-            />
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1">Nástupní plat (Kč)</label>
               <input

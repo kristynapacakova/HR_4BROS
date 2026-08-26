@@ -208,7 +208,8 @@ export interface ExpenseRequest {
 }
 
 export const EXPENSE_CATEGORIES = [
-  { value: "REPREZENTACE", label: "Reprezentace (oběd, kafe s klientem…)" },
+  { value: "SPORT", label: "Benefit — příspěvek na sport" },
+  { value: "REPREZENTACE", label: "Náklad ke klientovi (oběd, kafe…)" },
   { value: "CESTOVNÉ", label: "Cestovné" },
   { value: "VZDĚLÁVÁNÍ", label: "Vzdělávání" },
   { value: "JINE", label: "Jiné" },

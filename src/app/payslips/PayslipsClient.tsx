@@ -5,9 +5,9 @@ import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbe
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
-  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, type BenefitType, type ExpenseRequest,
+  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, type BenefitType, type ExpenseRequest, type SportBenefitRequest,
 } from '@/lib/mock-data'
-import { loadBenefitSelections, loadSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
+import { loadBenefitSelections, loadSportRequests, saveSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
 
 const MONTH_NAMES = [
@@ -206,12 +206,12 @@ export function PayslipsClient({
   const [showSickDetail, setShowSickDetail] = useState(false)
   const [benefitType, setBenefitType] = useState<BenefitType | null>(null)
   const [approvedThisMonth, setApprovedThisMonth] = useState(false)
-  const [sportRequests, setSportRequests] = useState<{ employeeId: string; month: number; year: number; status: string }[]>([])
+  const [allSportRequests, setAllSportRequests] = useState<SportBenefitRequest[]>([])
   const [expenseRequests, setExpenseRequests] = useState<ExpenseRequest[]>([])
   const [addingExpense, setAddingExpense] = useState(false)
   const [expTitle, setExpTitle] = useState('')
   const [expAmount, setExpAmount] = useState('')
-  const [expCategory, setExpCategory] = useState('REPREZENTACE')
+  const [expCategory, setExpCategory] = useState('SPORT')
   const expFileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -225,7 +225,7 @@ export function PayslipsClient({
         r.employeeId === employeeId && r.status === 'APPROVED' &&
         r.month === now.getMonth() + 1 && r.year === now.getFullYear()
       ))
-      setSportRequests(requests.filter(r => r.employeeId === employeeId))
+      setAllSportRequests(requests)
       setExpenseRequests(loadExpenseRequests(DEMO_EXPENSE_REQUESTS))
     }
     refresh()
@@ -240,6 +240,7 @@ export function PayslipsClient({
   }, [employeeId])
 
   const now = new Date()
+  const sportRequests = allSportRequests.filter(r => r.employeeId === employeeId)
   const myExpenses = expenseRequests
     .filter(r => r.employeeId === employeeId)
     .sort((a, b) => b.requestedAt.localeCompare(a.requestedAt))
@@ -252,22 +253,38 @@ export function PayslipsClient({
     const file = expFileRef.current?.files?.[0]
     const amt = Number(expAmount)
     if (!employeeId || !expTitle.trim() || !amt || amt <= 0 || !file) return
-    const newReq: ExpenseRequest = {
-      id: `exp-${Date.now()}`,
-      employeeId,
-      employeeName: employeeName ?? '',
-      title: expTitle.trim(),
-      amount: amt,
-      currency: 'CZK',
-      category: expCategory,
-      receiptName: file.name,
-      month: now.getMonth() + 1,
-      year: now.getFullYear(),
-      status: 'PENDING',
-      requestedAt: now.toISOString().slice(0, 10),
+
+    if (expCategory === 'SPORT') {
+      // Doklad na příspěvek na sport patří do benefitů, ne mezi obecné výdaje.
+      const newSportReq: SportBenefitRequest = {
+        id: `sport-${Date.now()}`,
+        employeeId,
+        employeeName: employeeName ?? '',
+        month: now.getMonth() + 1,
+        year: now.getFullYear(),
+        receiptName: file.name,
+        status: 'PENDING',
+        requestedAt: now.toISOString().slice(0, 10),
+      }
+      saveSportRequests([newSportReq, ...allSportRequests])
+    } else {
+      const newReq: ExpenseRequest = {
+        id: `exp-${Date.now()}`,
+        employeeId,
+        employeeName: employeeName ?? '',
+        title: expTitle.trim(),
+        amount: amt,
+        currency: 'CZK',
+        category: expCategory,
+        receiptName: file.name,
+        month: now.getMonth() + 1,
+        year: now.getFullYear(),
+        status: 'PENDING',
+        requestedAt: now.toISOString().slice(0, 10),
+      }
+      saveExpenseRequests([newReq, ...expenseRequests])
     }
-    saveExpenseRequests([newReq, ...expenseRequests])
-    setExpTitle(''); setExpAmount(''); setExpCategory('REPREZENTACE'); setAddingExpense(false)
+    setExpTitle(''); setExpAmount(''); setExpCategory('SPORT'); setAddingExpense(false)
     if (expFileRef.current) expFileRef.current.value = ''
   }
 
@@ -476,9 +493,12 @@ export function PayslipsClient({
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
           <div className="flex items-center gap-2 mb-1">
             <Receipt className="w-4 h-4 text-violet" />
-            <p className="text-sm font-semibold text-navy">Proplacené výdaje</p>
+            <p className="text-sm font-semibold text-navy">Doklady k proplacení</p>
           </div>
-          <p className="text-xs text-slate-400 mb-4">Nahraj doklad (oběd s klientem, taxi…) — po schválení HR se částka přičte k {isICO ? 'faktuře' : 'odměně'} za daný měsíc.</p>
+          <p className="text-xs text-slate-400 mb-4">
+            Nahraj doklad — příspěvek na sport, náklad ke klientovi, cestovné apod. Po schválení HR se částka přičte
+            k {isICO ? 'faktuře' : 'odměně'} za daný měsíc. Doklad na sport najdeš pak i v záložce Benefity.
+          </p>
 
           {myExpenses.length > 0 && (
             <div className="divide-y divide-slate-50 border-t border-slate-100 mb-3">
