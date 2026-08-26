@@ -598,6 +598,33 @@ export const INVOICE_STATUS_LABELS: Record<InvoicePaymentStatus, string> = {
   ZAPLACENO: 'Zaplaceno',
 }
 
+// Měsíční faktury OSVČ — do budoucna natažené z Fakturoidu (napárovaného na banku) přes API.
+// Zatím mock: paušál (Plat) + Místo (nájem) + Občerstvení + volitelná další položka.
+export interface IcoInvoiceRecord {
+  id: string
+  employeeId: string
+  month: number
+  year: number
+  invoiceNumber: string
+  salaryAmount: number
+  officeAmount: number
+  refreshAmount: number
+  otherLabel: string | null
+  otherAmount: number
+}
+
+export const DEMO_ICO_INVOICES: IcoInvoiceRecord[] = [
+  { id: "inv-2026-08", employeeId: DEMO_USER_ICO.id, month: 8, year: 2026, invoiceNumber: "2026-0180", salaryAmount: 0,     officeAmount: 2000, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
+  { id: "inv-2026-07", employeeId: DEMO_USER_ICO.id, month: 7, year: 2026, invoiceNumber: "2026-0150", salaryAmount: 60000, officeAmount: 500,  refreshAmount: 800, otherLabel: null, otherAmount: 0 },
+  { id: "inv-2026-06", employeeId: DEMO_USER_ICO.id, month: 6, year: 2026, invoiceNumber: "2026-0120", salaryAmount: 0,     officeAmount: 2000, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
+  { id: "inv-2026-05", employeeId: DEMO_USER_ICO.id, month: 5, year: 2026, invoiceNumber: "2026-0090", salaryAmount: 65000, officeAmount: 3800, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
+  { id: "inv-2026-04", employeeId: DEMO_USER_ICO.id, month: 4, year: 2026, invoiceNumber: "2026-0060", salaryAmount: 48000, officeAmount: 500,  refreshAmount: 800, otherLabel: null, otherAmount: 0 },
+  { id: "inv-2026-02", employeeId: DEMO_USER_ICO.id, month: 2, year: 2026, invoiceNumber: "2026-0105", salaryAmount: 65000, officeAmount: 3800, refreshAmount: 800, otherLabel: "Sport", otherAmount: 600 },
+  { id: "inv-2026-01", employeeId: DEMO_USER_ICO.id, month: 1, year: 2026, invoiceNumber: "2026-0050", salaryAmount: 65000, officeAmount: 3800, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
+  { id: "inv-2025-12", employeeId: DEMO_USER_ICO.id, month: 12, year: 2025, invoiceNumber: "2026-0016", salaryAmount: 4865, officeAmount: 2000, refreshAmount: 400, otherLabel: null, otherAmount: 0 },
+  { id: "inv-2025-11", employeeId: DEMO_USER_ICO.id, month: 11, year: 2025, invoiceNumber: "2025-0558", salaryAmount: 0,    officeAmount: 2000, refreshAmount: 400, otherLabel: null, otherAmount: 0 },
+]
+
 export const DEMO_PAYSLIPS = [
   // 2026 — future (planned salary, no payslip yet)
   { id: "f12", month: 12, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
