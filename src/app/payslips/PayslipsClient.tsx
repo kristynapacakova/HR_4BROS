@@ -448,11 +448,15 @@ export function PayslipsClient({
                 Nahraj doklad — příspěvek na sport, náklad ke klientovi, cestovné apod. Zvol, jestli si to chceš nechat
                 proplatit (+), nebo naopak nechat strhnout z {isICO ? 'faktury' : 'odměny'} (−). Po schválení HR se to
                 promítne do {isICO ? 'faktury' : 'odměny'} za daný měsíc. Doklad na sport najdeš pak i v záložce Benefity.
+                Po skončení měsíce se tu ukazuje zase jen nový, čistý měsíc — starší doklady najdeš v rozpisu daného
+                měsíce v přehledu níže.
               </p>
 
-              {myDocs.length > 0 && (
+              <p className="text-xs font-medium text-slate-500 mb-2">{MONTH_NAMES[now.getMonth()]} {now.getFullYear()}</p>
+
+              {myDocsThisMonth.length > 0 && (
                 <div className="divide-y divide-slate-50 border-t border-slate-100 mb-3">
-                  {myDocs.map((exp) => (
+                  {myDocsThisMonth.map((exp) => (
                     <div key={exp.id} className="py-3 flex items-center justify-between gap-3">
                       <div className="min-w-0">
                         <p className="text-sm text-navy truncate">{exp.title}</p>
