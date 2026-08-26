@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell } from 'lucide-react'
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
-import { DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, type BenefitType } from '@/lib/mock-data'
+import { DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES, type BenefitType } from '@/lib/mock-data'
 import { loadBenefitSelections, loadSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 
 const MONTH_NAMES = [
@@ -47,18 +47,18 @@ function PayslipRow({ p, isICO }: { p: Payslip; isICO: boolean }) {
             <span className="px-1.5 py-0.5 bg-violet/10 text-violet rounded text-xs">plánováno</span>
           )}
         </div>
-        <p className="text-xs text-slate-400 mt-0.5">Hrubá: {fmt(p.grossAmount, p.currency)}</p>
+        {!isICO && <p className="text-xs text-slate-400 mt-0.5">Hrubá: {fmt(p.grossAmount, p.currency)}</p>}
       </div>
       <div className="text-right">
         <p className={`text-sm font-bold ${p.planned ? 'text-violet' : 'text-navy'}`}>
           {fmt(p.netAmount, p.currency)}
         </p>
-        <p className="text-xs text-slate-400">čistá</p>
+        <p className="text-xs text-slate-400">{isICO ? 'odměna' : 'čistá'}</p>
       </div>
-      {!p.planned && (
+      {!p.planned && !isICO && (
         <button
           className="flex-shrink-0 p-2 text-slate-300 hover:text-violet rounded-full hover:bg-violet/5 transition-colors"
-          title={`Stáhnout ${isICO ? 'fakturu' : 'výplatní pásku'} — ${MONTH_NAMES[p.month - 1]} ${p.year} (demo)`}
+          title={`Stáhnout výplatní pásku — ${MONTH_NAMES[p.month - 1]} ${p.year} (demo)`}
         >
           <Download className="w-4 h-4" />
         </button>
@@ -77,7 +77,7 @@ function YearPanel({ year, payslips, isICO }: { year: number; payslips: Payslip[
     <div>
       {yearTotal > 0 && (
         <div className="px-6 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-sm">
-          <span className="text-slate-500">Celkem čistá za {year}</span>
+          <span className="text-slate-500">{isICO ? `Celkem odměna za ${year}` : `Celkem čistá za ${year}`}</span>
           <span className="font-semibold text-navy">{fmt(yearTotal, 'CZK')}</span>
         </div>
       )}
@@ -171,12 +171,14 @@ export function PayslipsClient({
               {isICO ? 'Poslední faktura' : 'Poslední výplata'} — {MONTH_NAMES[latestReal.month - 1]} {latestReal.year}
             </p>
             <div className="flex items-end gap-8 flex-wrap">
+              {!isICO && (
+                <div>
+                  <p className="text-white/50 text-xs mb-1">Hrubá mzda</p>
+                  <p className="text-xl font-headline font-semibold text-white/80">{fmt(latestReal.grossAmount, latestReal.currency)}</p>
+                </div>
+              )}
               <div>
-                <p className="text-white/50 text-xs mb-1">Hrubá mzda</p>
-                <p className="text-xl font-headline font-semibold text-white/80">{fmt(latestReal.grossAmount, latestReal.currency)}</p>
-              </div>
-              <div>
-                <p className="text-white/50 text-xs mb-1">Čistá mzda</p>
+                <p className="text-white/50 text-xs mb-1">{isICO ? 'Měsíční odměna' : 'Čistá mzda'}</p>
                 <p className="text-3xl font-headline font-bold text-white">{fmt(latestReal.netAmount, latestReal.currency)}</p>
               </div>
             </div>
@@ -197,23 +199,39 @@ export function PayslipsClient({
         </div>
       )}
 
-      {/* Rozpis odměny tento měsíc — hrubá mzda, benefit, nemoc, čistá k výplatě */}
-      {latestReal && (benefitType || (!isICO && sickDays > 0)) && (() => {
+      {/* Rozpis odměny tento měsíc — základ, doplňkové položky, benefit, nemoc, k výplatě */}
+      {latestReal && (isICO || benefitType || (!isICO && sickDays > 0)) && (() => {
         const sick = !isICO && sickDays > 0 ? computeSickPay(salaryInfo.currentSalary, sickDays) : null
         const benefitAmount =
           benefitType === 'SPORT_CONTRIBUTION' && approvedThisMonth ? SPORT_CONTRIBUTION_AMOUNT :
           benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
           0
-        const adjustedNet = latestReal.netAmount + benefitAmount - (sick?.deduction ?? 0)
+        const icoExpensesTotal = isICO ? ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0) : 0
+        const adjustedNet = latestReal.netAmount + benefitAmount + icoExpensesTotal - (sick?.deduction ?? 0)
 
         return (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
             <p className="text-sm font-semibold text-navy mb-3">Rozpis odměny — {MONTH_NAMES[latestReal.month - 1]} {latestReal.year}</p>
             <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-slate-500">Hrubá mzda</span>
-                <span className="font-medium text-navy">{fmt(latestReal.grossAmount, latestReal.currency)}</span>
-              </div>
+              {isICO ? (
+                <>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-slate-500">Měsíční paušál</span>
+                    <span className="font-medium text-navy">{fmt(latestReal.netAmount, latestReal.currency)}</span>
+                  </div>
+                  {ICO_MONTHLY_EXPENSES.map((e) => (
+                    <div key={e.label} className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500">{e.label}</span>
+                      <span className="font-medium text-green-600">+{fmt(e.amount, 'CZK')}</span>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500">Hrubá mzda</span>
+                  <span className="font-medium text-navy">{fmt(latestReal.grossAmount, latestReal.currency)}</span>
+                </div>
+              )}
 
               {benefitType === 'SPORT_CONTRIBUTION' && (
                 <div className="flex items-center justify-between gap-4">
@@ -270,7 +288,7 @@ export function PayslipsClient({
               )}
 
               <div className="flex items-center justify-between gap-4 pt-2.5 border-t border-slate-200">
-                <span className="text-navy font-semibold">Čistá k výplatě</span>
+                <span className="text-navy font-semibold">{isICO ? 'Odměna k fakturaci' : 'Čistá k výplatě'}</span>
                 <span className="font-bold text-navy">{fmt(adjustedNet, latestReal.currency)}</span>
               </div>
             </div>

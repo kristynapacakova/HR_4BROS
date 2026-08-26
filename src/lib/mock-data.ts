@@ -549,6 +549,12 @@ export const DEMO_LEAVE_REQUESTS = [
   { id: "3", type: "ANNUAL", startDate: new Date("2024-12-23"), endDate: new Date("2024-12-27"), status: "PENDING", reason: "Vánoce", note: null, createdAt: new Date("2024-11-01") },
 ]
 
+// Pravidelné měsíční položky přičítané k odměně OSVČ (nájem, občerstvení apod.)
+export const ICO_MONTHLY_EXPENSES = [
+  { label: "Nájem kancelářského místa", amount: 1500 },
+  { label: "Občerstvení", amount: 300 },
+]
+
 export const DEMO_PAYSLIPS = [
   // 2026 — future (planned salary, no payslip yet)
   { id: "f12", month: 12, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },

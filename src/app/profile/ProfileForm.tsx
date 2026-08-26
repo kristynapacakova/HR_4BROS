@@ -156,7 +156,9 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
             value={EMPLOYMENT_TYPES.find((t) => t.value === user.employmentType)?.label || user.employmentType || '—'}
             readOnly
           />
-          <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
+          {user.employmentType !== 'ICO' && (
+            <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
+          )}
           {teamMemberId && (
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1">16 Personalities</label>
