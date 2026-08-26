@@ -110,20 +110,23 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose, collapsed
           {!collapsed && <p className="text-slate-400 text-[11px] tracking-wide border-l border-slate-200 pl-3">HR Portál</p>}
         </div>
         {onClose && (
-          <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-navy p-1.5 rounded-lg transition-colors">
+          <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-navy p-1.5 rounded-lg transition-colors flex-shrink-0">
             <X className="w-4 h-4" />
           </button>
         )}
       </div>
 
-      {/* Collapse handle — floats on the sidebar's edge, desktop only */}
+      {/* Collapse toggle — its own row, desktop only */}
       {onToggleCollapsed && (
         <button
           onClick={onToggleCollapsed}
           title={collapsed ? 'Rozbalit menu' : 'Zúžit na ikonky'}
-          className="hidden lg:flex absolute top-9 -right-2.5 z-20 w-5 h-5 rounded-full bg-white border border-slate-200 items-center justify-center text-slate-400 hover:text-violet hover:border-violet/40 transition-colors"
+          className={cn(
+            'hidden lg:flex items-center gap-2 py-2.5 text-xs font-medium text-slate-400 hover:text-violet hover:bg-slate-50 border-b border-slate-100 transition-colors',
+            collapsed ? 'justify-center px-2' : 'px-5'
+          )}
         >
-          {collapsed ? <ChevronRight className="w-2.5 h-2.5" /> : <ChevronLeft className="w-2.5 h-2.5" />}
+          {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <><ChevronLeft className="w-3.5 h-3.5" /> Zúžit menu</>}
         </button>
       )}
 
