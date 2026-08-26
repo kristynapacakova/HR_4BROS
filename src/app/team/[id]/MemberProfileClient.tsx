@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ChevronLeft, ChevronRight, Cake, Briefcase, Users2, Camera, Pencil, Plus, X, Sparkles, HeartHandshake } from 'lucide-react'
+import { ArrowLeft, Cake, Briefcase, Users2, Camera, Pencil, Plus, X, Sparkles, HeartHandshake } from 'lucide-react'
 import {
   loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, PERSONALITY_TYPES,
   type TeamProfileOverride, type PhotoPosition,
@@ -55,50 +55,60 @@ function readFileAsDataUrl(file: File, maxSize: number, cb: (dataUrl: string) =>
   reader.readAsDataURL(file)
 }
 
-function SideNavTile({ member, override, direction }: {
-  member: { id: string; name: string; position: string; emoji: string }
-  override?: TeamProfileOverride
-  direction: 'prev' | 'next'
+function TeamStrip({ members, profiles, currentId }: {
+  members: { id: string; name: string; emoji: string }[]
+  profiles: Record<string, TeamProfileOverride>
+  currentId: string
 }) {
   return (
-    <Link
-      href={`/team/${member.id}`}
-      className="hidden sm:flex flex-shrink-0 flex-col items-center text-center gap-2 group mt-11"
-    >
-      <div className="relative w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden ring-2 ring-white shadow-md bg-[#F7F8FE] flex items-center justify-center group-hover:ring-violet/40 group-hover:scale-105 transition-all">
-        {override?.photo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={override.photo}
-            alt={member.name}
-            className="w-full h-full object-cover"
-            style={{
-              objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
-              transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
-            }}
-          />
-        ) : (
-          <span className="text-2xl">{member.emoji}</span>
-        )}
-      </div>
-      <p className="flex items-center justify-center gap-1 text-sm font-medium text-slate-600 leading-tight whitespace-nowrap group-hover:text-navy transition-colors">
-        {direction === 'prev' && <ChevronLeft className="w-3.5 h-3.5 flex-shrink-0" />}
-        <span>{member.name}</span>
-        {direction === 'next' && <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />}
-      </p>
-      <p className="text-[11px] text-slate-400 text-center leading-tight whitespace-nowrap">{member.position}</p>
-    </Link>
+    <div className="flex items-center gap-2.5 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+      {members.map((m) => {
+        const isCurrent = m.id === currentId
+        const override = profiles[m.id]
+        return (
+          <Link
+            key={m.id}
+            href={`/team/${m.id}`}
+            title={m.name}
+            className="group relative flex-shrink-0"
+          >
+            <div
+              className={`relative w-11 h-11 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center transition-all ${
+                isCurrent ? 'ring-2 ring-violet ring-offset-2' : 'ring-2 ring-white group-hover:ring-violet/40'
+              }`}
+            >
+              {override?.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={override.photo}
+                  alt={m.name}
+                  className="w-full h-full object-cover"
+                  style={{
+                    objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
+                    transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
+                  }}
+                />
+              ) : (
+                <span className="text-lg">{m.emoji}</span>
+              )}
+            </div>
+            <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 whitespace-nowrap bg-navy text-white text-[11px] rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+              {m.name}
+            </span>
+          </Link>
+        )
+      })}
+    </div>
   )
 }
 
 const INTEREST_SUGGESTIONS = ['Kafe ☕', 'Hory 🏔️', 'Knihy 📚', 'Běhání 🏃', 'Cestování ✈️', 'Vaření 🍳', 'Hudba 🎸', 'Deskovky 🎲']
 
 export function MemberProfileClient({
-  member, prev, next, viewerEmail,
+  member, allMembers, viewerEmail,
 }: {
   member: Member
-  prev: { id: string; name: string; position: string; emoji: string }
-  next: { id: string; name: string; position: string; emoji: string }
+  allMembers: { id: string; name: string; emoji: string }[]
   viewerEmail: string | null
 }) {
   const [profiles, setProfiles] = useState<Record<string, TeamProfileOverride>>({})
@@ -180,9 +190,12 @@ export function MemberProfileClient({
         <ArrowLeft className="w-4 h-4" /> Zpět na tým
       </Link>
 
-      <div className="flex items-start gap-3 lg:gap-5">
-        <SideNavTile member={prev} override={profiles[prev.id]} direction="prev" />
+      {/* Celý tým — klikni na kolečko pro přechod na jeho profil */}
+      <div className="mb-4">
+        <TeamStrip members={allMembers} profiles={profiles} currentId={member.id} />
+      </div>
 
+      <div className="flex items-start gap-3 lg:gap-5">
         {/* One cohesive profile card */}
         <div className="flex-1 min-w-0 bg-white rounded-2xl shadow-sm overflow-hidden">
           {/* Photo + name + badges */}
@@ -434,18 +447,6 @@ export function MemberProfileClient({
             </div>
           </div>
         </div>
-
-        <SideNavTile member={next} override={profiles[next.id]} direction="next" />
-      </div>
-
-      {/* Mobile prev/next row (side tiles hidden below sm) */}
-      <div className="flex sm:hidden items-center justify-between mt-4 px-1">
-        <Link href={`/team/${prev.id}`} className="flex items-center gap-1 text-sm text-slate-500 hover:text-navy transition-colors">
-          <ChevronLeft className="w-4 h-4" /> {prev.name.split(' ')[0]}
-        </Link>
-        <Link href={`/team/${next.id}`} className="flex items-center gap-1 text-sm text-slate-500 hover:text-navy transition-colors">
-          {next.name.split(' ')[0]} <ChevronRight className="w-4 h-4" />
-        </Link>
       </div>
 
       {positioning && override.photo && (

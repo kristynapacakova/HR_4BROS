@@ -16,8 +16,6 @@ export default async function TeamMemberPage({ params }: { params: { id: string 
   if (idx === -1) notFound()
 
   const member = sorted[idx]
-  const prev = sorted[(idx - 1 + sorted.length) % sorted.length]
-  const next = sorted[(idx + 1) % sorted.length]
 
   return (
     <AppShell
@@ -29,8 +27,7 @@ export default async function TeamMemberPage({ params }: { params: { id: string 
     >
       <MemberProfileClient
         member={member}
-        prev={{ id: prev.id, name: prev.name, position: prev.position, emoji: prev.emoji }}
-        next={{ id: next.id, name: next.name, position: next.position, emoji: next.emoji }}
+        allMembers={sorted.map((m) => ({ id: m.id, name: m.name, emoji: m.emoji }))}
         viewerEmail={session.user.email ?? null}
       />
     </AppShell>
