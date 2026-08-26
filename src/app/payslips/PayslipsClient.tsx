@@ -1,10 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell, Receipt, Upload, CheckCircle2, XCircle } from 'lucide-react'
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
-import { DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES, type BenefitType } from '@/lib/mock-data'
+import {
+  DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
+  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, type BenefitType, type ExpenseRequest,
+} from '@/lib/mock-data'
 import { loadBenefitSelections, loadSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
+import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
 
 const MONTH_NAMES = [
   'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
@@ -34,40 +38,111 @@ interface SalaryInfo {
   lastRaiseDate: Date
 }
 
-function PayslipRow({ p, isICO }: { p: Payslip; isICO: boolean }) {
+function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
+  p: Payslip
+  isICO: boolean
+  benefitType: BenefitType | null
+  sportRequests: { employeeId: string; month: number; year: number; status: string }[]
+  expenseRequests: ExpenseRequest[]
+}) {
+  const [open, setOpen] = useState(false)
+
+  const monthSportApproved = sportRequests.some(r =>
+    r.status === 'APPROVED' && r.month === p.month && r.year === p.year
+  )
+  const monthExpenses = expenseRequests.filter(e =>
+    e.status === 'APPROVED' && e.month === p.month && e.year === p.year
+  )
+  const sportAmount =
+    benefitType === 'SPORT_CONTRIBUTION' && monthSportApproved ? SPORT_CONTRIBUTION_AMOUNT :
+    benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
+    0
+  const icoExpensesTotal = isICO ? ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0) : 0
+  const monthExpensesTotal = monthExpenses.reduce((s, e) => s + e.amount, 0)
+  const hasBreakdown = isICO || sportAmount !== 0 || monthExpensesTotal !== 0
+
   return (
-    <div className={`px-6 py-4 flex items-center gap-4 transition-colors ${p.planned ? 'bg-violet/[0.02] hover:bg-violet/[0.04]' : 'hover:bg-slate-50'}`}>
-      <div className={`p-2.5 rounded-lg flex-shrink-0 ${p.planned ? 'bg-violet/10' : 'bg-alice'}`}>
-        <Banknote className={`w-5 h-5 ${p.planned ? 'text-violet' : 'text-navy'}`} />
-      </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-navy">{MONTH_NAMES[p.month - 1]} {p.year}</p>
-          {p.planned && (
-            <span className="px-1.5 py-0.5 bg-violet/10 text-violet rounded text-xs">plánováno</span>
-          )}
+    <div className={p.planned ? 'bg-violet/[0.02]' : ''}>
+      <button
+        type="button"
+        onClick={() => hasBreakdown && setOpen(o => !o)}
+        className={`w-full px-6 py-4 flex items-center gap-4 transition-colors text-left ${hasBreakdown ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+      >
+        <div className={`p-2.5 rounded-lg flex-shrink-0 ${p.planned ? 'bg-violet/10' : 'bg-alice'}`}>
+          <Banknote className={`w-5 h-5 ${p.planned ? 'text-violet' : 'text-navy'}`} />
         </div>
-        {!isICO && <p className="text-xs text-slate-400 mt-0.5">Hrubá: {fmt(p.grossAmount, p.currency)}</p>}
-      </div>
-      <div className="text-right">
-        <p className={`text-sm font-bold ${p.planned ? 'text-violet' : 'text-navy'}`}>
-          {fmt(p.netAmount, p.currency)}
-        </p>
-        <p className="text-xs text-slate-400">{isICO ? 'odměna' : 'čistá'}</p>
-      </div>
-      {!p.planned && !isICO && (
-        <button
-          className="flex-shrink-0 p-2 text-slate-300 hover:text-violet rounded-full hover:bg-violet/5 transition-colors"
-          title={`Stáhnout výplatní pásku — ${MONTH_NAMES[p.month - 1]} ${p.year} (demo)`}
-        >
-          <Download className="w-4 h-4" />
-        </button>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-medium text-navy">{MONTH_NAMES[p.month - 1]} {p.year}</p>
+            {p.planned && (
+              <span className="px-1.5 py-0.5 bg-violet/10 text-violet rounded text-xs">plánováno</span>
+            )}
+          </div>
+          {!isICO && <p className="text-xs text-slate-400 mt-0.5">Hrubá: {fmt(p.grossAmount, p.currency)}</p>}
+        </div>
+        <div className="text-right">
+          <p className={`text-sm font-bold ${p.planned ? 'text-violet' : 'text-navy'}`}>
+            {fmt(p.netAmount + icoExpensesTotal + sportAmount + monthExpensesTotal, p.currency)}
+          </p>
+          <p className="text-xs text-slate-400">{isICO ? 'odměna' : 'čistá'}</p>
+        </div>
+        {hasBreakdown && (
+          <ChevronDown className={`w-4 h-4 text-slate-300 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+        )}
+        {!p.planned && !isICO && (
+          <span
+            role="button"
+            onClick={(e) => { e.stopPropagation(); }}
+            className="flex-shrink-0 p-2 text-slate-300 hover:text-violet rounded-full hover:bg-violet/5 transition-colors"
+            title={`Stáhnout výplatní pásku — ${MONTH_NAMES[p.month - 1]} ${p.year} (demo)`}
+          >
+            <Download className="w-4 h-4" />
+          </span>
+        )}
+      </button>
+
+      {open && hasBreakdown && (
+        <div className="px-6 pb-4 -mt-1">
+          <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-1.5 text-sm">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-slate-500">{isICO ? 'Měsíční paušál' : 'Čistá mzda'}</span>
+              <span className="font-medium text-navy">{fmt(p.netAmount, p.currency)}</span>
+            </div>
+            {isICO && ICO_MONTHLY_EXPENSES.map((e) => (
+              <div key={e.label} className="flex items-center justify-between gap-4">
+                <span className="text-slate-500">{e.label}</span>
+                <span className="font-medium text-green-600">+{fmt(e.amount, 'CZK')}</span>
+              </div>
+            ))}
+            {sportAmount !== 0 && (
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-slate-500">{sportAmount > 0 ? 'Příspěvek na sport' : 'Multisport — doplatek nad příspěvek firmy'}</span>
+                <span className={`font-medium ${sportAmount > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                  {sportAmount > 0 ? '+' : '−'}{fmt(Math.abs(sportAmount), 'CZK')}
+                </span>
+              </div>
+            )}
+            {monthExpenses.map((exp) => (
+              <div key={exp.id} className="flex items-center justify-between gap-4">
+                <span className="text-slate-500">{exp.title}</span>
+                <span className="font-medium text-green-600">+{fmt(exp.amount, exp.currency)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )
 }
 
-function YearPanel({ year, payslips, isICO }: { year: number; payslips: Payslip[]; isICO: boolean }) {
+function YearPanel({ year, payslips, isICO, benefitType, sportRequests, expenseRequests }: {
+  year: number
+  payslips: Payslip[]
+  isICO: boolean
+  benefitType: BenefitType | null
+  sportRequests: { employeeId: string; month: number; year: number; status: string }[]
+  expenseRequests: ExpenseRequest[]
+}) {
   const byMonth = new Map(payslips.map(p => [p.month, p]))
   // Celý rok leden–prosinec, i pro měsíce bez záznamu
   const allMonths = Array.from({ length: 12 }, (_, i) => 12 - i).map(m => byMonth.get(m) ?? null)
@@ -94,7 +169,16 @@ function YearPanel({ year, payslips, isICO }: { year: number; payslips: Payslip[
               </div>
             )
           }
-          return <PayslipRow key={p.id} p={p} isICO={isICO} />
+          return (
+            <PayslipRow
+              key={p.id}
+              p={p}
+              isICO={isICO}
+              benefitType={benefitType}
+              sportRequests={sportRequests}
+              expenseRequests={expenseRequests}
+            />
+          )
         })}
       </div>
     </div>
@@ -108,6 +192,7 @@ export function PayslipsClient({
   pageTitle,
   sickDays = 0,
   employeeId,
+  employeeName,
 }: {
   payslips: Payslip[]
   salaryInfo: SalaryInfo
@@ -116,10 +201,18 @@ export function PayslipsClient({
   /** Dny nemoci v aktuálním měsíci — zobrazí rozpis srážky */
   sickDays?: number
   employeeId?: string
+  employeeName?: string
 }) {
   const [showSickDetail, setShowSickDetail] = useState(false)
   const [benefitType, setBenefitType] = useState<BenefitType | null>(null)
   const [approvedThisMonth, setApprovedThisMonth] = useState(false)
+  const [sportRequests, setSportRequests] = useState<{ employeeId: string; month: number; year: number; status: string }[]>([])
+  const [expenseRequests, setExpenseRequests] = useState<ExpenseRequest[]>([])
+  const [addingExpense, setAddingExpense] = useState(false)
+  const [expTitle, setExpTitle] = useState('')
+  const [expAmount, setExpAmount] = useState('')
+  const [expCategory, setExpCategory] = useState('REPREZENTACE')
+  const expFileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!employeeId) return
@@ -132,15 +225,51 @@ export function PayslipsClient({
         r.employeeId === employeeId && r.status === 'APPROVED' &&
         r.month === now.getMonth() + 1 && r.year === now.getFullYear()
       ))
+      setSportRequests(requests.filter(r => r.employeeId === employeeId))
+      setExpenseRequests(loadExpenseRequests(DEMO_EXPENSE_REQUESTS))
     }
     refresh()
     window.addEventListener(BENEFIT_CHANGED_EVENT, refresh)
+    window.addEventListener(EXPENSE_CHANGED_EVENT, refresh)
     window.addEventListener('storage', refresh)
     return () => {
       window.removeEventListener(BENEFIT_CHANGED_EVENT, refresh)
+      window.removeEventListener(EXPENSE_CHANGED_EVENT, refresh)
       window.removeEventListener('storage', refresh)
     }
   }, [employeeId])
+
+  const now = new Date()
+  const myExpenses = expenseRequests
+    .filter(r => r.employeeId === employeeId)
+    .sort((a, b) => b.requestedAt.localeCompare(a.requestedAt))
+  const approvedExpensesThisMonth = myExpenses.filter(r =>
+    r.status === 'APPROVED' && r.month === now.getMonth() + 1 && r.year === now.getFullYear()
+  )
+
+  const submitExpense = (e: React.FormEvent) => {
+    e.preventDefault()
+    const file = expFileRef.current?.files?.[0]
+    const amt = Number(expAmount)
+    if (!employeeId || !expTitle.trim() || !amt || amt <= 0 || !file) return
+    const newReq: ExpenseRequest = {
+      id: `exp-${Date.now()}`,
+      employeeId,
+      employeeName: employeeName ?? '',
+      title: expTitle.trim(),
+      amount: amt,
+      currency: 'CZK',
+      category: expCategory,
+      receiptName: file.name,
+      month: now.getMonth() + 1,
+      year: now.getFullYear(),
+      status: 'PENDING',
+      requestedAt: now.toISOString().slice(0, 10),
+    }
+    saveExpenseRequests([newReq, ...expenseRequests])
+    setExpTitle(''); setExpAmount(''); setExpCategory('REPREZENTACE'); setAddingExpense(false)
+    if (expFileRef.current) expFileRef.current.value = ''
+  }
 
   const sorted = [...payslips].sort((a, b) => (b.year - a.year) || (b.month - a.month))
 
@@ -200,14 +329,15 @@ export function PayslipsClient({
       )}
 
       {/* Rozpis odměny tento měsíc — základ, doplňkové položky, benefit, nemoc, k výplatě */}
-      {latestReal && (isICO || benefitType || (!isICO && sickDays > 0)) && (() => {
+      {latestReal && (isICO || benefitType || approvedExpensesThisMonth.length > 0 || (!isICO && sickDays > 0)) && (() => {
         const sick = !isICO && sickDays > 0 ? computeSickPay(salaryInfo.currentSalary, sickDays) : null
         const benefitAmount =
           benefitType === 'SPORT_CONTRIBUTION' && approvedThisMonth ? SPORT_CONTRIBUTION_AMOUNT :
           benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
           0
         const icoExpensesTotal = isICO ? ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0) : 0
-        const adjustedNet = latestReal.netAmount + benefitAmount + icoExpensesTotal - (sick?.deduction ?? 0)
+        const approvedExpensesTotal = approvedExpensesThisMonth.reduce((s, e) => s + e.amount, 0)
+        const adjustedNet = latestReal.netAmount + benefitAmount + icoExpensesTotal + approvedExpensesTotal - (sick?.deduction ?? 0)
 
         return (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
@@ -256,6 +386,16 @@ export function PayslipsClient({
                   </span>
                 </div>
               )}
+
+              {approvedExpensesThisMonth.map((exp) => (
+                <div key={exp.id} className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500 flex items-center gap-1.5">
+                    <Receipt className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                    {exp.title}
+                  </span>
+                  <span className="font-medium text-green-600">+{fmt(exp.amount, exp.currency)}</span>
+                </div>
+              ))}
 
               {sick && (
                 <div>
@@ -318,11 +458,121 @@ export function PayslipsClient({
         </div>
 
         {byYear[selectedYear] ? (
-          <YearPanel year={selectedYear} payslips={byYear[selectedYear]} isICO={isICO} />
+          <YearPanel
+            year={selectedYear}
+            payslips={byYear[selectedYear]}
+            isICO={isICO}
+            benefitType={benefitType}
+            sportRequests={sportRequests}
+            expenseRequests={myExpenses}
+          />
         ) : (
           <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
         )}
       </div>
+
+      {/* Proplacené výdaje — doklad na proplacení (oběd s klientem, taxi…), HR schvaluje */}
+      {employeeId && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+          <div className="flex items-center gap-2 mb-1">
+            <Receipt className="w-4 h-4 text-violet" />
+            <p className="text-sm font-semibold text-navy">Proplacené výdaje</p>
+          </div>
+          <p className="text-xs text-slate-400 mb-4">Nahraj doklad (oběd s klientem, taxi…) — po schválení HR se částka přičte k {isICO ? 'faktuře' : 'odměně'} za daný měsíc.</p>
+
+          {myExpenses.length > 0 && (
+            <div className="divide-y divide-slate-50 border-t border-slate-100 mb-3">
+              {myExpenses.map((exp) => (
+                <div key={exp.id} className="py-3 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm text-navy truncate">{exp.title}</p>
+                    <p className="text-[11px] text-slate-400">{exp.receiptName} · {MONTH_NAMES[exp.month - 1]} {exp.year}</p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="text-sm font-semibold text-navy">{fmt(exp.amount, exp.currency)}</span>
+                    {exp.status === 'APPROVED' && (
+                      <span className="flex items-center gap-1 text-[11px] font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
+                        <CheckCircle2 className="w-3 h-3" /> Schváleno
+                      </span>
+                    )}
+                    {exp.status === 'REJECTED' && (
+                      <span className="flex items-center gap-1 text-[11px] font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                        <XCircle className="w-3 h-3" /> Zamítnuto
+                      </span>
+                    )}
+                    {exp.status === 'PENDING' && (
+                      <span className="flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                        <Clock className="w-3 h-3" /> Čeká na HR
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!addingExpense ? (
+            <button
+              onClick={() => setAddingExpense(true)}
+              className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
+            >
+              <Upload className="w-4 h-4 flex-shrink-0" />
+              Nahrát doklad k proplacení
+            </button>
+          ) : (
+            <form onSubmit={submitExpense} className="space-y-3 pt-1">
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Co to bylo</label>
+                <input
+                  type="text"
+                  value={expTitle}
+                  onChange={(e) => setExpTitle(e.target.value)}
+                  placeholder="např. Oběd s klientem"
+                  required
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Částka (Kč)</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={expAmount}
+                    onChange={(e) => setExpAmount(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Kategorie</label>
+                  <select
+                    value={expCategory}
+                    onChange={(e) => setExpCategory(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                  >
+                    {EXPENSE_CATEGORIES.map((c) => (
+                      <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Doklad</label>
+                <input ref={expFileRef} type="file" accept="image/*,.pdf" required className="w-full text-sm" />
+              </div>
+              <div className="flex items-center gap-2">
+                <button type="submit" className="px-4 py-2 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
+                  Odeslat ke schválení
+                </button>
+                <button type="button" onClick={() => setAddingExpense(false)} className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-navy transition-colors">
+                  Zrušit
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      )}
     </div>
   )
 }

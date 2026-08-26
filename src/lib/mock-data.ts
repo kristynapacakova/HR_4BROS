@@ -187,11 +187,31 @@ export const DEMO_TASKS = [
 ]
 
 // ── Expense / Reimbursement Requests ──────────────────────────────────────
+// Zaměstnanec/OSVČ nahraje doklad (oběd s klientem, taxi apod.), HR schválí,
+// po schválení se částka přičte k odměně/faktuře za daný měsíc.
+// (DEMO_EXPENSE_REQUESTS is defined further below, after DEMO_USER/DEMO_USER_ICO.)
 
-export const DEMO_EXPENSE_REQUESTS = [
-  { id: "exp1", title: "Taxi na klientské jednání", amount: 350,  currency: "CZK", submittedAt: new Date("2026-05-28"), status: "PENDING",  category: "CESTOVNÉ" },
-  { id: "exp2", title: "Oběd s klientem",           amount: 890,  currency: "CZK", submittedAt: new Date("2026-05-20"), status: "APPROVED", category: "REPREZENTACE" },
-  { id: "exp3", title: "Nákup knih – školení",       amount: 1250, currency: "CZK", submittedAt: new Date("2026-05-10"), status: "APPROVED", category: "VZDĚLÁVÁNÍ" },
+export interface ExpenseRequest {
+  id: string
+  employeeId: string
+  employeeName: string
+  title: string
+  amount: number
+  currency: string
+  category: string
+  receiptName: string
+  month: number
+  year: number
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  requestedAt: string
+  seenByEmployee?: boolean
+}
+
+export const EXPENSE_CATEGORIES = [
+  { value: "REPREZENTACE", label: "Reprezentace (oběd, kafe s klientem…)" },
+  { value: "CESTOVNÉ", label: "Cestovné" },
+  { value: "VZDĚLÁVÁNÍ", label: "Vzdělávání" },
+  { value: "JINE", label: "Jiné" },
 ]
 
 // ── Salary Raise Info ─────────────────────────────────────────────────────
@@ -397,6 +417,11 @@ export const DEMO_USER_ICO = {
   monthlySalary: null as number | null,
   hourlyRate: 1200,
 }
+
+export const DEMO_EXPENSE_REQUESTS: ExpenseRequest[] = [
+  { id: "exp1", employeeId: DEMO_USER.id, employeeName: DEMO_USER.name, title: "Taxi na klientské jednání", amount: 350, currency: "CZK", category: "CESTOVNÉ", receiptName: "uctenka_taxi.pdf", month: 8, year: 2026, status: "PENDING", requestedAt: "2026-08-20" },
+  { id: "exp2", employeeId: DEMO_USER_ICO.id, employeeName: DEMO_USER_ICO.name, title: "Oběd s klientem", amount: 890, currency: "CZK", category: "REPREZENTACE", receiptName: "uctenka_obed.jpg", month: 7, year: 2026, status: "APPROVED", requestedAt: "2026-07-20" },
+]
 
 // Resolves which demo user record a logged-in session maps to, by id.
 export function getDemoUserById(id: string) {
