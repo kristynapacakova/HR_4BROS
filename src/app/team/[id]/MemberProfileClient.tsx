@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Cake, Briefcase, Users2, Camera, Pencil, Plus, X, Sparkles, HeartHandshake } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Cake, Briefcase, Users2, Camera, Pencil, Plus, X, Sparkles, HeartHandshake } from 'lucide-react'
 import {
   loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, PERSONALITY_TYPES,
   type TeamProfileOverride, type PhotoPosition,
@@ -60,44 +60,68 @@ function TeamStrip({ members, profiles, currentId }: {
   profiles: Record<string, TeamProfileOverride>
   currentId: string
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const scroll = (dir: 1 | -1) => {
+    scrollRef.current?.scrollBy({ left: dir * 280, behavior: 'smooth' })
+  }
+
   return (
-    <div className="flex items-center gap-2.5 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
-      {members.map((m) => {
-        const isCurrent = m.id === currentId
-        const override = profiles[m.id]
-        return (
-          <Link
-            key={m.id}
-            href={`/team/${m.id}`}
-            title={m.name}
-            className="group relative flex-shrink-0"
-          >
-            <div
-              className={`relative w-11 h-11 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center transition-all ${
-                isCurrent ? 'ring-2 ring-violet ring-offset-2' : 'ring-2 ring-white group-hover:ring-violet/40'
-              }`}
+    <div className="relative flex items-center gap-1">
+      <button
+        onClick={() => scroll(-1)}
+        className="hidden sm:flex flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 items-center justify-center text-slate-400 hover:text-violet hover:border-violet/40 transition-colors"
+        aria-label="Posunout doleva"
+      >
+        <ChevronLeft className="w-4 h-4" />
+      </button>
+
+      <div ref={scrollRef} className="flex items-start gap-4 overflow-x-auto py-2 px-1 scrollbar-none scroll-smooth">
+        {members.map((m) => {
+          const isCurrent = m.id === currentId
+          const override = profiles[m.id]
+          return (
+            <Link
+              key={m.id}
+              href={`/team/${m.id}`}
+              title={m.name}
+              className="group relative flex-shrink-0 flex flex-col items-center gap-1.5 w-16"
             >
-              {override?.photo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={override.photo}
-                  alt={m.name}
-                  className="w-full h-full object-cover"
-                  style={{
-                    objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
-                    transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
-                  }}
-                />
-              ) : (
-                <span className="text-lg">{m.emoji}</span>
-              )}
-            </div>
-            <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 whitespace-nowrap bg-navy text-white text-[11px] rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-              {m.name}
-            </span>
-          </Link>
-        )
-      })}
+              <div
+                className={`relative w-16 h-16 rounded-full overflow-hidden bg-[#F7F8FE] flex items-center justify-center transition-all ${
+                  isCurrent ? 'ring-2 ring-violet ring-offset-2' : 'ring-2 ring-white group-hover:ring-violet/40'
+                }`}
+              >
+                {override?.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={override.photo}
+                    alt={m.name}
+                    className="w-full h-full object-cover"
+                    style={{
+                      objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
+                      transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
+                    }}
+                  />
+                ) : (
+                  <span className="text-2xl">{m.emoji}</span>
+                )}
+              </div>
+              <span className="text-[11px] text-slate-500 text-center leading-tight truncate w-full group-hover:text-navy transition-colors">
+                {m.name.split(' ')[0]}
+              </span>
+            </Link>
+          )
+        })}
+      </div>
+
+      <button
+        onClick={() => scroll(1)}
+        className="hidden sm:flex flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 items-center justify-center text-slate-400 hover:text-violet hover:border-violet/40 transition-colors"
+        aria-label="Posunout doprava"
+      >
+        <ChevronRight className="w-4 h-4" />
+      </button>
     </div>
   )
 }
