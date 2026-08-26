@@ -589,6 +589,15 @@ export const ICO_MONTHLY_EXPENSES = [
   { label: "Občerstvení", amount: 300 },
 ]
 
+// Připraveno pro budoucí napojení na Fakturoid + firemní e-mail — zatím HR nastavuje ručně.
+export type InvoicePaymentStatus = 'NEZAPLACENO' | 'CEKA_NA_UHRADU' | 'ZAPLACENO'
+
+export const INVOICE_STATUS_LABELS: Record<InvoicePaymentStatus, string> = {
+  NEZAPLACENO: 'Nezaplaceno',
+  CEKA_NA_UHRADU: 'Čeká na úhradu',
+  ZAPLACENO: 'Zaplaceno',
+}
+
 export const DEMO_PAYSLIPS = [
   // 2026 — future (planned salary, no payslip yet)
   { id: "f12", month: 12, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },

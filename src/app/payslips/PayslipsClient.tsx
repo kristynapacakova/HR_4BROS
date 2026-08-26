@@ -5,10 +5,11 @@ import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbe
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
-  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, type BenefitType, type ExpenseRequest, type SportBenefitRequest,
+  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, INVOICE_STATUS_LABELS, type BenefitType, type ExpenseRequest, type SportBenefitRequest, type InvoicePaymentStatus,
 } from '@/lib/mock-data'
 import { loadBenefitSelections, loadSportRequests, saveSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
+import { loadInvoiceStatuses, invoiceStatusKey, INVOICE_STATUS_CHANGED_EVENT } from '@/lib/invoice-status-client'
 
 const MONTH_NAMES = [
   'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
@@ -213,6 +214,7 @@ export function PayslipsClient({
   const [benefitType, setBenefitType] = useState<BenefitType | null>(null)
   const [approvedThisMonth, setApprovedThisMonth] = useState(false)
   const [allSportRequests, setAllSportRequests] = useState<SportBenefitRequest[]>([])
+  const [invoiceStatuses, setInvoiceStatuses] = useState<Record<string, InvoicePaymentStatus>>({})
   const [expenseRequests, setExpenseRequests] = useState<ExpenseRequest[]>([])
   const [addingExpense, setAddingExpense] = useState(false)
   const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null)
@@ -238,6 +240,7 @@ export function PayslipsClient({
         r.month === now.getMonth() + 1 && r.year === now.getFullYear()
       ))
       setAllSportRequests(requests)
+      setInvoiceStatuses(loadInvoiceStatuses())
       const allExpenses = loadExpenseRequests(DEMO_EXPENSE_REQUESTS)
       setExpenseRequests(allExpenses)
       setExpSectionTouched((touched) => {
@@ -252,10 +255,12 @@ export function PayslipsClient({
     refresh()
     window.addEventListener(BENEFIT_CHANGED_EVENT, refresh)
     window.addEventListener(EXPENSE_CHANGED_EVENT, refresh)
+    window.addEventListener(INVOICE_STATUS_CHANGED_EVENT, refresh)
     window.addEventListener('storage', refresh)
     return () => {
       window.removeEventListener(BENEFIT_CHANGED_EVENT, refresh)
       window.removeEventListener(EXPENSE_CHANGED_EVENT, refresh)
+      window.removeEventListener(INVOICE_STATUS_CHANGED_EVENT, refresh)
       window.removeEventListener('storage', refresh)
     }
   }, [employeeId])
@@ -646,12 +651,25 @@ export function PayslipsClient({
                     <span className="text-slate-500">Měsíční paušál</span>
                     <span className="font-medium text-navy">{fmt(latestReal.netAmount, latestReal.currency)}</span>
                   </div>
-                  {ICO_MONTHLY_EXPENSES.map((e) => (
-                    <div key={e.label} className="flex items-center justify-between gap-4">
-                      <span className="text-slate-500">{e.label}</span>
-                      <span className="font-medium text-green-600">+{fmt(e.amount, 'CZK')}</span>
-                    </div>
-                  ))}
+                  {ICO_MONTHLY_EXPENSES.map((e) => {
+                    const status = employeeId ? invoiceStatuses[invoiceStatusKey(employeeId, latestReal.month, latestReal.year)] ?? 'NEZAPLACENO' : 'NEZAPLACENO'
+                    const statusStyle =
+                      status === 'ZAPLACENO' ? 'bg-green-50 text-green-700' :
+                      status === 'CEKA_NA_UHRADU' ? 'bg-amber-50 text-amber-700' :
+                      'bg-slate-100 text-slate-500'
+                    return (
+                      <div key={e.label} className="flex items-center justify-between gap-4">
+                        <span className="text-slate-500 flex items-center gap-1.5 flex-wrap">
+                          {e.label}
+                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${statusStyle}`}>{INVOICE_STATUS_LABELS[status]}</span>
+                        </span>
+                        <span className="font-medium text-green-600 flex-shrink-0">+{fmt(e.amount, 'CZK')}</span>
+                      </div>
+                    )
+                  })}
+                  <p className="text-[10px] text-slate-400">
+                    Stav platby zatím nastavuje HR ručně — časem se propíše z Fakturoidu.
+                  </p>
                 </>
               ) : (
                 <div className="flex items-center justify-between gap-4">
