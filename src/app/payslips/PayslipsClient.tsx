@@ -267,6 +267,19 @@ export function PayslipsClient({
   const myExpensesThisMonth = myExpenses.filter(r => r.month === now.getMonth() + 1 && r.year === now.getFullYear())
   const approvedExpensesThisMonth = myExpensesThisMonth.filter(r => r.status === 'APPROVED')
 
+  // Sjednocený seznam dokladů (obecné výdaje + doklady na sport) — vidět hned po odeslání, se stavem.
+  const myDocs = [
+    ...myExpenses.map((e) => ({
+      id: e.id, title: e.title, receiptName: e.receiptName, month: e.month, year: e.year,
+      amount: e.amount, sign: e.sign, currency: e.currency, status: e.status, requestedAt: e.requestedAt,
+    })),
+    ...sportRequests.map((r) => ({
+      id: r.id, title: 'Příspěvek na sport', receiptName: r.receiptName, month: r.month, year: r.year,
+      amount: SPORT_CONTRIBUTION_AMOUNT, sign: 'PLUS' as const, currency: 'CZK', status: r.status, requestedAt: r.requestedAt,
+    })),
+  ].sort((a, b) => b.requestedAt.localeCompare(a.requestedAt))
+  const myDocsThisMonth = myDocs.filter((d) => d.month === now.getMonth() + 1 && d.year === now.getFullYear())
+
   const submitExpense = (e: React.FormEvent) => {
     e.preventDefault()
     const file = expFileRef.current?.files?.[0]
@@ -378,8 +391,8 @@ export function PayslipsClient({
             <div className="flex items-center gap-2">
               <Receipt className="w-4 h-4 text-violet flex-shrink-0" />
               <p className="text-sm font-semibold text-navy">Doklady k proplacení</p>
-              {myExpensesThisMonth.length > 0 && (
-                <span className="bg-violet/10 text-violet text-xs font-medium px-2 py-0.5 rounded-full">{myExpensesThisMonth.length}</span>
+              {myDocsThisMonth.length > 0 && (
+                <span className="bg-violet/10 text-violet text-xs font-medium px-2 py-0.5 rounded-full">{myDocsThisMonth.length}</span>
               )}
             </div>
             <ChevronDown className={`w-4 h-4 text-slate-300 flex-shrink-0 transition-transform ${expSectionOpen ? 'rotate-180' : ''}`} />
@@ -393,9 +406,9 @@ export function PayslipsClient({
                 promítne do {isICO ? 'faktury' : 'odměny'} za daný měsíc. Doklad na sport najdeš pak i v záložce Benefity.
               </p>
 
-              {myExpenses.length > 0 && (
+              {myDocs.length > 0 && (
                 <div className="divide-y divide-slate-50 border-t border-slate-100 mb-3">
-                  {myExpenses.map((exp) => (
+                  {myDocs.map((exp) => (
                     <div key={exp.id} className="py-3 flex items-center justify-between gap-3">
                       <div className="min-w-0">
                         <p className="text-sm text-navy truncate">{exp.title}</p>
