@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell, Receipt, Upload, CheckCircle2, XCircle } from 'lucide-react'
+import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell, Receipt, Upload, CheckCircle2, XCircle, Trash2, Pencil } from 'lucide-react'
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
@@ -215,6 +215,7 @@ export function PayslipsClient({
   const [allSportRequests, setAllSportRequests] = useState<SportBenefitRequest[]>([])
   const [expenseRequests, setExpenseRequests] = useState<ExpenseRequest[]>([])
   const [addingExpense, setAddingExpense] = useState(false)
+  const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null)
   const [expTitle, setExpTitle] = useState('')
   const [expAmount, setExpAmount] = useState('')
   const [expCategory, setExpCategory] = useState('SPORT')
@@ -270,21 +271,67 @@ export function PayslipsClient({
   // Sjednocený seznam dokladů (obecné výdaje + doklady na sport) — vidět hned po odeslání, se stavem.
   const myDocs = [
     ...myExpenses.map((e) => ({
-      id: e.id, title: e.title, receiptName: e.receiptName, month: e.month, year: e.year,
+      kind: 'expense' as const, id: e.id, title: e.title, receiptName: e.receiptName, month: e.month, year: e.year,
       amount: e.amount, sign: e.sign, currency: e.currency, status: e.status, requestedAt: e.requestedAt,
     })),
     ...sportRequests.map((r) => ({
-      id: r.id, title: 'Příspěvek na sport', receiptName: r.receiptName, month: r.month, year: r.year,
+      kind: 'sport' as const, id: r.id, title: 'Příspěvek na sport', receiptName: r.receiptName, month: r.month, year: r.year,
       amount: SPORT_CONTRIBUTION_AMOUNT, sign: 'PLUS' as const, currency: 'CZK', status: r.status, requestedAt: r.requestedAt,
     })),
   ].sort((a, b) => b.requestedAt.localeCompare(a.requestedAt))
   const myDocsThisMonth = myDocs.filter((d) => d.month === now.getMonth() + 1 && d.year === now.getFullYear())
 
+  const resetExpenseForm = () => {
+    setExpTitle(''); setExpAmount(''); setExpCategory('SPORT'); setExpSign('PLUS')
+    setExpMonth(new Date().getMonth() + 1); setExpYear(new Date().getFullYear())
+    setAddingExpense(false); setEditingExpenseId(null)
+    if (expFileRef.current) expFileRef.current.value = ''
+  }
+
+  const startEditExpense = (exp: ExpenseRequest) => {
+    setEditingExpenseId(exp.id)
+    setExpTitle(exp.title)
+    setExpAmount(String(exp.amount))
+    setExpCategory(exp.category)
+    setExpSign(exp.sign)
+    setExpMonth(exp.month)
+    setExpYear(exp.year)
+    setAddingExpense(true)
+  }
+
+  const deleteExpense = (id: string) => {
+    saveExpenseRequests(expenseRequests.filter((r) => r.id !== id))
+  }
+
+  const deleteSportDoc = (id: string) => {
+    saveSportRequests(allSportRequests.filter((r) => r.id !== id))
+  }
+
   const submitExpense = (e: React.FormEvent) => {
     e.preventDefault()
     const file = expFileRef.current?.files?.[0]
     const amt = Number(expAmount)
-    if (!employeeId || !expTitle.trim() || !amt || amt <= 0 || !file) return
+    if (!employeeId || !expTitle.trim() || !amt || amt <= 0) return
+
+    if (editingExpenseId) {
+      const existing = expenseRequests.find((r) => r.id === editingExpenseId)
+      if (!existing) return
+      const updated: ExpenseRequest = {
+        ...existing,
+        title: expTitle.trim(),
+        amount: amt,
+        sign: expSign,
+        category: expCategory,
+        month: expMonth,
+        year: expYear,
+        receiptName: file ? file.name : existing.receiptName,
+      }
+      saveExpenseRequests(expenseRequests.map((r) => (r.id === editingExpenseId ? updated : r)))
+      resetExpenseForm()
+      return
+    }
+
+    if (!file) return
 
     if (expCategory === 'SPORT') {
       // Doklad na příspěvek na sport patří do benefitů, ne mezi obecné výdaje.
@@ -317,10 +364,7 @@ export function PayslipsClient({
       }
       saveExpenseRequests([newReq, ...expenseRequests])
     }
-    setExpTitle(''); setExpAmount(''); setExpCategory('SPORT'); setExpSign('PLUS')
-    setExpMonth(new Date().getMonth() + 1); setExpYear(new Date().getFullYear())
-    setAddingExpense(false)
-    if (expFileRef.current) expFileRef.current.value = ''
+    resetExpenseForm()
   }
 
   const sorted = [...payslips].sort((a, b) => (b.year - a.year) || (b.month - a.month))
@@ -429,9 +473,32 @@ export function PayslipsClient({
                           </span>
                         )}
                         {exp.status === 'PENDING' && (
-                          <span className="flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                            <Clock className="w-3 h-3" /> Čeká na HR
-                          </span>
+                          <>
+                            <span className="flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                              <Clock className="w-3 h-3" /> Čeká na HR
+                            </span>
+                            {exp.kind === 'expense' && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const full = expenseRequests.find((r) => r.id === exp.id)
+                                  if (full) startEditExpense(full)
+                                }}
+                                className="p-1.5 text-slate-300 hover:text-violet rounded-full hover:bg-violet/5 transition-colors"
+                                title="Upravit"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => (exp.kind === 'expense' ? deleteExpense(exp.id) : deleteSportDoc(exp.id))}
+                              className="p-1.5 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
+                              title="Smazat"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>
@@ -504,7 +571,7 @@ export function PayslipsClient({
                         onChange={(e) => setExpCategory(e.target.value)}
                         className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                       >
-                        {EXPENSE_CATEGORIES.map((c) => (
+                        {EXPENSE_CATEGORIES.filter((c) => !editingExpenseId || c.value !== 'SPORT').map((c) => (
                           <option key={c.value} value={c.value}>{c.label}</option>
                         ))}
                       </select>
@@ -534,14 +601,16 @@ export function PayslipsClient({
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Doklad</label>
-                    <input ref={expFileRef} type="file" accept="image/*,.pdf" required className="w-full text-sm" />
+                    <label className="block text-xs font-medium text-slate-500 mb-1">
+                      Doklad{editingExpenseId ? ' (nech prázdné, pokud měníš jen ostatní údaje)' : ''}
+                    </label>
+                    <input ref={expFileRef} type="file" accept="image/*,.pdf" required={!editingExpenseId} className="w-full text-sm" />
                   </div>
                   <div className="flex items-center gap-2">
                     <button type="submit" className="px-4 py-2 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
-                      Odeslat ke schválení
+                      {editingExpenseId ? 'Uložit změny' : 'Odeslat ke schválení'}
                     </button>
-                    <button type="button" onClick={() => setAddingExpense(false)} className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-navy transition-colors">
+                    <button type="button" onClick={resetExpenseForm} className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-navy transition-colors">
                       Zrušit
                     </button>
                   </div>
