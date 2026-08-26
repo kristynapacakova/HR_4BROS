@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import { VersionWatcher } from './VersionWatcher'
+import { DEMO_TEAM } from '@/lib/mock-data'
 
 const COLLAPSED_KEY = 'fb-sidebar-collapsed'
 
@@ -24,6 +25,10 @@ export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, 
   useEffect(() => {
     try { setCollapsed(localStorage.getItem(COLLAPSED_KEY) === '1') } catch { /* noop */ }
   }, [])
+
+  const teamMemberId = userEmail
+    ? DEMO_TEAM.find((m) => m.email.toLowerCase() === userEmail.toLowerCase())?.id
+    : undefined
 
   const toggleCollapsed = () => {
     setCollapsed((c) => {
@@ -67,6 +72,7 @@ export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, 
           title={title}
           onMenuClick={() => setSidebarOpen(true)}
           userName={userName}
+          teamMemberId={teamMemberId}
         />
         <main className="flex-1 overflow-y-auto p-5 lg:p-7">
           {children}

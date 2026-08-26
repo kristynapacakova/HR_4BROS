@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { formatDate } from '@/lib/utils'
-import { DEMO_USER, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_LEAVE_REQUESTS, getDemoUserById } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_TEAM, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_LEAVE_REQUESTS, getDemoUserById } from '@/lib/mock-data'
 import { ProfileTabs } from './ProfileTabs'
 import { AvatarUpload } from '@/components/AvatarUpload'
 import { PayslipsClient } from '@/app/payslips/PayslipsClient'
@@ -17,6 +17,7 @@ export default async function ProfilePage() {
   const user = getDemoUserById(session.user.id)
 
   const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === user.id)
+  const teamMemberId = DEMO_TEAM.find((m) => m.email.toLowerCase() === user.email.toLowerCase())?.id
 
   const payslipsLabel = 'Moje odměna'
 
@@ -45,7 +46,7 @@ export default async function ProfilePage() {
         {/* Profile header */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="flex items-center gap-5">
-            <AvatarUpload initial={user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()} />
+            <AvatarUpload initial={user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()} teamMemberId={teamMemberId} />
             <div>
               <h2 className="text-xl font-headline font-bold text-navy">{user.name || '—'}</h2>
               <p className="text-slate-500 text-sm">{user.position || '—'}</p>

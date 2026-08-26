@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Camera } from 'lucide-react'
+import { loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, type PhotoPosition } from '@/lib/team-profile-client'
 
 const AVATAR_KEY = 'fb-avatar'
 
@@ -11,7 +12,7 @@ function processFile(file: File, cb: (dataUrl: string) => void) {
   const reader = new FileReader()
   reader.onload = () => {
     img.onload = () => {
-      const size = 160
+      const size = 400
       const canvas = document.createElement('canvas')
       canvas.width = size; canvas.height = size
       const ctx = canvas.getContext('2d')!
@@ -24,21 +25,44 @@ function processFile(file: File, cb: (dataUrl: string) => void) {
   reader.readAsDataURL(file)
 }
 
-export function AvatarUpload({ initial }: { initial: string }) {
-  const [avatar, setAvatar] = useState<string | null>(null)
+function readAvatar(teamMemberId?: string): { photo: string | null; pos?: PhotoPosition } {
+  if (teamMemberId) {
+    const override = loadTeamProfiles()[teamMemberId]
+    if (override?.photo) return { photo: override.photo, pos: override.photoPos }
+  }
+  try {
+    return { photo: localStorage.getItem(AVATAR_KEY) }
+  } catch {
+    return { photo: null }
+  }
+}
+
+/** Profilová fotka je sdílená s medailonkem v Týmu Four Bros — jedna fotka pro obě místa. */
+export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamMemberId?: string }) {
+  const [avatar, setAvatar] = useState<{ photo: string | null; pos?: PhotoPosition }>({ photo: null })
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    try { setAvatar(localStorage.getItem(AVATAR_KEY)) } catch { /* noop */ }
-  }, [])
+    const refresh = () => setAvatar(readAvatar(teamMemberId))
+    refresh()
+    window.addEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+    window.addEventListener('fb-avatar-changed', refresh)
+    return () => {
+      window.removeEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+      window.removeEventListener('fb-avatar-changed', refresh)
+    }
+  }, [teamMemberId])
 
   const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     processFile(file, dataUrl => {
-      try { localStorage.setItem(AVATAR_KEY, dataUrl) } catch { /* noop */ }
-      setAvatar(dataUrl)
-      window.dispatchEvent(new Event('fb-avatar-changed'))
+      if (teamMemberId) {
+        saveTeamProfile(teamMemberId, { photo: dataUrl, photoPos: { x: 50, y: 50, zoom: 100 } })
+      } else {
+        try { localStorage.setItem(AVATAR_KEY, dataUrl) } catch { /* noop */ }
+        window.dispatchEvent(new Event('fb-avatar-changed'))
+      }
     })
     e.target.value = ''
   }
@@ -51,9 +75,17 @@ export function AvatarUpload({ initial }: { initial: string }) {
       title="Změnit profilovou fotku"
     >
       <div className="absolute -inset-1 rounded-full opacity-30" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }} />
-      {avatar ? (
+      {avatar.photo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={avatar} alt="Profilová fotka" className="relative w-16 h-16 rounded-full object-cover" />
+        <img
+          src={avatar.photo}
+          alt="Profilová fotka"
+          className="relative w-16 h-16 rounded-full object-cover"
+          style={avatar.pos ? {
+            objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
+            transform: `scale(${avatar.pos.zoom / 100})`,
+          } : undefined}
+        />
       ) : (
         <div className="relative w-16 h-16 bg-navy rounded-full flex items-center justify-center">
           <span className="text-white font-headline text-2xl font-bold">{initial}</span>
@@ -67,16 +99,20 @@ export function AvatarUpload({ initial }: { initial: string }) {
   )
 }
 
-/** Small read-only avatar used in the top header — follows the uploaded photo. */
-export function HeaderAvatar({ initial }: { initial: string }) {
-  const [avatar, setAvatar] = useState<string | null>(null)
+/** Small read-only avatar used in the top header — follows the same photo as Můj účet a medailonek v Týmu. */
+export function HeaderAvatar({ initial, teamMemberId }: { initial: string; teamMemberId?: string }) {
+  const [avatar, setAvatar] = useState<{ photo: string | null; pos?: PhotoPosition }>({ photo: null })
 
   useEffect(() => {
-    const read = () => { try { setAvatar(localStorage.getItem(AVATAR_KEY)) } catch { /* noop */ } }
-    read()
-    window.addEventListener('fb-avatar-changed', read)
-    return () => window.removeEventListener('fb-avatar-changed', read)
-  }, [])
+    const refresh = () => setAvatar(readAvatar(teamMemberId))
+    refresh()
+    window.addEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+    window.addEventListener('fb-avatar-changed', refresh)
+    return () => {
+      window.removeEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+      window.removeEventListener('fb-avatar-changed', refresh)
+    }
+  }, [teamMemberId])
 
   return (
     <div className="relative flex-shrink-0">
@@ -84,9 +120,17 @@ export function HeaderAvatar({ initial }: { initial: string }) {
         className="absolute -inset-0.5 rounded-full opacity-40"
         style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(4px)' }}
       />
-      {avatar ? (
+      {avatar.photo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={avatar} alt="" className="relative w-8 h-8 rounded-full object-cover ring-2 ring-white" />
+        <img
+          src={avatar.photo}
+          alt=""
+          className="relative w-8 h-8 rounded-full object-cover ring-2 ring-white"
+          style={avatar.pos ? {
+            objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
+            transform: `scale(${avatar.pos.zoom / 100})`,
+          } : undefined}
+        />
       ) : (
         <div className="relative w-8 h-8 bg-violet rounded-full flex items-center justify-center ring-2 ring-white">
           <span className="text-white text-xs font-semibold">{initial}</span>
