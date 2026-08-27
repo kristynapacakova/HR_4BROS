@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell, Receipt, Upload, CheckCircle2, XCircle, Trash2, Pencil } from 'lucide-react'
+import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell, Receipt, Upload, CheckCircle2, XCircle, Trash2, Pencil, Plane } from 'lucide-react'
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
@@ -359,6 +359,7 @@ export function PayslipsClient({
   employmentType,
   pageTitle,
   sickDays = 0,
+  vacationDays = 0,
   employeeId,
   employeeName,
   icoExpenses = ICO_MONTHLY_EXPENSES,
@@ -369,6 +370,8 @@ export function PayslipsClient({
   pageTitle: string
   /** Dny nemoci v aktuálním měsíci — zobrazí rozpis srážky */
   sickDays?: number
+  /** Dny dovolené v aktuálním měsíci — zobrazí info, že se nijak neodečítají ze mzdy */
+  vacationDays?: number
   employeeId?: string
   employeeName?: string
   /** Individuální měsíční položky OSVČ (nájem kancelářského místa, občerstvení) — liší se člověk od člověka */
@@ -795,7 +798,7 @@ export function PayslipsClient({
       )}
 
       {/* Rozpis odměny tento měsíc — základ, doplňkové položky, benefit, nemoc, k výplatě */}
-      {latestReal && (isICO || benefitType || approvedExpensesThisMonth.length > 0 || (!isICO && sickDays > 0)) && (() => {
+      {latestReal && (isICO || benefitType || approvedExpensesThisMonth.length > 0 || (!isICO && (sickDays > 0 || vacationDays > 0))) && (() => {
         const sick = !isICO && sickDays > 0 ? computeSickPay(salaryInfo.currentSalary, sickDays) : null
         const benefitAmount =
           benefitType === 'SPORT_CONTRIBUTION' && approvedThisMonth ? SPORT_CONTRIBUTION_AMOUNT :
@@ -843,6 +846,16 @@ export function PayslipsClient({
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-slate-500">Hrubá mzda</span>
                   <span className="font-medium text-navy">{fmt(latestReal.grossAmount, latestReal.currency)}</span>
+                </div>
+              )}
+
+              {!isICO && vacationDays > 0 && (
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500 flex items-center gap-1.5">
+                    <Plane className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                    Dovolená — {vacationDays} {vacationDays === 1 ? 'den' : vacationDays < 5 ? 'dny' : 'dní'}
+                  </span>
+                  <span className="text-xs text-slate-400">zahrnuto ve mzdě, bez srážky</span>
                 </div>
               )}
 

@@ -1,8 +1,22 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_PAYSLIPS, DEMO_SALARY_INFO, ICO_MONTHLY_EXPENSES, getDemoUserById } from '@/lib/mock-data'
+import { DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_TEAM_LEAVES, ICO_MONTHLY_EXPENSES, getDemoUserById } from '@/lib/mock-data'
 import { PayslipsClient } from './PayslipsClient'
+
+function daysThisMonth(userName: string, type: string): number {
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+  return DEMO_TEAM_LEAVES
+    .filter((l) => l.userName === userName && l.type === type && l.status === 'APPROVED')
+    .reduce((sum, l) => {
+      const start = l.startDate < monthStart ? monthStart : l.startDate
+      const end = l.endDate > monthEnd ? monthEnd : l.endDate
+      if (end < start) return sum
+      return sum + Math.round((end.getTime() - start.getTime()) / 86400000) + 1
+    }, 0)
+}
 
 export default async function PayslipsPage() {
   const session = await auth()
@@ -20,6 +34,9 @@ export default async function PayslipsPage() {
       ]
     : ICO_MONTHLY_EXPENSES
 
+  const sickDays = daysThisMonth(user.name, 'SICK')
+  const vacationDays = daysThisMonth(user.name, 'ANNUAL')
+
   return (
     <AppShell
       title={pageTitle}
@@ -35,6 +52,8 @@ export default async function PayslipsPage() {
         pageTitle={pageTitle}
         employeeId={user.id}
         icoExpenses={icoExpenses}
+        sickDays={sickDays}
+        vacationDays={vacationDays}
       />
     </AppShell>
   )
