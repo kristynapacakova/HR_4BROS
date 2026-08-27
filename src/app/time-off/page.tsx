@@ -48,6 +48,7 @@ export default async function TimeOffPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const isTL = session.user.role === 'TL'
   const user = getDemoUserById(session.user.id)
   const leaveBalance = DEMO_LEAVE_BALANCE
   const leaveRequests = DEMO_LEAVE_REQUESTS
@@ -62,6 +63,7 @@ export default async function TimeOffPage() {
     <AppShell
       title="Moje docházka"
       isAdmin={isAdmin}
+      isTL={isTL}
       userName={session.user.name}
       userEmail={session.user.email}
       employmentType={user.employmentType}

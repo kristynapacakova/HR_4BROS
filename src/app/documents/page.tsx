@@ -49,6 +49,7 @@ export default async function DocumentsPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const isTL = session.user.role === 'TL'
   const user = isAdmin ? DEMO_ADMIN : DEMO_USER
   const isHPP = user.employmentType === 'HPP'
 
@@ -79,6 +80,7 @@ export default async function DocumentsPage() {
     <AppShell
       title="Dokumenty a smlouvy"
       isAdmin={isAdmin}
+      isTL={isTL}
       userName={session.user.name}
       userEmail={session.user.email}
       employmentType={user.employmentType}

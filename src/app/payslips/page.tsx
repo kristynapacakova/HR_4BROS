@@ -23,6 +23,7 @@ export default async function PayslipsPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const isTL = session.user.role === 'TL'
   const user = getDemoUserById(session.user.id)
   const pageTitle = 'Moje odměna'
 
@@ -41,6 +42,7 @@ export default async function PayslipsPage() {
     <AppShell
       title={pageTitle}
       isAdmin={isAdmin}
+      isTL={isTL}
       userName={session.user.name}
       userEmail={session.user.email}
       employmentType={user.employmentType}

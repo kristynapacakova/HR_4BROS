@@ -10,10 +10,11 @@ export default async function FeedbackPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const isTL = session.user.role === 'TL'
   const user = isAdmin ? DEMO_ADMIN : DEMO_USER
 
   return (
-    <AppShell title="Schránka důvěry" isAdmin={isAdmin} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
+    <AppShell title="Schránka důvěry" isAdmin={isAdmin} isTL={isTL} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
       <div className="max-w-2xl mx-auto space-y-6">
 
         {/* Hero */}

@@ -9,12 +9,14 @@ export default async function TeamPage() {
   if (!session?.user?.id) redirect('/login')
 
   const isAdmin = session.user.role === 'ADMIN'
+  const isTL = session.user.role === 'TL'
   const user = isAdmin ? DEMO_ADMIN : DEMO_USER
 
   return (
     <AppShell
       title="Tým Four Bros"
       isAdmin={isAdmin}
+      isTL={isTL}
       userName={session.user.name}
       userEmail={session.user.email}
       employmentType={user.employmentType}
