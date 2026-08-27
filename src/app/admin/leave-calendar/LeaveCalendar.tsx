@@ -86,7 +86,7 @@ interface NewLeaveForm {
   end: string
 }
 
-export function LeaveCalendar({ leaves: initialLeaves }: { leaves: Leave[] }) {
+export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leaves: Leave[]; canEdit?: boolean }) {
   const today = new Date()
   const [viewYear, setViewYear]   = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
@@ -238,84 +238,90 @@ export function LeaveCalendar({ leaves: initialLeaves }: { leaves: Leave[] }) {
       </div>
 
       {/* Vygenerovat státní svátky */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <button
-          onClick={generateHolidays}
-          disabled={holidayYears.has(viewYear)}
-          className="px-4 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors disabled:opacity-50 disabled:cursor-default"
-        >
-          {holidayYears.has(viewYear) ? `Svátky pro rok ${viewYear} vygenerovány ✓` : `Vygenerovat státní svátky pro rok ${viewYear}`}
-        </button>
-        <p className="text-xs text-slate-400">Spočítají se samy včetně Velikonoc. Ručně přidané dny se nepřepíšou.</p>
-      </div>
+      {canEdit && (
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={generateHolidays}
+            disabled={holidayYears.has(viewYear)}
+            className="px-4 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors disabled:opacity-50 disabled:cursor-default"
+          >
+            {holidayYears.has(viewYear) ? `Svátky pro rok ${viewYear} vygenerovány ✓` : `Vygenerovat státní svátky pro rok ${viewYear}`}
+          </button>
+          <p className="text-xs text-slate-400">Spočítají se samy včetně Velikonoc. Ručně přidané dny se nepřepíšou.</p>
+        </div>
+      )}
 
       {/* Nová absence */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <button
-          onClick={() => setAddOpen(o => !o)}
-          className="w-full flex items-center gap-2 px-5 py-4 text-left text-sm font-medium text-navy hover:bg-slate-50 transition-colors"
-        >
-          <Plus className={`w-4 h-4 text-violet transition-transform ${addOpen ? 'rotate-45' : ''}`} />
-          Nová absence
-          <ChevronDown className={`w-4 h-4 text-slate-300 ml-auto transition-transform ${addOpen ? 'rotate-180' : ''}`} />
-        </button>
-        {addOpen && (
-          <div className="px-5 pb-5 grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <select
-              value={form.person}
-              onChange={e => setForm(f => ({ ...f, person: e.target.value }))}
-              className="input"
-            >
-              {ALL_PEOPLE.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
-            </select>
-            <select
-              value={form.type}
-              onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
-              className="input"
-            >
-              {LEGEND_ORDER.map(key => <option key={key} value={key}>{TYPE_COLORS[key].label}</option>)}
-            </select>
-            <input type="date" value={form.start} onChange={e => setForm(f => ({ ...f, start: e.target.value }))} className="input" />
-            <input type="date" value={form.end} onChange={e => setForm(f => ({ ...f, end: e.target.value }))} className="input" />
-            <button
-              onClick={addLeave}
-              disabled={!form.start || !form.end}
-              className="sm:col-span-4 px-4 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors disabled:opacity-40 w-fit"
-            >
-              Přidat absenci
-            </button>
-          </div>
-        )}
-      </div>
+      {canEdit && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <button
+            onClick={() => setAddOpen(o => !o)}
+            className="w-full flex items-center gap-2 px-5 py-4 text-left text-sm font-medium text-navy hover:bg-slate-50 transition-colors"
+          >
+            <Plus className={`w-4 h-4 text-violet transition-transform ${addOpen ? 'rotate-45' : ''}`} />
+            Nová absence
+            <ChevronDown className={`w-4 h-4 text-slate-300 ml-auto transition-transform ${addOpen ? 'rotate-180' : ''}`} />
+          </button>
+          {addOpen && (
+            <div className="px-5 pb-5 grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <select
+                value={form.person}
+                onChange={e => setForm(f => ({ ...f, person: e.target.value }))}
+                className="input"
+              >
+                {ALL_PEOPLE.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
+              </select>
+              <select
+                value={form.type}
+                onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
+                className="input"
+              >
+                {LEGEND_ORDER.map(key => <option key={key} value={key}>{TYPE_COLORS[key].label}</option>)}
+              </select>
+              <input type="date" value={form.start} onChange={e => setForm(f => ({ ...f, start: e.target.value }))} className="input" />
+              <input type="date" value={form.end} onChange={e => setForm(f => ({ ...f, end: e.target.value }))} className="input" />
+              <button
+                onClick={addLeave}
+                disabled={!form.start || !form.end}
+                className="sm:col-span-4 px-4 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors disabled:opacity-40 w-fit"
+              >
+                Přidat absenci
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Moje absence */}
-      <div>
-        <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
-          <h3 className="text-sm font-semibold text-navy">Moje absence</h3>
-          <p className="text-xs text-slate-400">Dovolená čerpaná v roce {viewYear}: {myDaysUsed} {myDaysUsed === 1 ? 'den' : myDaysUsed < 5 ? 'dny' : 'dnů'}</p>
+      {canEdit && (
+        <div>
+          <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+            <h3 className="text-sm font-semibold text-navy">Moje absence</h3>
+            <p className="text-xs text-slate-400">Dovolená čerpaná v roce {viewYear}: {myDaysUsed} {myDaysUsed === 1 ? 'den' : myDaysUsed < 5 ? 'dny' : 'dnů'}</p>
+          </div>
+          {myLeavesThisYear.length === 0 ? (
+            <div className="bg-white rounded-2xl border border-dashed border-slate-200 py-10 text-center">
+              <p className="text-sm text-slate-400">Zatím nemáš žádnou absenci.</p>
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-50">
+              {myLeavesThisYear.map(l => {
+                const colors = TYPE_COLORS[l.type] ?? TYPE_COLORS.ANNUAL
+                return (
+                  <div key={l.id} className="flex items-center gap-3 px-5 py-3">
+                    <span className={`w-2.5 h-2.5 rounded-full ${colors.dot} flex-shrink-0`} />
+                    <span className="text-sm text-navy flex-1">{colors.label}</span>
+                    <span className="text-xs text-slate-400">
+                      {new Date(l.startDate).toLocaleDateString('cs-CZ')} – {new Date(l.endDate).toLocaleDateString('cs-CZ')}
+                    </span>
+                    {l.status === 'PENDING' && <span className="badge-pending">Čeká</span>}
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
-        {myLeavesThisYear.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-dashed border-slate-200 py-10 text-center">
-            <p className="text-sm text-slate-400">Zatím nemáš žádnou absenci.</p>
-          </div>
-        ) : (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-50">
-            {myLeavesThisYear.map(l => {
-              const colors = TYPE_COLORS[l.type] ?? TYPE_COLORS.ANNUAL
-              return (
-                <div key={l.id} className="flex items-center gap-3 px-5 py-3">
-                  <span className={`w-2.5 h-2.5 rounded-full ${colors.dot} flex-shrink-0`} />
-                  <span className="text-sm text-navy flex-1">{colors.label}</span>
-                  <span className="text-xs text-slate-400">
-                    {new Date(l.startDate).toLocaleDateString('cs-CZ')} – {new Date(l.endDate).toLocaleDateString('cs-CZ')}
-                  </span>
-                  {l.status === 'PENDING' && <span className="badge-pending">Čeká</span>}
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+      )}
     </div>
   )
 }

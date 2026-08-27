@@ -2,7 +2,8 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { CreateEmployeeForm } from './CreateEmployeeForm'
-import { DEMO_EMPLOYEES, EMPLOYMENT_TYPES, SENIORITY_LEVELS } from '@/lib/mock-data'
+import { TeamLeadCell } from './TeamLeadCell'
+import { DEMO_EMPLOYEES, DEMO_TEAM, EMPLOYMENT_TYPES, SENIORITY_LEVELS } from '@/lib/mock-data'
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
@@ -64,6 +65,7 @@ export default async function AdminEmployeesPage() {
                   <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Mzda / měs</th>
                   <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Efektivita</th>
                   <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Ve firmě</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Team lead</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -73,6 +75,7 @@ export default async function AdminEmployeesPage() {
                     ? Math.round((emp.clientHours / emp.monthlyHours) * 100)
                     : null
                   const isICO = emp.employmentType === 'ICO'
+                  const teamMember = DEMO_TEAM.find(m => m.email.toLowerCase() === emp.email?.toLowerCase())
 
                   return (
                     <tr key={emp.id} className="hover:bg-slate-50 transition-colors">
@@ -145,6 +148,13 @@ export default async function AdminEmployeesPage() {
 
                       {/* Ve firmě */}
                       <td className="px-5 py-4 text-slate-600">{tenure(emp.startDate)}</td>
+
+                      {/* Team lead */}
+                      <td className="px-5 py-4">
+                        {teamMember ? (
+                          <TeamLeadCell teamMemberId={teamMember.id} baseTeamLeadId={teamMember.teamLeadId} />
+                        ) : <span className="text-slate-400">—</span>}
+                      </td>
                     </tr>
                   )
                 })}

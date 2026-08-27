@@ -155,6 +155,8 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose, collapsed
               {!collapsed && <p className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Tým</p>}
             </div>
             {navLink('/admin/leave-requests', 'Žádosti o dovolenou', CheckSquare)}
+            {navLink('/admin/leave-calendar', 'Docházka firmy', CalendarRange)}
+            {navLink('/admin/tym-fakturace', 'Fakturace týmu', FileText)}
           </>
         )}
       </nav>

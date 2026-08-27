@@ -7,7 +7,9 @@ import { LeaveCalendar } from './LeaveCalendar'
 export default async function LeaveCalendarPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
-  if (session.user.role !== 'ADMIN') redirect('/dashboard')
+  const isAdmin = session.user.role === 'ADMIN'
+  const isTL = session.user.role === 'TL'
+  if (!isAdmin && !isTL) redirect('/dashboard')
 
   const serializedLeaves = DEMO_TEAM_LEAVES.map((l) => ({
     ...l,
@@ -18,11 +20,12 @@ export default async function LeaveCalendarPage() {
   return (
     <AppShell
       title="Přehled docházky"
-      isAdmin={true}
+      isAdmin={isAdmin}
+      isTL={isTL}
       userName={session.user.name}
       userEmail={session.user.email}
     >
-      <LeaveCalendar leaves={serializedLeaves} />
+      <LeaveCalendar leaves={serializedLeaves} canEdit={isAdmin} />
     </AppShell>
   )
 }
