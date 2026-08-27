@@ -4,7 +4,14 @@ import { AppShell } from '@/components/layout/AppShell'
 import { formatDate, getLeaveTypeCz, getDaysBetween } from '@/lib/utils'
 import { CalendarDays } from 'lucide-react'
 import { LeaveActionButtons } from './LeaveActionButtons'
-import { DEMO_ALL_LEAVE_REQUESTS, DEMO_TL } from '@/lib/mock-data'
+import { DEMO_ALL_LEAVE_REQUESTS, DEMO_TL, DEMO_TEAM } from '@/lib/mock-data'
+
+// Nadřízený schvaluje jen Dovolenou — homeoffice, nemoc, lékař a volno se zapisují automaticky.
+const APPROVAL_REQUIRED_TYPE = 'ANNUAL'
+
+function teamLeadOf(email: string): string | null {
+  return DEMO_TEAM.find((m) => m.email.toLowerCase() === email.toLowerCase())?.teamLeadId ?? null
+}
 
 export default async function AdminLeaveRequestsPage() {
   const session = await auth()
@@ -13,11 +20,11 @@ export default async function AdminLeaveRequestsPage() {
   if (session.user.role !== 'ADMIN' && !isTL) redirect('/dashboard')
 
   const leaveRequests = isTL
-    ? DEMO_ALL_LEAVE_REQUESTS.filter((r) => r.user.department === DEMO_TL.department)
+    ? DEMO_ALL_LEAVE_REQUESTS.filter((r) => teamLeadOf(r.user.email) === DEMO_TL.id)
     : DEMO_ALL_LEAVE_REQUESTS
 
-  const pending = leaveRequests.filter((r) => r.status === 'PENDING')
-  const processed = leaveRequests.filter((r) => r.status !== 'PENDING')
+  const pending = leaveRequests.filter((r) => r.status === 'PENDING' && r.type === APPROVAL_REQUIRED_TYPE)
+  const processed = leaveRequests.filter((r) => r.status !== 'PENDING' || r.type !== APPROVAL_REQUIRED_TYPE)
 
   return (
     <AppShell
@@ -44,9 +51,18 @@ export default async function AdminLeaveRequestsPage() {
             </div>
           ) : (
             <div className="divide-y divide-slate-50">
-              {pending.map((req) => (
-                <LeaveRequestRow key={req.id} req={req} showActions />
-              ))}
+              {pending.map((req) => {
+                // Upozornění: kolik dalších lidí ze stejného týmu má ve stejném období dovolenou.
+                const teamLead = teamLeadOf(req.user.email)
+                const overlapping = DEMO_ALL_LEAVE_REQUESTS.filter((other) =>
+                  other.id !== req.id &&
+                  other.type === APPROVAL_REQUIRED_TYPE &&
+                  (other.status === 'APPROVED' || other.status === 'PENDING') &&
+                  teamLeadOf(other.user.email) === teamLead &&
+                  other.startDate <= req.endDate && other.endDate >= req.startDate
+                )
+                return <LeaveRequestRow key={req.id} req={req} showActions overlapCount={overlapping.length} />
+              })}
             </div>
           )}
         </div>
@@ -72,6 +88,7 @@ export default async function AdminLeaveRequestsPage() {
 function LeaveRequestRow({
   req,
   showActions,
+  overlapCount = 0,
 }: {
   req: {
     id: string
@@ -84,6 +101,7 @@ function LeaveRequestRow({
     user: { name: string | null; email: string; department: string | null }
   }
   showActions: boolean
+  overlapCount?: number
 }) {
   return (
     <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-4">
@@ -104,6 +122,11 @@ function LeaveRequestRow({
         </p>
         {req.reason && <p className="text-xs text-slate-400 mt-0.5 italic">"{req.reason}"</p>}
         {req.note && <p className="text-xs text-amber-700 mt-0.5">Vaše poznámka: {req.note}</p>}
+        {overlapCount > 0 && (
+          <p className="text-xs text-amber-700 bg-amber-50 rounded-full px-2.5 py-1 mt-1.5 inline-block">
+            ⚠️ Ve stejném období má dovolenou ještě {overlapCount} {overlapCount === 1 ? 'člověk' : overlapCount < 5 ? 'lidé' : 'lidí'} z týmu
+          </p>
+        )}
       </div>
       {showActions && <LeaveActionButtons requestId={req.id} />}
     </div>

@@ -16,6 +16,9 @@ export const DEMO_TEAM_LEAVES = [
   { id: "tl10", userName: "Ondřej Pospíšil", department: "Vývoj", type: "SICK", startDate: new Date("2026-05-05"), endDate: new Date("2026-05-06"), status: "APPROVED" },
   { id: "tl11", userName: "Jan Novák", department: "Vývoj", type: "ANNUAL", startDate: new Date("2025-12-22"), endDate: new Date("2025-12-31"), status: "APPROVED" },
   { id: "tl12", userName: "Marie Svobodová", department: "Marketing", type: "ANNUAL", startDate: new Date("2025-12-27"), endDate: new Date("2025-12-31"), status: "APPROVED" },
+  { id: "tl13", userName: "Lucie Kratochvílová", department: "Creative", type: "HOMEOFFICE", startDate: new Date("2026-08-25"), endDate: new Date("2026-08-27"), status: "APPROVED" },
+  { id: "tl14", userName: "Veronika Jelínková", department: "Account", type: "HOMEOFFICE", startDate: new Date("2026-08-27"), endDate: new Date("2026-08-27"), status: "APPROVED" },
+  { id: "tl15", userName: "Tomáš Dvořák", department: "Obchod", type: "LEKAR", startDate: new Date("2026-08-27"), endDate: new Date("2026-08-27"), status: "APPROVED" },
 ]
 
 // ── Analytics ──────────────────────────────────────────────────────────────

@@ -48,16 +48,39 @@ export default async function DashboardPage() {
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const todayAbsences = DEMO_TEAM_LEAVES.filter((l) => {
-    const start = new Date(l.startDate)
-    start.setHours(0, 0, 0, 0)
-    const end = new Date(l.endDate)
-    end.setHours(0, 0, 0, 0)
-    return today >= start && today <= end && (l.status === 'APPROVED' || l.status === 'PENDING')
+
+  // Tento týden (pondělí–neděle) — širší okno než jen dnešek, ať karta není prázdná ve dnech, kdy nikdo nechybí.
+  const weekStart = new Date(today)
+  weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7))
+  const weekEnd = new Date(weekStart)
+  weekEnd.setDate(weekStart.getDate() + 6)
+
+  const weekAbsences = DEMO_TEAM_LEAVES.filter((l) => {
+    const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
+    const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
+    return start <= weekEnd && end >= weekStart && (l.status === 'APPROVED' || l.status === 'PENDING')
+  }).sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+
+  // Kdo je z týmu daného uživatele dnes v kanceláři vs. na home office — TL vidí svůj tým, HR všechny týmy dohromady.
+  const scopeIds = isAdmin
+    ? DEMO_TEAM.map(m => m.id)
+    : isTL
+      ? DEMO_TEAM.filter(m => m.teamLeadId === session.user.id).map(m => m.id)
+      : []
+  const scopeNames = new Set(DEMO_TEAM.filter(m => scopeIds.includes(m.id)).map(m => m.name))
+  const todayOutByType = DEMO_TEAM_LEAVES.filter((l) => {
+    const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
+    const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
+    return today >= start && today <= end && l.status === 'APPROVED' && scopeNames.has(l.userName)
   })
+  const homeofficeCount = todayOutByType.filter(l => l.type === 'HOMEOFFICE').length
+  const otherOutCount = todayOutByType.filter(l => l.type !== 'HOMEOFFICE').length
+  const inOfficeCount = Math.max(0, scopeNames.size - homeofficeCount - otherOutCount)
 
   const pendingLeaveRequests = DEMO_ALL_LEAVE_REQUESTS.filter(l =>
-    l.status === 'PENDING' && (isAdmin || (isTL && l.user.department === user.department))
+    l.status === 'PENDING' && l.type === 'ANNUAL' && (isAdmin || (isTL &&
+      DEMO_TEAM.find(m => m.email.toLowerCase() === l.user.email.toLowerCase())?.teamLeadId === session.user.id
+    ))
   )
 
   // Smlouvy na dobu určitou končící do 3 měsíců — potřebují řešit prodloužení/ukončení
@@ -72,6 +95,7 @@ export default async function DashboardPage() {
     SICK: 'Nemoc',
     PERSONAL: 'Osobní volno',
     HOMEOFFICE: 'Home office',
+    LEKAR: 'Lékař',
   }
 
   // Narozeniny tento týden — z profilů týmu
@@ -178,23 +202,48 @@ export default async function DashboardPage() {
           </Link>
         )}
 
-        {/* Dnes — absences + nearest events in one card */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-headline text-navy mb-1">Dnes</h3>
-          <p className="text-xs text-slate-400 mb-4">Kdo je dnes mimo kancelář</p>
+        {/* Kdo je dnes v kanceláři vs. mimo — jen HR (celá firma) a TL (svůj tým) */}
+        {(isAdmin || isTL) && scopeNames.size > 0 && (
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h3 className="font-headline text-navy mb-1">{isAdmin ? 'Dnes ve firmě' : 'Dnes v tvém týmu'}</h3>
+            <p className="text-xs text-slate-400 mb-4">Kolik lidí je v kanceláři a kolik mimo</p>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="text-center">
+                <p className="text-2xl font-headline font-bold text-navy">{inOfficeCount}</p>
+                <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-headline font-bold text-violet">{homeofficeCount}</p>
+                <p className="text-xs text-slate-400 mt-0.5">home office</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-headline font-bold text-amber-600">{otherOutCount}</p>
+                <p className="text-xs text-slate-400 mt-0.5">jinak mimo</p>
+              </div>
+            </div>
+          </div>
+        )}
 
-          {todayAbsences.length === 0 ? (
-            <p className="text-sm text-slate-500">Všichni jsou dnes v kanceláři 🎉</p>
+        {/* Tento týden — kdo má kdy volno */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h3 className="font-headline text-navy mb-1">Tento týden</h3>
+          <p className="text-xs text-slate-400 mb-4">Kdo je tento týden mimo kancelář</p>
+
+          {weekAbsences.length === 0 ? (
+            <p className="text-sm text-slate-500">Tento týden nikdo nechybí 🎉</p>
           ) : (
             <div className="flex flex-wrap gap-x-6 gap-y-3">
-              {todayAbsences.map((absence) => (
+              {weekAbsences.map((absence) => (
                 <div key={absence.id} className="flex items-center gap-2.5">
                   <div className="w-8 h-8 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-violet text-xs font-semibold">{absence.userName[0]}</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-navy leading-tight">{absence.userName}</p>
-                    <p className="text-xs text-slate-400">{LEAVE_TYPE_CZ[absence.type] || absence.type}</p>
+                    <p className="text-xs text-slate-400">
+                      {LEAVE_TYPE_CZ[absence.type] || absence.type} · {absence.startDate.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })}
+                      {absence.startDate.getTime() !== absence.endDate.getTime() && ` – ${absence.endDate.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })}`}
+                    </p>
                   </div>
                 </div>
               ))}
