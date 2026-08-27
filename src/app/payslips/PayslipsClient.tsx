@@ -142,13 +142,24 @@ function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
   )
 }
 
-function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests }: {
+function InvoiceStatusBadge({ status }: { status: InvoicePaymentStatus }) {
+  const style =
+    status === 'ZAPLACENO' ? 'bg-green-50 text-green-700' :
+    status === 'CEKA_NA_UHRADU' ? 'bg-amber-50 text-amber-700' :
+    'bg-red-50 text-red-600'
+  return <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${style}`}>{INVOICE_STATUS_LABELS[status]}</span>
+}
+
+function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses }: {
   p: Payslip
   benefitType: BenefitType | null
   sportRequests: { employeeId: string; month: number; year: number; status: string }[]
   expenseRequests: ExpenseRequest[]
+  employeeId?: string
+  invoiceStatuses: Record<string, InvoicePaymentStatus>
 }) {
   const [open, setOpen] = useState(false)
+  const [showOtherDetail, setShowOtherDetail] = useState(false)
 
   const monthSportApproved = sportRequests.some(r => r.status === 'APPROVED' && r.month === p.month && r.year === p.year)
   const monthExpenses = expenseRequests.filter(e => e.status === 'APPROVED' && e.month === p.month && e.year === p.year)
@@ -158,12 +169,14 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests }: {
     0
   const officeAmount = ICO_MONTHLY_EXPENSES.find((e) => e.label.includes('kancel'))?.amount ?? 0
   const refreshAmount = ICO_MONTHLY_EXPENSES.find((e) => e.label.includes('erstven'))?.amount ?? 0
-  const otherTotal = monthExpenses.reduce((s, e) => s + signedAmount(e), 0) + sportAmount
-  const otherLabel = [
-    sportAmount !== 0 ? (sportAmount > 0 ? 'Sport' : 'Multisport doplatek') : null,
-    ...monthExpenses.map((e) => e.title),
-  ].filter(Boolean).join(', ')
-  const total = p.netAmount + officeAmount + refreshAmount + otherTotal
+  const officeInvoiceTotal = officeAmount + refreshAmount
+  const otherItems = [
+    ...(sportAmount !== 0 ? [{ label: sportAmount > 0 ? 'Příspěvek na sport' : 'Multisport — doplatek', amount: sportAmount }] : []),
+    ...monthExpenses.map((e) => ({ label: e.title, amount: signedAmount(e) })),
+  ]
+  const otherTotal = otherItems.reduce((s, i) => s + i.amount, 0)
+  const total = p.netAmount + officeInvoiceTotal + otherTotal
+  const officeStatus = employeeId ? invoiceStatuses[invoiceStatusKey(employeeId, p.month, p.year)] ?? 'NEZAPLACENO' : 'NEZAPLACENO'
 
   return (
     <>
@@ -178,7 +191,29 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests }: {
         <td className="px-4 py-3 text-slate-600">{fmt(p.netAmount, p.currency)}</td>
         <td className="px-4 py-3 text-slate-600">{fmt(officeAmount, 'CZK')}</td>
         <td className="px-4 py-3 text-slate-600">{fmt(refreshAmount, 'CZK')}</td>
-        <td className="px-4 py-3 text-slate-600">{otherLabel || '—'}</td>
+        <td className="px-4 py-3 text-slate-600">
+          {otherItems.length > 0 ? (
+            <span className="relative inline-flex items-center gap-1">
+              {fmt(otherTotal, 'CZK')}
+              <span
+                onClick={(e) => { e.stopPropagation(); setShowOtherDetail((s) => !s) }}
+                className="w-4 h-4 rounded-full bg-slate-100 text-slate-500 text-[10px] flex items-center justify-center hover:bg-slate-200 transition-colors cursor-pointer flex-shrink-0"
+              >
+                i
+              </span>
+              {showOtherDetail && (
+                <span className="absolute left-0 top-full mt-1.5 z-10 w-56 bg-navy text-white text-[11px] leading-snug rounded-lg px-3 py-2 shadow-lg text-left normal-case">
+                  {otherItems.map((it) => (
+                    <span key={it.label} className="flex items-center justify-between gap-3">
+                      <span>{it.label}</span>
+                      <span className="font-semibold whitespace-nowrap">{it.amount > 0 ? '+' : '−'}{fmt(Math.abs(it.amount), 'CZK')}</span>
+                    </span>
+                  ))}
+                </span>
+              )}
+            </span>
+          ) : '—'}
+        </td>
         <td className="px-4 py-3 font-semibold text-navy whitespace-nowrap">{fmt(total, p.currency)}</td>
         <td className="px-4 py-3 text-right">
           <ChevronDown className={`w-4 h-4 text-slate-300 inline-block transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -187,33 +222,40 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests }: {
       {open && (
         <tr>
           <td colSpan={7} className="px-6 pb-4">
-            <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-1.5 text-sm">
+            <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-2.5 text-sm">
               <div className="flex items-center justify-between gap-4">
-                <span className="text-slate-500">Měsíční paušál</span>
+                <span className="text-slate-500 flex items-center gap-1.5">
+                  Faktura za odměnu
+                  <button type="button" title="Stáhnout fakturu (natažena z e-mailu)" className="text-slate-400 hover:text-violet transition-colors">
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
+                </span>
                 <span className="font-medium text-navy">{fmt(p.netAmount, p.currency)}</span>
               </div>
-              {ICO_MONTHLY_EXPENSES.map((e) => (
-                <div key={e.label} className="flex items-center justify-between gap-4">
-                  <span className="text-slate-500">{e.label}</span>
-                  <span className="font-medium text-green-600">+{fmt(e.amount, 'CZK')}</span>
-                </div>
-              ))}
-              {sportAmount !== 0 && (
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-slate-500">{sportAmount > 0 ? 'Příspěvek na sport' : 'Multisport — doplatek nad příspěvek firmy'}</span>
-                  <span className={`font-medium ${sportAmount > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                    {sportAmount > 0 ? '+' : '−'}{fmt(Math.abs(sportAmount), 'CZK')}
-                  </span>
+              <div className="flex items-center justify-between gap-4 pt-2 border-t border-white">
+                <span className="text-slate-500 flex items-center gap-1.5">
+                  Faktura — nájem kancelářského místa a občerstvení
+                  <button type="button" title="Stáhnout fakturu (z Fakturoidu)" className="text-slate-400 hover:text-violet transition-colors">
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
+                </span>
+                <span className="flex items-center gap-2 flex-shrink-0">
+                  <span className="font-medium text-green-600">+{fmt(officeInvoiceTotal, 'CZK')}</span>
+                  <InvoiceStatusBadge status={officeStatus} />
+                </span>
+              </div>
+              {otherItems.length > 0 && (
+                <div className="pt-2 border-t border-white space-y-1.5">
+                  {otherItems.map((it) => (
+                    <div key={it.label} className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500">{it.label}</span>
+                      <span className={`font-medium ${it.amount > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                        {it.amount > 0 ? '+' : '−'}{fmt(Math.abs(it.amount), 'CZK')}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               )}
-              {monthExpenses.map((exp) => (
-                <div key={exp.id} className="flex items-center justify-between gap-4">
-                  <span className="text-slate-500">{exp.title}</span>
-                  <span className={`font-medium ${exp.sign === 'MINUS' ? 'text-red-500' : 'text-green-600'}`}>
-                    {exp.sign === 'MINUS' ? '−' : '+'}{fmt(exp.amount, exp.currency)}
-                  </span>
-                </div>
-              ))}
             </div>
           </td>
         </tr>
@@ -222,12 +264,14 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests }: {
   )
 }
 
-function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseRequests }: {
+function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses }: {
   year: number
   payslips: Payslip[]
   benefitType: BenefitType | null
   sportRequests: { employeeId: string; month: number; year: number; status: string }[]
   expenseRequests: ExpenseRequest[]
+  employeeId?: string
+  invoiceStatuses: Record<string, InvoicePaymentStatus>
 }) {
   const byMonth = new Map(payslips.map(p => [p.month, p]))
   const allMonths = Array.from({ length: 12 }, (_, i) => 12 - i).map(m => byMonth.get(m) ?? null).filter(Boolean) as Payslip[]
@@ -242,7 +286,7 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
         <thead>
           <tr className="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
             <th className="px-6 py-3 font-medium">Období</th>
-            <th className="px-4 py-3 font-medium">Plat</th>
+            <th className="px-4 py-3 font-medium">Paušál</th>
             <th className="px-4 py-3 font-medium">Místo</th>
             <th className="px-4 py-3 font-medium">Občerstvení</th>
             <th className="px-4 py-3 font-medium">Další</th>
@@ -252,7 +296,7 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
         </thead>
         <tbody className="divide-y divide-slate-50">
           {allMonths.map((p) => (
-            <IcoMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} />
+            <IcoMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeId={employeeId} invoiceStatuses={invoiceStatuses} />
           ))}
         </tbody>
       </table>
@@ -763,33 +807,37 @@ export function PayslipsClient({
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
             <p className="text-sm font-semibold text-navy mb-3">Rozpis odměny — {MONTH_NAMES[latestReal.month - 1]} {latestReal.year}</p>
             <div className="space-y-2 text-sm">
-              {isICO ? (
-                <>
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-slate-500">Měsíční paušál</span>
-                    <span className="font-medium text-navy">{fmt(latestReal.netAmount, latestReal.currency)}</span>
-                  </div>
-                  {ICO_MONTHLY_EXPENSES.map((e) => {
-                    const status = employeeId ? invoiceStatuses[invoiceStatusKey(employeeId, latestReal.month, latestReal.year)] ?? 'NEZAPLACENO' : 'NEZAPLACENO'
-                    const statusStyle =
-                      status === 'ZAPLACENO' ? 'bg-green-50 text-green-700' :
-                      status === 'CEKA_NA_UHRADU' ? 'bg-amber-50 text-amber-700' :
-                      'bg-slate-100 text-slate-500'
-                    return (
-                      <div key={e.label} className="flex items-center justify-between gap-4">
-                        <span className="text-slate-500 flex items-center gap-1.5 flex-wrap">
-                          {e.label}
-                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${statusStyle}`}>{INVOICE_STATUS_LABELS[status]}</span>
-                        </span>
-                        <span className="font-medium text-green-600 flex-shrink-0">+{fmt(e.amount, 'CZK')}</span>
-                      </div>
-                    )
-                  })}
-                  <p className="text-[10px] text-slate-400">
-                    Stav platby zatím nastavuje HR ručně — časem se propíše z Fakturoidu.
-                  </p>
-                </>
-              ) : (
+              {isICO ? (() => {
+                const officeInvoiceStatus = employeeId ? invoiceStatuses[invoiceStatusKey(employeeId, latestReal.month, latestReal.year)] ?? 'NEZAPLACENO' : 'NEZAPLACENO'
+                return (
+                  <>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500 flex items-center gap-1.5">
+                        Faktura za odměnu
+                        <button type="button" title="Stáhnout fakturu (natažena z e-mailu)" className="text-slate-400 hover:text-violet transition-colors">
+                          <Download className="w-3.5 h-3.5" />
+                        </button>
+                      </span>
+                      <span className="font-medium text-navy">{fmt(latestReal.netAmount, latestReal.currency)}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500 flex items-center gap-1.5">
+                        Faktura — nájem kancelářského místa a občerstvení
+                        <button type="button" title="Stáhnout fakturu (z Fakturoidu)" className="text-slate-400 hover:text-violet transition-colors">
+                          <Download className="w-3.5 h-3.5" />
+                        </button>
+                      </span>
+                      <span className="flex items-center gap-2 flex-shrink-0">
+                        <span className="font-medium text-green-600">+{fmt(ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0), 'CZK')}</span>
+                        <InvoiceStatusBadge status={officeInvoiceStatus} />
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400">
+                      Stav platby zatím nastavuje HR ručně — časem se propíše z Fakturoidu.
+                    </p>
+                  </>
+                )
+              })() : (
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-slate-500">Hrubá mzda</span>
                   <span className="font-medium text-navy">{fmt(latestReal.grossAmount, latestReal.currency)}</span>
@@ -900,6 +948,8 @@ export function PayslipsClient({
               benefitType={benefitType}
               sportRequests={sportRequests}
               expenseRequests={myExpenses}
+              employeeId={employeeId}
+              invoiceStatuses={invoiceStatuses}
             />
           ) : (
             <YearPanel
