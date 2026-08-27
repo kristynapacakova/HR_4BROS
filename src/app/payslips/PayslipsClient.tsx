@@ -142,6 +142,124 @@ function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
   )
 }
 
+function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests }: {
+  p: Payslip
+  benefitType: BenefitType | null
+  sportRequests: { employeeId: string; month: number; year: number; status: string }[]
+  expenseRequests: ExpenseRequest[]
+}) {
+  const [open, setOpen] = useState(false)
+
+  const monthSportApproved = sportRequests.some(r => r.status === 'APPROVED' && r.month === p.month && r.year === p.year)
+  const monthExpenses = expenseRequests.filter(e => e.status === 'APPROVED' && e.month === p.month && e.year === p.year)
+  const sportAmount =
+    benefitType === 'SPORT_CONTRIBUTION' && monthSportApproved ? SPORT_CONTRIBUTION_AMOUNT :
+    benefitType === 'MULTISPORT' ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
+    0
+  const officeAmount = ICO_MONTHLY_EXPENSES.find((e) => e.label.includes('kancel'))?.amount ?? 0
+  const refreshAmount = ICO_MONTHLY_EXPENSES.find((e) => e.label.includes('erstven'))?.amount ?? 0
+  const otherTotal = monthExpenses.reduce((s, e) => s + signedAmount(e), 0) + sportAmount
+  const otherLabel = [
+    sportAmount !== 0 ? (sportAmount > 0 ? 'Sport' : 'Multisport doplatek') : null,
+    ...monthExpenses.map((e) => e.title),
+  ].filter(Boolean).join(', ')
+  const total = p.netAmount + officeAmount + refreshAmount + otherTotal
+
+  return (
+    <>
+      <tr
+        onClick={() => setOpen((o) => !o)}
+        className={`cursor-pointer hover:bg-slate-50 transition-colors ${p.planned ? 'bg-violet/[0.02]' : ''}`}
+      >
+        <td className="px-6 py-3 font-medium text-navy whitespace-nowrap">
+          {MONTH_NAMES[p.month - 1]} {p.year}
+          {p.planned && <span className="ml-2 px-1.5 py-0.5 bg-violet/10 text-violet rounded text-[10px]">plánováno</span>}
+        </td>
+        <td className="px-4 py-3 text-slate-600">{fmt(p.netAmount, p.currency)}</td>
+        <td className="px-4 py-3 text-slate-600">{fmt(officeAmount, 'CZK')}</td>
+        <td className="px-4 py-3 text-slate-600">{fmt(refreshAmount, 'CZK')}</td>
+        <td className="px-4 py-3 text-slate-600">{otherLabel || '—'}</td>
+        <td className="px-4 py-3 font-semibold text-navy whitespace-nowrap">{fmt(total, p.currency)}</td>
+        <td className="px-4 py-3 text-right">
+          <ChevronDown className={`w-4 h-4 text-slate-300 inline-block transition-transform ${open ? 'rotate-180' : ''}`} />
+        </td>
+      </tr>
+      {open && (
+        <tr>
+          <td colSpan={7} className="px-6 pb-4">
+            <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-1.5 text-sm">
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-slate-500">Měsíční paušál</span>
+                <span className="font-medium text-navy">{fmt(p.netAmount, p.currency)}</span>
+              </div>
+              {ICO_MONTHLY_EXPENSES.map((e) => (
+                <div key={e.label} className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500">{e.label}</span>
+                  <span className="font-medium text-green-600">+{fmt(e.amount, 'CZK')}</span>
+                </div>
+              ))}
+              {sportAmount !== 0 && (
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500">{sportAmount > 0 ? 'Příspěvek na sport' : 'Multisport — doplatek nad příspěvek firmy'}</span>
+                  <span className={`font-medium ${sportAmount > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                    {sportAmount > 0 ? '+' : '−'}{fmt(Math.abs(sportAmount), 'CZK')}
+                  </span>
+                </div>
+              )}
+              {monthExpenses.map((exp) => (
+                <div key={exp.id} className="flex items-center justify-between gap-4">
+                  <span className="text-slate-500">{exp.title}</span>
+                  <span className={`font-medium ${exp.sign === 'MINUS' ? 'text-red-500' : 'text-green-600'}`}>
+                    {exp.sign === 'MINUS' ? '−' : '+'}{fmt(exp.amount, exp.currency)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  )
+}
+
+function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseRequests }: {
+  year: number
+  payslips: Payslip[]
+  benefitType: BenefitType | null
+  sportRequests: { employeeId: string; month: number; year: number; status: string }[]
+  expenseRequests: ExpenseRequest[]
+}) {
+  const byMonth = new Map(payslips.map(p => [p.month, p]))
+  const allMonths = Array.from({ length: 12 }, (_, i) => 12 - i).map(m => byMonth.get(m) ?? null).filter(Boolean) as Payslip[]
+
+  if (allMonths.length === 0) {
+    return <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+            <th className="px-6 py-3 font-medium">Období</th>
+            <th className="px-4 py-3 font-medium">Plat</th>
+            <th className="px-4 py-3 font-medium">Místo</th>
+            <th className="px-4 py-3 font-medium">Občerstvení</th>
+            <th className="px-4 py-3 font-medium">Další</th>
+            <th className="px-4 py-3 font-medium">Celkem</th>
+            <th className="px-4 py-3"></th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-50">
+          {allMonths.map((p) => (
+            <IcoMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 function YearPanel({ year, payslips, isICO, benefitType, sportRequests, expenseRequests }: {
   year: number
   payslips: Payslip[]
@@ -775,14 +893,24 @@ export function PayslipsClient({
         </div>
 
         {byYear[selectedYear] ? (
-          <YearPanel
-            year={selectedYear}
-            payslips={byYear[selectedYear]}
-            isICO={isICO}
-            benefitType={benefitType}
-            sportRequests={sportRequests}
-            expenseRequests={myExpenses}
-          />
+          isICO ? (
+            <IcoYearTable
+              year={selectedYear}
+              payslips={byYear[selectedYear]}
+              benefitType={benefitType}
+              sportRequests={sportRequests}
+              expenseRequests={myExpenses}
+            />
+          ) : (
+            <YearPanel
+              year={selectedYear}
+              payslips={byYear[selectedYear]}
+              isICO={isICO}
+              benefitType={benefitType}
+              sportRequests={sportRequests}
+              expenseRequests={myExpenses}
+            />
+          )
         ) : (
           <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
         )}
