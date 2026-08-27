@@ -10,6 +10,13 @@ import {
   DEMO_TEAM,
   DEMO_EMPLOYEES,
   DEMO_ALL_LEAVE_REQUESTS,
+  DEMO_ADMIN,
+  DEMO_USER,
+  DEMO_TL,
+  DEMO_USER_ICO,
+  DEMO_EDU_BUDGETS,
+  DEMO_EDU_REQUESTS,
+  DEFAULT_EDU_BUDGET,
   getDemoUserById,
   demoTeamIdFor,
 } from '@/lib/mock-data'
@@ -17,6 +24,10 @@ import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
 
 const CZ_MONTHS = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']
+
+function fmtKc(n: number) {
+  return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
+}
 
 function tenureText(startDate: Date): string {
   const now = new Date()
@@ -78,6 +89,75 @@ export default async function DashboardPage() {
   const homeofficeCount = todayOutByType.filter(l => l.type === 'HOMEOFFICE').length
   const otherOutCount = todayOutByType.filter(l => l.type !== 'HOMEOFFICE').length
   const inOfficeCount = Math.max(0, scopeNames.size - homeofficeCount - otherOutCount)
+
+  // Obsazenost kanclu od začátku měsíce do dneška — pracovní dny × lidé z týmu, kolik z toho reálně sedělo v kanceláři.
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
+  const workdaysSoFar: Date[] = []
+  for (const d = new Date(monthStart); d <= today; d.setDate(d.getDate() + 1)) {
+    const dow = d.getDay()
+    if (dow !== 0 && dow !== 6) workdaysSoFar.push(new Date(d))
+  }
+  let officePersonDays = 0
+  let homeofficePersonDays = 0
+  let totalPersonDays = 0
+  for (const day of workdaysSoFar) {
+    for (const name of Array.from(scopeNames)) {
+      totalPersonDays++
+      const leave = DEMO_TEAM_LEAVES.find((l) => {
+        const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
+        const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
+        return l.userName === name && l.status === 'APPROVED' && day >= start && day <= end
+      })
+      if (!leave) officePersonDays++
+      else if (leave.type === 'HOMEOFFICE') homeofficePersonDays++
+    }
+  }
+  const officeOccupancyPct = totalPersonDays > 0 ? Math.round((officePersonDays / totalPersonDays) * 100) : 100
+  const homeofficeRatePct = totalPersonDays > 0 ? Math.round((homeofficePersonDays / totalPersonDays) * 100) : 0
+  const teamLabel = isAdmin ? 'firmy' : 'tvého týmu'
+
+  // Přihlašovací demo účty mají e-mail navázaný na svůj DEMO_TEAM záznam — přes to dohledáme jejich id
+  // v prostoru vzdělávacího budgetu / žádostí o dovolenou (ty jsou historicky vedené podle login id, ne DEMO_TEAM id).
+  const PERSONA_ID_BY_EMAIL: Record<string, string> = {
+    [DEMO_ADMIN.email.toLowerCase()]: DEMO_ADMIN.id,
+    [DEMO_USER.email.toLowerCase()]: DEMO_USER.id,
+    [DEMO_TL.email.toLowerCase()]: DEMO_TL.id,
+    [DEMO_USER_ICO.email.toLowerCase()]: DEMO_USER_ICO.id,
+  }
+  const scopeMembers = DEMO_TEAM.filter(m => scopeIds.includes(m.id))
+
+  // Vyčerpaná dovolená letos v týmu — vůči nároku (annualLeaveDays), OSVČ bez nároku se do součtu nepočítají.
+  const yearStart = new Date(today.getFullYear(), 0, 1)
+  const yearEnd = new Date(today.getFullYear(), 11, 31)
+  let vacationEntitlement = 0
+  let vacationUsed = 0
+  for (const m of scopeMembers) {
+    if (m.annualLeaveDays == null) continue
+    vacationEntitlement += m.annualLeaveDays
+    vacationUsed += DEMO_TEAM_LEAVES
+      .filter(l => l.userName === m.name && l.type === 'ANNUAL' && l.status === 'APPROVED')
+      .reduce((sum, l) => {
+        const start = l.startDate < yearStart ? yearStart : l.startDate
+        const end = l.endDate > yearEnd ? yearEnd : l.endDate
+        if (end < start) return sum
+        return sum + Math.round((end.getTime() - start.getTime()) / 86400000) + 1
+      }, 0)
+  }
+  const vacationUsedPct = vacationEntitlement > 0 ? Math.round((vacationUsed / vacationEntitlement) * 100) : null
+
+  // Vzdělávací budget vyčerpaný v týmu — každý má nárok na výchozí budget, čerpání se sčítá jen tam, kde je evidované.
+  let eduBudgetTotal = 0
+  let eduBudgetUsed = 0
+  for (const m of scopeMembers) {
+    const personaId = PERSONA_ID_BY_EMAIL[m.email.toLowerCase()]
+    eduBudgetTotal += personaId ? (DEMO_EDU_BUDGETS[personaId] ?? DEFAULT_EDU_BUDGET) : DEFAULT_EDU_BUDGET
+    if (personaId) {
+      eduBudgetUsed += DEMO_EDU_REQUESTS
+        .filter(r => r.employeeId === personaId && r.status === 'APPROVED')
+        .reduce((sum, r) => sum + r.amount, 0)
+    }
+  }
+  const eduBudgetUsedPct = eduBudgetTotal > 0 ? Math.round((eduBudgetUsed / eduBudgetTotal) * 100) : null
 
   const pendingLeaveRequests = DEMO_ALL_LEAVE_REQUESTS.filter(l =>
     l.status === 'PENDING' && l.type === 'ANNUAL' && (isAdmin || (isTL &&
@@ -223,6 +303,50 @@ export default async function DashboardPage() {
                 <p className="text-xs text-slate-400 mt-0.5">jinak mimo</p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Hravé statistiky — obsazenost kanclu, čerpání dovolené a vzdělávacího budgetu */}
+        {(isAdmin || isTL) && scopeMembers.length > 0 && (
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
+            <div>
+              <h3 className="font-headline text-navy mb-1">Jak to vypadá {isAdmin ? 've firmě' : 've tvém týmu'}?</h3>
+              <p className="text-xs text-slate-400">Od začátku měsíce do dneška</p>
+            </div>
+
+            <div>
+              <p className="text-sm text-navy">
+                Kancl <strong>{teamLabel}</strong> bývá z <strong className="text-violet">{officeOccupancyPct} %</strong> obsazený
+                {homeofficeRatePct > 0 && <> ({homeofficeRatePct} % dní je někdo na home office)</>}.
+              </p>
+              <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
+                <div className="bg-violet h-2 rounded-full transition-all" style={{ width: `${officeOccupancyPct}%` }} />
+              </div>
+            </div>
+
+            {vacationUsedPct !== null && (
+              <div>
+                <p className="text-sm text-navy">
+                  V rámci {teamLabel} je letos vyčerpáno <strong className="text-green-600">{vacationUsedPct} %</strong> dovolené
+                  {' '}({vacationUsed}/{vacationEntitlement} dní).
+                </p>
+                <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
+                  <div className="bg-green-500 h-2 rounded-full transition-all" style={{ width: `${Math.min(100, vacationUsedPct)}%` }} />
+                </div>
+              </div>
+            )}
+
+            {eduBudgetUsedPct !== null && (
+              <div>
+                <p className="text-sm text-navy">
+                  Vzdělávací budget {teamLabel} je letos vyčerpaný z <strong className="text-amber-600">{eduBudgetUsedPct} %</strong>
+                  {' '}({fmtKc(eduBudgetUsed)} / {fmtKc(eduBudgetTotal)}).
+                </p>
+                <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
+                  <div className="bg-amber-500 h-2 rounded-full transition-all" style={{ width: `${Math.min(100, eduBudgetUsedPct)}%` }} />
+                </div>
+              </div>
+            )}
           </div>
         )}
 
