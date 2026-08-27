@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Dumbbell, GraduationCap, CheckCircle2, Clock, XCircle, Plus, Link2, Upload, HeartPulse } from 'lucide-react'
+import { Dumbbell, GraduationCap, CheckCircle2, Clock, XCircle, Plus, Link2, Upload, HeartPulse, ChevronDown } from 'lucide-react'
 import {
   DEMO_EDU_BUDGETS, DEMO_EDU_REQUESTS, DEFAULT_EDU_BUDGET, type EduRequest,
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST,
@@ -44,6 +44,8 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
 
   const [benefitType, setBenefitType] = useState<'MULTISPORT' | 'SPORT_CONTRIBUTION' | null>(null)
   const [sportRequests, setSportRequests] = useState<SportBenefitRequest[]>([])
+  const [sportHistoryOpen, setSportHistoryOpen] = useState(false)
+  const [eduHistoryOpen, setEduHistoryOpen] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const isICO = employmentType === 'ICO'
@@ -211,18 +213,34 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
             </div>
           )}
 
-          {mySportRequests.length > 0 && (
-            <div className="divide-y divide-slate-50 border-t border-slate-100 mt-4 pt-1">
-              {mySportRequests.filter(r => r.id !== currentMonthRequest?.id).map(r => (
-                <div key={r.id} className="py-2.5 flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-sm text-navy truncate">{MONTH_NAMES_CZ[r.month - 1]} {r.year} — {r.receiptName}</p>
+          {(() => {
+            const history = mySportRequests.filter(r => r.id !== currentMonthRequest?.id)
+            if (history.length === 0) return null
+            return (
+              <div className="mt-4 pt-1 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setSportHistoryOpen((o) => !o)}
+                  className="w-full flex items-center justify-between py-2 text-xs font-medium text-slate-500 hover:text-navy transition-colors"
+                >
+                  <span>Historie ({history.length})</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${sportHistoryOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {sportHistoryOpen && (
+                  <div className="divide-y divide-slate-50">
+                    {history.map(r => (
+                      <div key={r.id} className="py-2.5 flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm text-navy truncate">{MONTH_NAMES_CZ[r.month - 1]} {r.year} — {r.receiptName}</p>
+                        </div>
+                        <StatusBadge status={r.status} />
+                      </div>
+                    ))}
                   </div>
-                  <StatusBadge status={r.status} />
-                </div>
-              ))}
-            </div>
-          )}
+                )}
+              </div>
+            )
+          })()}
 
           <p className="text-xs text-slate-400 mt-3">
             Po schválení HR se ti {fmt(SPORT_CONTRIBUTION_AMOUNT)} připočte k odměně za daný měsíc.
@@ -256,29 +274,60 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
           {pending > 0 && <> · čeká na schválení {fmt(pending)}</>}
         </p>
 
-        {myRequests.length > 0 && (
-          <div className="divide-y divide-slate-50 border-t border-slate-100">
-            {myRequests.map(r => (
-              <div key={r.id} className="py-3 flex items-center justify-between gap-3">
-                <div className="min-w-0 flex items-center gap-2 flex-wrap">
-                  <div className="min-w-0">
-                    <p className="text-sm text-navy truncate">
-                      {r.title}
-                      {r.url && (
-                        <a href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet hover:text-violet-dark ml-1.5 align-middle">
-                          <Link2 className="w-3 h-3" />
-                        </a>
-                      )}
-                    </p>
-                    <p className="text-[11px] text-slate-400">{new Date(r.requestedAt).toLocaleDateString('cs-CZ')}</p>
-                  </div>
-                  <StatusBadge status={r.status} />
+        {(() => {
+          const recent = myRequests.filter(r => {
+            const d = new Date(r.requestedAt)
+            return d.getMonth() + 1 === currentMonth && d.getFullYear() === currentYear
+          })
+          const history = myRequests.filter(r => !recent.includes(r))
+
+          const renderRow = (r: EduRequest) => (
+            <div key={r.id} className="py-3 flex items-center justify-between gap-3">
+              <div className="min-w-0 flex items-center gap-2 flex-wrap">
+                <div className="min-w-0">
+                  <p className="text-sm text-navy truncate">
+                    {r.title}
+                    {r.url && (
+                      <a href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet hover:text-violet-dark ml-1.5 align-middle">
+                        <Link2 className="w-3 h-3" />
+                      </a>
+                    )}
+                  </p>
+                  <p className="text-[11px] text-slate-400">{new Date(r.requestedAt).toLocaleDateString('cs-CZ')}</p>
                 </div>
-                <span className="text-sm font-semibold text-navy flex-shrink-0">{fmt(r.amount)}</span>
+                <StatusBadge status={r.status} />
               </div>
-            ))}
-          </div>
-        )}
+              <span className="text-sm font-semibold text-navy flex-shrink-0">{fmt(r.amount)}</span>
+            </div>
+          )
+
+          return (
+            <>
+              {recent.length > 0 && (
+                <div className="divide-y divide-slate-50 border-t border-slate-100">
+                  {recent.map(renderRow)}
+                </div>
+              )}
+              {history.length > 0 && (
+                <div className={recent.length > 0 ? 'mt-1' : 'border-t border-slate-100'}>
+                  <button
+                    type="button"
+                    onClick={() => setEduHistoryOpen((o) => !o)}
+                    className="w-full flex items-center justify-between py-2 text-xs font-medium text-slate-500 hover:text-navy transition-colors"
+                  >
+                    <span>Historie ({history.length})</span>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${eduHistoryOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {eduHistoryOpen && (
+                    <div className="divide-y divide-slate-50">
+                      {history.map(renderRow)}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )
+        })()}
 
         {!addOpen ? (
           <button
