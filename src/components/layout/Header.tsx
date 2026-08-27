@@ -3,15 +3,17 @@
 import { Menu, Bell, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import { HeaderAvatar } from '@/components/AvatarUpload'
+import { RoleSwitcher } from './RoleSwitcher'
 
 interface HeaderProps {
   title: string
   onMenuClick?: () => void
   userName?: string | null
+  userEmail?: string | null
   teamMemberId?: string
 }
 
-export function Header({ title, onMenuClick, userName, teamMemberId }: HeaderProps) {
+export function Header({ title, onMenuClick, userName, userEmail, teamMemberId }: HeaderProps) {
   return (
     <header className="relative sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-slate-200/50 px-6 py-3.5 flex items-center gap-4 overflow-hidden">
       <div
@@ -28,6 +30,7 @@ export function Header({ title, onMenuClick, userName, teamMemberId }: HeaderPro
         <h1 className="text-lg font-headline font-semibold text-navy tracking-tight">{title}</h1>
       </div>
       <div className="flex items-center gap-2">
+        <RoleSwitcher currentEmail={userEmail} />
         <Link
           href="/pravidla"
           className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-all duration-150"

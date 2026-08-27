@@ -72,6 +72,7 @@ export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, 
           title={title}
           onMenuClick={() => setSidebarOpen(true)}
           userName={userName}
+          userEmail={userEmail}
           teamMemberId={teamMemberId}
         />
         <main className="flex-1 overflow-y-auto p-5 lg:p-7">
