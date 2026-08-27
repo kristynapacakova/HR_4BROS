@@ -79,9 +79,6 @@ function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium text-navy">{MONTH_NAMES[p.month - 1]} {p.year}</p>
-            {p.planned && (
-              <span className="px-1.5 py-0.5 bg-violet/10 text-violet rounded text-xs">plánováno</span>
-            )}
           </div>
           {!isICO && <p className="text-xs text-slate-400 mt-0.5">Hrubá: {fmt(p.grossAmount, p.currency)}</p>}
         </div>
@@ -186,7 +183,6 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
       >
         <td className="px-6 py-3 font-medium text-navy whitespace-nowrap">
           {MONTH_NAMES[p.month - 1]} {p.year}
-          {p.planned && <span className="ml-2 px-1.5 py-0.5 bg-violet/10 text-violet rounded text-[10px]">plánováno</span>}
         </td>
         <td className="px-4 py-3 text-slate-600">{fmt(p.netAmount, p.currency)}</td>
         <td className="px-4 py-3 text-slate-600">{fmt(officeAmount, 'CZK')}</td>
