@@ -43,12 +43,13 @@ interface SalaryInfo {
   lastRaiseDate: Date
 }
 
-function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
+function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests, icoExpenses = ICO_MONTHLY_EXPENSES }: {
   p: Payslip
   isICO: boolean
   benefitType: BenefitType | null
   sportRequests: { employeeId: string; month: number; year: number; status: string }[]
   expenseRequests: ExpenseRequest[]
+  icoExpenses?: { label: string; amount: number }[]
 }) {
   const [open, setOpen] = useState(false)
 
@@ -62,7 +63,7 @@ function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
     benefitType === 'SPORT_CONTRIBUTION' && monthSportApproved ? SPORT_CONTRIBUTION_AMOUNT :
     benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
     0
-  const icoExpensesTotal = isICO ? ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0) : 0
+  const icoExpensesTotal = isICO ? icoExpenses.reduce((s, e) => s + e.amount, 0) : 0
   const monthExpensesTotal = monthExpenses.reduce((s, e) => s + signedAmount(e), 0)
   const hasBreakdown = isICO || sportAmount !== 0 || monthExpensesTotal !== 0
 
@@ -110,7 +111,7 @@ function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests }: {
               <span className="text-slate-500">{isICO ? 'Měsíční paušál' : 'Čistá mzda'}</span>
               <span className="font-medium text-navy">{fmt(p.netAmount, p.currency)}</span>
             </div>
-            {isICO && ICO_MONTHLY_EXPENSES.map((e) => (
+            {isICO && icoExpenses.map((e) => (
               <div key={e.label} className="flex items-center justify-between gap-4">
                 <span className="text-slate-500">{e.label}</span>
                 <span className="font-medium text-green-600">+{fmt(e.amount, 'CZK')}</span>
@@ -147,13 +148,14 @@ function InvoiceStatusBadge({ status }: { status: InvoicePaymentStatus }) {
   return <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${style}`}>{INVOICE_STATUS_LABELS[status]}</span>
 }
 
-function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses }: {
+function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses, icoExpenses }: {
   p: Payslip
   benefitType: BenefitType | null
   sportRequests: { employeeId: string; month: number; year: number; status: string }[]
   expenseRequests: ExpenseRequest[]
   employeeId?: string
   invoiceStatuses: Record<string, InvoicePaymentStatus>
+  icoExpenses: { label: string; amount: number }[]
 }) {
   const [open, setOpen] = useState(false)
   const [showOtherDetail, setShowOtherDetail] = useState(false)
@@ -164,8 +166,8 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
     benefitType === 'SPORT_CONTRIBUTION' && monthSportApproved ? SPORT_CONTRIBUTION_AMOUNT :
     benefitType === 'MULTISPORT' ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
     0
-  const officeAmount = ICO_MONTHLY_EXPENSES.find((e) => e.label.includes('kancel'))?.amount ?? 0
-  const refreshAmount = ICO_MONTHLY_EXPENSES.find((e) => e.label.includes('erstven'))?.amount ?? 0
+  const officeAmount = icoExpenses.find((e) => e.label.includes('kancel'))?.amount ?? 0
+  const refreshAmount = icoExpenses.find((e) => e.label.includes('erstven'))?.amount ?? 0
   const officeInvoiceTotal = officeAmount + refreshAmount
   const otherItems = [
     ...(sportAmount !== 0 ? [{ label: sportAmount > 0 ? 'Příspěvek na sport' : 'Multisport — doplatek', amount: sportAmount }] : []),
@@ -260,7 +262,7 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
   )
 }
 
-function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses }: {
+function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses, icoExpenses }: {
   year: number
   payslips: Payslip[]
   benefitType: BenefitType | null
@@ -268,6 +270,7 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
   expenseRequests: ExpenseRequest[]
   employeeId?: string
   invoiceStatuses: Record<string, InvoicePaymentStatus>
+  icoExpenses: { label: string; amount: number }[]
 }) {
   const byMonth = new Map(payslips.map(p => [p.month, p]))
   const allMonths = Array.from({ length: 12 }, (_, i) => 12 - i).map(m => byMonth.get(m) ?? null).filter(Boolean) as Payslip[]
@@ -292,7 +295,7 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
         </thead>
         <tbody className="divide-y divide-slate-50">
           {allMonths.map((p) => (
-            <IcoMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeId={employeeId} invoiceStatuses={invoiceStatuses} />
+            <IcoMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeId={employeeId} invoiceStatuses={invoiceStatuses} icoExpenses={icoExpenses} />
           ))}
         </tbody>
       </table>
@@ -358,6 +361,7 @@ export function PayslipsClient({
   sickDays = 0,
   employeeId,
   employeeName,
+  icoExpenses = ICO_MONTHLY_EXPENSES,
 }: {
   payslips: Payslip[]
   salaryInfo: SalaryInfo
@@ -367,6 +371,8 @@ export function PayslipsClient({
   sickDays?: number
   employeeId?: string
   employeeName?: string
+  /** Individuální měsíční položky OSVČ (nájem kancelářského místa, občerstvení) — liší se člověk od člověka */
+  icoExpenses?: { label: string; amount: number }[]
 }) {
   const [showSickDetail, setShowSickDetail] = useState(false)
   const [benefitType, setBenefitType] = useState<BenefitType | null>(null)
@@ -795,7 +801,7 @@ export function PayslipsClient({
           benefitType === 'SPORT_CONTRIBUTION' && approvedThisMonth ? SPORT_CONTRIBUTION_AMOUNT :
           benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
           0
-        const icoExpensesTotal = isICO ? ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0) : 0
+        const icoExpensesTotal = isICO ? icoExpenses.reduce((s, e) => s + e.amount, 0) : 0
         const approvedExpensesTotal = approvedExpensesThisMonth.reduce((s, e) => s + signedAmount(e), 0)
         const adjustedNet = latestReal.netAmount + benefitAmount + icoExpensesTotal + approvedExpensesTotal - (sick?.deduction ?? 0)
 
@@ -824,7 +830,7 @@ export function PayslipsClient({
                         </button>
                       </span>
                       <span className="flex items-center gap-2 flex-shrink-0">
-                        <span className="font-medium text-green-600">+{fmt(ICO_MONTHLY_EXPENSES.reduce((s, e) => s + e.amount, 0), 'CZK')}</span>
+                        <span className="font-medium text-green-600">+{fmt(icoExpenses.reduce((s, e) => s + e.amount, 0), 'CZK')}</span>
                         <InvoiceStatusBadge status={officeInvoiceStatus} />
                       </span>
                     </div>
@@ -946,6 +952,7 @@ export function PayslipsClient({
               expenseRequests={myExpenses}
               employeeId={employeeId}
               invoiceStatuses={invoiceStatuses}
+              icoExpenses={icoExpenses}
             />
           ) : (
             <YearPanel

@@ -425,6 +425,10 @@ export const DEMO_USER_ICO = {
   hourlyRate: 1200,
   contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
   contractEndDate: null as Date | null,
+  icoNumber: "01234567",
+  officeAmount: 1500,
+  refreshAmount: 300,
+  annualLeaveDays: 25,
 }
 
 export const DEMO_EXPENSE_REQUESTS: ExpenseRequest[] = [
@@ -512,31 +516,57 @@ export const TEAM_DEPARTMENTS = [
   'Creative', 'Performance', 'Account', 'Sales', 'Backoffice', 'HR', 'Vývoj',
 ]
 
-export const DEMO_TEAM: {
+export interface PersonRecord {
   id: string; name: string; email: string; position: string; department: string
   seniority: string | null; employmentType: string; birthday: string | null
   bio: string | null; emoji: string; teamLeadId: string | null
-}[] = [
-  { id: "t1",  name: "Petra Nováková",    email: DEMO_ADMIN.email,     position: "HR Manager",           department: "HR",          seniority: "SENIOR", employmentType: "HPP", birthday: "1988-03-15", bio: "Mám ráda lidi, kávu a pořádek.", emoji: "🌿", teamLeadId: null },
-  { id: "t2",  name: "Jan Novák",          email: DEMO_USER.email,      position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻", teamLeadId: "t16" },
-  { id: "t3",  name: "Marie Svobodová",    email: "marie.svobodova@fourbros.cz", position: "Social Media Manager", department: "Performance", seniority: "JUNIOR", employmentType: "DPP", birthday: "1997-11-03", bio: "Tvořím obsah, který lidi zastaví při scrollování.", emoji: "📱", teamLeadId: null },
-  { id: "t4",  name: "Tomáš Dvořák",       email: DEMO_USER_ICO.email,  position: "Account Manager",      department: "Account",     seniority: "SENIOR", employmentType: "ICO", birthday: "1985-07-22", bio: "Klienti jsou základ. Rád řeším výzvy.", emoji: "🤝", teamLeadId: "t16" },
-  { id: "t5",  name: "Lucie Kratochvílová",email: "lucie.kratochvilova@fourbros.cz", position: "Art Director",         department: "Creative",    seniority: "SENIOR", employmentType: "ICO", birthday: "1991-02-08", bio: "Vizuál je moje řeč. Pixely jsou moji přátelé.", emoji: "🎨", teamLeadId: "t16" },
-  { id: "t6",  name: "Ondřej Mašek",       email: "ondrej.masek@fourbros.cz", position: "Performance Specialist",department:"Performance", seniority: "MEDIOR", employmentType: "ICO", birthday: "1993-09-14", bio: "PPC, data a ROAS. Čísla mě baví.", emoji: "📊", teamLeadId: null },
-  { id: "t7",  name: "Klára Horáková",     email: "klara.horakova@fourbros.cz", position: "Copywriter",           department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "1999-04-01", bio: "Slova jsou moje superschopnost.", emoji: "✍️", teamLeadId: null },
-  { id: "t8",  name: "Martin Beneš",       email: "martin.benes@fourbros.cz", position: "Sales Manager",        department: "Sales",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀", teamLeadId: null },
-  { id: "t9",  name: "Veronika Jelínková", email: "veronika.jelinkova@fourbros.cz", position: "Project Manager",      department: "Account",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋", teamLeadId: "t16" },
-  { id: "t10", name: "Pavel Šimánek",      email: "pavel.simanek@fourbros.cz", position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬", teamLeadId: null },
-  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null },
-  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null },
-  { id: "t13", name: "Michaela Červenková",email: "michaela.cervenkova@fourbros.cz", position: "Office Manager",       department: "Backoffice",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠", teamLeadId: null },
-  { id: "t14", name: "Radek Pospíšil",     email: "radek.pospisil@fourbros.cz", position: "Business Developer",   department: "Sales",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼", teamLeadId: null },
-  { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧", teamLeadId: null },
-  { id: "t16", name: "Eva Horáková",       email: DEMO_TL.email,        position: "Team Lead — Vývoj",    department: "Vývoj",       seniority: "LEAD",   employmentType: "HPP", birthday: "1987-11-02", bio: "Vedu tým vývojářů a mám ráda, když věci dávají smysl.", emoji: "🧭", teamLeadId: null },
+  role: "ADMIN" | "TL" | "EMPLOYEE"
+  startDate: Date
+  monthlyHours: number | null
+  clientHours: number | null
+  monthlySalary: number | null
+  hourlyRate: number | null
+  /** Jen u OSVČ — IČO a měsíční položky, které se liší člověk od člověka. */
+  icoNumber: string | null
+  officeAmount: number | null
+  refreshAmount: number | null
+  /** Nárok na placenou dovolenou za rok — u OSVČ typicky null (nejsou zaměstnanci). */
+  annualLeaveDays: number | null
+  contractTermType: "URCITA" | "NEURCITA"
+  contractEndDate: Date | null
+}
+
+export const DEMO_TEAM: PersonRecord[] = [
+  { id: "t1",  name: "Petra Nováková",    email: DEMO_ADMIN.email,     position: "HR Manager",           department: "HR",          seniority: "SENIOR", employmentType: "HPP", birthday: "1988-03-15", bio: "Mám ráda lidi, kávu a pořádek.", emoji: "🌿", teamLeadId: null, role: "ADMIN", startDate: new Date("2022-01-01"), monthlyHours: 160, clientHours: null, monthlySalary: 58000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t2",  name: "Jan Novák",          email: DEMO_USER.email,      position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2024-01-15"), monthlyHours: 168, clientHours: 120, monthlySalary: 65000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "URCITA", contractEndDate: new Date("2026-11-15") },
+  { id: "t3",  name: "Marie Svobodová",    email: "marie.svobodova@fourbros.cz", position: "Social Media Manager", department: "Performance", seniority: "JUNIOR", employmentType: "DPP", birthday: "1997-11-03", bio: "Tvořím obsah, který lidi zastaví při scrollování.", emoji: "📱", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-06-01"), monthlyHours: 80, clientHours: 60, monthlySalary: 28000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 20, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t4",  name: "Tomáš Dvořák",       email: DEMO_USER_ICO.email,  position: "Account Manager",      department: "Account",     seniority: "SENIOR", employmentType: "ICO", birthday: "1985-07-22", bio: "Klienti jsou základ. Rád řeším výzvy.", emoji: "🤝", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2022-03-15"), monthlyHours: 140, clientHours: 110, monthlySalary: null, hourlyRate: 1200, icoNumber: "01234567", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t5",  name: "Lucie Kratochvílová",email: "lucie.kratochvilova@fourbros.cz", position: "Art Director",         department: "Creative",    seniority: "SENIOR", employmentType: "ICO", birthday: "1991-02-08", bio: "Vizuál je moje řeč. Pixely jsou moji přátelé.", emoji: "🎨", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-09-01"), monthlyHours: 150, clientHours: 120, monthlySalary: null, hourlyRate: 1100, icoNumber: "87654321", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t6",  name: "Ondřej Mašek",       email: "ondrej.masek@fourbros.cz", position: "Performance Specialist",department:"Performance", seniority: "MEDIOR", employmentType: "ICO", birthday: "1993-09-14", bio: "PPC, data a ROAS. Čísla mě baví.", emoji: "📊", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-11-01"), monthlyHours: 150, clientHours: 115, monthlySalary: null, hourlyRate: 950, icoNumber: "11223344", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t7",  name: "Klára Horáková",     email: "klara.horakova@fourbros.cz", position: "Copywriter",           department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "1999-04-01", bio: "Slova jsou moje superschopnost.", emoji: "✍️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-08-01"), monthlyHours: 140, clientHours: 100, monthlySalary: null, hourlyRate: 750, icoNumber: "22334455", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t8",  name: "Martin Beneš",       email: "martin.benes@fourbros.cz", position: "Sales Manager",        department: "Sales",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2019-05-01"), monthlyHours: 160, clientHours: 130, monthlySalary: null, hourlyRate: 1300, icoNumber: "33445566", officeAmount: 1800, refreshAmount: 400, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t9",  name: "Veronika Jelínková", email: "veronika.jelinkova@fourbros.cz", position: "Project Manager",      department: "Account",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-02-01"), monthlyHours: 150, clientHours: 100, monthlySalary: null, hourlyRate: 1000, icoNumber: "44556677", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t10", name: "Pavel Šimánek",      email: "pavel.simanek@fourbros.cz", position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-04-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1000, icoNumber: "55667788", officeAmount: 1300, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-11-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "66778899", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2024-02-01"), monthlyHours: 140, clientHours: 90, monthlySalary: null, hourlyRate: 750, icoNumber: "77889900", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t13", name: "Michaela Červenková",email: "michaela.cervenkova@fourbros.cz", position: "Office Manager",       department: "Backoffice",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2020-06-01"), monthlyHours: 160, clientHours: null, monthlySalary: 42000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t14", name: "Radek Pospíšil",     email: "radek.pospisil@fourbros.cz", position: "Business Developer",   department: "Sales",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-07-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1050, icoNumber: "88990011", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-05-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "99001122", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t16", name: "Eva Horáková",       email: DEMO_TL.email,        position: "Team Lead — Vývoj",    department: "Vývoj",       seniority: "LEAD",   employmentType: "HPP", birthday: "1987-11-02", bio: "Vedu tým vývojářů a mám ráda, když věci dávají smysl.", emoji: "🧭", teamLeadId: null, role: "TL", startDate: new Date("2021-04-01"), monthlyHours: 168, clientHours: 100, monthlySalary: 85000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
 ]
 
 // Lidé, které lze v adminu nastavit jako team leadera daného člověka.
-export const TEAM_LEAD_CANDIDATES = DEMO_TEAM.filter((m) => m.id === "t16").map((m) => ({ id: m.id, name: m.name }))
+export const TEAM_LEAD_CANDIDATES = DEMO_TEAM.filter((m) => m.role === "TL").map((m) => ({ id: m.id, name: m.name }))
+
+export const PERSON_ROLE_LABELS: Record<PersonRecord["role"], string> = {
+  ADMIN: "Administrátor / HR",
+  TL: "Team leader",
+  EMPLOYEE: "Uživatel",
+}
+
+// Kompletní seznam lidí ve firmě pro adminskou sekci Uživatelé — DEMO_TEAM je zdroj pravdy,
+// tohle jméno se v appce používá tam, kde dřív existoval samostatný (a neúplný) seznam zaměstnanců.
+export const DEMO_EMPLOYEES: PersonRecord[] = DEMO_TEAM
 
 // tag: SMLOUVA | DODATEK | GDPR | NDA  (for contracts section)
 // type: CONTRACT | PAYSLIP
@@ -681,60 +711,6 @@ export const DEMO_PAYSLIPS = [
   { id: "23-3",  month: 3,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
   { id: "23-2",  month: 2,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
   { id: "23-1",  month: 1,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-]
-
-export const DEMO_EMPLOYEES = [
-  {
-    id: "demo-employee-1",
-    name: "Jan Novák",
-    email: "jan.novak@fourbros.cz",
-    department: "Creative",
-    position: "Frontend Developer",
-    employmentType: "HPP",
-    startDate: new Date("2024-01-15"),
-    seniority: "MEDIOR",
-    monthlyHours: 168,
-    clientHours: 120,
-    monthlySalary: 65000,
-    hourlyRate: null as number | null,
-    leaveBalances: [{ annualTotal: 20, annualUsed: 5 }],
-    contractTermType: "URCITA" as "URCITA" | "NEURCITA",
-    contractEndDate: new Date("2026-11-15") as Date | null,
-  },
-  {
-    id: "demo-employee-2",
-    name: "Marie Svobodová",
-    email: "marie.svobodova@fourbros.cz",
-    department: "Performance",
-    position: "Marketing Specialist",
-    employmentType: "DPP",
-    startDate: new Date("2023-06-01"),
-    seniority: "JUNIOR",
-    monthlyHours: 80,
-    clientHours: 60,
-    monthlySalary: 28000,
-    hourlyRate: null as number | null,
-    leaveBalances: [{ annualTotal: 20, annualUsed: 8 }],
-    contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
-    contractEndDate: null as Date | null,
-  },
-  {
-    id: "demo-employee-3",
-    name: "Tomáš Dvořák",
-    email: "tomas.dvorak@fourbros.cz",
-    department: "Account",
-    position: "Account Manager",
-    employmentType: "ICO",
-    startDate: new Date("2022-03-15"),
-    seniority: "SENIOR",
-    monthlyHours: 140,
-    clientHours: 110,
-    monthlySalary: null as number | null,
-    hourlyRate: 1200,
-    leaveBalances: [{ annualTotal: 20, annualUsed: 12 }],
-    contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
-    contractEndDate: null as Date | null,
-  },
 ]
 
 // All leave requests for admin view (with user info)

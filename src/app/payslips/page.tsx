@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_PAYSLIPS, DEMO_SALARY_INFO, getDemoUserById } from '@/lib/mock-data'
+import { DEMO_PAYSLIPS, DEMO_SALARY_INFO, ICO_MONTHLY_EXPENSES, getDemoUserById } from '@/lib/mock-data'
 import { PayslipsClient } from './PayslipsClient'
 
 export default async function PayslipsPage() {
@@ -11,6 +11,14 @@ export default async function PayslipsPage() {
   const isAdmin = session.user.role === 'ADMIN'
   const user = getDemoUserById(session.user.id)
   const pageTitle = 'Moje odměna'
+
+  // Nájem kancelářského místa a občerstvení se liší člověk od člověka — bere se z jeho profilu.
+  const icoExpenses = 'officeAmount' in user
+    ? [
+        { label: 'Nájem kancelářského místa', amount: user.officeAmount },
+        { label: 'Občerstvení', amount: user.refreshAmount },
+      ]
+    : ICO_MONTHLY_EXPENSES
 
   return (
     <AppShell
@@ -26,6 +34,7 @@ export default async function PayslipsPage() {
         employmentType={user.employmentType ?? 'HPP'}
         pageTitle={pageTitle}
         employeeId={user.id}
+        icoExpenses={icoExpenses}
       />
     </AppShell>
   )
