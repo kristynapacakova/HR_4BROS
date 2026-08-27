@@ -571,6 +571,12 @@ export const PERSON_ROLE_LABELS: Record<PersonRecord["role"], string> = {
 // tohle jméno se v appce používá tam, kde dřív existoval samostatný (a neúplný) seznam zaměstnanců.
 export const DEMO_EMPLOYEES: PersonRecord[] = DEMO_TEAM
 
+// teamLeadId v DEMO_TEAM odkazuje na DEMO_TEAM.id (např. "t16"), ne na přihlašovací id
+// demo účtu (DEMO_TL.id = "demo-tl-1") — tohle převádí jedno na druhé podle e-mailu.
+export function demoTeamIdFor(email: string): string | undefined {
+  return DEMO_TEAM.find((m) => m.email.toLowerCase() === email.toLowerCase())?.id
+}
+
 // tag: SMLOUVA | DODATEK | GDPR | NDA  (for contracts section)
 // type: CONTRACT | PAYSLIP
 export const DEMO_DOCUMENTS = [

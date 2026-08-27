@@ -11,6 +11,7 @@ import {
   DEMO_EMPLOYEES,
   DEMO_ALL_LEAVE_REQUESTS,
   getDemoUserById,
+  demoTeamIdFor,
 } from '@/lib/mock-data'
 import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
@@ -35,6 +36,7 @@ export default async function DashboardPage() {
   const isAdmin = session.user.role === 'ADMIN'
   const isTL = session.user.role === 'TL'
   const user = getDemoUserById(session.user.id)
+  const myTeamId = isTL ? demoTeamIdFor(session.user.email ?? '') : undefined
 
   const tasks = DEMO_TASKS
   const pendingTasks = tasks.filter(t => !t.completed)
@@ -65,7 +67,7 @@ export default async function DashboardPage() {
   const scopeIds = isAdmin
     ? DEMO_TEAM.map(m => m.id)
     : isTL
-      ? DEMO_TEAM.filter(m => m.teamLeadId === session.user.id).map(m => m.id)
+      ? DEMO_TEAM.filter(m => m.teamLeadId === myTeamId).map(m => m.id)
       : []
   const scopeNames = new Set(DEMO_TEAM.filter(m => scopeIds.includes(m.id)).map(m => m.name))
   const todayOutByType = DEMO_TEAM_LEAVES.filter((l) => {
@@ -79,7 +81,7 @@ export default async function DashboardPage() {
 
   const pendingLeaveRequests = DEMO_ALL_LEAVE_REQUESTS.filter(l =>
     l.status === 'PENDING' && l.type === 'ANNUAL' && (isAdmin || (isTL &&
-      DEMO_TEAM.find(m => m.email.toLowerCase() === l.user.email.toLowerCase())?.teamLeadId === session.user.id
+      DEMO_TEAM.find(m => m.email.toLowerCase() === l.user.email.toLowerCase())?.teamLeadId === myTeamId
     ))
   )
 

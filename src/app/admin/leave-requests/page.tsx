@@ -4,7 +4,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { formatDate, getLeaveTypeCz, getDaysBetween } from '@/lib/utils'
 import { CalendarDays } from 'lucide-react'
 import { LeaveActionButtons } from './LeaveActionButtons'
-import { DEMO_ALL_LEAVE_REQUESTS, DEMO_TL, DEMO_TEAM } from '@/lib/mock-data'
+import { DEMO_ALL_LEAVE_REQUESTS, DEMO_TEAM, demoTeamIdFor } from '@/lib/mock-data'
 
 // Nadřízený schvaluje jen Dovolenou — homeoffice, nemoc, lékař a volno se zapisují automaticky.
 const APPROVAL_REQUIRED_TYPE = 'ANNUAL'
@@ -18,9 +18,10 @@ export default async function AdminLeaveRequestsPage() {
   if (!session?.user?.id) redirect('/login')
   const isTL = session.user.role === 'TL'
   if (session.user.role !== 'ADMIN' && !isTL) redirect('/dashboard')
+  const myTeamId = isTL ? demoTeamIdFor(session.user.email ?? '') : undefined
 
   const leaveRequests = isTL
-    ? DEMO_ALL_LEAVE_REQUESTS.filter((r) => teamLeadOf(r.user.email) === DEMO_TL.id)
+    ? DEMO_ALL_LEAVE_REQUESTS.filter((r) => teamLeadOf(r.user.email) === myTeamId)
     : DEMO_ALL_LEAVE_REQUESTS
 
   const pending = leaveRequests.filter((r) => r.status === 'PENDING' && r.type === APPROVAL_REQUIRED_TYPE)

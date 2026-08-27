@@ -1,13 +1,14 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_TEAM, DEMO_TL, DEMO_USER_ICO, DEMO_ICO_INVOICES } from '@/lib/mock-data'
+import { DEMO_TEAM, DEMO_USER_ICO, DEMO_ICO_INVOICES, demoTeamIdFor } from '@/lib/mock-data'
 import { TeamFakturaceClient } from './TeamFakturaceClient'
 
 export default async function TymFakturacePage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')
   if (session.user.role !== 'TL') redirect('/dashboard')
+  const myTeamId = demoTeamIdFor(session.user.email ?? '')
 
   const team = DEMO_TEAM.map((m) => ({
     id: m.id,
@@ -32,7 +33,7 @@ export default async function TymFakturacePage() {
           Přehled faktur OSVČ spolupracovníků, které ti HR přiřadilo do týmu. Faktura za nájem kancelářského místa
           a občerstvení se časem bude tahat automaticky z Fakturoidu — zatím stav plateb nastavuje HR ručně.
         </p>
-        <TeamFakturaceClient team={team} teamLeadId={DEMO_TL.id} invoices={DEMO_ICO_INVOICES} />
+        <TeamFakturaceClient team={team} teamLeadId={myTeamId ?? ''} invoices={DEMO_ICO_INVOICES} />
       </div>
     </AppShell>
   )
