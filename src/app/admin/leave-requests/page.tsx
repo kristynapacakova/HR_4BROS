@@ -30,6 +30,7 @@ export default async function AdminLeaveRequestsPage() {
     <AppShell
       title={isTL ? 'Žádosti o dovolenou — tvůj tým' : 'Žádosti o dovolenou'}
       isAdmin={session.user.role === 'ADMIN'}
+      isTL={isTL}
       userName={session.user.name}
       userEmail={session.user.email}
     >
