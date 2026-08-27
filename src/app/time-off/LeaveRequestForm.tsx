@@ -83,12 +83,13 @@ function calcWorkdays(start: Date, end: Date) {
 // ── Leave types ───────────────────────────────────────────────────────────────
 
 const LEAVE_TYPES = [
-  { value: 'DOVOLENA',       label: 'Dovolená',        deductsBalance: true },
-  { value: 'HOMEOFFICE',     label: 'Homeoffice',      deductsBalance: false },
-  { value: 'NEMOC',          label: 'Nemoc',           deductsBalance: false },
-  { value: 'POHREB',         label: 'Pohřeb',          deductsBalance: false },
-  { value: 'NEPLACENE_VOLNO',label: 'Neplacené volno', deductsBalance: false },
-  { value: 'PLACENE_VOLNO',  label: 'Placené volno',   deductsBalance: false },
+  { value: 'DOVOLENA',       label: 'Dovolená',        deductsBalance: true,  needsApproval: true },
+  { value: 'HOMEOFFICE',     label: 'Homeoffice',      deductsBalance: false, needsApproval: false },
+  { value: 'NEMOC',          label: 'Nemoc',           deductsBalance: false, needsApproval: false },
+  { value: 'LEKAR',          label: 'Lékař',           deductsBalance: false, needsApproval: false },
+  { value: 'POHREB',         label: 'Pohřeb',          deductsBalance: false, needsApproval: false },
+  { value: 'NEPLACENE_VOLNO',label: 'Neplacené volno', deductsBalance: false, needsApproval: false },
+  { value: 'PLACENE_VOLNO',  label: 'Placené volno',   deductsBalance: false, needsApproval: false },
 ]
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -165,7 +166,9 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <p className="text-green-700 font-medium">Žádost byla odeslána!</p>
+        <p className="text-green-700 font-medium">
+          {selectedType.needsApproval ? 'Žádost byla odeslána ke schválení!' : 'Absence byla zapsána do docházky!'}
+        </p>
         <p className="text-sm text-amber-600 mt-1">Demo verze — změny se neukládají.</p>
       </div>
     )
@@ -383,12 +386,18 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
         </div>
       )}
 
+      <p className="text-xs text-slate-400">
+        {selectedType.needsApproval
+          ? 'Dovolenou schvaluje tvůj nadřízený.'
+          : 'Tento typ absence se schvaluje automaticky — jen se zapíše do docházky.'}
+      </p>
+
       <button
         type="submit"
         disabled={loading}
         className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
       >
-        {loading ? 'Odesílám...' : 'Odeslat žádost'}
+        {loading ? 'Odesílám...' : selectedType.needsApproval ? 'Odeslat žádost' : 'Zapsat do docházky'}
       </button>
     </form>
   )

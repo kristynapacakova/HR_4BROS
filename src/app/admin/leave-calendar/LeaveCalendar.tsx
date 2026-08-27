@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Plus, ChevronDown } from 'lucide-react'
+import { Plus, ChevronDown, Plane, Home, Stethoscope, Thermometer, Wallet, Ban, Trash2 } from 'lucide-react'
 
 interface Leave {
   id: string
@@ -13,14 +13,14 @@ interface Leave {
   status: string
 }
 
-const TYPE_COLORS: Record<string, { dot: string; cell: string; label: string }> = {
-  ANNUAL:         { dot: 'bg-green-400',  cell: 'bg-green-100 text-green-700',   label: 'Dovolená' },
-  PLACENE_VOLNO:  { dot: 'bg-blue-400',   cell: 'bg-blue-100 text-blue-700',     label: 'Placené volno' },
-  PERSONAL:       { dot: 'bg-blue-400',   cell: 'bg-blue-100 text-blue-700',     label: 'Placené volno' },
-  NEPLACENE_VOLNO:{ dot: 'bg-slate-400',  cell: 'bg-slate-200 text-slate-600',   label: 'Neplacené volno' },
-  SICK:           { dot: 'bg-red-400',    cell: 'bg-red-100 text-red-700',       label: 'Nemoc' },
-  LEKAR:          { dot: 'bg-amber-400',  cell: 'bg-amber-100 text-amber-700',   label: 'Lékař' },
-  HOMEOFFICE:     { dot: 'bg-violet',     cell: 'bg-violet/15 text-violet',      label: 'Homeoffice' },
+const TYPE_COLORS: Record<string, { dot: string; cell: string; label: string; icon: React.ComponentType<{ className?: string }> }> = {
+  ANNUAL:         { dot: 'bg-green-400',  cell: 'bg-green-100 text-green-700',   label: 'Dovolená',        icon: Plane },
+  PLACENE_VOLNO:  { dot: 'bg-blue-400',   cell: 'bg-blue-100 text-blue-700',     label: 'Placené volno',   icon: Wallet },
+  PERSONAL:       { dot: 'bg-blue-400',   cell: 'bg-blue-100 text-blue-700',     label: 'Placené volno',   icon: Wallet },
+  NEPLACENE_VOLNO:{ dot: 'bg-slate-400',  cell: 'bg-slate-200 text-slate-600',   label: 'Neplacené volno', icon: Ban },
+  SICK:           { dot: 'bg-red-400',    cell: 'bg-red-100 text-red-700',       label: 'Nemoc',           icon: Thermometer },
+  LEKAR:          { dot: 'bg-amber-400',  cell: 'bg-amber-100 text-amber-700',   label: 'Lékař',           icon: Stethoscope },
+  HOMEOFFICE:     { dot: 'bg-violet',     cell: 'bg-violet/15 text-violet',      label: 'Homeoffice',      icon: Home },
 }
 const LEGEND_ORDER = ['ANNUAL', 'PLACENE_VOLNO', 'NEPLACENE_VOLNO', 'SICK', 'LEKAR', 'HOMEOFFICE']
 
@@ -91,7 +91,6 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
   const [viewYear, setViewYear]   = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
   const [leaves, setLeaves] = useState<Leave[]>(initialLeaves)
-  const [holidayYears, setHolidayYears] = useState<Set<number>>(new Set())
   const [addOpen, setAddOpen] = useState(false)
   const [form, setForm] = useState<NewLeaveForm>({ person: ALL_PEOPLE[0].name, type: 'ANNUAL', start: '', end: '' })
 
@@ -113,10 +112,8 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
   const todayDay = today.getFullYear() === viewYear && today.getMonth() === viewMonth ? today.getDate() : null
 
-  const holidaySet = useMemo(
-    () => (holidayYears.has(viewYear) ? getCzechHolidays(viewYear) : new Set<string>()),
-    [holidayYears, viewYear]
-  )
+  // Státní svátky se počítají vzorcem pro libovolný rok — není potřeba je ručně generovat.
+  const holidaySet = useMemo(() => getCzechHolidays(viewYear), [viewYear])
   const isHoliday = (day: number) => holidaySet.has(`${viewMonth}-${day}`)
 
   const leaveForDay = useMemo(() => {
@@ -124,7 +121,10 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leaves, viewYear, viewMonth])
 
-  const generateHolidays = () => setHolidayYears(prev => new Set(prev).add(viewYear))
+  const deleteLeave = (leave: Leave) => {
+    if (!confirm(`Smazat ${TYPE_COLORS[leave.type]?.label ?? leave.type} — ${leave.userName}?`)) return
+    setLeaves(prev => prev.filter(l => l.id !== leave.id))
+  }
 
   const addLeave = () => {
     if (!form.start || !form.end) return
@@ -164,6 +164,11 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
       </div>
 
       {/* Table */}
+      {canEdit && (
+        <p className="flex items-center gap-1.5 text-xs text-slate-400 -mb-2">
+          <Trash2 className="w-3.5 h-3.5" /> Klikni na absenci v tabulce a smaž ji, když se nakonec nečerpala.
+        </p>
+      )}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="border-collapse">
@@ -198,20 +203,22 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
                     return (
                       <td key={day} className="text-center py-1">
                         <span
+                          role={leave && canEdit ? 'button' : undefined}
+                          onClick={leave && canEdit ? () => deleteLeave(leave) : undefined}
                           title={
                             leave
-                              ? `${colors!.label}${pending ? ' · čeká na schválení' : ''}`
+                              ? `${colors!.label}${pending ? ' · čeká na schválení' : ''}${canEdit ? ' · klikni pro smazání' : ''}`
                               : holiday ? 'Státní svátek' : undefined
                           }
                           className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-[11px] font-medium transition-colors ${
                             colors
-                              ? `${colors.cell} ${pending ? 'opacity-50 border border-dashed border-current' : ''}`
+                              ? `${colors.cell} ${pending ? 'opacity-50 border border-dashed border-current' : ''} ${canEdit ? 'cursor-pointer hover:ring-2 hover:ring-red-300' : ''}`
                               : holiday
                                 ? 'bg-slate-100 text-slate-400 font-semibold'
                                 : 'text-slate-500 bg-slate-50'
                           } ${isToday ? 'border-2 border-violet' : ''}`}
                         >
-                          {day}
+                          {colors ? <colors.icon className="w-3.5 h-3.5" /> : day}
                         </span>
                       </td>
                     )
@@ -225,31 +232,23 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
 
       {/* Legend */}
       <div className="flex flex-wrap gap-4 px-1">
-        {LEGEND_ORDER.map(key => (
-          <span key={key} className="flex items-center gap-1.5 text-xs text-slate-500">
-            <span className={`w-2.5 h-2.5 rounded-full ${TYPE_COLORS[key].dot} inline-block`} />
-            {TYPE_COLORS[key].label}
-          </span>
-        ))}
+        {LEGEND_ORDER.map(key => {
+          const Icon = TYPE_COLORS[key].icon
+          return (
+            <span key={key} className="flex items-center gap-1.5 text-xs text-slate-500">
+              <span className={`w-5 h-5 rounded-md flex items-center justify-center ${TYPE_COLORS[key].cell}`}>
+                <Icon className="w-3 h-3" />
+              </span>
+              {TYPE_COLORS[key].label}
+            </span>
+          )
+        })}
         <span className="flex items-center gap-1.5 text-xs text-slate-400">
           <span className="w-2.5 h-2.5 rounded-full border-2 border-dashed border-slate-300 inline-block" />
           Čeká na schválení
         </span>
       </div>
 
-      {/* Vygenerovat státní svátky */}
-      {canEdit && (
-        <div className="flex items-center gap-3 flex-wrap">
-          <button
-            onClick={generateHolidays}
-            disabled={holidayYears.has(viewYear)}
-            className="px-4 py-2.5 rounded-full text-sm font-semibold text-white bg-violet hover:bg-violet-dark transition-colors disabled:opacity-50 disabled:cursor-default"
-          >
-            {holidayYears.has(viewYear) ? `Svátky pro rok ${viewYear} vygenerovány ✓` : `Vygenerovat státní svátky pro rok ${viewYear}`}
-          </button>
-          <p className="text-xs text-slate-400">Spočítají se samy včetně Velikonoc. Ručně přidané dny se nepřepíšou.</p>
-        </div>
-      )}
 
       {/* Nová absence */}
       {canEdit && (
