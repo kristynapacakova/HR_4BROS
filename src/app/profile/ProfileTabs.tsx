@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { ProfileForm } from './ProfileForm'
 import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Banknote, CalendarDays, FileText, ClipboardList, Gift } from 'lucide-react'
 import { BenefitsPanel } from './panels/BenefitsPanel'
@@ -76,6 +77,8 @@ export function ProfileTabs({
     { id: 'benefity', label: 'Benefity', icon: Gift },
     { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
   ] as const
+  type TabId = typeof tabs[number]['id']
+  const [tab, setTab] = useState<TabId>('udaje')
 
   const efficiency = hrData?.monthlyHours && hrData.clientHours
     ? Math.round((hrData.clientHours / hrData.monthlyHours) * 100)
@@ -84,29 +87,31 @@ export function ProfileTabs({
   const seniorityLabel = seniorityLevels?.find(s => s.value === hrData?.seniority)?.label ?? hrData?.seniority ?? '—'
 
   return (
-    <div className="space-y-10">
-      {/* Rychlý přechod na sekci — vše je rozbalené pod sebou, tohle jen skočí na kotvu */}
-      <div className="flex flex-wrap gap-1.5 bg-slate-50 rounded-2xl p-1.5">
+    <div className="lg:flex lg:flex-row-reverse lg:items-start lg:gap-6">
+      {/* Menu vpravo — přepíná, která sekce je vidět */}
+      <nav className="flex lg:flex-col gap-1.5 bg-slate-50 rounded-2xl p-1.5 lg:w-52 lg:flex-shrink-0 lg:sticky lg:top-20 overflow-x-auto lg:overflow-visible mb-6 lg:mb-0">
         {tabs.map(t => {
           const Icon = t.icon
+          const active = tab === t.id
           return (
-            <a
+            <button
               key={t.id}
-              href={`#sekce-${t.id}`}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium text-slate-500 hover:text-navy hover:bg-white transition-all whitespace-nowrap"
+              onClick={() => setTab(t.id as TabId)}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                active ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy hover:bg-white/60'
+              }`}
             >
-              <Icon className="w-4 h-4 text-slate-400" />
+              <Icon className={`w-4 h-4 flex-shrink-0 ${active ? 'text-violet' : 'text-slate-400'}`} />
               {t.label}
-            </a>
+            </button>
           )
         })}
-      </div>
+      </nav>
+
+      <div className="flex-1 min-w-0">
 
       {/* Osobní údaje + HR údaje */}
-      <section id="sekce-udaje" className="scroll-mt-20">
-        <h2 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
-          <UserIcon className="w-4 h-4 text-violet" /> Osobní údaje
-        </h2>
+      {tab === 'udaje' && (
         <div className="space-y-6">
           <ProfileForm
             user={user}
@@ -196,13 +201,10 @@ export function ProfileTabs({
             </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Zapůjčený majetek */}
-      <section id="sekce-majetek" className="scroll-mt-20">
-        <h2 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
-          <Laptop className="w-4 h-4 text-violet" /> Majetek
-        </h2>
+      {tab === 'majetek' && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({assets.length} položek)</h3>
@@ -245,39 +247,21 @@ export function ProfileTabs({
             </div>
           )}
         </div>
-      </section>
+      )}
 
       {/* Moje odměna */}
-      <section id="sekce-vyplata" className="scroll-mt-20">
-        <h2 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
-          <Banknote className="w-4 h-4 text-violet" /> {tabs.find(t => t.id === 'vyplata')!.label}
-        </h2>
-        {payslipsPanel}
-      </section>
+      {tab === 'vyplata' && payslipsPanel}
 
       {/* Moje docházka */}
-      <section id="sekce-dochazka" className="scroll-mt-20">
-        <h2 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
-          <CalendarDays className="w-4 h-4 text-violet" /> Docházka
-        </h2>
-        {timeOffPanel}
-      </section>
+      {tab === 'dochazka' && timeOffPanel}
 
       {/* Benefity */}
-      <section id="sekce-benefity" className="scroll-mt-20">
-        <h2 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
-          <Gift className="w-4 h-4 text-violet" /> Benefity
-        </h2>
-        <BenefitsPanel employeeId={user.id} employeeName={user.name} employmentType={user.employmentType} />
-      </section>
+      {tab === 'benefity' && <BenefitsPanel employeeId={user.id} employeeName={user.name} employmentType={user.employmentType} />}
 
       {/* Dokumenty a smlouvy */}
-      <section id="sekce-dokumenty" className="scroll-mt-20">
-        <h2 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
-          <FileText className="w-4 h-4 text-violet" /> Dokumenty
-        </h2>
-        {documentsPanel}
-      </section>
+      {tab === 'dokumenty' && documentsPanel}
+
+      </div>
     </div>
   )
 }
