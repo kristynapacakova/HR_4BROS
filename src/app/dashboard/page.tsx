@@ -284,69 +284,61 @@ export default async function DashboardPage() {
           </Link>
         )}
 
-        {/* Kdo je dnes v kanceláři vs. mimo — jen HR (celá firma) a TL (svůj tým) */}
+        {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
         {(isAdmin || isTL) && scopeNames.size > 0 && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <h3 className="font-headline text-navy mb-1">{isAdmin ? 'Dnes ve firmě' : 'Dnes v tvém týmu'}</h3>
+            <h3 className="font-headline text-navy mb-1">{isAdmin ? 'Firma dnes' : 'Tvůj tým dnes'}</h3>
             <p className="text-xs text-slate-400 mb-4">Kolik lidí je v kanceláři a kolik mimo</p>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3 pb-5 mb-5 border-b border-slate-100">
               <div className="text-center">
-                <p className="text-2xl font-headline font-bold text-navy">{inOfficeCount}</p>
+                <p className="text-2xl font-headline font-semibold text-navy">{inOfficeCount}</p>
                 <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-headline font-bold text-violet">{homeofficeCount}</p>
+                <p className="text-2xl font-headline font-semibold text-navy">{homeofficeCount}</p>
                 <p className="text-xs text-slate-400 mt-0.5">home office</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-headline font-bold text-amber-600">{otherOutCount}</p>
+                <p className="text-2xl font-headline font-semibold text-navy">{otherOutCount}</p>
                 <p className="text-xs text-slate-400 mt-0.5">jinak mimo</p>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Hravé statistiky — obsazenost kanclu, čerpání dovolené a vzdělávacího budgetu */}
-        {(isAdmin || isTL) && scopeMembers.length > 0 && (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
-            <div>
-              <h3 className="font-headline text-navy mb-1">Jak to vypadá {isAdmin ? 've firmě' : 've tvém týmu'}?</h3>
-              <p className="text-xs text-slate-400">Od začátku měsíce do dneška</p>
-            </div>
-
-            <div>
-              <p className="text-sm text-navy">
-                Kancl <strong>{teamLabel}</strong> bývá z <strong className="text-violet">{officeOccupancyPct} %</strong> obsazený
-                {homeofficeRatePct > 0 && <> ({homeofficeRatePct} % dní je někdo na home office)</>}.
-              </p>
-              <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
-                <div className="bg-violet h-2 rounded-full transition-all" style={{ width: `${officeOccupancyPct}%` }} />
-              </div>
-            </div>
-
-            {vacationUsedPct !== null && (
+            <div className="space-y-4">
               <div>
-                <p className="text-sm text-navy">
-                  V rámci {teamLabel} je letos vyčerpáno <strong className="text-green-600">{vacationUsedPct} %</strong> dovolené
-                  {' '}({vacationUsed}/{vacationEntitlement} dní).
-                </p>
-                <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
-                  <div className="bg-green-500 h-2 rounded-full transition-all" style={{ width: `${Math.min(100, vacationUsedPct)}%` }} />
+                <div className="flex items-center justify-between text-sm mb-1.5">
+                  <span className="text-slate-500">Obsazenost kanclu {teamLabel} tento měsíc</span>
+                  <span className="font-medium text-navy">{officeOccupancyPct} %</span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-1.5">
+                  <div className="bg-violet h-1.5 rounded-full transition-all" style={{ width: `${officeOccupancyPct}%` }} />
                 </div>
               </div>
-            )}
 
-            {eduBudgetUsedPct !== null && (
-              <div>
-                <p className="text-sm text-navy">
-                  Vzdělávací budget {teamLabel} je letos vyčerpaný z <strong className="text-amber-600">{eduBudgetUsedPct} %</strong>
-                  {' '}({fmtKc(eduBudgetUsed)} / {fmtKc(eduBudgetTotal)}).
-                </p>
-                <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
-                  <div className="bg-amber-500 h-2 rounded-full transition-all" style={{ width: `${Math.min(100, eduBudgetUsedPct)}%` }} />
+              {vacationUsedPct !== null && (
+                <div>
+                  <div className="flex items-center justify-between text-sm mb-1.5">
+                    <span className="text-slate-500">Vyčerpaná dovolená letos ({vacationUsed}/{vacationEntitlement} dní)</span>
+                    <span className="font-medium text-navy">{vacationUsedPct} %</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-1.5">
+                    <div className="bg-violet/60 h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, vacationUsedPct)}%` }} />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+
+              {eduBudgetUsedPct !== null && (
+                <div>
+                  <div className="flex items-center justify-between text-sm mb-1.5">
+                    <span className="text-slate-500">Vzdělávací budget letos ({fmtKc(eduBudgetUsed)} / {fmtKc(eduBudgetTotal)})</span>
+                    <span className="font-medium text-navy">{eduBudgetUsedPct} %</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-1.5">
+                    <div className="bg-navy/30 h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, eduBudgetUsedPct)}%` }} />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
