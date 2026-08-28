@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
 import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Banknote, CalendarDays, FileText, ClipboardList, Gift } from 'lucide-react'
 import { BenefitsPanel } from './panels/BenefitsPanel'
@@ -78,7 +79,10 @@ export function ProfileTabs({
     { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
   ] as const
   type TabId = typeof tabs[number]['id']
-  const [tab, setTab] = useState<TabId>('udaje')
+  const searchParams = useSearchParams()
+  const requestedTab = searchParams.get('tab')
+  const initialTab = tabs.some(t => t.id === requestedTab) ? (requestedTab as TabId) : 'udaje'
+  const [tab, setTab] = useState<TabId>(initialTab)
 
   const efficiency = hrData?.monthlyHours && hrData.clientHours
     ? Math.round((hrData.clientHours / hrData.monthlyHours) * 100)
@@ -87,9 +91,9 @@ export function ProfileTabs({
   const seniorityLabel = seniorityLevels?.find(s => s.value === hrData?.seniority)?.label ?? hrData?.seniority ?? '—'
 
   return (
-    <div className="lg:flex lg:flex-row-reverse lg:items-start lg:gap-6">
-      {/* Menu vpravo — přepíná, která sekce je vidět */}
-      <nav className="flex lg:flex-col gap-1.5 bg-slate-50 rounded-2xl p-1.5 lg:w-52 lg:flex-shrink-0 lg:sticky lg:top-20 overflow-x-auto lg:overflow-visible mb-6 lg:mb-0">
+    <div>
+      {/* Tab bar — horizontal pill row under the profile header, clearly separate from the main nav */}
+      <div className="flex flex-wrap gap-1.5 bg-slate-50 rounded-2xl p-1.5 mb-6">
         {tabs.map(t => {
           const Icon = t.icon
           const active = tab === t.id
@@ -98,17 +102,15 @@ export function ProfileTabs({
               key={t.id}
               onClick={() => setTab(t.id as TabId)}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-                active ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy hover:bg-white/60'
+                active ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy'
               }`}
             >
-              <Icon className={`w-4 h-4 flex-shrink-0 ${active ? 'text-violet' : 'text-slate-400'}`} />
+              <Icon className={`w-4 h-4 ${active ? 'text-violet' : 'text-slate-400'}`} />
               {t.label}
             </button>
           )
         })}
-      </nav>
-
-      <div className="flex-1 min-w-0">
+      </div>
 
       {/* Osobní údaje + HR údaje */}
       {tab === 'udaje' && (
@@ -260,8 +262,6 @@ export function ProfileTabs({
 
       {/* Dokumenty a smlouvy */}
       {tab === 'dokumenty' && documentsPanel}
-
-      </div>
     </div>
   )
 }
