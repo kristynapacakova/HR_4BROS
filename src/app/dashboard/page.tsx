@@ -22,6 +22,7 @@ import {
 } from '@/lib/mock-data'
 import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
+import { RingStat } from './RingStat'
 
 const CZ_MONTHS = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']
 
@@ -304,39 +305,28 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <div className="flex items-center justify-between text-sm mb-1.5">
-                  <span className="text-slate-500">Obsazenost kanclu {teamLabel} tento měsíc</span>
-                  <span className="font-medium text-navy">{officeOccupancyPct} %</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-1.5">
-                  <div className="bg-violet h-1.5 rounded-full transition-all" style={{ width: `${officeOccupancyPct}%` }} />
-                </div>
-              </div>
-
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <RingStat
+                pct={officeOccupancyPct}
+                value={`${officeOccupancyPct}%`}
+                label={`Obsazenost kanclu ${teamLabel} tento měsíc`}
+                tone="strong"
+              />
               {vacationUsedPct !== null && (
-                <div>
-                  <div className="flex items-center justify-between text-sm mb-1.5">
-                    <span className="text-slate-500">Vyčerpaná dovolená letos ({vacationUsed}/{vacationEntitlement} dní)</span>
-                    <span className="font-medium text-navy">{vacationUsedPct} %</span>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-1.5">
-                    <div className="bg-violet/60 h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, vacationUsedPct)}%` }} />
-                  </div>
-                </div>
+                <RingStat
+                  pct={vacationUsedPct}
+                  value={`${vacationUsedPct}%`}
+                  label={`Vyčerpaná dovolená letos (${vacationUsed}/${vacationEntitlement} dní)`}
+                  tone="soft"
+                />
               )}
-
               {eduBudgetUsedPct !== null && (
-                <div>
-                  <div className="flex items-center justify-between text-sm mb-1.5">
-                    <span className="text-slate-500">Vzdělávací budget letos ({fmtKc(eduBudgetUsed)} / {fmtKc(eduBudgetTotal)})</span>
-                    <span className="font-medium text-navy">{eduBudgetUsedPct} %</span>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-1.5">
-                    <div className="bg-navy/30 h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, eduBudgetUsedPct)}%` }} />
-                  </div>
-                </div>
+                <RingStat
+                  pct={eduBudgetUsedPct}
+                  value={`${eduBudgetUsedPct}%`}
+                  label={`Vzdělávací budget letos (${fmtKc(eduBudgetUsed)} z ${fmtKc(eduBudgetTotal)})`}
+                  tone="soft"
+                />
               )}
             </div>
           </div>
