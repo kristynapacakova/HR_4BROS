@@ -225,74 +225,6 @@ export default async function DashboardPage() {
           startDate={startDate.toISOString()}
         />
 
-        {/* Čeká na tebe — admin vidí vše, TL jen svůj tým */}
-        {(isAdmin || isTL) && (
-          <Link
-            href="/admin/leave-requests"
-            className="block bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:border-violet/30 transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <CheckSquare className="w-4 h-4 text-violet" />
-                </div>
-                <div>
-                  <p className="font-headline text-navy leading-tight">Čeká na tebe</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {pendingLeaveRequests.length === 0
-                      ? isTL ? 'Žádné žádosti od tvého týmu' : 'Žádné žádosti ke schválení'
-                      : `${pendingLeaveRequests.length} ${pendingLeaveRequests.length === 1 ? 'žádost o dovolenou čeká' : 'žádosti o dovolenou čekají'} na schválení${isTL ? ' od tvého týmu' : ''}`}
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors flex-shrink-0" />
-            </div>
-          </Link>
-        )}
-
-        {/* Smlouvy na dobu určitou končící do 3 měsíců — jen admin */}
-        {isAdmin && expiringContracts.length > 0 && (
-          <Link
-            href="/admin/smlouvy"
-            className="block bg-alice border border-slate-100 rounded-2xl p-6 hover:border-navy/20 transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-                  <FileClock className="w-4 h-4 text-navy" />
-                </div>
-                <div>
-                  <p className="font-headline text-navy leading-tight">Smlouvy končící brzy</p>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    {expiringContracts.length} {expiringContracts.length === 1 ? 'smlouva na dobu určitou končí' : 'smlouvy na dobu určitou končí'} do 3 měsíců — je třeba řešit prodloužení
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-navy transition-colors flex-shrink-0" />
-            </div>
-          </Link>
-        )}
-
-        {/* Moje čísla za tenhle měsíc — vidí úplně každý */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-headline text-navy mb-1">Jak to vypadá tenhle měsíc u tebe?</h3>
-          <p className="text-xs text-slate-400 mb-4">Kolik dní jsi byl/a v kanceláři, na home office a mimo</p>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy">{myOfficeDays}</p>
-              <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy">{myHomeofficeDays}</p>
-              <p className="text-xs text-slate-400 mt-0.5">home office</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy">{myOffDays}</p>
-              <p className="text-xs text-slate-400 mt-0.5">OFF</p>
-            </div>
-          </div>
-        </div>
-
         {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
         {(isAdmin || isTL) && scopeNames.size > 0 && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
@@ -340,6 +272,26 @@ export default async function DashboardPage() {
           </div>
         )}
 
+        {/* Moje čísla za tenhle měsíc — vidí úplně každý */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h3 className="font-headline text-navy mb-1">Jak to vypadá tenhle měsíc u tebe?</h3>
+          <p className="text-xs text-slate-400 mb-4">Kolik dní jsi byl/a v kanceláři, na home office a mimo</p>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center">
+              <p className="text-2xl font-headline font-semibold text-navy">{myOfficeDays}</p>
+              <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-headline font-semibold text-navy">{myHomeofficeDays}</p>
+              <p className="text-xs text-slate-400 mt-0.5">home office</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-headline font-semibold text-navy">{myOffDays}</p>
+              <p className="text-xs text-slate-400 mt-0.5">OFF</p>
+            </div>
+          </div>
+        </div>
+
         {/* Tento týden — kdo má kdy volno */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <h3 className="font-headline text-navy mb-1">Tento týden</h3>
@@ -370,6 +322,54 @@ export default async function DashboardPage() {
 
         {/* Kalendář akcí — Google Kalendář + narozeniny tento týden */}
         <EventsCard birthdays={weekBirthdays} isAdmin={isAdmin} />
+
+        {/* Čeká na tebe — admin vidí vše, TL jen svůj tým */}
+        {(isAdmin || isTL) && (
+          <Link
+            href="/admin/leave-requests"
+            className="block bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:border-violet/30 transition-colors group"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <CheckSquare className="w-4 h-4 text-violet" />
+                </div>
+                <div>
+                  <p className="font-headline text-navy leading-tight">Čeká na tebe</p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {pendingLeaveRequests.length === 0
+                      ? isTL ? 'Žádné žádosti od tvého týmu' : 'Žádné žádosti ke schválení'
+                      : `${pendingLeaveRequests.length} ${pendingLeaveRequests.length === 1 ? 'žádost o dovolenou čeká' : 'žádosti o dovolenou čekají'} na schválení${isTL ? ' od tvého týmu' : ''}`}
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors flex-shrink-0" />
+            </div>
+          </Link>
+        )}
+
+        {/* Smlouvy na dobu určitou končící do 3 měsíců — jen admin */}
+        {isAdmin && expiringContracts.length > 0 && (
+          <Link
+            href="/admin/smlouvy"
+            className="block bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:border-navy/20 transition-colors group"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-alice rounded-full flex items-center justify-center flex-shrink-0">
+                  <FileClock className="w-4 h-4 text-navy" />
+                </div>
+                <div>
+                  <p className="font-headline text-navy leading-tight">Smlouvy končící brzy</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    {expiringContracts.length} {expiringContracts.length === 1 ? 'smlouva na dobu určitou končí' : 'smlouvy na dobu určitou končí'} do 3 měsíců — je třeba řešit prodloužení
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-navy transition-colors flex-shrink-0" />
+            </div>
+          </Link>
+        )}
       </div>
     </AppShell>
   )
