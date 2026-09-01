@@ -343,8 +343,8 @@ export default async function DashboardPage() {
             <div className="flex flex-wrap gap-x-6 gap-y-3">
               {weekAbsences.map((absence) => (
                 <div key={absence.id} className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-violet text-xs font-semibold">{absence.userName[0]}</span>
+                  <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-slate-500 text-xs font-semibold">{absence.userName[0]}</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-navy leading-tight">{absence.userName}</p>

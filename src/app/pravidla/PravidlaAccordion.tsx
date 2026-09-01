@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { SickPayEstimator } from './SickPayEstimator'
+import { WatercolorBackdrop } from '@/app/team/Medailonek'
 
 interface Section {
   id: string
@@ -190,16 +191,9 @@ export function PravidlaAccordion() {
   return (
     <div className="space-y-6">
 
-      {/* Header — editorial-size headline with soft violet glow */}
+      {/* Header — editorial-size headline over the brand watercolor stroke */}
       <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-10 sm:px-10 sm:py-12">
-        <div
-          className="absolute -right-16 -top-16 w-72 h-72 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.32), transparent 70%)', filter: 'blur(52px)' }}
-        />
-        <div
-          className="absolute -left-10 -bottom-20 w-56 h-56 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(155,69,232,0.18), transparent 70%)', filter: 'blur(44px)' }}
-        />
+        <WatercolorBackdrop className="-right-16 -top-16 w-80 h-80 opacity-25" />
         <div className="relative max-w-lg">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-violet-light" style={{ fontSize: 10, letterSpacing: '0.2em' }}>∿∿∿</span>

@@ -221,8 +221,8 @@ export function EventsCard({ birthdays, isAdmin }: { birthdays: Birthday[]; isAd
           {/* Akce (Google + ruční) */}
           {upcoming.map(e => (
             <div key={e.id} className="group flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-violet/10 flex items-center justify-center flex-shrink-0">
-                <PartyPopper className="w-4 h-4 text-violet" />
+              <div className="w-8 h-8 rounded-full bg-alice flex items-center justify-center flex-shrink-0">
+                <PartyPopper className="w-4 h-4 text-navy" />
               </div>
               <p className="text-sm text-navy flex-1 min-w-0 truncate">
                 {e.title} <span className="text-slate-400">· {fmtDate(e.date)}</span>

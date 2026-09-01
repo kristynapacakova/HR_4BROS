@@ -71,7 +71,7 @@ const config: Config = {
           light: "#9b45e8",
           dark: "#6010b8",
         },
-        alice: "#EFF6FF",
+        alice: "#F7F8FE",
         "four-bros": {
           bg: "#F4F4F4",
           white: "#FFFFFF",

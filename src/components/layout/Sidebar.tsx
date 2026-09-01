@@ -98,14 +98,6 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose, collapsed
 
   return (
     <div className="relative flex flex-col h-full bg-white border-r border-slate-100">
-      <div className="absolute inset-0 flex flex-col overflow-hidden pointer-events-none">
-        {/* Soft violet glow accent */}
-        <div
-          className="absolute -top-24 -left-20 w-64 h-64 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.08), transparent 70%)', filter: 'blur(40px)' }}
-        />
-      </div>
-
       {/* Logo header */}
       <div className={cn('relative flex items-center border-b border-slate-100', collapsed ? 'justify-center px-2 py-5' : 'justify-between px-5 py-5')}>
         <div className={cn('flex items-center', collapsed ? '' : 'gap-3')}>

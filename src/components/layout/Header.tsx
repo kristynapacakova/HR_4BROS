@@ -17,10 +17,6 @@ interface HeaderProps {
 export function Header({ title, onMenuClick, userName, userEmail, teamMemberId }: HeaderProps) {
   return (
     <header className="relative sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-slate-200/50 px-6 py-3.5 flex items-center gap-4">
-      <div
-        className="absolute -top-16 right-12 w-48 h-48 rounded-full pointer-events-none -z-10 overflow-hidden"
-        style={{ background: 'radial-gradient(circle, rgba(126,23,224,0.10), transparent 70%)', filter: 'blur(30px)' }}
-      />
       <button
         onClick={onMenuClick}
         className="lg:hidden text-navy p-2 rounded-full hover:bg-slate-100 transition-colors"
