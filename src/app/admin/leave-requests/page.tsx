@@ -130,7 +130,15 @@ function LeaveRequestRow({
           </p>
         )}
       </div>
-      {showActions && <LeaveActionButtons requestId={req.id} />}
+      {showActions && (
+        <LeaveActionButtons
+          requestId={req.id}
+          recipientEmail={req.user.email}
+          leaveType={getLeaveTypeCz(req.type)}
+          startDate={formatDate(req.startDate)}
+          endDate={formatDate(req.endDate)}
+        />
+      )}
     </div>
   )
 }

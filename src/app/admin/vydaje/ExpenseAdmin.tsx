@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { CheckCircle2, XCircle, Clock, FileText, Pencil, Trash2 } from 'lucide-react'
-import { EXPENSE_CATEGORIES, type ExpenseRequest } from '@/lib/mock-data'
+import { EXPENSE_CATEGORIES, PERSONA_EMAIL_BY_ID, type ExpenseRequest } from '@/lib/mock-data'
 import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
+import { pushNotification } from '@/lib/notifications-client'
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
@@ -141,6 +142,16 @@ export function ExpenseAdmin({ seedRequests }: { seedRequests: ExpenseRequest[] 
 
   const setStatus = (id: string, status: 'APPROVED' | 'REJECTED') => {
     saveExpenseRequests(requests.map((r) => (r.id === id ? { ...r, status } : r)))
+    const req = requests.find((r) => r.id === id)
+    const email = req && PERSONA_EMAIL_BY_ID[req.employeeId]
+    if (req && email) {
+      pushNotification({
+        recipientEmail: email,
+        title: status === 'APPROVED' ? 'Doklad k proplacení schválen' : 'Doklad k proplacení zamítnut',
+        body: `${req.title} — ${fmt(req.amount)}`,
+        href: '/payslips',
+      })
+    }
   }
 
   const saveEdit = (id: string, patch: Partial<ExpenseRequest>) => {

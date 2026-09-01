@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, X, FileText } from 'lucide-react'
 import type { IcoInvoiceRecord, InvoicePaymentStatus } from '@/lib/mock-data'
 import { INVOICE_STATUS_LABELS } from '@/lib/mock-data'
 import { loadInvoiceStatuses, saveInvoiceStatus, invoiceStatusKey, INVOICE_STATUS_CHANGED_EVENT } from '@/lib/invoice-status-client'
+import { pushNotification } from '@/lib/notifications-client'
 
 const MONTH_NAMES_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec']
 
@@ -35,7 +36,7 @@ function StatusBadge({ status, onClick }: { status: InvoicePaymentStatus; onClic
 const STATUS_CYCLE: InvoicePaymentStatus[] = ['NEZAPLACENO', 'CEKA_NA_UHRADU', 'ZAPLACENO']
 
 export function InvoiceOverview({ employees, invoices }: {
-  employees: { id: string; name: string }[]
+  employees: { id: string; name: string; email?: string }[]
   invoices: IcoInvoiceRecord[]
 }) {
   const now = new Date()
@@ -71,6 +72,15 @@ export function InvoiceOverview({ employees, invoices }: {
     const current = statuses[key] ?? 'NEZAPLACENO'
     const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(current) + 1) % STATUS_CYCLE.length]
     saveInvoiceStatus(key, next)
+    const email = employees.find((e) => e.id === employeeId)?.email
+    if (next === 'ZAPLACENO' && email) {
+      pushNotification({
+        recipientEmail: email,
+        title: 'Faktura zaplacena',
+        body: `Faktura za ${MONTH_NAMES_CZ[m - 1]} ${y} byla označena jako zaplacená.`,
+        href: '/payslips',
+      })
+    }
   }
 
   const rows = employees.map((emp) => ({

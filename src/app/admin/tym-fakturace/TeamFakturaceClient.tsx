@@ -36,7 +36,7 @@ export function TeamFakturaceClient({ team, teamLeadId, invoices }: {
 
   const myIcoTeam = team
     .filter((m) => effectiveLeadOf(m) === teamLeadId && m.employmentType === 'ICO')
-    .map((m) => ({ id: m.invoiceEmployeeId, name: m.name }))
+    .map((m) => ({ id: m.invoiceEmployeeId, name: m.name, email: m.email }))
 
   if (myIcoTeam.length === 0) {
     return (

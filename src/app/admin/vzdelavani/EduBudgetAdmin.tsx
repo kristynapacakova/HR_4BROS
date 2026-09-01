@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react'
 import { GraduationCap, CheckCircle2, XCircle, Clock, Link2 } from 'lucide-react'
 import type { EduRequest } from '@/lib/mock-data'
+import { PERSONA_EMAIL_BY_ID } from '@/lib/mock-data'
 import {
   loadEduRequests, saveEduRequests,
   loadEduBudgetOverrides, saveEduBudgetOverrides,
   EDU_CHANGED_EVENT,
 } from '@/lib/edu-budget-client'
+import { pushNotification } from '@/lib/notifications-client'
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
@@ -59,6 +61,16 @@ export function EduBudgetAdmin({
 
   const setStatus = (id: string, status: 'APPROVED' | 'REJECTED') => {
     saveEduRequests(requests.map((r) => (r.id === id ? { ...r, status } : r)))
+    const req = requests.find((r) => r.id === id)
+    const email = req && PERSONA_EMAIL_BY_ID[req.employeeId]
+    if (req && email) {
+      pushNotification({
+        recipientEmail: email,
+        title: status === 'APPROVED' ? 'Vzdělávací budget schválen' : 'Vzdělávací budget zamítnut',
+        body: `${req.title} — ${fmt(req.amount)}`,
+        href: '/profile?tab=benefity',
+      })
+    }
   }
 
   const saveBudget = (empId: string) => {

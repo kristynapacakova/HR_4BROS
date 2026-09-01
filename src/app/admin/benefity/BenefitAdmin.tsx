@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react'
 import { Dumbbell, HeartPulse, CheckCircle2, XCircle, Clock, FileText } from 'lucide-react'
 import type { BenefitType, SportBenefitRequest } from '@/lib/mock-data'
-import { SPORT_CONTRIBUTION_AMOUNT, DEMO_BENEFIT_SELECTION } from '@/lib/mock-data'
+import { SPORT_CONTRIBUTION_AMOUNT, DEMO_BENEFIT_SELECTION, PERSONA_EMAIL_BY_ID } from '@/lib/mock-data'
 import {
   loadBenefitSelections, saveBenefitSelection,
   loadSportRequests, saveSportRequests,
   BENEFIT_CHANGED_EVENT,
 } from '@/lib/benefit-client'
+import { pushNotification } from '@/lib/notifications-client'
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
@@ -51,6 +52,16 @@ export function BenefitAdmin({ employees, seedRequests }: { employees: Employee[
 
   const setStatus = (id: string, status: 'APPROVED' | 'REJECTED') => {
     saveSportRequests(requests.map((r) => (r.id === id ? { ...r, status } : r)))
+    const req = requests.find((r) => r.id === id)
+    const email = req && PERSONA_EMAIL_BY_ID[req.employeeId]
+    if (req && email) {
+      pushNotification({
+        recipientEmail: email,
+        title: status === 'APPROVED' ? 'Příspěvek na sport schválen' : 'Příspěvek na sport zamítnut',
+        body: `${MONTH_NAMES_CZ[req.month - 1]} ${req.year}`,
+        href: '/profile?tab=benefity',
+      })
+    }
   }
 
   return (

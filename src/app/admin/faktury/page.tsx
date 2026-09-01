@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_EMPLOYEES, DEMO_ICO_INVOICES } from '@/lib/mock-data'
+import { DEMO_EMPLOYEES, DEMO_USER_ICO, DEMO_ICO_INVOICES } from '@/lib/mock-data'
 import { InvoiceOverview } from './InvoiceOverview'
 
 export default async function FakturyPage() {
@@ -9,7 +9,12 @@ export default async function FakturyPage() {
   if (!session?.user?.id) redirect('/login')
   if (session.user.role !== 'ADMIN') redirect('/dashboard')
 
-  const icoEmployees = DEMO_EMPLOYEES.filter((e) => e.employmentType === 'ICO').map((e) => ({ id: e.id, name: e.name }))
+  // Fakturační historie je v demu zatím reálně vyplněná jen pro jednoho OSVČ (DEMO_USER_ICO).
+  const icoEmployees = DEMO_EMPLOYEES.filter((e) => e.employmentType === 'ICO').map((e) => ({
+    id: e.email.toLowerCase() === DEMO_USER_ICO.email.toLowerCase() ? DEMO_USER_ICO.id : e.id,
+    name: e.name,
+    email: e.email,
+  }))
 
   return (
     <AppShell

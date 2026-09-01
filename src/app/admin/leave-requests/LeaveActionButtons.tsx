@@ -2,8 +2,15 @@
 
 import { useState } from 'react'
 import { Check, X } from 'lucide-react'
+import { pushNotification } from '@/lib/notifications-client'
 
-export function LeaveActionButtons({ requestId }: { requestId: string }) {
+export function LeaveActionButtons({ requestId, recipientEmail, leaveType, startDate, endDate }: {
+  requestId: string
+  recipientEmail: string
+  leaveType: string
+  startDate: string
+  endDate: string
+}) {
   const [loading, setLoading] = useState<'approve' | 'reject' | null>(null)
   const [done, setDone] = useState<'approve' | 'reject' | null>(null)
 
@@ -11,6 +18,12 @@ export function LeaveActionButtons({ requestId }: { requestId: string }) {
     setLoading(action)
     // Demo: simulate action
     await new Promise((r) => setTimeout(r, 500))
+    pushNotification({
+      recipientEmail,
+      title: action === 'approve' ? `${leaveType} schválena` : `${leaveType} zamítnuta`,
+      body: `${startDate} – ${endDate}`,
+      href: '/time-off',
+    })
     setLoading(null)
     setDone(action)
     setTimeout(() => setDone(null), 2500)
@@ -19,7 +32,7 @@ export function LeaveActionButtons({ requestId }: { requestId: string }) {
   if (done) {
     return (
       <p className="text-xs text-amber-600 flex-shrink-0">
-        Demo verze — změny se neukládají
+        Demo verze — změny se neukládají, notifikace odeslána
       </p>
     )
   }

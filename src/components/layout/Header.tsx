@@ -1,9 +1,10 @@
 'use client'
 
-import { Menu, Bell, BookOpen } from 'lucide-react'
+import { Menu, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import { HeaderAvatar } from '@/components/AvatarUpload'
 import { RoleSwitcher } from './RoleSwitcher'
+import { NotificationBell } from './NotificationBell'
 
 interface HeaderProps {
   title: string
@@ -38,9 +39,7 @@ export function Header({ title, onMenuClick, userName, userEmail, teamMemberId }
           <BookOpen className="w-4 h-4" />
           Pravidla
         </Link>
-        <button className="relative p-2 text-slate-400 hover:text-navy rounded-full hover:bg-slate-100 transition-all duration-150">
-          <Bell className="w-5 h-5" />
-        </button>
+        <NotificationBell userEmail={userEmail} />
         <HeaderAvatar initial={userName?.[0]?.toUpperCase() || 'U'} teamMemberId={teamMemberId} />
       </div>
     </header>

@@ -577,6 +577,34 @@ export function demoTeamIdFor(email: string): string | undefined {
   return DEMO_TEAM.find((m) => m.email.toLowerCase() === email.toLowerCase())?.id
 }
 
+// Žádosti o benefity/vzdělávání/výdaje jsou v demu vedené podle přihlašovacího (persona) id — tohle na něj dohledá e-mail.
+export const PERSONA_EMAIL_BY_ID: Record<string, string> = {
+  [DEMO_ADMIN.id]: DEMO_ADMIN.email,
+  [DEMO_USER.id]: DEMO_USER.email,
+  [DEMO_TL.id]: DEMO_TL.email,
+  [DEMO_USER_ICO.id]: DEMO_USER_ICO.email,
+}
+
+// ── Notifikace ──────────────────────────────────────────────────────────────
+
+export interface NotificationSeed {
+  id: string
+  recipientEmail: string
+  title: string
+  body: string
+  href?: string
+  createdAt: string
+  read: boolean
+}
+
+export const DEMO_NOTIFICATIONS: NotificationSeed[] = [
+  { id: "ntf-seed-1", recipientEmail: DEMO_USER.email, title: "Dovolená schválena", body: "Tvoje dovolená 21. 7. – 1. 8. byla schválena.", href: "/time-off", createdAt: "2026-07-15T09:00:00.000Z", read: true },
+  { id: "ntf-seed-2", recipientEmail: DEMO_USER.email, title: "Vzdělávací budget", body: "HR schválilo kurz Copywriting Akademie za 3 490 Kč.", href: "/profile?tab=benefity", createdAt: "2026-05-28T09:00:00.000Z", read: true },
+  { id: "ntf-seed-3", recipientEmail: DEMO_TL.email, title: "Nová žádost o dovolenou", body: "Ve tvém týmu čeká žádost o dovolenou ke schválení.", href: "/admin/leave-requests", createdAt: "2026-08-20T09:00:00.000Z", read: false },
+  { id: "ntf-seed-4", recipientEmail: DEMO_USER_ICO.email, title: "Faktura zaplacena", body: "Faktura za červenec (nájem + občerstvení) byla označena jako zaplacená.", href: "/payslips", createdAt: "2026-08-05T09:00:00.000Z", read: false },
+  { id: "ntf-seed-5", recipientEmail: DEMO_ADMIN.email, title: "Žádosti čekají na schválení", body: "Několik žádostí o dovolenou čeká na tvoje vyřízení.", href: "/admin/leave-requests", createdAt: "2026-08-20T09:00:00.000Z", read: false },
+]
+
 // tag: SMLOUVA | DODATEK | GDPR | NDA  (for contracts section)
 // type: CONTRACT | PAYSLIP
 export const DEMO_DOCUMENTS = [
