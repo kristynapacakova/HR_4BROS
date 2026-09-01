@@ -5,7 +5,8 @@ import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbe
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
-  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, INVOICE_STATUS_LABELS, type BenefitType, type ExpenseRequest, type SportBenefitRequest, type InvoicePaymentStatus,
+  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, INVOICE_STATUS_LABELS, DEMO_TEAM_LEAVES,
+  type BenefitType, type ExpenseRequest, type SportBenefitRequest, type InvoicePaymentStatus,
 } from '@/lib/mock-data'
 import { loadBenefitSelections, loadSportRequests, saveSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
@@ -22,6 +23,20 @@ function fmt(amount: number, currency: string) {
 
 function signedAmount(exp: ExpenseRequest) {
   return exp.sign === 'MINUS' ? -exp.amount : exp.amount
+}
+
+/** Kalendářní dny schválené absence daného typu, které spadají do daného měsíce. */
+function leaveDaysInMonth(userName: string, type: 'ANNUAL' | 'SICK', month: number, year: number): number {
+  const monthStart = new Date(year, month - 1, 1)
+  const monthEnd = new Date(year, month, 0)
+  return DEMO_TEAM_LEAVES
+    .filter((l) => l.userName === userName && l.type === type && l.status === 'APPROVED')
+    .reduce((sum, l) => {
+      const start = l.startDate < monthStart ? monthStart : l.startDate
+      const end = l.endDate > monthEnd ? monthEnd : l.endDate
+      if (end < start) return sum
+      return sum + Math.round((end.getTime() - start.getTime()) / 86400000) + 1
+    }, 0)
 }
 
 interface Payslip {
@@ -41,103 +56,6 @@ interface SalaryInfo {
   nextRaiseDate: Date
   nextRaiseAmount: number
   lastRaiseDate: Date
-}
-
-function PayslipRow({ p, isICO, benefitType, sportRequests, expenseRequests, icoExpenses = ICO_MONTHLY_EXPENSES }: {
-  p: Payslip
-  isICO: boolean
-  benefitType: BenefitType | null
-  sportRequests: { employeeId: string; month: number; year: number; status: string }[]
-  expenseRequests: ExpenseRequest[]
-  icoExpenses?: { label: string; amount: number }[]
-}) {
-  const [open, setOpen] = useState(false)
-
-  const monthSportApproved = sportRequests.some(r =>
-    r.status === 'APPROVED' && r.month === p.month && r.year === p.year
-  )
-  const monthExpenses = expenseRequests.filter(e =>
-    e.status === 'APPROVED' && e.month === p.month && e.year === p.year
-  )
-  const sportAmount =
-    benefitType === 'SPORT_CONTRIBUTION' && monthSportApproved ? SPORT_CONTRIBUTION_AMOUNT :
-    benefitType === 'MULTISPORT' && isICO ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
-    0
-  const icoExpensesTotal = isICO ? icoExpenses.reduce((s, e) => s + e.amount, 0) : 0
-  const monthExpensesTotal = monthExpenses.reduce((s, e) => s + signedAmount(e), 0)
-  const hasBreakdown = isICO || sportAmount !== 0 || monthExpensesTotal !== 0
-
-  return (
-    <div className={p.planned ? 'bg-violet/[0.02]' : ''}>
-      <button
-        type="button"
-        onClick={() => hasBreakdown && setOpen(o => !o)}
-        className={`w-full px-6 py-4 flex items-center gap-4 transition-colors text-left ${hasBreakdown ? 'cursor-pointer hover:bg-slate-50' : ''}`}
-      >
-        <div className={`p-2.5 rounded-lg flex-shrink-0 ${p.planned ? 'bg-violet/10' : 'bg-alice'}`}>
-          <Banknote className={`w-5 h-5 ${p.planned ? 'text-violet' : 'text-navy'}`} />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-navy">{MONTH_NAMES[p.month - 1]} {p.year}</p>
-          </div>
-          {!isICO && <p className="text-xs text-slate-400 mt-0.5">Hrubá: {fmt(p.grossAmount, p.currency)}</p>}
-        </div>
-        <div className="text-right">
-          <p className={`text-sm font-bold ${p.planned ? 'text-violet' : 'text-navy'}`}>
-            {fmt(p.netAmount + icoExpensesTotal + sportAmount + monthExpensesTotal, p.currency)}
-          </p>
-          <p className="text-xs text-slate-400">{isICO ? 'odměna' : 'čistá'}</p>
-        </div>
-        {hasBreakdown && (
-          <ChevronDown className={`w-4 h-4 text-slate-300 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
-        )}
-        {!p.planned && !isICO && (
-          <span
-            role="button"
-            onClick={(e) => { e.stopPropagation(); }}
-            className="flex-shrink-0 p-2 text-slate-300 hover:text-violet rounded-full hover:bg-violet/5 transition-colors"
-            title={`Stáhnout výplatní pásku — ${MONTH_NAMES[p.month - 1]} ${p.year} (demo)`}
-          >
-            <Download className="w-4 h-4" />
-          </span>
-        )}
-      </button>
-
-      {open && hasBreakdown && (
-        <div className="px-6 pb-4 -mt-1">
-          <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-1.5 text-sm">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-slate-500">{isICO ? 'Měsíční paušál' : 'Čistá mzda'}</span>
-              <span className="font-medium text-navy">{fmt(p.netAmount, p.currency)}</span>
-            </div>
-            {isICO && icoExpenses.map((e) => (
-              <div key={e.label} className="flex items-center justify-between gap-4">
-                <span className="text-slate-500">{e.label}</span>
-                <span className="font-medium text-green-600">+{fmt(e.amount, 'CZK')}</span>
-              </div>
-            ))}
-            {sportAmount !== 0 && (
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-slate-500">{sportAmount > 0 ? 'Příspěvek na sport' : 'Multisport — doplatek nad příspěvek firmy'}</span>
-                <span className={`font-medium ${sportAmount > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                  {sportAmount > 0 ? '+' : '−'}{fmt(Math.abs(sportAmount), 'CZK')}
-                </span>
-              </div>
-            )}
-            {monthExpenses.map((exp) => (
-              <div key={exp.id} className="flex items-center justify-between gap-4">
-                <span className="text-slate-500">{exp.title}</span>
-                <span className={`font-medium ${exp.sign === 'MINUS' ? 'text-red-500' : 'text-green-600'}`}>
-                  {exp.sign === 'MINUS' ? '−' : '+'}{fmt(exp.amount, exp.currency)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  )
 }
 
 function InvoiceStatusBadge({ status }: { status: InvoicePaymentStatus }) {
@@ -303,52 +221,153 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
   )
 }
 
-function YearPanel({ year, payslips, isICO, benefitType, sportRequests, expenseRequests }: {
-  year: number
-  payslips: Payslip[]
-  isICO: boolean
+function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeName, monthlySalary }: {
+  p: Payslip
   benefitType: BenefitType | null
   sportRequests: { employeeId: string; month: number; year: number; status: string }[]
   expenseRequests: ExpenseRequest[]
+  employeeName?: string
+  monthlySalary: number
 }) {
-  const byMonth = new Map(payslips.map(p => [p.month, p]))
-  // Celý rok leden–prosinec, i pro měsíce bez záznamu
-  const allMonths = Array.from({ length: 12 }, (_, i) => 12 - i).map(m => byMonth.get(m) ?? null)
-  const yearTotal = payslips.filter(p => !p.planned).reduce((sum, p) => sum + p.netAmount, 0)
+  const [open, setOpen] = useState(false)
+
+  const monthSportApproved = sportRequests.some(r => r.status === 'APPROVED' && r.month === p.month && r.year === p.year)
+  const monthExpenses = expenseRequests.filter(e => e.status === 'APPROVED' && e.month === p.month && e.year === p.year)
+  const sportAmount = benefitType === 'SPORT_CONTRIBUTION' && monthSportApproved ? SPORT_CONTRIBUTION_AMOUNT : 0
+
+  const vacationDays = employeeName ? leaveDaysInMonth(employeeName, 'ANNUAL', p.month, p.year) : 0
+  const sickDays = employeeName ? leaveDaysInMonth(employeeName, 'SICK', p.month, p.year) : 0
+  const sick = sickDays > 0 ? computeSickPay(monthlySalary, sickDays) : null
+
+  const otherItems = [
+    ...(sportAmount !== 0 ? [{ label: 'Příspěvek na sport', amount: sportAmount }] : []),
+    ...monthExpenses.map((e) => ({ label: e.title, amount: signedAmount(e) })),
+    ...(sick ? [{ label: `Nemoc — srážka (${sickDays} ${sickDays === 1 ? 'den' : sickDays < 5 ? 'dny' : 'dní'})`, amount: -sick.deduction }] : []),
+  ]
+  const otherTotal = otherItems.reduce((s, i) => s + i.amount, 0)
+  const total = p.netAmount + otherTotal
+  const [showOtherDetail, setShowOtherDetail] = useState(false)
 
   return (
-    <div>
-      {yearTotal > 0 && (
-        <div className="px-6 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-sm">
-          <span className="text-slate-500">{isICO ? `Celkem odměna za ${year}` : `Celkem čistá za ${year}`}</span>
-          <span className="font-semibold text-navy">{fmt(yearTotal, 'CZK')}</span>
-        </div>
-      )}
-      <div className="divide-y divide-slate-50">
-        {allMonths.map((p, i) => {
-          const month = 12 - i
-          if (!p) {
-            return (
-              <div key={month} className="px-6 py-3 flex items-center gap-4 opacity-40">
-                <div className="p-2.5 rounded-lg bg-slate-100 flex-shrink-0">
-                  <Banknote className="w-5 h-5 text-slate-300" />
-                </div>
-                <p className="text-sm text-slate-400 flex-1">{MONTH_NAMES[month - 1]} {year} — bez záznamu</p>
+    <>
+      <tr
+        onClick={() => setOpen((o) => !o)}
+        className={`cursor-pointer hover:bg-slate-50 transition-colors ${p.planned ? 'bg-violet/[0.02]' : ''}`}
+      >
+        <td className="px-6 py-3 font-medium text-navy whitespace-nowrap">{MONTH_NAMES[p.month - 1]} {p.year}</td>
+        <td className="px-4 py-3 text-slate-600">{fmt(p.grossAmount, p.currency)}</td>
+        <td className="px-4 py-3 text-slate-600">{fmt(p.netAmount, p.currency)}</td>
+        <td className="px-4 py-3 text-slate-600">
+          {vacationDays > 0 ? `${vacationDays} ${vacationDays === 1 ? 'den' : vacationDays < 5 ? 'dny' : 'dní'}` : '—'}
+        </td>
+        <td className="px-4 py-3 text-slate-600">
+          {otherItems.length > 0 ? (
+            <span className="relative inline-flex items-center gap-1">
+              {otherTotal > 0 ? '+' : otherTotal < 0 ? '−' : ''}{fmt(Math.abs(otherTotal), 'CZK')}
+              <span
+                onClick={(e) => { e.stopPropagation(); setShowOtherDetail((s) => !s) }}
+                className="w-4 h-4 rounded-full bg-slate-100 text-slate-500 text-[10px] flex items-center justify-center hover:bg-slate-200 transition-colors cursor-pointer flex-shrink-0"
+              >
+                i
+              </span>
+              {showOtherDetail && (
+                <span className="absolute left-0 top-full mt-1.5 z-10 w-56 bg-navy text-white text-[11px] leading-snug rounded-lg px-3 py-2 shadow-lg text-left normal-case">
+                  {otherItems.map((it) => (
+                    <span key={it.label} className="flex items-center justify-between gap-3">
+                      <span>{it.label}</span>
+                      <span className="font-semibold whitespace-nowrap">{it.amount > 0 ? '+' : '−'}{fmt(Math.abs(it.amount), 'CZK')}</span>
+                    </span>
+                  ))}
+                </span>
+              )}
+            </span>
+          ) : '—'}
+        </td>
+        <td className="px-4 py-3 font-semibold text-navy whitespace-nowrap">{fmt(total, p.currency)}</td>
+        <td className="px-4 py-3 text-right">
+          <ChevronDown className={`w-4 h-4 text-slate-300 inline-block transition-transform ${open ? 'rotate-180' : ''}`} />
+        </td>
+      </tr>
+      {open && (
+        <tr>
+          <td colSpan={7} className="px-6 pb-4">
+            <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-2.5 text-sm">
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-slate-500 flex items-center gap-1.5">
+                  Výplatní páska
+                  {!p.planned && (
+                    <button type="button" title="Stáhnout výplatní pásku (demo)" className="text-slate-400 hover:text-violet transition-colors">
+                      <Download className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </span>
+                <span className="font-medium text-navy">{fmt(p.netAmount, p.currency)}</span>
               </div>
-            )
-          }
-          return (
-            <PayslipRow
-              key={p.id}
-              p={p}
-              isICO={isICO}
-              benefitType={benefitType}
-              sportRequests={sportRequests}
-              expenseRequests={expenseRequests}
-            />
-          )
-        })}
-      </div>
+              {vacationDays > 0 && (
+                <div className="flex items-center justify-between gap-4 pt-2 border-t border-white">
+                  <span className="text-slate-500 flex items-center gap-1.5">
+                    <Plane className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                    Dovolená — {vacationDays} {vacationDays === 1 ? 'den' : vacationDays < 5 ? 'dny' : 'dní'}
+                  </span>
+                  <span className="text-xs text-slate-400">zahrnuto ve mzdě, bez srážky</span>
+                </div>
+              )}
+              {otherItems.length > 0 && (
+                <div className="pt-2 border-t border-white space-y-1.5">
+                  {otherItems.map((it) => (
+                    <div key={it.label} className="flex items-center justify-between gap-4">
+                      <span className="text-slate-500">{it.label}</span>
+                      <span className={`font-medium ${it.amount > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                        {it.amount > 0 ? '+' : '−'}{fmt(Math.abs(it.amount), 'CZK')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  )
+}
+
+function HppYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeName, monthlySalary }: {
+  year: number
+  payslips: Payslip[]
+  benefitType: BenefitType | null
+  sportRequests: { employeeId: string; month: number; year: number; status: string }[]
+  expenseRequests: ExpenseRequest[]
+  employeeName?: string
+  monthlySalary: number
+}) {
+  const byMonth = new Map(payslips.map(p => [p.month, p]))
+  const allMonths = Array.from({ length: 12 }, (_, i) => 12 - i).map(m => byMonth.get(m) ?? null).filter(Boolean) as Payslip[]
+
+  if (allMonths.length === 0) {
+    return <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+            <th className="px-6 py-3 font-medium">Období</th>
+            <th className="px-4 py-3 font-medium">Hrubá mzda</th>
+            <th className="px-4 py-3 font-medium">Čistá mzda</th>
+            <th className="px-4 py-3 font-medium">Dovolená</th>
+            <th className="px-4 py-3 font-medium">Další</th>
+            <th className="px-4 py-3 font-medium">K výplatě</th>
+            <th className="px-4 py-3"></th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-50">
+          {allMonths.map((p) => (
+            <HppMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeName={employeeName} monthlySalary={monthlySalary} />
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -968,13 +987,14 @@ export function PayslipsClient({
               icoExpenses={icoExpenses}
             />
           ) : (
-            <YearPanel
+            <HppYearTable
               year={selectedYear}
               payslips={byYear[selectedYear]}
-              isICO={isICO}
               benefitType={benefitType}
               sportRequests={sportRequests}
               expenseRequests={myExpenses}
+              employeeName={employeeName}
+              monthlySalary={salaryInfo.currentSalary}
             />
           )
         ) : (
