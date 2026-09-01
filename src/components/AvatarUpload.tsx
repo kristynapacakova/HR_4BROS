@@ -26,7 +26,7 @@ function processFile(file: File, cb: (dataUrl: string) => void) {
   reader.readAsDataURL(file)
 }
 
-function readAvatar(teamMemberId?: string): { photo: string | null; pos?: PhotoPosition } {
+export function readAvatar(teamMemberId?: string): { photo: string | null; pos?: PhotoPosition } {
   if (teamMemberId) {
     const override = loadTeamProfiles()[teamMemberId]
     if (override?.photo) return { photo: override.photo, pos: override.photoPos }

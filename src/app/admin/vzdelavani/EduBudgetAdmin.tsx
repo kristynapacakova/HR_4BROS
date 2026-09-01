@@ -88,8 +88,8 @@ export function EduBudgetAdmin({
       {/* Rozpočty */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-9 h-9 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
-            <GraduationCap className="w-4 h-4 text-violet" />
+          <div className="w-9 h-9 bg-alice rounded-full flex items-center justify-center flex-shrink-0">
+            <GraduationCap className="w-4 h-4 text-navy" />
           </div>
           <h3 className="font-headline font-semibold text-navy">Roční rozpočty</h3>
         </div>

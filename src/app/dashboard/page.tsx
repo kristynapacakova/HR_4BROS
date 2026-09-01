@@ -49,6 +49,7 @@ export default async function DashboardPage() {
   const isTL = session.user.role === 'TL'
   const user = getDemoUserById(session.user.id)
   const myTeamId = isTL ? demoTeamIdFor(session.user.email ?? '') : undefined
+  const myTeamMemberId = demoTeamIdFor(session.user.email ?? '')
 
   const tasks = DEMO_TASKS
   const pendingTasks = tasks.filter(t => !t.completed)
@@ -201,6 +202,8 @@ export default async function DashboardPage() {
         {/* Hero greeting with inline stats */}
         <DashboardGreeting
           name={(user?.name || session.user.email || '').split(' ')[0]}
+          initial={(user?.name || session.user.email || '?')[0]?.toUpperCase()}
+          teamMemberId={myTeamMemberId}
           position={user?.position || undefined}
           department={user?.department || undefined}
           tenure={tenure}
@@ -252,32 +255,32 @@ export default async function DashboardPage() {
         {isAdmin && expiringContracts.length > 0 && (
           <Link
             href="/admin/smlouvy"
-            className="block bg-amber-50 border border-amber-100 rounded-2xl p-6 hover:border-amber-200 transition-colors group"
+            className="block bg-alice border border-slate-100 rounded-2xl p-6 hover:border-navy/20 transition-colors group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <FileClock className="w-4 h-4 text-amber-700" />
+                <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                  <FileClock className="w-4 h-4 text-navy" />
                 </div>
                 <div>
                   <p className="font-headline text-navy leading-tight">Smlouvy končící brzy</p>
-                  <p className="text-xs text-amber-700 mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     {expiringContracts.length} {expiringContracts.length === 1 ? 'smlouva na dobu určitou končí' : 'smlouvy na dobu určitou končí'} do 3 měsíců — je třeba řešit prodloužení
                   </p>
                 </div>
               </div>
-              <ChevronRight className="w-4 h-4 text-amber-400 group-hover:text-amber-600 transition-colors flex-shrink-0" />
+              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-navy transition-colors flex-shrink-0" />
             </div>
 
-            <div className="flex flex-wrap gap-x-6 gap-y-3 mt-4 pt-4 border-t border-amber-100">
+            <div className="flex flex-wrap gap-x-6 gap-y-3 mt-4 pt-4 border-t border-slate-200">
               {expiringContracts.map((e) => (
                 <div key={e.id} className="flex items-center gap-2.5">
                   <div className="w-7 h-7 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 text-[11px] font-semibold">{e.name[0]}</span>
+                    <span className="text-navy text-[11px] font-semibold">{e.name[0]}</span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-navy leading-tight">{e.name}</p>
-                    <p className="text-xs text-amber-700">do {e.contractEndDate!.toLocaleDateString('cs-CZ')} · za {e.daysLeft} dní</p>
+                    <p className="text-xs text-slate-500">do {e.contractEndDate!.toLocaleDateString('cs-CZ')} · za {e.daysLeft} dní</p>
                   </div>
                 </div>
               ))}
