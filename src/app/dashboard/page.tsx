@@ -118,6 +118,21 @@ export default async function DashboardPage() {
   const homeofficeRatePct = totalPersonDays > 0 ? Math.round((homeofficePersonDays / totalPersonDays) * 100) : 0
   const teamLabel = isAdmin ? 'firmy' : 'tvého týmu'
 
+  // Moje vlastní čísla za tenhle měsíc — vidí to úplně každý, ne jen HR/TL.
+  let myOfficeDays = 0
+  let myHomeofficeDays = 0
+  let myOffDays = 0
+  for (const day of workdaysSoFar) {
+    const leave = DEMO_TEAM_LEAVES.find((l) => {
+      const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
+      const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
+      return l.userName === user.name && l.status === 'APPROVED' && day >= start && day <= end
+    })
+    if (!leave) myOfficeDays++
+    else if (leave.type === 'HOMEOFFICE') myHomeofficeDays++
+    else myOffDays++
+  }
+
   // Přihlašovací demo účty mají e-mail navázaný na svůj DEMO_TEAM záznam — přes to dohledáme jejich id
   // v prostoru vzdělávacího budgetu / žádostí o dovolenou (ty jsou historicky vedené podle login id, ne DEMO_TEAM id).
   const PERSONA_ID_BY_EMAIL: Record<string, string> = {
@@ -232,22 +247,6 @@ export default async function DashboardPage() {
               </div>
               <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors flex-shrink-0" />
             </div>
-
-            {pendingLeaveRequests.length > 0 && (
-              <div className="flex flex-wrap gap-x-6 gap-y-3 mt-4 pt-4 border-t border-slate-100">
-                {pendingLeaveRequests.slice(0, 4).map((req) => (
-                  <div key={req.id} className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-slate-500 text-[11px] font-semibold">{req.user.name[0]}</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-navy leading-tight">{req.user.name}</p>
-                      <p className="text-xs text-slate-400">{LEAVE_TYPE_CZ[req.type] || req.type}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </Link>
         )}
 
@@ -271,22 +270,28 @@ export default async function DashboardPage() {
               </div>
               <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-navy transition-colors flex-shrink-0" />
             </div>
-
-            <div className="flex flex-wrap gap-x-6 gap-y-3 mt-4 pt-4 border-t border-slate-200">
-              {expiringContracts.map((e) => (
-                <div key={e.id} className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-navy text-[11px] font-semibold">{e.name[0]}</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-navy leading-tight">{e.name}</p>
-                    <p className="text-xs text-slate-500">do {e.contractEndDate!.toLocaleDateString('cs-CZ')} · za {e.daysLeft} dní</p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </Link>
         )}
+
+        {/* Moje čísla za tenhle měsíc — vidí úplně každý */}
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h3 className="font-headline text-navy mb-1">Jak to vypadá tenhle měsíc u tebe?</h3>
+          <p className="text-xs text-slate-400 mb-4">Kolik dní jsi byl/a v kanceláři, na home office a mimo</p>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center">
+              <p className="text-2xl font-headline font-semibold text-navy">{myOfficeDays}</p>
+              <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-headline font-semibold text-navy">{myHomeofficeDays}</p>
+              <p className="text-xs text-slate-400 mt-0.5">home office</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-headline font-semibold text-navy">{myOffDays}</p>
+              <p className="text-xs text-slate-400 mt-0.5">OFF</p>
+            </div>
+          </div>
+        </div>
 
         {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
         {(isAdmin || isTL) && scopeNames.size > 0 && (
@@ -304,7 +309,7 @@ export default async function DashboardPage() {
               </div>
               <div className="text-center">
                 <p className="text-2xl font-headline font-semibold text-navy">{otherOutCount}</p>
-                <p className="text-xs text-slate-400 mt-0.5">jinak mimo</p>
+                <p className="text-xs text-slate-400 mt-0.5">OFF</p>
               </div>
             </div>
 
@@ -323,7 +328,7 @@ export default async function DashboardPage() {
                   tone="soft"
                 />
               )}
-              {eduBudgetUsedPct !== null && (
+              {isAdmin && eduBudgetUsedPct !== null && (
                 <RingStat
                   pct={eduBudgetUsedPct}
                   value={`${eduBudgetUsedPct}%`}
