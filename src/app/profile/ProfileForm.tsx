@@ -137,7 +137,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Jméno a příjmení" value={formData.name} onChange={(v) => update('name', v)} />
           <div>
-            <label className="block text-xs font-medium text-violet mb-1">Přezdívka — jak ti máme říkat 💜</label>
+            <label className="block text-xs font-medium text-violet mb-1">Přezdívka — jak ti máme říkat</label>
             <input
               type="text"
               value={nickname}
@@ -232,7 +232,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
                 <p className="text-lg font-headline font-bold text-navy">{currentSalary ? fmtCzk(currentSalary) : '—'}</p>
                 {growthPct !== null && growthPct > 0 && (
                   <span className="text-xs font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded-full">
-                    +{growthPct} % od nástupu 📈
+                    +{growthPct} % od nástupu
                   </span>
                 )}
               </div>
