@@ -228,8 +228,7 @@ export default async function DashboardPage() {
         {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
         {(isAdmin || isTL) && scopeNames.size > 0 && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <h3 className="font-headline text-navy mb-1">{isAdmin ? 'Jak to vypadá dnes ve firmě?' : 'Jak to vypadá dnes ve tvém týmu?'}</h3>
-            <p className="text-xs text-slate-400 mb-4">Kolik lidí je v kanceláři a kolik mimo</p>
+            <h3 className="font-headline text-navy mb-4">{isAdmin ? 'Jak to vypadá dnes ve firmě?' : 'Jak to vypadá dnes ve tvém týmu?'}</h3>
             <div className="grid grid-cols-3 gap-3 pb-5 mb-5 border-b border-slate-100">
               <div className="text-center">
                 <p className="text-2xl font-headline font-semibold text-navy">{inOfficeCount}</p>
@@ -274,8 +273,7 @@ export default async function DashboardPage() {
 
         {/* Moje čísla za tenhle měsíc — vidí úplně každý */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-headline text-navy mb-1">Jak to vypadá tenhle měsíc u tebe?</h3>
-          <p className="text-xs text-slate-400 mb-4">Kolik dní jsi byl/a v kanceláři, na home office a mimo</p>
+          <h3 className="font-headline text-navy mb-4">Jak to vypadá tenhle měsíc u tebe?</h3>
           <div className="grid grid-cols-3 gap-3">
             <div className="text-center">
               <p className="text-2xl font-headline font-semibold text-navy">{myOfficeDays}</p>
@@ -294,8 +292,7 @@ export default async function DashboardPage() {
 
         {/* Tento týden — kdo má kdy volno */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h3 className="font-headline text-navy mb-1">Tento týden</h3>
-          <p className="text-xs text-slate-400 mb-4">Kdo je tento týden mimo kancelář</p>
+          <h3 className="font-headline text-navy mb-4">Tento týden</h3>
 
           {weekAbsences.length === 0 ? (
             <p className="text-sm text-slate-500">Tento týden nikdo nechybí 🎉</p>
