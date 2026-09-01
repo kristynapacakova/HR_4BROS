@@ -291,7 +291,7 @@ export default async function DashboardPage() {
         {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
         {(isAdmin || isTL) && scopeNames.size > 0 && (
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <h3 className="font-headline text-navy mb-1">{isAdmin ? 'Firma dnes' : 'Tvůj tým dnes'}</h3>
+            <h3 className="font-headline text-navy mb-1">{isAdmin ? 'Jak to vypadá dnes ve firmě?' : 'Jak to vypadá dnes ve tvém týmu?'}</h3>
             <p className="text-xs text-slate-400 mb-4">Kolik lidí je v kanceláři a kolik mimo</p>
             <div className="grid grid-cols-3 gap-3 pb-5 mb-5 border-b border-slate-100">
               <div className="text-center">
