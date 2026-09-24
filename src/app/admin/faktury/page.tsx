@@ -29,7 +29,7 @@ export default async function FakturyPage() {
           automaticky z Fakturoidu (napárovaného na banku), včetně toho, jestli je zaplacená. Zatím je to mock — stav
           plateb nastavuje HR ručně přímo tady.
         </p>
-        <InvoiceOverview employees={icoEmployees} invoices={DEMO_ICO_INVOICES} />
+        <InvoiceOverview employees={icoEmployees} invoices={DEMO_ICO_INVOICES} isHrReviewer />
       </div>
     </AppShell>
   )

@@ -14,9 +14,11 @@ interface TeamMember {
   invoiceEmployeeId: string
 }
 
-export function TeamFakturaceClient({ team, teamLeadId, invoices }: {
+export function TeamFakturaceClient({ team, teamLeadId, teamLeadName, teamLeadEmail, invoices }: {
   team: TeamMember[]
   teamLeadId: string
+  teamLeadName: string
+  teamLeadEmail: string
   invoices: IcoInvoiceRecord[]
 }) {
   const [overrides, setOverrides] = useState<Record<string, string | null>>({})
@@ -46,5 +48,14 @@ export function TeamFakturaceClient({ team, teamLeadId, invoices }: {
     )
   }
 
-  return <InvoiceOverview employees={myIcoTeam} invoices={invoices} />
+  return (
+    <InvoiceOverview
+      employees={myIcoTeam}
+      invoices={invoices}
+      canPropose
+      proposerId={teamLeadId}
+      proposerName={teamLeadName}
+      proposerEmail={teamLeadEmail}
+    />
+  )
 }

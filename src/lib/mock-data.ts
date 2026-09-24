@@ -695,6 +695,27 @@ export const DEMO_ICO_INVOICES: IcoInvoiceRecord[] = [
   { id: "inv-2025-11", employeeId: DEMO_USER_ICO.id, month: 11, year: 2025, invoiceNumber: "2025-0558", salaryAmount: 0,    officeAmount: 2000, refreshAmount: 400, otherLabel: null, otherAmount: 0 },
 ]
 
+// ── Úpravy odměny navržené team leadem ──────────────────────────────────────
+// TL může u lidí ve svém týmu navrhnout přirážku/srážku/prémii k jejich faktuře — musí to ale schválit HR,
+// než se to promítne do přehledu. Ukládá se v prostoru invoiceEmployeeId (stejném jako DEMO_ICO_INVOICES).
+export interface TeamAdjustmentRequest {
+  id: string
+  teamLeadId: string
+  teamLeadName: string
+  teamLeadEmail: string
+  employeeId: string
+  employeeName: string
+  title: string
+  amount: number
+  sign: 'PLUS' | 'MINUS'
+  month: number
+  year: number
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  requestedAt: string
+}
+
+export const DEMO_TEAM_ADJUSTMENTS: TeamAdjustmentRequest[] = []
+
 export const DEMO_PAYSLIPS = [
   // 2026 — future (planned salary, no payslip yet)
   { id: "f12", month: 12, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },

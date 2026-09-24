@@ -32,8 +32,15 @@ export default async function TymFakturacePage() {
         <p className="text-sm text-slate-500">
           Přehled faktur OSVČ spolupracovníků, které ti HR přiřadilo do týmu. Faktura za nájem kancelářského místa
           a občerstvení se časem bude tahat automaticky z Fakturoidu — zatím stav plateb nastavuje HR ručně.
+          U kteréhokoli měsíce můžeš navrhnout úpravu odměny (přirážku, srážku, prémii) — projde ale schválením HR.
         </p>
-        <TeamFakturaceClient team={team} teamLeadId={myTeamId ?? ''} invoices={DEMO_ICO_INVOICES} />
+        <TeamFakturaceClient
+          team={team}
+          teamLeadId={myTeamId ?? ''}
+          teamLeadName={session.user.name ?? 'Team lead'}
+          teamLeadEmail={session.user.email ?? ''}
+          invoices={DEMO_ICO_INVOICES}
+        />
       </div>
     </AppShell>
   )
