@@ -1,0 +1,134 @@
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Regular.otf') format('opentype');
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+/* No Bold variant exists — map 700 to SemiBold so browser doesn't synthesize */
+@font-face {
+  font-family: 'Serenity';
+  src: url('/fonts/Serenity-SemiBold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 5% 96%;
+    --foreground: 210 40% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 14%;
+    --primary: 272 80% 49%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 30% 94%;
+    --secondary-foreground: 210 40% 14%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 210 20% 46%;
+    --accent: 272 80% 49%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 272 80% 49%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-[#F2F2F7] text-navy font-sans;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-headline;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  .font-headline {
+    font-weight: 500;
+  }
+
+  /* Hide scrollbar but keep scrollability (tab bars etc.) */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-6;
+  }
+
+  .input {
+    @apply w-full px-4 py-2.5 bg-slate-100 rounded-xl text-sm text-navy placeholder:text-slate-400
+           focus:outline-none focus:ring-2 focus:ring-violet/40 focus:bg-white transition-all duration-150;
+  }
+
+  .badge-pending {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800;
+  }
+
+  .badge-approved {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+  }
+
+  .badge-rejected {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-navy-200 hover:bg-white/10 hover:text-white transition-all duration-150 text-sm font-medium;
+  }
+
+  .nav-item.active {
+    @apply bg-white/15 text-white;
+  }
+}
