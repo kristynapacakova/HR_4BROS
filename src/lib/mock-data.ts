@@ -716,6 +716,25 @@ export interface TeamAdjustmentRequest {
 
 export const DEMO_TEAM_ADJUSTMENTS: TeamAdjustmentRequest[] = []
 
+// Návrh na trvalou změnu měsíční odměny/paušálu od zadaného období — na rozdíl od jednorázové prémie
+// výše platí od zvoleného měsíce dál, dokud ji někdo nezmění znovu. Musí schválit HR.
+export interface SalaryChangeRequest {
+  id: string
+  teamLeadId: string
+  teamLeadName: string
+  teamLeadEmail: string
+  employeeId: string
+  employeeName: string
+  newAmount: number
+  reason: string
+  effectiveMonth: number
+  effectiveYear: number
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  requestedAt: string
+}
+
+export const DEMO_SALARY_CHANGES: SalaryChangeRequest[] = []
+
 export const DEMO_PAYSLIPS = [
   // 2026 — future (planned salary, no payslip yet)
   { id: "f12", month: 12, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
