@@ -1,0 +1,1701 @@
+<title>Four Bros HR check-iny</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Four Bros HR check-iny – vizuál vychází z modro-tyrkysového watercoloru */
+:root {
+  --ink: #1c2a4a;
+  --ink-soft: #4a5874;
+  --muted: #7a8699;
+  --sky: #a9c7ec;
+  --sky-deep: #5f8fd1;
+  --aqua: #8fd8d3;
+  --aqua-deep: #2e9e98;
+  --mist: #eef5fb;
+  --bg: #f6f9fc;
+  --card: #ffffff;
+  --line: #dfe7f0;
+
+  --green: #2fae74;
+  --green-bg: #e3f6ec;
+  --orange: #e99a2c;
+  --orange-bg: #fdf1df;
+  --red: #e0454b;
+  --red-bg: #fde6e7;
+  --grey: #b4bdc9;
+  --grey-bg: #eef1f5;
+
+  --surface: #ffffff;
+  --on-ink: #ffffff;
+  --green-fg: #1d7a50;
+  --orange-fg: #9a5f0c;
+  --red-fg: #b0262c;
+  --aqua-bg: #e2f6f4;
+  --semafor-bg: #1c2a4a;
+  --semafor-off: #3a4766;
+  --header-top: rgba(255,255,255,.15);
+  --header-fade: rgba(246,249,252,.9);
+  --glass: rgba(255,255,255,.55);
+  --glass-hover: rgba(255,255,255,.85);
+  --empty-veil: rgba(255,255,255,.75);
+  --overlay: rgba(28, 42, 74, .4);
+
+  --radius: 16px;
+  --shadow: 0 1px 2px rgba(28, 42, 74, .06), 0 6px 20px rgba(28, 42, 74, .06);
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-head: "Poppins", "Inter", system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ink: #e8eef8; --ink-soft: #b5c1d6; --muted: #8a97ad;
+  --sky: #5f86bd; --sky-deep: #8fb6ec; --aqua: #4fb3ad; --aqua-deep: #4fbdb6;
+  --mist: #1d2a40; --bg: #0f1726; --card: #16213a; --line: #2a3854;
+  --green: #3cc48a; --green-bg: #163a2c; --orange: #f0a845; --orange-bg: #3b2c14;
+  --red: #f0646a; --red-bg: #3d1c22; --grey: #5d6a80; --grey-bg: #232f45;
+  --surface: #111a2e; --on-ink: #0f1726;
+  --green-fg: #8fe6bd; --orange-fg: #f7c983; --red-fg: #ffa6aa; --aqua-bg: #173b3a;
+  --semafor-bg: #0a1120; --semafor-off: #2a3550;
+  --header-top: rgba(15,23,38,.35); --header-fade: rgba(15,23,38,.92);
+  --glass: rgba(15,23,38,.55); --glass-hover: rgba(15,23,38,.85);
+  --empty-veil: rgba(22,33,58,.85); --overlay: rgba(0,0,0,.55);
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --ink: #e8eef8; --ink-soft: #b5c1d6; --muted: #8a97ad;
+  --sky: #5f86bd; --sky-deep: #8fb6ec; --aqua: #4fb3ad; --aqua-deep: #4fbdb6;
+  --mist: #1d2a40; --bg: #0f1726; --card: #16213a; --line: #2a3854;
+  --green: #3cc48a; --green-bg: #163a2c; --orange: #f0a845; --orange-bg: #3b2c14;
+  --red: #f0646a; --red-bg: #3d1c22; --grey: #5d6a80; --grey-bg: #232f45;
+  --surface: #111a2e; --on-ink: #0f1726;
+  --green-fg: #8fe6bd; --orange-fg: #f7c983; --red-fg: #ffa6aa; --aqua-bg: #173b3a;
+  --semafor-bg: #0a1120; --semafor-off: #2a3550;
+  --header-top: rgba(15,23,38,.35); --header-fade: rgba(15,23,38,.92);
+  --glass: rgba(15,23,38,.55); --glass-hover: rgba(15,23,38,.85);
+  --empty-veil: rgba(22,33,58,.85); --overlay: rgba(0,0,0,.55);
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 15px;
+  line-height: 1.5;
+}
+a { color: var(--sky-deep); }
+h1, h2, h3, h4 { font-family: var(--font-head); margin: 0 0 .5em; line-height: 1.25; }
+h1 { font-size: 1.7rem; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.05rem; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+
+/* ---------- horní lišta ---------- */
+.topbar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 22px max(16px, calc((100% - 1160px) / 2));
+  background:
+    linear-gradient(180deg, var(--header-top), var(--header-fade)),
+    url("watercolor.jpg") center 35% / cover no-repeat;
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; flex-direction: column; text-decoration: none; color: var(--ink); }
+.brand-mark { font-family: var(--font-head); font-weight: 700; font-size: 1.6rem; letter-spacing: -.02em; }
+.brand-sub { font-size: .8rem; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-soft); }
+.nav { display: flex; flex-wrap: wrap; gap: 6px; }
+.nav a {
+  padding: 8px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 500;
+  background: var(--glass);
+  backdrop-filter: blur(4px);
+}
+.nav a:hover { background: var(--glass-hover); }
+.nav a.active { background: var(--ink); color: var(--on-ink); }
+
+.container { max-width: 1160px; margin: 0 auto; padding: 28px 16px 64px; }
+
+/* ---------- karty a mřížky ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+.grid { display: grid; gap: 16px; }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid-cards { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.stack > * + * { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.row.between { justify-content: space-between; }
+.section-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 32px 0 14px; }
+.section-head:first-child { margin-top: 0; }
+.section-head h2 { margin: 0; }
+
+.stat { position: relative; overflow: hidden; }
+.stat .stat-value { font-family: var(--font-head); font-size: 2rem; font-weight: 700; }
+.stat .stat-label { color: var(--ink-soft); font-size: .9rem; }
+.stat::after {
+  content: ""; position: absolute; right: -30px; top: -30px; width: 110px; height: 110px;
+  border-radius: 50%; background: var(--mist); z-index: 0;
+}
+.stat > * { position: relative; z-index: 1; }
+.stat.alert .stat-value { color: var(--red); }
+
+/* ---------- semafor ---------- */
+.light {
+  display: inline-block; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--grey); box-shadow: inset 0 0 0 2px rgba(255,255,255,.6); flex: none;
+}
+.light.green { background: var(--green); }
+.light.orange { background: var(--orange); }
+.light.red { background: var(--red); }
+.light.lg { width: 22px; height: 22px; }
+
+.semafor {
+  display: inline-flex; flex-direction: column; gap: 6px; padding: 8px;
+  background: var(--semafor-bg); border-radius: 14px; flex: none;
+}
+.semafor span { width: 22px; height: 22px; border-radius: 50%; background: var(--semafor-off); }
+.semafor.red .s-red { background: var(--red); box-shadow: 0 0 12px var(--red); }
+.semafor.orange .s-orange { background: var(--orange); box-shadow: 0 0 12px var(--orange); }
+.semafor.green .s-green { background: var(--green); box-shadow: 0 0 12px var(--green); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: 999px; font-size: .8rem; font-weight: 600;
+  background: var(--grey-bg); color: var(--ink-soft); white-space: nowrap;
+}
+.chip.green { background: var(--green-bg); color: var(--green-fg); }
+.chip.orange { background: var(--orange-bg); color: var(--orange-fg); }
+.chip.red { background: var(--red-bg); color: var(--red-fg); }
+.chip.blue { background: var(--mist); color: var(--sky-deep); }
+
+/* ---------- lidé ---------- */
+.person-card { display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: inherit; transition: transform .12s; }
+.person-card:hover { transform: translateY(-2px); }
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex: none;
+  display: grid; place-items: center; font-family: var(--font-head); font-weight: 600;
+  background: linear-gradient(135deg, var(--sky), var(--aqua)); color: var(--ink);
+}
+.avatar.lg { width: 64px; height: 64px; font-size: 1.3rem; }
+.progress { height: 8px; border-radius: 999px; background: var(--mist); overflow: hidden; }
+.progress > div { height: 100%; background: linear-gradient(90deg, var(--sky), var(--aqua)); border-radius: inherit; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--mist); }
+
+/* ---------- schůzky ---------- */
+.meeting-list { list-style: none; margin: 0; padding: 0; }
+.meeting-list li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.meeting-list li:last-child { border-bottom: 0; }
+.date-badge {
+  flex: none; width: 54px; text-align: center; border-radius: 12px; padding: 6px 0;
+  background: var(--mist); font-family: var(--font-head); line-height: 1.1;
+}
+.date-badge b { display: block; font-size: 1.2rem; }
+.date-badge small { font-size: .7rem; text-transform: uppercase; color: var(--ink-soft); }
+.date-badge.overdue { background: var(--red-bg); color: var(--red-fg); }
+
+.timeline { position: relative; }
+.checkin { border-left: 4px solid var(--grey); }
+.checkin.green { border-left-color: var(--green); }
+.checkin.orange { border-left-color: var(--orange); }
+.checkin.red { border-left-color: var(--red); }
+.checkin-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.checkin-head h3 { margin: 0; }
+
+.analysis { display: grid; gap: 16px; margin-top: 16px; }
+.analysis-top { display: flex; gap: 16px; align-items: flex-start; }
+.box.analysis-top h4 { font-size: 1.05rem; margin-bottom: 4px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.verdict-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.verdict-list li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; align-items: start; }
+.verdict-list .light { margin-top: 4px; }
+.verdict-list q { display: block; color: var(--ink-soft); font-style: italic; font-size: .88rem; margin-top: 2px; }
+.verdict-list q::before { content: "„"; } .verdict-list q::after { content: "“"; }
+.box { background: var(--bg); border-radius: 12px; padding: 14px 16px; }
+.box.red { background: var(--red-bg); }
+.box h4 { font-size: .9rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin-bottom: 10px; }
+.box ul { margin: 0; padding-left: 18px; }
+
+details.transcript summary { cursor: pointer; color: var(--sky-deep); font-weight: 500; }
+details.transcript pre {
+  white-space: pre-wrap; font-family: var(--font); font-size: .85rem; max-height: 320px; overflow: auto;
+  background: var(--bg); padding: 12px; border-radius: 10px;
+}
+
+/* ---------- poznámky ---------- */
+.note { padding: 12px 14px; background: var(--bg); border-radius: 12px; }
+.note-meta { font-size: .78rem; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.note p { margin: 4px 0 0; white-space: pre-wrap; }
+
+/* ---------- kalendář ---------- */
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.cal-dow { font-size: .75rem; text-transform: uppercase; color: var(--muted); text-align: center; padding: 4px 0; }
+.cal-day {
+  min-height: 104px; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 0;
+}
+.cal-day.other { opacity: .45; }
+.cal-day.today { border-color: var(--aqua-deep); box-shadow: inset 0 0 0 1px var(--aqua-deep); }
+.cal-num { font-size: .8rem; font-weight: 600; color: var(--ink-soft); }
+.cal-ev {
+  display: block; font-size: .74rem; line-height: 1.25; padding: 3px 6px; border-radius: 6px;
+  text-decoration: none; color: var(--ink); background: var(--mist);
+  border-left: 3px solid var(--sky-deep); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cal-ev.green { border-left-color: var(--green); background: var(--green-bg); }
+.cal-ev.orange { border-left-color: var(--orange); background: var(--orange-bg); }
+.cal-ev.red { border-left-color: var(--red); background: var(--red-bg); }
+.cal-ev.overdue { border-left-color: var(--red); background: var(--surface); outline: 1px dashed var(--red); }
+.cal-ev.start { border-left-color: var(--aqua-deep); background: var(--aqua-bg); }
+
+/* ---------- formuláře a tlačítka ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font: inherit; font-weight: 600; cursor: pointer; text-decoration: none;
+  border: 1px solid transparent; border-radius: 999px; padding: 9px 18px;
+  background: var(--ink); color: var(--on-ink);
+}
+.btn:hover { filter: brightness(1.15); }
+.btn:disabled { opacity: .55; cursor: progress; }
+.btn.secondary { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn.secondary:hover { background: var(--mist); filter: none; }
+.btn.aqua { background: var(--aqua-deep); color: #fff; }
+.btn.danger { background: var(--surface); color: var(--red); border-color: var(--red-bg); }
+.btn.danger:hover { background: var(--red-bg); filter: none; }
+.btn.sm { padding: 6px 12px; font-size: .85rem; }
+.btn.link { background: none; color: var(--sky-deep); padding: 0; border: 0; font-weight: 500; }
+
+label { display: block; font-weight: 600; font-size: .85rem; margin-bottom: 4px; color: var(--ink-soft); }
+input, select, textarea {
+  font: inherit; color: var(--ink); width: 100%;
+  border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; background: var(--surface);
+}
+input:focus, select:focus, textarea:focus, .btn:focus-visible, a:focus-visible {
+  outline: 3px solid rgba(46, 158, 152, .35); outline-offset: 1px; border-color: var(--aqua-deep);
+}
+textarea { resize: vertical; min-height: 90px; }
+.field + .field { margin-top: 12px; }
+.fields-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.edit-list .item { display: grid; grid-template-columns: 1fr 2fr auto; gap: 8px; align-items: start; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.edit-list.checkpoints .item { grid-template-columns: 90px 1fr 2fr auto; }
+
+.dropzone {
+  border: 2px dashed var(--sky); border-radius: 14px; padding: 18px; text-align: center;
+  background: var(--mist); color: var(--ink-soft);
+}
+.dropzone.over { border-color: var(--aqua-deep); background: var(--aqua-bg); }
+
+.empty {
+  text-align: center; padding: 40px 20px; color: var(--ink-soft);
+  background:
+    linear-gradient(var(--empty-veil), var(--empty-veil)),
+    url("watercolor.jpg") center / cover;
+}
+
+.banner { padding: 12px 16px; border-radius: 12px; background: var(--orange-bg); color: var(--orange-fg); }
+
+/* ---------- modal, toast ---------- */
+.modal { position: fixed; inset: 0; background: var(--overlay); display: grid; place-items: center; padding: 16px; z-index: 50; }
+.modal[hidden] { display: none; }
+.modal-card { background: var(--card); color: var(--ink); border-radius: var(--radius); padding: 24px; width: min(560px, 100%); max-height: 90vh; overflow: auto; box-shadow: var(--shadow); }
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  background: var(--ink); color: var(--on-ink); padding: 10px 18px; border-radius: 999px; z-index: 60;
+  box-shadow: var(--shadow); max-width: calc(100% - 32px);
+}
+.toast[hidden] { display: none; }
+
+.spinner {
+  width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(127,127,127,.4);
+  border-top-color: currentColor; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 720px) {
+  h1 { font-size: 1.4rem; }
+  .cal { gap: 3px; }
+  .cal-day { min-height: 70px; padding: 4px; }
+  .cal-ev { font-size: .66rem; padding: 2px 4px; }
+  .cal-dow { font-size: .65rem; }
+  .edit-list .item, .edit-list.checkpoints .item { grid-template-columns: 1fr; }
+  .analysis-top { flex-direction: column; }
+}
+
+</style>
+<header class="topbar">
+    <a class="brand" href="#/prehled">
+      <span class="brand-mark">four bros</span>
+      <span class="brand-sub">HR check-iny</span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#/prehled" data-route="prehled">Přehled</a>
+      <a href="#/lide" data-route="lide">Lidé</a>
+      <a href="#/kalendar" data-route="kalendar">Kalendář</a>
+      <a href="#/nastaveni" data-route="nastaveni">Nastavení</a>
+    </nav>
+  </header>
+
+  <main id="app" class="container" aria-live="polite">
+    <p class="muted">Načítám…</p>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div id="modal-body"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+<script>
+"use strict";
+
+// =====================================================================
+// Four Bros HR check-iny – frontend (bez frameworku)
+// =====================================================================
+
+const DEFAULT_SETTINGS = {
+  values: [
+    { id: "v-vysledky", name: "Výsledky mluví za nás", description: "Práci dotahuje do konce, zajímá ho/ji reálný dopad a měřitelný výsledek, ne jen odvedená činnost." },
+    { id: "v-data", name: "Data a vědecký přístup", description: "Rozhoduje se na základě dat, testuje hypotézy, ověřuje si fakta místo dojmů." },
+    { id: "v-primost", name: "Osobní a přímý přístup", description: "Mluví narovinu, lidsky a bez zbytečné formálnosti – s kolegy i s klienty." },
+    { id: "v-otevrenost", name: "Radikální otevřenost", description: "Otevřeně pojmenuje rizika, chyby i očekávání; sám/sama o zpětnou vazbu stojí a umí ji přijmout." },
+    { id: "v-marketing", name: "Marketing nás baví", description: "Opravdový zájem o obor, zvídavost, chuť se učit a sledovat novinky." },
+    { id: "v-vpred", name: "Posouváme se vpřed", description: "Iniciativa, růstové myšlení, přináší vlastní nápady a unikátní zkušenost z předchozí kariéry." },
+    { id: "v-tym", name: "Tým a odpovědnost", description: "Spolehlivost, ownership za svou část, ochota pomoct týmu." },
+  ],
+  redFlags: [
+    { id: "r-vina", name: "Svalování viny", description: "Vyhýbá se odpovědnosti, chyby připisuje ostatním nebo okolnostem." },
+    { id: "r-feedback", name: "Odmítání zpětné vazby", description: "Reaguje defenzivně, zpětnou vazbu bagatelizuje nebo ignoruje." },
+    { id: "r-netransparentnost", name: "Zamlčování problémů", description: "Netransparentnost, problémy nehlásí včas, něco zakrývá." },
+    { id: "r-nezajem", name: "Nezájem o obor a práci", description: "Práce jen „za peníze“, žádná zvídavost ani vlastní iniciativa." },
+    { id: "r-negativita", name: "Negativita vůči týmu / klientům", description: "Pomlouvání, cynismus, opakovaná kritika bez návrhu řešení." },
+    { id: "r-ocekavani", name: "Nesoulad očekávání", description: "Jiná představa o roli, penězích, home office, kariérním růstu nebo tempu." },
+    { id: "r-odchod", name: "Signály odchodu", description: "Zmínky o hledání jiné práce, nejistota, jestli zůstat." },
+    { id: "r-pretizeni", name: "Přetížení / izolace", description: "Známky vyhoření, stresu, pocit osamění nebo nedostatku podpory." },
+    { id: "r-spolehlivost", name: "Nespolehlivost", description: "Nedodržuje termíny, sliby nebo domluvená pravidla." },
+  ],
+  checkpoints: [
+    { id: "c-14", day: 14, label: "Po 2 týdnech", focus: "První dojmy, onboarding, jestli realita odpovídá očekávání, co chybí." },
+    { id: "c-30", day: 30, label: "Po 1 měsíci", focus: "Zapojení do týmu, pochopení role, první zkušenost s kulturou Four Bros." },
+    { id: "c-60", day: 60, label: "Po 2 měsících", focus: "Samostatnost, výkon, práce se zpětnou vazbou, vztahy s klienty." },
+    { id: "c-85", day: 85, label: "Před koncem zkušebky", focus: "Celkové zhodnocení, souznění s hodnotami, rozhodnutí o pokračování a další plány." },
+  ],
+};
+
+const ONBOARDING_DAYS = 90;
+const STATUS_LABEL = { green: "Souzní", orange: "Pozor", red: "Red flag", unknown: "Nezaznělo" };
+
+const state = {
+  db: null,
+  aiReady: false,
+  calMonth: null,
+  route: "prehled",
+  routeParam: null,
+  analyzing: new Map(), // klíč → AbortController
+  store: null, // { root, people, transcripts } když je úložiště dostupné
+  storeState: "loading", // loading | ok | none
+  sample: null,
+  downloads: null,
+};
+
+// ---------- pomocné funkce ----------
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+
+function todayIso() {
+  return toIso(new Date());
+}
+function toIso(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+function parseIso(s) {
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+function addDays(iso, n) {
+  const d = parseIso(iso);
+  d.setDate(d.getDate() + n);
+  return toIso(d);
+}
+function diffDays(a, b) {
+  return Math.round((parseIso(b) - parseIso(a)) / 86400000);
+}
+function fmtDate(iso, opts = { day: "numeric", month: "numeric", year: "numeric" }) {
+  return iso ? parseIso(iso).toLocaleDateString("cs-CZ", opts) : "";
+}
+function fmtDateTime(isoStr) {
+  return new Date(isoStr).toLocaleString("cs-CZ", { day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+function initials(name) {
+  return name.split(/\s+/).filter((w) => /^\p{L}/u.test(w)).slice(0, 2).map((p) => p[0].toUpperCase()).join("");
+}
+function relDays(n) {
+  if (n === 0) return "dnes";
+  if (n === 1) return "zítra";
+  if (n === -1) return "včera";
+  if (n > 0) return `za ${n} ${n < 5 ? "dny" : "dní"}`;
+  const a = -n;
+  return `před ${a} ${a === 1 ? "dnem" : "dny"}`;
+}
+
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.hidden = false;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => (t.hidden = true), 3200);
+}
+
+// ---------- data ----------
+
+function emptyDb() {
+  return { version: 1, settings: structuredClone(DEFAULT_SETTINGS), people: [] };
+}
+
+// Data žijí v soukromé části úložiště stránky: data/users/<id>/hr …
+// Člověk = jeden dokument, přepisy zvlášť (dokument má limit 256 KiB).
+const written = { settings: null, people: new Map(), transcripts: new Map() };
+const tKey = (pid, cpId) => `${pid}__${cpId}`;
+
+function splitPerson(p) {
+  const body = structuredClone(p);
+  const transcripts = {};
+  for (const [cpId, ci] of Object.entries(body.checkins || {})) {
+    transcripts[tKey(p.id, cpId)] = ci.transcript || "";
+    delete ci.transcript;
+  }
+  return { body, transcripts };
+}
+
+function attachTranscripts(person, texts) {
+  for (const [key, text] of texts) {
+    const [pid, cpId] = key.split("__");
+    if (pid !== person.id) continue;
+    getCheckin(person, cpId).transcript = text;
+  }
+}
+
+async function load() {
+  const [db, user, sample, downloads] = await Promise.all(
+    ["db", "user", "sample", "downloads"].map((n) => window.claude?.use(n).catch(() => null) ?? Promise.resolve(null)),
+  );
+  state.sample = sample;
+  state.aiReady = Boolean(sample);
+  state.downloads = downloads;
+  const uidv = user ? await user.id() : null;
+  if (!db || !uidv) {
+    state.storeState = "none";
+    state.db = emptyDb();
+    return;
+  }
+  const root = db.doc(`data/users/${uidv}/hr`);
+  state.store = { root, people: root.collection("people"), transcripts: root.collection("transcripts") };
+  const [rootSnap, peopleSnap, trSnap] = await Promise.all([root.get(), state.store.people.get(), state.store.transcripts.get()]);
+  const dbData = emptyDb();
+  if (rootSnap.exists && rootSnap.data().settings) {
+    dbData.settings = structuredClone(rootSnap.data().settings);
+    written.settings = JSON.stringify(dbData.settings);
+  }
+  const texts = new Map();
+  for (const d of trSnap.docs) {
+    texts.set(d.id, d.data().text || "");
+    written.transcripts.set(d.id, d.data().text || "");
+  }
+  for (const d of peopleSnap.docs) {
+    const p = structuredClone(d.data());
+    written.people.set(p.id, JSON.stringify(p));
+    attachTranscripts(p, texts);
+    dbData.people.push(p);
+  }
+  state.db = dbData;
+  state.storeState = "ok";
+  subscribe();
+}
+
+/** Živé změny z jiných oken / zařízení. Vlastní zápisy se poznají podle shody s `written`. */
+function subscribe() {
+  const onErr = () => {};
+  state.store.root.onSnapshot((snap) => {
+    if (!snap.exists || !snap.data().settings) return;
+    const j = JSON.stringify(snap.data().settings);
+    if (j === written.settings) return;
+    written.settings = j;
+    state.db.settings = JSON.parse(j);
+    renderSoon();
+  }, onErr);
+  state.store.people.onSnapshot((qs) => {
+    let changed = false;
+    for (const ch of qs.docChanges()) {
+      const id = ch.doc.id;
+      if (ch.type === "removed") {
+        if (!written.people.has(id)) continue;
+        written.people.delete(id);
+        state.db.people = state.db.people.filter((p) => p.id !== id);
+        changed = true;
+        continue;
+      }
+      const j = JSON.stringify(ch.doc.data());
+      if (j === written.people.get(id)) continue;
+      written.people.set(id, j);
+      const fresh = JSON.parse(j);
+      const old = findPerson(id);
+      for (const [cpId, ci] of Object.entries(old?.checkins || {})) {
+        if (ci.transcript) getCheckin(fresh, cpId).transcript = ci.transcript;
+      }
+      state.db.people = old ? state.db.people.map((p) => (p.id === id ? fresh : p)) : [...state.db.people, fresh];
+      changed = true;
+    }
+    if (changed) renderSoon();
+  }, onErr);
+  state.store.transcripts.onSnapshot((qs) => {
+    let changed = false;
+    for (const ch of qs.docChanges()) {
+      const key = ch.doc.id;
+      const text = ch.type === "removed" ? "" : ch.doc.data().text || "";
+      if ((written.transcripts.get(key) ?? "") === text) continue;
+      if (text) written.transcripts.set(key, text);
+      else written.transcripts.delete(key);
+      const [pid, cpId] = key.split("__");
+      const p = findPerson(pid);
+      if (p) {
+        getCheckin(p, cpId).transcript = text;
+        changed = true;
+      }
+    }
+    if (changed) renderSoon();
+  }, onErr);
+}
+
+/** Překreslí, ale ne pod rukama, když člověk zrovna píše. */
+function renderSoon() {
+  const el = document.activeElement;
+  if (el && $("#app").contains(el) && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) {
+    el.addEventListener("blur", () => setTimeout(render, 0), { once: true });
+    return;
+  }
+  if (!$("#modal").hidden) return;
+  render();
+}
+
+let saveTimer = null;
+let saveChain = Promise.resolve();
+function save() {
+  if (!state.store) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveChain = saveChain.then(flush).catch((err) => {
+      const msg = err?.code === "quota_exceeded"
+        ? "Úložiště je plné – smaž staré lidi nebo přepisy."
+        : err?.code === "invalid_argument"
+          ? "Tohle zobrazení nemá právo ukládat."
+          : "zkus to prosím znovu.";
+      toast("Uložení se nepovedlo: " + msg);
+    });
+  }, 300);
+}
+
+// Zapisuje jen to, co se změnilo, a vždy jeden zápis na dokument najednou.
+async function flush() {
+  const { root, people, transcripts } = state.store;
+  const sJson = JSON.stringify(state.db.settings);
+  if (sJson !== written.settings) {
+    await root.set({ version: 1, settings: state.db.settings });
+    written.settings = sJson;
+  }
+  const seenPeople = new Set();
+  const seenTr = new Set();
+  for (const p of state.db.people) {
+    seenPeople.add(p.id);
+    const { body, transcripts: texts } = splitPerson(p);
+    const j = JSON.stringify(body);
+    if (j !== written.people.get(p.id)) {
+      await people.doc(p.id).set(body);
+      written.people.set(p.id, j);
+    }
+    for (const [key, text] of Object.entries(texts)) {
+      if (!text) continue;
+      seenTr.add(key);
+      if (written.transcripts.get(key) === text) continue;
+      await transcripts.doc(key).set({ personId: p.id, text });
+      written.transcripts.set(key, text);
+    }
+  }
+  for (const key of [...written.transcripts.keys()]) {
+    if (seenTr.has(key)) continue;
+    await transcripts.doc(key).delete();
+    written.transcripts.delete(key);
+  }
+  for (const id of [...written.people.keys()]) {
+    if (seenPeople.has(id)) continue;
+    await people.doc(id).delete();
+    written.people.delete(id);
+  }
+}
+
+const settings = () => state.db.settings;
+const findPerson = (id) => state.db.people.find((p) => p.id === id);
+
+function getCheckin(person, cpId) {
+  person.checkins ||= {};
+  person.checkins[cpId] ||= { date: null, done: false, transcript: "", analysis: null, manualStatus: null, notes: "" };
+  return person.checkins[cpId];
+}
+
+/** Datum check-inu: ručně nastavené, jinak den X od nástupu (víkend se posune na pondělí). */
+function checkinDate(person, cp) {
+  const manual = person.checkins?.[cp.id]?.date;
+  if (manual) return manual;
+  const iso = addDays(person.startDate, cp.day);
+  const dow = parseIso(iso).getDay();
+  return dow === 6 ? addDays(iso, 2) : dow === 0 ? addDays(iso, 1) : iso;
+}
+
+function checkinStatus(ci) {
+  if (!ci) return null;
+  return ci.manualStatus || ci.analysis?.overall || null;
+}
+
+function isDone(ci) {
+  return Boolean(ci && (ci.done || ci.transcript || ci.analysis));
+}
+
+/** Všechny naplánované schůzky (pro přehled a kalendář). */
+function allMeetings() {
+  const out = [];
+  for (const p of state.db.people) {
+    if (p.archived) continue;
+    for (const cp of settings().checkpoints) {
+      const ci = p.checkins?.[cp.id];
+      out.push({ person: p, cp, date: checkinDate(p, cp), ci, done: isDone(ci), status: checkinStatus(ci) });
+    }
+  }
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/** Celkový semafor člověka = stav posledního vyhodnoceného check-inu. */
+function personStatus(p) {
+  const statuses = settings()
+    .checkpoints.map((cp) => checkinStatus(p.checkins?.[cp.id]))
+    .filter(Boolean);
+  if (!statuses.length) return null;
+  return statuses[statuses.length - 1];
+}
+
+function onboardingDay(p) {
+  return diffDays(p.startDate, todayIso());
+}
+
+function nextMeeting(p) {
+  return settings()
+    .checkpoints.map((cp) => ({ cp, date: checkinDate(p, cp), ci: p.checkins?.[cp.id] }))
+    .find((m) => !isDone(m.ci));
+}
+
+function redFlagCount(p) {
+  return Object.values(p.checkins || {}).reduce(
+    (n, ci) => n + (ci.analysis?.redFlags?.filter((f) => f.severity === "red").length || 0),
+    0,
+  );
+}
+
+// ---------- UI stavební kostky ----------
+
+function light(status, cls = "") {
+  return `<span class="light ${status || ""} ${cls}" title="${esc(STATUS_LABEL[status] || "Zatím bez hodnocení")}"></span>`;
+}
+function chip(status) {
+  if (!status) return `<span class="chip">Bez hodnocení</span>`;
+  return `<span class="chip ${status}">${light(status)} ${STATUS_LABEL[status]}</span>`;
+}
+function semafor(status) {
+  return `<div class="semafor ${status || ""}" aria-label="${esc(STATUS_LABEL[status] || "Bez hodnocení")}"><span class="s-red"></span><span class="s-orange"></span><span class="s-green"></span></div>`;
+}
+function avatar(p, cls = "") {
+  return `<div class="avatar ${cls}">${esc(initials(p.name))}</div>`;
+}
+function progress(p) {
+  const pct = Math.max(0, Math.min(100, (onboardingDay(p) / ONBOARDING_DAYS) * 100));
+  return `<div class="progress" title="Den ${onboardingDay(p)} z ${ONBOARDING_DAYS}"><div style="width:${pct}%"></div></div>`;
+}
+function dayLabel(p) {
+  const d = onboardingDay(p);
+  if (d < 0) return `nastupuje ${relDays(-d)}`;
+  if (d > ONBOARDING_DAYS) return "adaptace dokončena";
+  return `den ${d} z ${ONBOARDING_DAYS}`;
+}
+function dateBadge(iso, overdue) {
+  const d = parseIso(iso);
+  return `<div class="date-badge ${overdue ? "overdue" : ""}"><b>${d.getDate()}</b><small>${d.toLocaleDateString("cs-CZ", { month: "short" })}</small></div>`;
+}
+
+function emptyState(title, text, action = "") {
+  return `<div class="card empty"><h2>${title}</h2><p>${text}</p>${action}</div>`;
+}
+
+// ---------- modal ----------
+
+function openModal(html, onMount) {
+  $("#modal-body").innerHTML = html;
+  $("#modal").hidden = false;
+  onMount?.($("#modal-body"));
+  $("#modal-body").querySelector("input, textarea, select")?.focus();
+}
+function closeModal() {
+  $("#modal").hidden = true;
+  $("#modal-body").innerHTML = "";
+  ask._resolve?.(false);
+  ask._resolve = null;
+}
+
+/** Potvrzovací dialog v rámci stránky (prohlížečové confirm() tu nefunguje). */
+function ask(message, { ok = "Ano", danger = false, typeToConfirm = "" } = {}) {
+  return new Promise((resolve) => {
+    openModal(`
+      <h2>Opravdu?</h2>
+      <p>${esc(message)}</p>
+      ${typeToConfirm ? `<div class="field"><label for="ask-type">Pro potvrzení napiš ${esc(typeToConfirm)}</label><input id="ask-type" autocomplete="off"></div>` : ""}
+      <div class="row between" style="margin-top:16px">
+        <button type="button" class="btn secondary" id="ask-no">Zpět</button>
+        <button type="button" class="btn ${danger ? "danger" : ""}" id="ask-yes">${esc(ok)}</button>
+      </div>`, (root) => {
+      const yes = $("#ask-yes", root);
+      const input = $("#ask-type", root);
+      if (input) {
+        yes.disabled = true;
+        input.addEventListener("input", () => (yes.disabled = input.value.trim() !== typeToConfirm));
+      }
+      ask._resolve = resolve;
+      yes.addEventListener("click", () => { ask._resolve = null; closeModal(); resolve(true); });
+      $("#ask-no", root).addEventListener("click", () => closeModal());
+    });
+  });
+}
+
+function go(href) {
+  const [, route, param] = href.split("/");
+  state.route = route || "prehled";
+  state.routeParam = param || null;
+  render();
+}
+
+function personForm(p = {}) {
+  return `
+    <h2>${p.id ? "Upravit člověka" : "Nový člověk"}</h2>
+    <form id="person-form" class="stack">
+      <div class="fields-2">
+        <div><label for="f-name">Jméno a příjmení *</label><input id="f-name" name="name" required value="${esc(p.name)}"></div>
+        <div><label for="f-start">Datum nástupu *</label><input id="f-start" name="startDate" type="date" required value="${esc(p.startDate || todayIso())}"></div>
+        <div><label for="f-role">Pozice</label><input id="f-role" name="role" value="${esc(p.role)}" placeholder="např. PPC specialista"></div>
+        <div><label for="f-team">Tým</label><input id="f-team" name="team" value="${esc(p.team)}" placeholder="např. Performance"></div>
+        <div><label for="f-lead">Leader / buddy</label><input id="f-lead" name="lead" value="${esc(p.lead)}"></div>
+        <div><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" value="${esc(p.email)}"></div>
+      </div>
+      <div class="row between">
+        <button type="button" class="btn secondary" data-action="close-modal">Zrušit</button>
+        <button class="btn">${p.id ? "Uložit" : "Přidat"}</button>
+      </div>
+    </form>`;
+}
+
+function openPersonForm(existing) {
+  openModal(personForm(existing), (root) => {
+    $("#person-form", root).addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      if (existing) {
+        Object.assign(existing, data);
+      } else {
+        const p = { id: uid(), ...data, checkins: {}, notes: [], createdAt: new Date().toISOString() };
+        state.db.people.push(p);
+        go(`#/clovek/${p.id}`);
+      }
+      save();
+      closeModal();
+      render();
+      toast(existing ? "Uloženo" : "Člověk přidán – schůzky jsou naplánované v kalendáři");
+    });
+  });
+}
+
+// =====================================================================
+// Pohledy
+// =====================================================================
+
+function storeBanner() {
+  const parts = [];
+  if (state.storeState === "none") parts.push("Ukládání tu není dostupné – otevři stránku přihlášená na claude.ai, jinak se změny po zavření ztratí.");
+  if (!state.aiReady) parts.push("Vyhodnocení přepisů přes Clauda v tomhle zobrazení nejde. Lidi, kalendář i poznámky fungují normálně.");
+  return parts.length ? `<div class="banner" style="margin-bottom:16px">${parts.join("<br>")}</div>` : "";
+}
+
+function viewDashboard() {
+  const people = state.db.people.filter((p) => !p.archived);
+  if (!people.length) {
+    return storeBanner() + emptyState(
+      "Vítej v HR check-inech 👋",
+      "Přidej prvního nováčka. Appka mu podle data nástupu naplánuje check-iny na první 3 měsíce a pak ti z přepisů ukáže semafor.",
+      `<div class="row" style="justify-content:center"><button class="btn" data-action="add-person">Přidat člověka</button><button class="btn secondary" data-action="load-demo">Vyzkoušet na ukázkových datech</button></div>`,
+    );
+  }
+  const today = todayIso();
+  const meetings = allMeetings();
+  const overdue = meetings.filter((m) => !m.done && m.date < today);
+  const upcoming = meetings.filter((m) => !m.done && m.date >= today && diffDays(today, m.date) <= 21);
+  const inOnboarding = people.filter((p) => onboardingDay(p) <= ONBOARDING_DAYS);
+  const weekCount = meetings.filter((m) => !m.done && m.date >= today && diffDays(today, m.date) < 7).length;
+  const reds = people.filter((p) => personStatus(p) === "red");
+
+  const meetingItem = (m) => `
+    <li>
+      ${dateBadge(m.date, m.date < today)}
+      <div style="flex:1;min-width:0">
+        <a href="#/clovek/${m.person.id}"><b>${esc(m.person.name)}</b></a>
+        <div class="small muted">${esc(m.cp.label)} · ${relDays(diffDays(today, m.date))}</div>
+      </div>
+      ${m.date < today ? `<span class="chip red">Po termínu</span>` : ""}
+    </li>`;
+
+  const sorted = [...people].sort((a, b) => {
+    const rank = { red: 0, orange: 1, green: 2 };
+    return (rank[personStatus(a)] ?? 3) - (rank[personStatus(b)] ?? 3);
+  });
+
+  return `
+    ${storeBanner()}
+    <div class="section-head"><h1>Ahoj, tady je přehled</h1><button class="btn" data-action="add-person">+ Přidat člověka</button></div>
+    <div class="grid grid-4">
+      <div class="card stat"><div class="stat-value">${inOnboarding.length}</div><div class="stat-label">lidí v adaptaci</div></div>
+      <div class="card stat"><div class="stat-value">${weekCount}</div><div class="stat-label">check-inů tento týden</div></div>
+      <div class="card stat ${overdue.length ? "alert" : ""}"><div class="stat-value">${overdue.length}</div><div class="stat-label">schůzek po termínu</div></div>
+      <div class="card stat ${reds.length ? "alert" : ""}"><div class="stat-value">${reds.length}</div><div class="stat-label">lidí na červené</div></div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:16px">
+      <div class="card">
+        <h2>Nejbližší check-iny</h2>
+        ${overdue.length + upcoming.length
+          ? `<ul class="meeting-list">${[...overdue, ...upcoming].map(meetingItem).join("")}</ul>`
+          : `<p class="muted">V příštích 3 týdnech nic naplánovaného. 🎉</p>`}
+      </div>
+      <div class="card">
+        <h2>Semafor týmu</h2>
+        <ul class="meeting-list">
+          ${sorted.map((p) => `
+            <li>
+              ${avatar(p)}
+              <div style="flex:1;min-width:0">
+                <a href="#/clovek/${p.id}"><b>${esc(p.name)}</b></a>
+                <div class="small muted">${esc(p.role || "")}${p.role ? " · " : ""}${dayLabel(p)}</div>
+              </div>
+              ${chip(personStatus(p))}
+            </li>`).join("")}
+        </ul>
+      </div>
+    </div>`;
+}
+
+function viewPeople() {
+  const showArchived = state.showArchived === true;
+  const people = state.db.people
+    .filter((p) => showArchived || !p.archived)
+    .sort((a, b) => b.startDate.localeCompare(a.startDate));
+  const today = todayIso();
+  return `
+    <div class="section-head">
+      <h1>Lidé</h1>
+      <div class="row">
+        <label class="row small" style="margin:0;font-weight:500"><input type="checkbox" data-action="toggle-archived" ${showArchived ? "checked" : ""} style="width:auto"> zobrazit archiv</label>
+        <button class="btn" data-action="add-person">+ Přidat člověka</button>
+      </div>
+    </div>
+    ${people.length ? `
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Jméno</th><th>Pozice / tým</th><th>Nástup</th><th style="min-width:140px">Adaptace</th><th>Další check-in</th><th>Semafor</th></tr></thead>
+        <tbody>
+          ${people.map((p) => {
+            const next = nextMeeting(p);
+            return `
+            <tr class="clickable" data-href="#/clovek/${p.id}">
+              <td><div class="row">${avatar(p)}<b>${esc(p.name)}</b>${p.archived ? `<span class="chip">archiv</span>` : ""}</div></td>
+              <td>${esc(p.role || "–")}<div class="small muted">${esc(p.team || "")}</div></td>
+              <td>${fmtDate(p.startDate)}</td>
+              <td>${progress(p)}<div class="small muted">${dayLabel(p)}</div></td>
+              <td>${next ? `${fmtDate(next.date)}<div class="small ${next.date < today ? "" : "muted"}" ${next.date < today ? 'style="color:var(--red)"' : ""}>${esc(next.cp.label)} · ${relDays(diffDays(today, next.date))}</div>` : `<span class="muted">vše hotovo</span>`}</td>
+              <td>${chip(personStatus(p))}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>` : emptyState("Zatím tu nikdo není", "Přidej prvního nováčka.", `<button class="btn" data-action="add-person">Přidat člověka</button>`)}`;
+}
+
+function viewPerson(id) {
+  const p = findPerson(id);
+  if (!p) return emptyState("Člověk nenalezen", "Možná byl smazán.", `<a class="btn" href="#/lide">Zpět na seznam</a>`);
+  const today = todayIso();
+  const flags = redFlagCount(p);
+
+  return `
+    <p><a href="#/lide">← Lidé</a></p>
+    <div class="card">
+      <div class="row between" style="align-items:flex-start">
+        <div class="row" style="align-items:flex-start;gap:16px">
+          ${avatar(p, "lg")}
+          <div>
+            <h1 style="margin-bottom:2px">${esc(p.name)}</h1>
+            <div class="muted">${esc([p.role, p.team].filter(Boolean).join(" · ") || "Pozice nevyplněna")}</div>
+            <div class="small muted">Nástup ${fmtDate(p.startDate)}${p.lead ? ` · leader/buddy: ${esc(p.lead)}` : ""}${p.email ? ` · <a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : ""}</div>
+          </div>
+        </div>
+        <div class="row">
+          ${semafor(personStatus(p))}
+          <div>
+            ${chip(personStatus(p))}
+            <div class="small muted" style="margin-top:4px">${flags ? `${flags}× vážný red flag` : "bez vážných red flags"}</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px">${progress(p)}<div class="small muted" style="margin-top:4px">${dayLabel(p)}</div></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn secondary sm" data-action="edit-person" data-id="${p.id}">Upravit</button>
+        <button class="btn secondary sm" data-action="archive-person" data-id="${p.id}">${p.archived ? "Vrátit z archivu" : "Archivovat"}</button>
+        <button class="btn danger sm" data-action="delete-person" data-id="${p.id}">Smazat</button>
+      </div>
+    </div>
+
+    <div class="section-head"><h2>Check-iny během adaptace</h2></div>
+    <div class="timeline stack">
+      ${settings().checkpoints.map((cp) => checkinCard(p, cp, today)).join("")}
+    </div>
+
+    <div class="section-head"><h2>Poznámky</h2></div>
+    <div class="card stack">
+      <form data-form="add-note" data-id="${p.id}" class="stack">
+        <textarea name="text" placeholder="Co ti utkvělo? Postřehy z chodby, od leadera, domluvené kroky…" required></textarea>
+        <div class="row between"><span class="small muted">Poznámky vidíš jen ty.</span><button class="btn">Přidat poznámku</button></div>
+      </form>
+      ${(p.notes || []).slice().reverse().map((n) => `
+        <div class="note">
+          <div class="note-meta"><span>${fmtDateTime(n.createdAt)}</span><button class="btn link small" data-action="delete-note" data-id="${p.id}" data-note="${n.id}">smazat</button></div>
+          <p>${esc(n.text)}</p>
+        </div>`).join("") || `<p class="muted">Zatím žádné poznámky.</p>`}
+    </div>`;
+}
+
+function checkinCard(p, cp, today) {
+  const ci = p.checkins?.[cp.id];
+  const date = checkinDate(p, cp);
+  const done = isDone(ci);
+  const status = checkinStatus(ci);
+  const key = `${p.id}:${cp.id}`;
+  const busy = state.analyzing.has(key);
+  const overdue = !done && date < today;
+
+  return `
+  <div class="card checkin ${status || ""}" id="ci-${cp.id}">
+    <div class="checkin-head">
+      <div>
+        <h3>${esc(cp.label)} <span class="muted small" style="font-weight:400">· den ${cp.day}</span></h3>
+        <div class="small muted">${esc(cp.focus || "")}</div>
+      </div>
+      <div class="row">
+        ${overdue ? `<span class="chip red">Po termínu</span>` : done ? `<span class="chip blue">Proběhlo</span>` : `<span class="chip">${relDays(diffDays(today, date))}</span>`}
+        ${chip(status)}
+      </div>
+    </div>
+
+    <div class="fields-2" style="margin-top:14px">
+      <div>
+        <label for="d-${p.id}-${cp.id}">Datum schůzky</label>
+        <input id="d-${p.id}-${cp.id}" type="date" value="${date}" data-change="ci-date" data-id="${p.id}" data-cp="${cp.id}">
+        ${!done ? `<div class="small" style="margin-top:4px">Přidat do kalendáře: <a href="${gcalLink(p, cp, date)}" target="_blank" rel="noopener">Google</a> · <a href="${outlookLink(p, cp, date)}" target="_blank" rel="noopener">Outlook</a></div>` : ""}
+      </div>
+      <div>
+        <label>Ruční úprava semaforu</label>
+        <select data-change="ci-manual" data-id="${p.id}" data-cp="${cp.id}">
+          <option value="">${ci?.analysis ? `Podle analýzy (${STATUS_LABEL[ci.analysis.overall]})` : "— bez ruční úpravy —"}</option>
+          ${["green", "orange", "red"].map((s) => `<option value="${s}" ${ci?.manualStatus === s ? "selected" : ""}>${STATUS_LABEL[s]}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      ${ci?.transcript
+        ? `<details class="transcript"><summary>Přepis (${ci.transcript.length.toLocaleString("cs-CZ")} znaků)</summary><pre>${esc(ci.transcript)}</pre></details>
+           <div class="row" style="margin-top:10px">
+             ${busy
+               ? `<button class="btn aqua" disabled><span class="spinner"></span> Claude čte přepis…</button><button class="btn secondary sm" data-action="stop-analyze" data-id="${p.id}" data-cp="${cp.id}">Zastavit</button>`
+               : `<button class="btn aqua" data-action="analyze" data-id="${p.id}" data-cp="${cp.id}" ${!state.aiReady ? "disabled" : ""}>${ci.analysis ? "Vyhodnotit znovu" : "Vyhodnotit semafor"}</button>`}
+             <button class="btn secondary sm" data-action="upload" data-id="${p.id}" data-cp="${cp.id}">Nahradit přepis</button>
+             <button class="btn danger sm" data-action="remove-transcript" data-id="${p.id}" data-cp="${cp.id}">Smazat přepis</button>
+           </div>
+           ${busy ? `<p class="small muted">Trvá to obvykle 1–2 minuty. Poprvé se tě claude.ai zeptá, jestli stránka smí Clauda použít.</p>` : ""}
+           ${!state.aiReady ? `<p class="small muted">Vyhodnocení přes Clauda v tomhle zobrazení nejde.</p>` : ""}`
+        : `<div class="dropzone" data-drop data-id="${p.id}" data-cp="${cp.id}">
+             <p style="margin:0 0 10px">Přetáhni sem přepis (.txt, .md, .vtt, .srt) nebo</p>
+             <div class="row" style="justify-content:center">
+               <button class="btn secondary sm" data-action="upload" data-id="${p.id}" data-cp="${cp.id}">Vybrat soubor</button>
+               <button class="btn secondary sm" data-action="paste" data-id="${p.id}" data-cp="${cp.id}">Vložit text</button>
+               ${!done ? `<button class="btn link small" data-action="mark-done" data-id="${p.id}" data-cp="${cp.id}">jen označit jako proběhlé</button>` : ""}
+             </div>
+           </div>`}
+    </div>
+
+    ${ci?.analysis ? analysisBlock(ci.analysis) : ""}
+
+    <div style="margin-top:14px">
+      <label>Poznámky ke schůzce</label>
+      <textarea data-change="ci-notes" data-id="${p.id}" data-cp="${cp.id}" placeholder="Domluvené kroky, co sledovat příště…">${esc(ci?.notes || "")}</textarea>
+    </div>
+  </div>`;
+}
+
+function analysisBlock(a) {
+  const values = a.values || [];
+  const flags = a.redFlags || [];
+  return `
+  <div class="analysis">
+    <div class="analysis-top box">
+      ${semafor(a.overall)}
+      <div>
+        <h4>${esc(a.headline)}</h4>
+        <p style="margin:0">${esc(a.summary)}</p>
+        <div class="small muted" style="margin-top:6px">Vyhodnoceno ${fmtDateTime(a.analyzedAt)} · AI návrh, finální slovo máš ty</div>
+      </div>
+    </div>
+    <div class="grid grid-2">
+      <div class="box">
+        <h4>Hodnoty Four Bros</h4>
+        <ul class="verdict-list">
+          ${values.map((v) => `
+            <li>${light(v.status === "unknown" ? "" : v.status)}
+              <div><b>${esc(v.name)}</b> <span class="small muted">· ${STATUS_LABEL[v.status] || ""}</span>
+                <div class="small">${esc(v.comment)}</div>
+                ${v.evidence ? `<q>${esc(v.evidence)}</q>` : ""}
+              </div></li>`).join("")}
+        </ul>
+      </div>
+      <div class="box ${flags.some((f) => f.severity === "red") ? "red" : ""}">
+        <h4>Red flags</h4>
+        ${flags.length ? `<ul class="verdict-list">
+          ${flags.map((f) => `
+            <li>${light(f.severity)}
+              <div><b>${esc(f.name)}</b>
+                <div class="small">${esc(f.comment)}</div>
+                ${f.evidence ? `<q>${esc(f.evidence)}</q>` : ""}
+              </div></li>`).join("")}
+        </ul>` : `<p class="small" style="margin:0">Žádné varovné signály se v přepisu neobjevily. ✅</p>`}
+      </div>
+    </div>
+    <div class="grid grid-2">
+      ${a.strengths?.length ? `<div class="box"><h4>Co funguje</h4><ul>${a.strengths.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>` : ""}
+      ${a.followUpQuestions?.length ? `<div class="box"><h4>Otázky na příště</h4><ul>${a.followUpQuestions.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>` : ""}
+    </div>
+    ${a.recommendation ? `<div class="box"><h4>Doporučený další krok</h4><p style="margin:0">${esc(a.recommendation)}</p></div>` : ""}
+  </div>`;
+}
+
+function viewCalendar() {
+  const today = todayIso();
+  const base = state.calMonth || today.slice(0, 7);
+  const [y, m] = base.split("-").map(Number);
+  const first = new Date(y, m - 1, 1);
+  const offset = (first.getDay() + 6) % 7; // pondělí = 0
+  const start = new Date(y, m - 1, 1 - offset);
+  const days = [];
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    days.push(toIso(d));
+  }
+  if (days.slice(35).every((d) => !d.startsWith(base))) days.length = 35;
+
+  const byDate = {};
+  for (const mt of allMeetings()) (byDate[mt.date] ||= []).push({ type: "meeting", ...mt });
+  for (const p of state.db.people.filter((x) => !x.archived)) (byDate[p.startDate] ||= []).push({ type: "start", person: p });
+
+  const monthName = first.toLocaleDateString("cs-CZ", { month: "long", year: "numeric" });
+  const dows = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+
+  return `
+    <div class="section-head">
+      <h1 style="text-transform:capitalize">${monthName}</h1>
+      <div class="row">
+        <button class="btn secondary sm" data-action="cal-move" data-delta="-1" aria-label="Předchozí měsíc">←</button>
+        <button class="btn secondary sm" data-action="cal-today">Dnes</button>
+        <button class="btn secondary sm" data-action="cal-move" data-delta="1" aria-label="Další měsíc">→</button>
+      </div>
+    </div>
+    <div class="row small muted" style="margin-bottom:12px">
+      <span class="cal-ev start" style="display:inline-block">nástup</span>
+      <span class="cal-ev" style="display:inline-block">naplánováno</span>
+      <span class="cal-ev overdue" style="display:inline-block">po termínu</span>
+      <span class="cal-ev green" style="display:inline-block">souzní</span>
+      <span class="cal-ev orange" style="display:inline-block">pozor</span>
+      <span class="cal-ev red" style="display:inline-block">red flag</span>
+    </div>
+    <div class="cal">
+      ${dows.map((d) => `<div class="cal-dow">${d}</div>`).join("")}
+      ${days.map((d) => `
+        <div class="cal-day ${d.startsWith(base) ? "" : "other"} ${d === today ? "today" : ""}">
+          <div class="cal-num">${parseIso(d).getDate()}</div>
+          ${(byDate[d] || []).map((ev) => ev.type === "start"
+            ? `<a class="cal-ev start" href="#/clovek/${ev.person.id}" title="Nástup: ${esc(ev.person.name)}">🎉 ${esc(ev.person.name)}</a>`
+            : `<a class="cal-ev ${ev.status || (!ev.done && ev.date < today ? "overdue" : "")}" href="#/clovek/${ev.person.id}" title="${esc(ev.person.name)} – ${esc(ev.cp.label)}">${esc(ev.person.name)} · ${esc(ev.cp.label)}</a>`,
+          ).join("")}
+        </div>`).join("")}
+    </div>`;
+}
+
+function viewSettings() {
+  const s = settings();
+  const listEditor = (kind, items, placeholderName, placeholderDesc) => `
+    <div class="edit-list" data-list="${kind}">
+      ${items.map((it, i) => `
+        <div class="item">
+          <input value="${esc(it.name)}" data-edit="${kind}" data-i="${i}" data-key="name" placeholder="${placeholderName}">
+          <textarea data-edit="${kind}" data-i="${i}" data-key="description" placeholder="${placeholderDesc}" style="min-height:44px">${esc(it.description)}</textarea>
+          <button class="btn danger sm" data-action="remove-item" data-kind="${kind}" data-i="${i}" aria-label="Odebrat">✕</button>
+        </div>`).join("")}
+    </div>
+    <button class="btn secondary sm" style="margin-top:10px" data-action="add-item" data-kind="${kind}">+ Přidat</button>`;
+
+  return `
+    <h1>Nastavení</h1>
+    <p class="muted">Podle těchhle hodnot a signálů AI vyhodnocuje přepisy. Uprav je, aby přesně seděly na Four Bros – čím konkrétnější popis, tím přesnější semafor.</p>
+
+    <div class="stack">
+      <div class="card">
+        <h2>Hodnoty a kultura Four Bros</h2>
+        ${listEditor("values", s.values, "Hodnota", "Jak se projevuje v praxi")}
+      </div>
+
+      <div class="card">
+        <h2>Red flags</h2>
+        ${listEditor("redFlags", s.redFlags, "Varovný signál", "Jak ho poznat")}
+      </div>
+
+      <div class="card">
+        <h2>Check-iny během adaptace</h2>
+        <p class="small muted">Den = kolikátý den od nástupu se schůzka automaticky naplánuje. U konkrétního člověka jde datum posunout.</p>
+        <div class="edit-list checkpoints">
+          ${s.checkpoints.map((cp, i) => `
+            <div class="item">
+              <input type="number" min="1" max="365" value="${cp.day}" data-edit="checkpoints" data-i="${i}" data-key="day" aria-label="Den">
+              <input value="${esc(cp.label)}" data-edit="checkpoints" data-i="${i}" data-key="label" placeholder="Název">
+              <textarea data-edit="checkpoints" data-i="${i}" data-key="focus" placeholder="Na co se zaměřit" style="min-height:44px">${esc(cp.focus)}</textarea>
+              <button class="btn danger sm" data-action="remove-item" data-kind="checkpoints" data-i="${i}" aria-label="Odebrat">✕</button>
+            </div>`).join("")}
+        </div>
+        <button class="btn secondary sm" style="margin-top:10px" data-action="add-item" data-kind="checkpoints">+ Přidat check-in</button>
+      </div>
+
+      <div class="card">
+        <h2>Data a záloha</h2>
+        <p class="small muted">Data jsou v soukromé části této stránky na claude.ai. Vidíš je jen ty, i když stránku někomu nasdílíš (ten člověk uvidí prázdnou appku). Přepisy čte při vyhodnocení Claude pod tvým účtem.</p>
+        <div class="row">
+          ${state.downloads ? `<button class="btn secondary" data-action="export-json">Stáhnout zálohu (.json)</button>` : ""}
+          <button class="btn secondary" data-action="import-json">Nahrát zálohu</button>
+          <button class="btn secondary" data-action="reset-settings">Obnovit výchozí hodnoty a red flags</button>
+          <button class="btn danger" data-action="wipe">Smazat všechna data</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// =====================================================================
+// Router a render
+// =====================================================================
+
+function render() {
+  const route = state.route;
+  const param = state.routeParam;
+  const hash = `${route}/${param || ""}`;
+  document.querySelectorAll("#nav a").forEach((a) => {
+    a.classList.toggle("active", a.dataset.route === route || (route === "clovek" && a.dataset.route === "lide"));
+  });
+  const app = $("#app");
+  const scroll = window.scrollY;
+  const sameView = render._last === hash;
+  const views = { prehled: viewDashboard, lide: viewPeople, clovek: () => viewPerson(param), kalendar: viewCalendar, nastaveni: viewSettings };
+  app.innerHTML = (views[route] || viewDashboard)();
+  if (sameView) window.scrollTo(0, scroll);
+  else window.scrollTo(0, 0);
+  render._last = hash;
+}
+
+// ---------- přepisy ----------
+
+function cleanTranscript(text, filename = "") {
+  let t = text.replace(/\r\n?/g, "\n");
+  if (/\.(vtt|srt)$/i.test(filename) || /^WEBVTT/.test(t)) {
+    t = t
+      .split("\n")
+      .filter((line) => !/^WEBVTT/.test(line) && !/^\d+$/.test(line.trim()) && !/-->/.test(line) && !/^NOTE\b/.test(line))
+      .join("\n")
+      .replace(/<v\s+([^>]+)>/g, "$1: ")
+      .replace(/<\/?[^>]+>/g, "")
+      .replace(/\n{2,}/g, "\n");
+  }
+  return t.trim();
+}
+
+function setTranscript(personId, cpId, text) {
+  const p = findPerson(personId);
+  const ci = getCheckin(p, cpId);
+  ci.transcript = text;
+  ci.done = true;
+  save();
+  render();
+  toast("Přepis uložen" + (state.aiReady ? " – teď klikni na „Vyhodnotit semafor“" : ""));
+}
+
+async function readFileAsTranscript(file, personId, cpId) {
+  if (/\.(docx?|pdf)$/i.test(file.name)) {
+    toast("Word/PDF zatím neumím – ulož přepis jako .txt nebo text vlož přes „Vložit text“.");
+    return;
+  }
+  const text = cleanTranscript(await file.text(), file.name);
+  if (!text) return toast("Soubor je prázdný.");
+  setTranscript(personId, cpId, text);
+}
+
+function pickFile(accept, cb) {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = accept;
+  input.addEventListener("change", () => input.files[0] && cb(input.files[0]));
+  input.click();
+}
+
+const ANALYSIS_INSTRUCTIONS = `Jsi zkušená HR partnerka ve firmě Four Bros (brněnská marketingová agentura). Pomáháš HR vyhodnocovat adaptační check-iny nováčků během prvních 3 měsíců (zkušební doby).
+
+Dostaneš přepis rozhovoru HR s nováčkem, firemní hodnoty a seznam varovných signálů (red flags). Férově posuď, jak postoje a chování člověka souzní s kulturou Four Bros, a upozorni na rizika.
+
+Pravidla:
+- Opírej se jen o to, co v přepisu skutečně zaznělo. Ke každému hodnocení dej krátkou doslovnou citaci (evidence). Když k hodnotě nic nezaznělo, dej status "unknown" a evidence nech prázdnou.
+- Semafor: "green" = jasně souzní, "orange" = nejasné / smíšené / stojí za doptání, "red" = jde proti hodnotě nebo je to vážný signál.
+- Red flag uváděj jen tehdy, když ho přepis opravdu dokládá. Nevymýšlej. Rozlišuj běžnou nejistotu nováčka (normální v prvních týdnech) od skutečného varovného signálu.
+- Zohledni fázi adaptace a zaměření daného check-inu.
+- Nehodnoť osobnost ani citlivé charakteristiky (věk, zdraví, rodina, původ apod.) – jen pracovní postoje a chování.
+- overall: "red", pokud je aspoň jeden vážný red flag; "orange", pokud jsou nejasnosti nebo menší signály; jinak "green".
+- Piš česky, lidsky a přímo – tak, jak mluví Four Bros. Otázky na příště tykej.`;
+
+function buildPrompt(p, cp, transcript) {
+  const s = settings();
+  return `${ANALYSIS_INSTRUCTIONS}
+
+<kontext>
+Jméno: ${p.name}
+Pozice: ${p.role || "neuvedeno"}
+Tým: ${p.team || "neuvedeno"}
+Datum nástupu: ${p.startDate}
+Check-in: ${cp.label} (den ${cp.day} od nástupu)
+Zaměření check-inu: ${cp.focus || "obecný adaptační rozhovor"}
+</kontext>
+
+<hodnoty_four_bros>
+${s.values.map((v) => `- ${v.name}: ${v.description}`).join("\n")}
+</hodnoty_four_bros>
+
+<red_flags>
+${s.redFlags.map((f) => `- ${f.name}: ${f.description}`).join("\n")}
+</red_flags>
+
+<prepis>
+${transcript}
+</prepis>
+
+Odpověz POUZE jedním JSON objektem v tomto tvaru:
+{
+  "overall": "green" | "orange" | "red",
+  "headline": "jedna krátká věta shrnutí",
+  "summary": "3–5 vět",
+  "values": [{"name": "přesný název hodnoty ze seznamu", "status": "green" | "orange" | "red" | "unknown", "evidence": "doslovná citace nebo prázdný řetězec", "comment": "krátký komentář"}],
+  "redFlags": [{"name": "název signálu", "severity": "orange" | "red", "evidence": "doslovná citace", "comment": "krátký komentář"}],
+  "strengths": ["…"],
+  "followUpQuestions": ["3–5 otázek na příští check-in"],
+  "recommendation": "konkrétní další krok pro HR / leadera"
+}
+V poli "values" uveď každou hodnotu ze seznamu právě jednou. V poli "redFlags" jen signály, které přepis dokládá (prázdné pole, pokud žádné).`;
+}
+
+const STATUSES = ["green", "orange", "red"];
+function normalizeAnalysis(r) {
+  if (!r || typeof r !== "object" || !STATUSES.includes(r.overall)) throw { code: "invalid_json" };
+  const str = (x) => (typeof x === "string" ? x : "");
+  const arr = (x) => (Array.isArray(x) ? x : []);
+  return {
+    overall: r.overall,
+    headline: str(r.headline),
+    summary: str(r.summary),
+    values: arr(r.values).map((v) => ({
+      name: str(v?.name),
+      status: [...STATUSES, "unknown"].includes(v?.status) ? v.status : "unknown",
+      evidence: str(v?.evidence),
+      comment: str(v?.comment),
+    })),
+    redFlags: arr(r.redFlags).map((f) => ({
+      name: str(f?.name),
+      severity: f?.severity === "red" ? "red" : "orange",
+      evidence: str(f?.evidence),
+      comment: str(f?.comment),
+    })),
+    strengths: arr(r.strengths).map(str).filter(Boolean),
+    followUpQuestions: arr(r.followUpQuestions).map(str).filter(Boolean),
+    recommendation: str(r.recommendation),
+    analyzedAt: new Date().toISOString(),
+  };
+}
+
+const SAMPLE_ERRORS = {
+  not_granted: "stránka nemá povolení používat Clauda.",
+  sampling_disabled: "Claude není pro tenhle účet dostupný.",
+  rate_limited: "teď je toho moc najednou, zkus to za chvíli.",
+  session_expired: "přihlas se znovu na claude.ai.",
+  prompt_too_large: "přepis je moc dlouhý – zkrať ho.",
+  refused: "Claude tenhle přepis odmítl vyhodnotit.",
+  invalid_json: "odpověď nešla přečíst, zkus to znovu.",
+};
+
+async function runAnalysis(personId, cpId) {
+  const p = findPerson(personId);
+  const cp = settings().checkpoints.find((c) => c.id === cpId);
+  const ci = getCheckin(p, cpId);
+  const key = `${personId}:${cpId}`;
+  if (!state.sample || state.analyzing.has(key)) return;
+  const ctl = new AbortController();
+  state.analyzing.set(key, ctl);
+  render();
+  try {
+    const raw = await state.sample.json(buildPrompt(p, cp, ci.transcript), {
+      modelTier: "complex",
+      cache: false,
+      signal: ctl.signal,
+    });
+    const person = findPerson(personId);
+    if (person) {
+      getCheckin(person, cpId).analysis = normalizeAnalysis(raw);
+      save();
+      toast("Hotovo – semafor je vyhodnocený");
+    }
+  } catch (err) {
+    if (err?.code === "not_granted" || err?.code === "sampling_disabled") state.aiReady = false;
+    if (err?.code !== "cancelled") toast("Vyhodnocení se nepovedlo: " + (SAMPLE_ERRORS[err?.code] || "zkus to prosím znovu."));
+  } finally {
+    state.analyzing.delete(key);
+    render();
+  }
+}
+
+// ---------- export ----------
+
+async function download(filename, content) {
+  if (!state.downloads) return toast("Stahování tu není dostupné.");
+  try {
+    await state.downloads.save({ filename, data: content });
+  } catch (err) {
+    if (err?.code !== "declined") toast("Stažení se nepovedlo.");
+  }
+}
+
+function calendarText(p, cp) {
+  return {
+    title: `HR check-in: ${p.name} – ${cp.label}`,
+    details: `${cp.focus || ""}\n\nPo schůzce nahraj přepis do HR check-inů.`,
+  };
+}
+function gcalLink(p, cp, date) {
+  const { title, details } = calendarText(p, cp);
+  const d = date.replace(/-/g, "");
+  const next = addDays(date, 1).replace(/-/g, "");
+  return "https://calendar.google.com/calendar/render?" + new URLSearchParams({ action: "TEMPLATE", text: title, dates: `${d}/${next}`, details });
+}
+function outlookLink(p, cp, date) {
+  const { title, details } = calendarText(p, cp);
+  return "https://outlook.office.com/calendar/0/deeplink/compose?" + new URLSearchParams({
+    subject: title, body: details, startdt: date, enddt: addDays(date, 1), allday: "true", path: "/calendar/action/compose", rru: "addevent",
+  });
+}
+
+// ---------- demo data ----------
+
+function demoData() {
+  const t = todayIso();
+  const mk = (name, role, team, daysAgo, lead) => ({
+    id: uid(), name, role, team, lead, email: "", startDate: addDays(t, -daysAgo), checkins: {}, notes: [], createdAt: new Date().toISOString(), demo: true,
+  });
+  const a = mk("Tereza Nová (ukázka)", "PPC specialistka", "Performance", 40, "Martin");
+  const b = mk("Jakub Malý (ukázka)", "Copywriter", "Content", 70, "Lucie");
+  const c = mk("Eva Svobodová (ukázka)", "Account manažerka", "Klienti", 5, "Petr");
+  const allValues = (status) => DEFAULT_SETTINGS.values.map((v) => ({ name: v.name, status, evidence: "", comment: "" }));
+
+  a.checkins["c-14"] = {
+    date: null, done: true, manualStatus: null, notes: "Domluveno: víc času s Martinem na reporting.",
+    transcript: "HR: Jak se ti zatím daří?\nTereza: Super, nejvíc mě baví, že tady se fakt všechno měří. Hned první týden jsem si udělala vlastní dashboard.\nHR: Co ti chybí?\nTereza: Asi víc zpětné vazby na kampaně, klidně tvrdé, chci se zlepšovat.",
+    analysis: {
+      overall: "green", headline: "Tereza velmi dobře souzní s kulturou – data, otevřenost, chuť růst.",
+      summary: "Tereza mluví s nadšením o práci s daty a sama si řekla o tvrdší zpětnou vazbu. Projevuje iniciativu (vlastní dashboard). Žádné varovné signály.",
+      values: allValues("unknown").map((v) => ({
+        ...v,
+        ...(v.name === "Data a vědecký přístup" && { status: "green", evidence: "nejvíc mě baví, že tady se fakt všechno měří", comment: "Přirozeně staví na datech." }),
+        ...(v.name === "Radikální otevřenost" && { status: "green", evidence: "Asi víc zpětné vazby na kampaně, klidně tvrdé", comment: "Sama si o zpětnou vazbu říká." }),
+        ...(v.name === "Posouváme se vpřed" && { status: "green", evidence: "Hned první týden jsem si udělala vlastní dashboard.", comment: "Iniciativa bez zadání." }),
+      })),
+      redFlags: [], strengths: ["Iniciativa", "Práce s daty", "Chce zpětnou vazbu"],
+      followUpQuestions: ["Jak ti funguje spolupráce s Martinem?", "Na čem by ses chtěla do konce zkušebky nejvíc zlepšit?"],
+      recommendation: "Zajistit pravidelnou zpětnou vazbu na kampaně (např. týdenní 15min review s Martinem).",
+      analyzedAt: new Date().toISOString(), model: "ukázka",
+    },
+  };
+  b.checkins["c-14"] = { date: null, done: true, transcript: "", analysis: null, manualStatus: "green", notes: "V pohodě, rychle se zapojil." };
+  b.checkins["c-30"] = {
+    date: null, done: true, manualStatus: null, notes: "",
+    transcript: "HR: Jak hodnotíš první měsíc?\nJakub: Upřímně, čekal jsem víc home office. A ten feedback od klienta minule nebyl fér, za to mohl account, ne já.\nHR: A co tě baví?\nJakub: Psaní mě baví, to jo.",
+    analysis: {
+      overall: "orange", headline: "Jakub má rád psaní, ale objevuje se nesoulad očekávání a přehazování odpovědnosti.",
+      summary: "Jakub má k obsahu pozitivní vztah, zmiňuje ale nenaplněné očekávání ohledně home office a odpovědnost za klientskou výtku přesouvá na kolegu. Zatím ne kritické, ale stojí za otevřený rozhovor.",
+      values: allValues("unknown").map((v) => ({
+        ...v,
+        ...(v.name === "Marketing nás baví" && { status: "green", evidence: "Psaní mě baví, to jo.", comment: "Pozitivní vztah k práci." }),
+        ...(v.name === "Tým a odpovědnost" && { status: "orange", evidence: "za to mohl account, ne já", comment: "Odpovědnost přenáší na kolegu." }),
+      })),
+      redFlags: [
+        { name: "Nesoulad očekávání", severity: "orange", evidence: "čekal jsem víc home office", comment: "Vyjasnit pravidla a jestli je to pro něj zásadní." },
+        { name: "Svalování viny", severity: "orange", evidence: "za to mohl account, ne já", comment: "Zatím jednorázové, sledovat." },
+      ],
+      strengths: ["Baví ho psaní"],
+      followUpQuestions: ["Jak teď vnímáš pravidla home office?", "Co bys příště udělal jinak u té klientské výtky?"],
+      recommendation: "Do 2 týdnů krátký rozhovor s Lucií o očekáváních (HO) a o tom, jak u nás pracujeme s chybami.",
+      analyzedAt: new Date().toISOString(), model: "ukázka",
+    },
+  };
+  b.notes.push({ id: uid(), createdAt: new Date().toISOString(), text: "Lucie říkala, že termíny drží, jen je víc ve stresu před deadlinem." });
+  return [a, b, c];
+}
+
+// =====================================================================
+// Události
+// =====================================================================
+
+function bindEvents() {
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#/"]');
+    if (!a) return;
+    e.preventDefault();
+    go(a.getAttribute("href"));
+  });
+
+  $("#modal").addEventListener("click", (e) => {
+    if (e.target.id === "modal") closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !$("#modal").hidden) closeModal();
+  });
+
+  document.addEventListener("click", async (e) => {
+    const row = e.target.closest("tr[data-href]");
+    if (row && !e.target.closest("a, button")) {
+      go(row.dataset.href);
+      return;
+    }
+    const el = e.target.closest("[data-action]");
+    if (!el) return;
+    const { action, id, cp } = el.dataset;
+    const p = id ? findPerson(id) : null;
+
+    switch (action) {
+      case "close-modal": closeModal(); break;
+      case "add-person": openPersonForm(); break;
+      case "edit-person": openPersonForm(p); break;
+      case "archive-person":
+        p.archived = !p.archived; save(); render();
+        toast(p.archived ? "Archivováno – zmizí z přehledu a kalendáře" : "Vráceno z archivu");
+        break;
+      case "delete-person":
+        if (await ask(`Smazat ${p.name} včetně všech přepisů a poznámek? Nejde to vrátit.`, { ok: "Smazat", danger: true })) {
+          state.analyzing.forEach((ctl, k) => k.startsWith(id + ":") && ctl.abort());
+          state.db.people = state.db.people.filter((x) => x.id !== id);
+          save(); go("#/lide"); toast("Smazáno");
+        }
+        break;
+      case "toggle-archived":
+        state.showArchived = el.checked; render(); break;
+      case "load-demo":
+        state.db.people.push(...demoData()); save(); render(); toast("Ukázková data nahrána – smažeš je v detailu člověka");
+        break;
+      case "upload":
+        pickFile(".txt,.md,.vtt,.srt,text/plain", (f) => readFileAsTranscript(f, id, cp));
+        break;
+      case "paste":
+        openModal(`
+          <h2>Vložit přepis</h2>
+          <form id="paste-form" class="stack">
+            <textarea name="text" style="min-height:260px" placeholder="Sem vlož text přepisu schůzky…" required></textarea>
+            <div class="row between"><button type="button" class="btn secondary" data-action="close-modal">Zrušit</button><button class="btn">Uložit přepis</button></div>
+          </form>`, (root) => {
+          $("#paste-form", root).addEventListener("submit", (ev) => {
+            ev.preventDefault();
+            const text = cleanTranscript(new FormData(ev.target).get("text"));
+            closeModal();
+            if (text) setTranscript(id, cp, text);
+          });
+        });
+        break;
+      case "mark-done":
+        getCheckin(p, cp).done = true; save(); render(); break;
+      case "remove-transcript":
+        if (await ask("Smazat přepis i jeho vyhodnocení?", { ok: "Smazat", danger: true })) {
+          Object.assign(getCheckin(p, cp), { transcript: "", analysis: null }); save(); render();
+        }
+        break;
+      case "analyze": runAnalysis(id, cp); break;
+      case "stop-analyze": state.analyzing.get(`${id}:${cp}`)?.abort(); break;
+      case "delete-note":
+        p.notes = p.notes.filter((n) => n.id !== el.dataset.note); save(); render(); break;
+      case "cal-move": {
+        const [y, m] = (state.calMonth || todayIso().slice(0, 7)).split("-").map(Number);
+        const d = new Date(y, m - 1 + Number(el.dataset.delta), 1);
+        state.calMonth = toIso(d).slice(0, 7); render(); break;
+      }
+      case "cal-today": state.calMonth = null; render(); break;
+      case "add-item": {
+        const kind = el.dataset.kind;
+        if (kind === "checkpoints") settings().checkpoints.push({ id: "c-" + uid(), day: 45, label: "Nový check-in", focus: "" });
+        else settings()[kind].push({ id: uid(), name: "", description: "" });
+        sortCheckpoints(); save(); render(); break;
+      }
+      case "remove-item": {
+        const list = settings()[el.dataset.kind];
+        const item = list[Number(el.dataset.i)];
+        if (await ask(`Odebrat „${item.name || item.label || "položku"}“?`, { ok: "Odebrat", danger: true })) {
+          list.splice(Number(el.dataset.i), 1); save(); render();
+        }
+        break;
+      }
+      case "reset-settings":
+        if (await ask("Vrátit hodnoty a red flags na výchozí? Check-iny zůstanou.", { ok: "Obnovit" })) {
+          settings().values = structuredClone(DEFAULT_SETTINGS.values);
+          settings().redFlags = structuredClone(DEFAULT_SETTINGS.redFlags);
+          save(); render();
+        }
+        break;
+      case "export-json":
+        download(`fourbros-hr-zaloha-${todayIso()}.json`, JSON.stringify(state.db, null, 2));
+        break;
+      case "import-json":
+        pickFile(".json,application/json", async (f) => {
+          try {
+            const db = JSON.parse(await f.text());
+            if (!Array.isArray(db.people) || !db.settings) throw new Error("neplatný formát");
+            if (!(await ask("Nahrát zálohu? Současná data se přepíšou.", { ok: "Nahrát", danger: true }))) return;
+            state.db = db; save(); render(); toast("Záloha nahrána");
+          } catch (err) {
+            toast("Zálohu se nepodařilo načíst: " + err.message);
+          }
+        });
+        break;
+      case "wipe":
+        if (await ask("Smazat VŠECHNA data (lidi, přepisy, poznámky)? Nejdřív si stáhni zálohu.", { ok: "Smazat vše", danger: true, typeToConfirm: "SMAZAT" })) {
+          state.analyzing.forEach((ctl) => ctl.abort());
+          state.db = emptyDb(); save(); go("#/prehled"); toast("Data smazána");
+        }
+        break;
+    }
+  });
+
+  document.addEventListener("change", (e) => {
+    const el = e.target;
+    if (el.dataset.change) {
+      const p = findPerson(el.dataset.id);
+      const ci = getCheckin(p, el.dataset.cp);
+      if (el.dataset.change === "ci-date") ci.date = el.value || null;
+      if (el.dataset.change === "ci-manual") ci.manualStatus = el.value || null;
+      if (el.dataset.change === "ci-notes") { ci.notes = el.value; save(); toast("Poznámka uložena"); return; }
+      save(); render();
+      return;
+    }
+    if (el.dataset.edit) {
+      const item = settings()[el.dataset.edit][Number(el.dataset.i)];
+      item[el.dataset.key] = el.dataset.key === "day" ? Math.max(1, Number(el.value) || 1) : el.value;
+      if (el.dataset.edit === "checkpoints" && el.dataset.key === "day") { sortCheckpoints(); render(); }
+      save();
+    }
+  });
+
+  document.addEventListener("submit", (e) => {
+    const form = e.target;
+    if (form.dataset.form === "add-note") {
+      e.preventDefault();
+      const text = new FormData(form).get("text").trim();
+      if (!text) return;
+      const p = findPerson(form.dataset.id);
+      (p.notes ||= []).push({ id: uid(), createdAt: new Date().toISOString(), text });
+      save(); render(); toast("Poznámka přidána");
+    }
+  });
+
+  // drag & drop přepisů
+  document.addEventListener("dragover", (e) => {
+    const dz = e.target.closest("[data-drop]");
+    if (dz) { e.preventDefault(); dz.classList.add("over"); }
+  });
+  document.addEventListener("dragleave", (e) => e.target.closest?.("[data-drop]")?.classList.remove("over"));
+  document.addEventListener("drop", (e) => {
+    const dz = e.target.closest("[data-drop]");
+    if (!dz) return;
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) readFileAsTranscript(file, dz.dataset.id, dz.dataset.cp);
+  });
+}
+
+function sortCheckpoints() {
+  settings().checkpoints.sort((a, b) => a.day - b.day);
+}
+
+// ---------- start ----------
+
+(async function init() {
+  bindEvents();
+  try {
+    await load();
+    render();
+  } catch (err) {
+    state.db ||= emptyDb();
+    state.storeState = "none";
+    render();
+    toast("Data se nepodařilo načíst – zkus stránku obnovit.");
+  }
+})();
+
+</script>

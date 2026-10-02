@@ -13,7 +13,13 @@ Samostatná HR appka (nezávislá na HR portálu) pro adaptaci nováčků během
 - **Poznámky**: ke každé schůzce i obecné poznámky k člověku.
 - **Nastavení**: hodnoty Four Bros, red flags a harmonogram check-inů si upravíš sama. Přes záloha/obnova stáhneš a nahraješ data jako JSON.
 
-## Spuštění
+## Otevření
+
+**Nejjednodušší je online verze na claude.ai:** https://claude.ai/artifact/P7CSayPRUVNECtPXTKm25D
+
+Nic se neinstaluje a API klíč není potřeba, přepis vyhodnotí Claude pod tvým účtem. Data jsou v soukromé části stránky a vidíš je jen ty. Zdroj této verze je ve složce `artifact/`.
+
+## Spuštění na vlastním počítači (volitelné)
 
 Potřebuješ [Node.js](https://nodejs.org/) verze 22 nebo novější.
 
