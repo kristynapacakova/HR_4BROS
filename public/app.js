@@ -36,7 +36,7 @@ const DEFAULT_SETTINGS = {
 const ONBOARDING_DAYS = 90;
 const STATUS_LABEL = { green: "Souzní", orange: "Pozor", red: "Red flag", unknown: "Nezaznělo" };
 
-const state = { db: null, aiReady: false, calMonth: null, analyzing: new Set() };
+const state = { db: null, aiReady: false, calMonth: null, analyzing: new Set(), status: null };
 
 // ---------- pomocné funkce ----------
 
@@ -100,28 +100,119 @@ function emptyDb() {
   return { version: 1, settings: structuredClone(DEFAULT_SETTINGS), people: [] };
 }
 
+// ---------- server ----------
+// "core" = nastavení + lidé bez přepisů; každý přepis se ukládá zvlášť.
+
+class LoginRequired extends Error {}
+
+async function api(method, url, body) {
+  const res = await fetch(url, {
+    method,
+    headers: body ? { "Content-Type": "application/json" } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: "same-origin",
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && data.login) throw new LoginRequired();
+  if (!res.ok) throw new Error(data.error || `Chyba serveru (${res.status})`);
+  return data;
+}
+
+const written = { core: null, transcripts: new Map() };
+const tKey = (pid, cpId) => `${pid}__${cpId}`;
+
+function splitDb() {
+  const core = { version: 1, settings: state.db.settings, people: structuredClone(state.db.people) };
+  const transcripts = new Map();
+  for (const p of core.people) {
+    for (const [cpId, ci] of Object.entries(p.checkins || {})) {
+      if (ci.transcript) transcripts.set(tKey(p.id, cpId), ci.transcript);
+      delete ci.transcript;
+    }
+  }
+  return { core, transcripts };
+}
+
 async function load() {
-  const [dataRes, statusRes] = await Promise.all([fetch("/api/data"), fetch("/api/status")]);
-  const { db } = await dataRes.json();
-  state.db = db || emptyDb();
-  state.aiReady = (await statusRes.json()).aiReady;
+  state.status = await api("GET", "/api/status");
+  state.aiReady = state.status.aiReady;
+  if (state.status.authRequired && !state.status.loggedIn) throw new LoginRequired();
+  const { core, transcripts } = await api("GET", "/api/data");
+  const db = core ? { ...emptyDb(), ...core } : emptyDb();
+  written.core = core ? JSON.stringify({ version: 1, settings: db.settings, people: db.people }) : null;
+  written.transcripts = new Map(Object.entries(transcripts || {}));
+  for (const [key, text] of written.transcripts) {
+    const [pid, cpId] = key.split("__");
+    const p = db.people.find((x) => x.id === pid);
+    if (p) {
+      p.checkins ||= {};
+      p.checkins[cpId] ||= { date: null, done: true, transcript: "", analysis: null, manualStatus: null, notes: "" };
+      p.checkins[cpId].transcript = text;
+    }
+  }
+  state.db = db;
 }
 
 let saveTimer = null;
+let saveChain = Promise.resolve();
 function save() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    try {
-      const res = await fetch("/api/data", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ db: state.db }),
-      });
-      if (!res.ok) throw new Error((await res.json()).error);
-    } catch (err) {
+  saveTimer = setTimeout(() => {
+    saveChain = saveChain.then(flush).catch((err) => {
+      if (err instanceof LoginRequired) return showLogin("Přihlášení vypršelo – přihlas se znovu. Poslední změna se neuložila.");
       toast("Uložení se nepovedlo: " + err.message);
-    }
+    });
   }, 300);
+}
+
+// Posílá jen to, co se změnilo.
+async function flush() {
+  const { core, transcripts } = splitDb();
+  for (const [key, text] of transcripts) {
+    if (written.transcripts.get(key) === text) continue;
+    await api("PUT", "/api/transcript", { key, text });
+    written.transcripts.set(key, text);
+  }
+  const coreJson = JSON.stringify(core);
+  if (coreJson !== written.core) {
+    await api("PUT", "/api/data", { core });
+    written.core = coreJson;
+  }
+  for (const key of [...written.transcripts.keys()]) {
+    if (transcripts.has(key)) continue;
+    await api("DELETE", `/api/transcript?key=${encodeURIComponent(key)}`);
+    written.transcripts.delete(key);
+  }
+}
+
+function showLogin(message = "") {
+  document.querySelector("#nav").hidden = true;
+  $("#app").innerHTML = `
+    <div class="card" style="max-width:420px;margin:40px auto">
+      <h1>Přihlášení</h1>
+      <p class="muted">HR check-iny obsahují citlivé údaje, proto jsou zamčené heslem.</p>
+      ${message ? `<div class="banner" style="margin-bottom:12px">${esc(message)}</div>` : ""}
+      <form id="login-form" class="stack">
+        <div><label for="login-password">Heslo</label><input id="login-password" type="password" autocomplete="current-password" required></div>
+        <button class="btn">Přihlásit se</button>
+        <p id="login-error" class="small" style="color:var(--red);margin:0" hidden></p>
+      </form>
+    </div>`;
+  $("#login-password").focus();
+  $("#login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector("button");
+    btn.disabled = true;
+    try {
+      await api("POST", "/api/login", { password: $("#login-password").value });
+      await start();
+    } catch (err) {
+      const errEl = $("#login-error");
+      errEl.textContent = err.message;
+      errEl.hidden = false;
+      btn.disabled = false;
+    }
+  });
 }
 
 const settings = () => state.db.settings;
@@ -313,7 +404,7 @@ function viewDashboard() {
   });
 
   return `
-    ${!state.aiReady ? `<div class="banner" style="margin-bottom:16px">Analýza přepisů je vypnutá – chybí <code>ANTHROPIC_API_KEY</code>. Lidi, kalendář i poznámky fungují normálně. Návod je v README.</div>` : ""}
+    ${!state.aiReady ? `<div class="banner" style="margin-bottom:16px">Vyhodnocení přepisů je vypnuté – chybí <code>ANTHROPIC_API_KEY</code>. Lidi, kalendář i poznámky fungují normálně. Návod je v README.</div>` : ""}
     <div class="section-head"><h1>Ahoj, tady je přehled</h1><button class="btn" data-action="add-person">+ Přidat člověka</button></div>
     <div class="grid grid-4">
       <div class="card stat"><div class="stat-value">${inOnboarding.length}</div><div class="stat-label">lidí v adaptaci</div></div>
@@ -479,7 +570,7 @@ function checkinCard(p, cp, today) {
              <button class="btn secondary sm" data-action="upload" data-id="${p.id}" data-cp="${cp.id}">Nahradit přepis</button>
              <button class="btn danger sm" data-action="remove-transcript" data-id="${p.id}" data-cp="${cp.id}">Smazat přepis</button>
            </div>
-           ${!state.aiReady ? `<p class="small muted">Analýza je vypnutá – chybí ANTHROPIC_API_KEY (viz README).</p>` : ""}`
+           ${!state.aiReady ? `<p class="small muted">Vyhodnocení je vypnuté – chybí ANTHROPIC_API_KEY (viz README).</p>` : ""}`
         : `<div class="dropzone" data-drop data-id="${p.id}" data-cp="${cp.id}">
              <p style="margin:0 0 10px">Přetáhni sem přepis (.txt, .md, .vtt, .srt) nebo</p>
              <div class="row" style="justify-content:center">
@@ -642,12 +733,13 @@ function viewSettings() {
 
       <div class="card">
         <h2>Data a záloha</h2>
-        <p class="small muted">Všechno se ukládá jen na tomhle počítači (soubor <code>data/db.json</code>). Přepisy odcházejí k vyhodnocení do Claude API. Pravidelně si dělej zálohu.</p>
+        <p class="small muted">${state.status?.storage === "redis" ? "Data jsou uložená v databázi (Upstash Redis) a appka je zamčená heslem." : "Data jsou uložená ve složce <code>data/</code> na tomhle počítači."} Přepisy odcházejí k vyhodnocení do Claude API. Pravidelně si dělej zálohu.</p>
         <div class="row">
           <button class="btn secondary" data-action="export-json">Stáhnout zálohu (.json)</button>
           <button class="btn secondary" data-action="import-json">Nahrát zálohu</button>
           <button class="btn secondary" data-action="reset-settings">Obnovit výchozí hodnoty a red flags</button>
           <button class="btn danger" data-action="wipe">Smazat všechna data</button>
+          ${state.status?.authRequired ? `<button class="btn secondary" data-action="logout">Odhlásit se</button>` : ""}
         </div>
       </div>
     </div>`;
@@ -725,23 +817,18 @@ async function runAnalysis(personId, cpId) {
   state.analyzing.add(key);
   render();
   try {
-    const res = await fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        person: { name: p.name, role: p.role, team: p.team, startDate: p.startDate },
-        checkpoint: cp,
-        settings: { values: settings().values, redFlags: settings().redFlags },
-        transcript: ci.transcript,
-      }),
+    const body = await api("POST", "/api/analyze", {
+      person: { name: p.name, role: p.role, team: p.team, startDate: p.startDate },
+      checkpoint: cp,
+      settings: { values: settings().values, redFlags: settings().redFlags },
+      transcript: ci.transcript,
     });
-    const body = await res.json();
-    if (!res.ok) throw new Error(body.error);
     ci.analysis = body.result;
     save();
     toast("Hotovo – semafor je vyhodnocený");
   } catch (err) {
-    toast("Analýza selhala: " + err.message);
+    if (err instanceof LoginRequired) return showLogin("Přihlášení vypršelo – přihlas se znovu.");
+    toast("Vyhodnocení selhalo: " + err.message);
   } finally {
     state.analyzing.delete(key);
     render();
@@ -955,6 +1042,9 @@ function bindEvents() {
           }
         });
         break;
+      case "logout":
+        api("POST", "/api/logout").catch(() => {}).finally(() => location.reload());
+        break;
       case "wipe":
         if (confirm("Opravdu smazat VŠECHNA data (lidi, přepisy, poznámky)? Nejdřív si stáhni zálohu.") && prompt("Pro potvrzení napiš SMAZAT") === "SMAZAT") {
           state.db = emptyDb(); save(); location.hash = "#/prehled"; render(); toast("Data smazána");
@@ -1015,12 +1105,16 @@ function sortCheckpoints() {
 
 // ---------- start ----------
 
-(async function init() {
-  bindEvents();
+async function start() {
   try {
     await load();
+    document.querySelector("#nav").hidden = false;
     render();
   } catch (err) {
-    $("#app").innerHTML = emptyState("Appka se nenačetla", `Běží server? (${esc(err.message)})`);
+    if (err instanceof LoginRequired) return showLogin();
+    $("#app").innerHTML = emptyState("Appka se nenačetla", esc(err.message));
   }
-})();
+}
+
+bindEvents();
+start();

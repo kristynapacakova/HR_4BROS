@@ -13,11 +13,36 @@ Samostatná HR appka (nezávislá na HR portálu) pro adaptaci nováčků během
 - **Poznámky**: ke každé schůzce i obecné poznámky k člověku.
 - **Nastavení**: hodnoty Four Bros, red flags a harmonogram check-inů si upravíš sama. Přes záloha/obnova stáhneš a nahraješ data jako JSON.
 
-## Otevření
+## Nasazení na Vercel (krok za krokem)
 
-**Nejjednodušší je online verze na claude.ai:** https://claude.ai/artifact/P7CSayPRUVNECtPXTKm25D
+Kód je na GitHubu v repozitáři `kristynapacakova/hr_4bros`. Vercel si ho odtud sám stáhne a při každé změně na GitHubu appku znovu nasadí.
 
-Nic se neinstaluje a API klíč není potřeba, přepis vyhodnotí Claude pod tvým účtem. Data jsou v soukromé části stránky a vidíš je jen ty. Zdroj této verze je ve složce `artifact/`.
+1. **Účet:** přihlas se na <https://vercel.com> přes GitHub (Continue with GitHub).
+2. **Import:** klikni na **Add New… → Project**, u repozitáře `hr_4bros` dej **Import**. Nastavení nech, jak je (Framework Preset: *Other*). Zatím **neklikej na Deploy**, nejdřív rozbal **Environment Variables** a přidej:
+   - `APP_PASSWORD`: heslo, kterým se budeš do appky přihlašovat (vymysli si silné).
+   - `ANTHROPIC_API_KEY`: klíč z <https://console.anthropic.com/> → API Keys. Je potřeba jen pro vyhodnocení přepisů a dá se doplnit i později.
+3. Klikni na **Deploy**.
+4. **Databáze:** v projektu otevři záložku **Storage → Create Database → Upstash for Redis** (verze Free stačí) a dej **Connect** k tomuhle projektu. Vercel sám doplní přístupové údaje (`KV_REST_API_URL`, `KV_REST_API_TOKEN`).
+5. **Redeploy:** záložka **Deployments** → u posledního nasazení tři tečky → **Redeploy**. Nové proměnné se načtou až po novém nasazení.
+6. Otevři adresu, kterou ti Vercel ukáže (něco jako `hr-4bros.vercel.app`), a přihlas se heslem z kroku 2.
+
+Když později změníš heslo nebo klíč v **Settings → Environment Variables**, vždy udělej Redeploy. Změna hesla odhlásí všechna zařízení.
+
+> Vercel standardně nasazuje větev `main`. Pokud je appka zatím na jiné větvi, buď ji slouč do `main`, nebo ve Vercelu v **Settings → Git → Production Branch** nastav tu větev.
+
+### Co appka na Vercelu potřebuje
+
+| Proměnná | K čemu | Povinné |
+|---|---|---|
+| `APP_PASSWORD` | heslo do appky | ano |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | databáze Upstash Redis, doplní je Vercel | ano |
+| `ANTHROPIC_API_KEY` | vyhodnocení přepisů (Claude Opus 5.5) | pro semafor z přepisů |
+
+Vyhodnocení jednoho přepisu může trvat 1–2 minuty, appka má proto nastavený delší časový limit funkce (`vercel.json`).
+
+## Verze na claude.ai
+
+Alternativa bez Vercelu a bez API klíče: <https://claude.ai/artifact/P7CSayPRUVNECtPXTKm25D>. Přepis tu vyhodnotí Claude pod tvým účtem a data jsou v soukromé části stránky. Zdroj je ve složce `artifact/`. Data mezi verzí na claude.ai a na Vercelu se nesdílí, přenést je jde přes **Nastavení → Stáhnout zálohu / Nahrát zálohu**.
 
 ## Spuštění na vlastním počítači (volitelné)
 
@@ -25,29 +50,26 @@ Potřebuješ [Node.js](https://nodejs.org/) verze 22 nebo novější.
 
 ```bash
 npm install
-cp .env.example .env      # do .env vlož ANTHROPIC_API_KEY
+cp .env.example .env      # volitelně doplň ANTHROPIC_API_KEY, případně APP_PASSWORD
 npm start
 ```
 
-Pak otevři <http://localhost:3000>.
-
-Bez API klíče funguje všechno kromě vyhodnocení přepisů. Klíč získáš na <https://console.anthropic.com/>. Analýza běží na modelu Claude Opus 5.5.
-
-Tip: na prvním spuštění klikni na **„Vyzkoušet na ukázkových datech“** a uvidíš, jak to vypadá s vyplněnými daty.
+Pak otevři <http://localhost:3000>. Bez Redisu se data ukládají do složky `data/` (není v gitu).
 
 ## Data a soukromí
 
-- Všechna data (lidi, přepisy, poznámky) jsou jen v souboru `data/db.json` na počítači, kde appka běží. Do gitu se **neukládají** (`data/` je v `.gitignore`).
-- Appka poslouchá jen na `127.0.0.1`, takže z jiného počítače se k ní nikdo nedostane. Pokud ji budeš chtít provozovat na serveru pro víc lidí, bude potřeba přidat přihlášení.
+- Na Vercelu jsou data v databázi Upstash Redis připojené k tvému projektu. Appka je zamčená heslem a bez přihlášení nevrátí žádná data.
 - K vyhodnocení se přepis posílá do Claude API (Anthropic). Nováčka je dobré informovat, že se rozhovor přepisuje a zpracovává (GDPR).
 - AI hodnotí jen pracovní postoje a chování, ne osobnost ani citlivé údaje. Výsledek je podklad pro rozhovor, ne rozhodnutí.
+- Pravidelně si v Nastavení stahuj zálohu.
 
 ## Struktura
 
 ```
-server.js          Node server: ukládání dat + /api/analyze (Claude API)
-public/index.html  aplikace
-public/app.js      logika (lidé, kalendář, semafor, poznámky, nastavení)
-public/style.css   vizuál v barvách Four Bros
-public/watercolor.jpg
+public/          frontend (index.html, app.js, style.css, watercolor.jpg)
+api/             Vercel funkce (data, přepisy, přihlášení, vyhodnocení)
+lib/             sdílená logika: úložiště, přihlášení, vyhodnocení přes Claude API
+server.js        lokální server pro běh na vlastním počítači
+vercel.json      nastavení pro Vercel
+artifact/        verze pro claude.ai
 ```
