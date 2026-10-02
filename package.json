@@ -1,0 +1,16 @@
+{
+  "name": "fourbros-hr-checkin",
+  "version": "1.0.0",
+  "description": "Four Bros HR appka: adaptační check-iny nováčků, semafor hodnot a red flags z přepisů schůzek.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0"
+  }
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Four Bros · HR check-iny</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%238fd8d3'/><text x='16' y='21' font-size='14' text-anchor='middle' font-family='sans-serif' font-weight='700' fill='%231c2a4a'>4B</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/prehled">
+      <span class="brand-mark">four bros</span>
+      <span class="brand-sub">HR check-iny</span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#/prehled" data-route="prehled">Přehled</a>
+      <a href="#/lide" data-route="lide">Lidé</a>
+      <a href="#/kalendar" data-route="kalendar">Kalendář</a>
+      <a href="#/nastaveni" data-route="nastaveni">Nastavení</a>
+    </nav>
+  </header>
+
+  <main id="app" class="container" aria-live="polite">
+    <p class="muted">Načítám…</p>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div id="modal-body"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
