@@ -1,0 +1,17 @@
+# env files
+.env
+.env.local
+.env*.local
+
+# Next.js
+.next/
+out/
+node_modules/
+npm-debug.log*
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# OS
+.DS_Store

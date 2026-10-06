@@ -1,0 +1,165 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  role          String    @default("EMPLOYEE") // ADMIN | EMPLOYEE
+  department    String?
+  position      String?
+  startDate     DateTime?
+  phone         String?
+  address       String?
+  city          String?
+  country       String    @default("CZ")
+  birthDate     DateTime?
+  bankAccount   String?
+  taxId         String?
+
+  accounts         Account[]
+  sessions         Session[]
+  onboardingTasks  OnboardingTask[]
+  documents        Document[]
+  leaveRequests    LeaveRequest[]
+  leaveBalances    LeaveBalance[]
+  payslips         Payslip[]
+  emergencyContact EmergencyContact?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model OnboardingTask {
+  id          String    @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  order       Int       @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id         String    @id @default(cuid())
+  userId     String
+  name       String
+  type       String    // CONTRACT | ID | PAYSLIP | OTHER
+  url        String
+  signedAt   DateTime?
+  uploadedBy String?   // userId of admin who uploaded
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LeaveRequest {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // ANNUAL | SICK | PERSONAL | UNPAID
+  startDate DateTime
+  endDate   DateTime
+  status    String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  reason    String?
+  note      String?  // admin note
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LeaveBalance {
+  id          String @id @default(cuid())
+  userId      String
+  year        Int
+  annualTotal Int    @default(20)
+  annualUsed  Int    @default(0)
+  sickTotal   Int    @default(10)
+  sickUsed    Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, year])
+}
+
+model Payslip {
+  id          String  @id @default(cuid())
+  userId      String
+  month       Int
+  year        Int
+  grossAmount Float
+  netAmount   Float
+  fileUrl     String?
+  currency    String  @default("CZK")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, month, year])
+}
+
+model EmergencyContact {
+  id           String @id @default(cuid())
+  userId       String @unique
+  name         String
+  phone        String
+  relationship String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
