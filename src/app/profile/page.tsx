@@ -55,7 +55,7 @@ export default async function ProfilePage() {
               <p className="text-slate-400 text-xs mt-0.5">{user.department || '—'}</p>
             </div>
             <div className="ml-auto text-right">
-              <p className="text-xs text-slate-400">Zaměstnanec od</p>
+              <p className="text-xs text-slate-400">{user.employmentType === 'ICO' ? 'Spolupracujeme od' : 'Zaměstnanec od'}</p>
               <p className="text-sm font-medium text-navy">{formatDate(user.startDate)}</p>
             </div>
           </div>
