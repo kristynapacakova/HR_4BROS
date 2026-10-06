@@ -77,7 +77,12 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
 
   useEffect(() => {
     if (!teamMemberId) return
-    const refresh = () => setPersonality(loadTeamProfiles()[teamMemberId]?.personality ?? '')
+    const refresh = () => {
+      const override = loadTeamProfiles()[teamMemberId]
+      setPersonality(override?.personality ?? '')
+      const demoDefault = DEMO_TEAM.find((m) => m.id === teamMemberId)?.birthday ?? ''
+      setBirthDate(override?.birthday !== undefined ? (override.birthday ?? '') : demoDefault)
+    }
     refresh()
     window.addEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
     window.addEventListener('storage', refresh)
@@ -90,6 +95,11 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
   const updatePersonality = (code: string) => {
     setPersonality(code)
     if (teamMemberId) saveTeamProfile(teamMemberId, { personality: code || null })
+  }
+
+  const updateBirthDate = (value: string) => {
+    setBirthDate(value)
+    if (teamMemberId) saveTeamProfile(teamMemberId, { birthday: value || null })
   }
 
   const markBozpDone = () => {
@@ -171,6 +181,19 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
           {user.employmentType !== 'ICO' && (
             <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
           )}
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1">Datum narození</label>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => updateBirthDate(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            />
+            <p className="text-[10px] text-slate-400 mt-1">
+              Propíše se do narozeninových připomínek v appce (Tým, dashboard). Automatický zápis do Google kalendáře
+              a oznámení na Slack v den narozenin zatím čeká na propojení firemních účtů.
+            </p>
+          </div>
           {teamMemberId && (
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1">16 Personalities</label>
@@ -197,15 +220,6 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
       {isEmployee && (
         <Section title="Zaměstnanecké údaje">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-500 mb-1">Datum narození</label>
-              <input
-                type="date"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-              />
-            </div>
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1">Zdravotní pojišťovna</label>
               <select

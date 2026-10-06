@@ -24,8 +24,6 @@ import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
 import { RingStat } from './RingStat'
 
-const CZ_MONTHS = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']
-
 function fmtKc(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
 }
@@ -197,18 +195,8 @@ export default async function DashboardPage() {
     LEKAR: 'Lékař',
   }
 
-  // Narozeniny tento týden — z profilů týmu
-  const weekBirthdays = DEMO_TEAM
-    .filter(m => m.birthday)
-    .map(m => {
-      const [, bm, bd] = m.birthday!.split('-').map(Number)
-      let next = new Date(today.getFullYear(), bm - 1, bd)
-      if (next < today) next = new Date(today.getFullYear() + 1, bm - 1, bd)
-      const days = Math.round((next.getTime() - today.getTime()) / 86400000)
-      return { name: m.name, days, dateLabel: `${next.getDate()}. ${CZ_MONTHS[bm - 1]}` }
-    })
-    .filter(b => b.days <= 7)
-    .sort((a, b) => a.days - b.days)
+  // Narozeniny tento týden — základní data z DEMO_TEAM, EventsCard si k tomu domíchá případné úpravy z profilu
+  const teamBirthdays = DEMO_TEAM.map(m => ({ id: m.id, name: m.name, birthday: m.birthday }))
 
   return (
     <AppShell title="Dashboard" isAdmin={isAdmin} isTL={isTL} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
@@ -318,7 +306,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Kalendář akcí — Google Kalendář + narozeniny tento týden */}
-        <EventsCard birthdays={weekBirthdays} isAdmin={isAdmin} />
+        <EventsCard teamBirthdays={teamBirthdays} isAdmin={isAdmin} />
 
         {/* Čeká na tebe — admin vidí vše, TL jen svůj tým */}
         {(isAdmin || isTL) && (

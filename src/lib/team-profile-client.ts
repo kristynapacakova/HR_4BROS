@@ -14,6 +14,8 @@ export interface TeamProfileOverride {
   helpWith?: string | null
   personality?: string | null // 16 Personalities kód, např. "INFJ"
   gallery?: string[]
+  /** Datum narození (YYYY-MM-DD) — přebíjí výchozí hodnotu z DEMO_TEAM. */
+  birthday?: string | null
 }
 
 export const PERSONALITY_TYPES: Record<string, { name: string; desc: string }> = {

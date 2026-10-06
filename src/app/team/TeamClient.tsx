@@ -107,7 +107,8 @@ export function TeamClient({ members, departments }: {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
             {group.members.map(member => {
           const override = profiles[member.id]
-          const days = daysUntilBirthday(member.birthday)
+          const effectiveBirthday = override?.birthday !== undefined ? override.birthday : member.birthday
+          const days = daysUntilBirthday(effectiveBirthday)
           const birthdaySoon = days !== null && days <= 30
           return (
             <Link
@@ -135,7 +136,7 @@ export function TeamClient({ members, departments }: {
               <p className="text-xs text-slate-400 mt-0.5 truncate w-full">{member.position}</p>
               <div className={`inline-flex items-center gap-1 text-[11px] mt-2 ${birthdaySoon ? 'text-violet font-medium' : 'text-slate-400'}`}>
                 <Cake className="w-3 h-3 flex-shrink-0" />
-                {member.birthday ? formatBirthday(member.birthday) : 'Narozeniny neuvedeny'}
+                {effectiveBirthday ? formatBirthday(effectiveBirthday) : 'Narozeniny neuvedeny'}
                 {birthdaySoon && days !== null && <span>· za {days === 0 ? 'dnes!' : `${days} dní`}</span>}
               </div>
             </Link>

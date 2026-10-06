@@ -2,6 +2,15 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { Cake, CalendarDays, Plus, X, PartyPopper, Settings2, RefreshCw, Link2 } from 'lucide-react'
+import { loadTeamProfiles, TEAM_PROFILE_CHANGED_EVENT } from '@/lib/team-profile-client'
+
+const CZ_MONTHS = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']
+
+interface TeamBirthday {
+  id: string
+  name: string
+  birthday: string | null
+}
 
 interface Birthday {
   name: string
@@ -43,7 +52,8 @@ function fmtDate(iso: string): string {
  * Kalendář akcí — propisuje se z Google Kalendáře (tajná iCal adresa),
  * plus narozeniny tento týden z profilů týmu. Ruční přidání jako záloha.
  */
-export function EventsCard({ birthdays, isAdmin }: { birthdays: Birthday[]; isAdmin: boolean }) {
+export function EventsCard({ teamBirthdays, isAdmin }: { teamBirthdays: TeamBirthday[]; isAdmin: boolean }) {
+  const [birthdays, setBirthdays] = useState<Birthday[]>([])
   const [localEvents, setLocalEvents] = useState<CompanyEvent[]>([])
   const [googleEvents, setGoogleEvents] = useState<CompanyEvent[]>([])
   const [icsUrl, setIcsUrl] = useState('')
@@ -87,6 +97,34 @@ export function EventsCard({ birthdays, isAdmin }: { birthdays: Birthday[]; isAd
     setHydrated(true)
     if (url) fetchGoogle(url)
   }, [fetchGoogle])
+
+  useEffect(() => {
+    const refresh = () => {
+      const overrides = loadTeamProfiles()
+      const today = new Date(); today.setHours(0, 0, 0, 0)
+      const computed = teamBirthdays
+        .map((m) => {
+          const raw = overrides[m.id]?.birthday !== undefined ? overrides[m.id].birthday : m.birthday
+          if (!raw) return null
+          const [, bm, bd] = raw.split('-').map(Number)
+          let next = new Date(today.getFullYear(), bm - 1, bd)
+          if (next < today) next = new Date(today.getFullYear() + 1, bm - 1, bd)
+          const days = Math.round((next.getTime() - today.getTime()) / 86400000)
+          return { name: m.name, days, dateLabel: `${next.getDate()}. ${CZ_MONTHS[bm - 1]}` }
+        })
+        .filter((b): b is Birthday => b !== null)
+        .sort((a, b) => a.days - b.days)
+      setBirthdays(computed)
+    }
+    refresh()
+    window.addEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+    window.addEventListener('storage', refresh)
+    return () => {
+      window.removeEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+      window.removeEventListener('storage', refresh)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamBirthdays])
 
   useEffect(() => {
     if (hydrated) {
