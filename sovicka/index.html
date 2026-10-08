@@ -63,7 +63,7 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;gap:18px;paddi
 .tiles{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .tile{border:3px solid var(--c);border-radius:24px;background:color-mix(in srgb,var(--c) 12%,var(--card));padding:18px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 6px 0 var(--c);transition:transform .12s}
 .tile:active{transform:translateY(4px);box-shadow:0 2px 0 var(--c)}
-.tile .pic{font-size:clamp(52px,10vw,72px);line-height:1.1}
+.tile .pic{font-size:clamp(46px,9vw,64px);line-height:1.1}
 .tile .nm{font-family:var(--display);font-weight:800;font-size:clamp(20px,3.6vw,26px)}
 .tile .what{font-size:14px;color:var(--muted);text-align:center;line-height:1.3}
 .parentsBtn{margin-top:6px;background:none;border:0;color:var(--muted);text-decoration:underline;font-size:16px;padding:10px}
@@ -139,6 +139,73 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;gap:18px;paddi
 .seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .note{font-size:14px;color:var(--muted)}
 
+/* home groups */
+.group{width:100%;display:flex;flex-direction:column;gap:10px}
+.group h2{font-family:var(--display);font-weight:800;font-size:22px;margin:6px 0 0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.group h2 small{font-family:var(--body);font-weight:400;font-size:15px;color:var(--muted)}
+/* voice speed */
+.speed{display:flex;gap:6px;align-items:center}
+.speed button{height:38px;min-width:46px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-size:22px;line-height:1;padding:0 6px}
+.speed button.on{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 16%,var(--card))}
+.meta-right{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+.set.col{flex-direction:column;align-items:stretch}
+.set .line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+/* arena (catch, maze) */
+.arena{position:relative;width:min(100%,calc((100dvh - 260px) * 1.3333));min-width:min(100%,300px);aspect-ratio:4/3;max-width:100%;background:var(--card);border-radius:24px;border:3px solid var(--line);overflow:hidden;touch-action:none}
+.arena canvas{width:100%;height:100%;display:block;touch-action:none}
+.mover{position:absolute;left:0;top:0;border:0;background:none;padding:0;line-height:1;display:grid;place-items:center;border-radius:50%;touch-action:none}
+.mover.caught{animation:pop .3s}
+/* match + search */
+.target-card{width:120px;height:120px;border-radius:24px;border:4px solid var(--blue);background:var(--card);display:grid;place-items:center;font-size:72px}
+.rot{display:inline-block;line-height:1}
+.pic-btn.hit{border-color:var(--green);box-shadow:0 0 0 4px var(--green);background:color-mix(in srgb,var(--green) 14%,var(--card))}
+.search{display:grid;gap:6px;width:min(100%,560px)}
+.search .pic-btn{border-radius:14px;border-width:2px;box-shadow:none;font-size:clamp(24px,6.5vw,40px)}
+.counter{display:flex;gap:8px}
+.counter i{width:26px;height:26px;border-radius:50%;border:3px dashed var(--line);background:var(--card)}
+.counter i.on{border:3px solid var(--green);background:var(--green)}
+/* simon */
+.simon{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;width:min(100%,400px)}
+.pad{aspect-ratio:1;border-radius:28px;border:4px solid var(--c);background:color-mix(in srgb,var(--c) 18%,var(--card));font-size:clamp(52px,14vw,80px);display:grid;place-items:center;transition:transform .1s,background .1s;box-shadow:0 6px 0 var(--c)}
+.pad.lit{background:var(--c);transform:scale(1.06)}
+/* where (prepositions) */
+.scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:min(100%,520px)}
+.scene{position:relative;aspect-ratio:1;border-radius:22px;border:3px solid var(--line);background:var(--card);container-type:inline-size;overflow:hidden;padding:0;box-shadow:0 5px 0 var(--line)}
+.scene .floor{position:absolute;left:0;right:0;top:88%;bottom:0;background:var(--grid)}
+.scene .an{position:absolute;font-size:24cqw;line-height:1;transform:translate(-50%,-100%)}
+.scene .tbl-top{position:absolute;height:6%;top:50%;background:#A86B3C;border-radius:3px}
+.scene .tbl-leg{position:absolute;width:5%;top:56%;height:32%;background:#8B5530}
+.scene .box{position:absolute;top:54%;height:34%;background:#D9A15E;border:3px solid #9C6A2E;border-radius:4px;box-sizing:border-box}
+/* moves */
+.move-card{width:min(100%,460px);background:var(--card);border-radius:28px;border:3px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px 14px}
+.move-card .big{font-size:clamp(80px,20vw,120px);line-height:1.1;display:flex;gap:10px;align-items:center}
+.move-card .side{font:800 28px var(--display);border-radius:12px;padding:0 12px;color:#fff}
+.move-card .txt{font-size:22px;font-weight:700;text-align:center;line-height:1.35;max-width:30ch}
+/* letters & reading */
+.letter-head{width:min(100%,640px);display:grid;grid-template-columns:auto auto 1fr;gap:14px;align-items:center}
+.glyph{font-family:var(--body);font-weight:700;font-size:clamp(56px,13vw,86px);line-height:1;display:flex;gap:10px;align-items:baseline;color:var(--red)}
+.glyph .lo{font-size:.75em}
+.lpic{font-size:clamp(48px,11vw,72px);line-height:1}
+.lstory{font-size:18px;line-height:1.4;min-width:0}
+.letter-wrap{width:min(100%,calc((100dvh - 430px) * 1.3333))}
+.abc{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.abc button{min-width:44px;height:44px;border-radius:12px;border:2px solid var(--line);background:var(--card);font:800 22px var(--display);color:var(--blue)}
+.abc button.vow{color:var(--red)}
+.abc button.on{border-color:var(--ink);box-shadow:0 0 0 3px var(--yellow)}
+.letters-opt .pic-btn{font-family:var(--body);font-weight:700;font-size:clamp(46px,12vw,72px);color:var(--blue)}
+.letters-opt .pic-btn.vow{color:var(--red)}
+.letters-opt .syl-opt{font-size:clamp(36px,9vw,56px);aspect-ratio:auto;padding:18px 0}
+.join{display:flex;gap:70px;transition:gap .6s ease-in-out}
+.join.on{gap:4px}
+.ltile{width:100px;height:116px;border-radius:20px;background:var(--card);border:4px solid currentColor;font:700 78px/1 var(--body);display:grid;place-items:center;transition:transform .2s}
+.ltile.con{color:var(--blue)}
+.ltile.vow{color:var(--red)}
+.ltile.lit{transform:scale(1.15)}
+.read-word{font-family:var(--body);font-weight:700;font-size:clamp(56px,15vw,96px);letter-spacing:.04em;background:var(--card);border-radius:24px;border:3px solid var(--line);padding:6px 28px;line-height:1.2}
+.read-word span{display:inline-block;transition:transform .2s}
+.read-word span.lit{transform:translateY(-8px) scale(1.1)}
+@media (max-width:600px){.letter-head{grid-template-columns:auto auto;}.lstory{grid-column:1/-1}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12);box-shadow:0 0 0 6px var(--yellow)}}
 @keyframes bump{50%{transform:scale(1.3)}}
@@ -177,7 +244,12 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;gap:18px;paddi
     </div>
     <div class="meta">
       <div class="dots" id="dots"></div>
-      <div class="levels" id="levels"></div>
+      <div class="meta-right">
+        <div class="speed" id="speed" role="group" aria-label="Rychlost hlasu">
+          <button data-r="0.65" aria-label="Hlas pomalu">🐌</button><button data-r="0.8" aria-label="Hlas středně">🐢</button><button data-r="0.95" aria-label="Hlas rychleji">🐇</button>
+        </div>
+        <div class="levels" id="levels"></div>
+      </div>
     </div>
   </div>
   <main id="stage"></main>
@@ -202,9 +274,23 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;gap:18px;paddi
   <div class="panel" role="dialog" aria-labelledby="pTitle">
     <h2 id="pTitle">Pro rodiče</h2>
     <div class="set"><span>Hlas a zvuky</span><div class="seg" data-key="sound"><button data-v="1">Zapnuto</button><button data-v="0">Vypnuto</button></div></div>
-    <div class="set"><span>Rychlost hlasu</span><div class="seg" data-key="rate"><button data-v="0.7">Pomalu</button><button data-v="0.85">Středně</button><button data-v="1">Normálně</button></div></div>
+    <div class="set"><span>Rychlost hlasu</span><div class="seg" data-key="rate"><button data-v="0.65">🐌 Pomalu</button><button data-v="0.8">🐢 Středně</button><button data-v="0.95">🐇 Rychleji</button></div></div>
+    <div class="set col"><span>Hlas sovičky</span>
+      <div class="line"><select id="voiceSel" aria-label="Hlas sovičky"></select><button class="btn" id="voiceTest" style="font-size:16px;padding:4px 14px">▶ Vyzkoušet</button></div>
+      <div class="line"><span class="note">Tón:</span><div class="seg" data-key="pitch"><button data-v="1">Běžný</button><button data-v="1.12">Vyšší, veselejší</button></div></div>
+    </div>
     <div class="set"><span>Psaný text pokynu</span><div class="seg" data-key="text"><button data-v="1">Ukázat</button><button data-v="0">Skrýt</button></div></div>
     <p class="note" id="voiceStatus"></p>
+    <p class="note">Nejpřirozeněji zní hlasy s označením <b>Natural</b>, <b>Premium</b>, <b>Vylepšený</b> nebo <b>Google</b>. Na počítači otevřete hru v prohlížeči <b>Microsoft Edge</b>, tam jsou hlasy „Vlasta (Natural)“ a „Antonín (Natural)“. Na iPadu stáhněte v Nastavení › Zpřístupnění › Předčítaný obsah › Hlasy › Čeština hlas <b>Zuzana (Prémiový)</b>. Na Androidu nainstalujte „Převod textu na řeč Google“ a stáhněte český hlas. Pak hru načtěte znovu a hlas vyberte tady.</p>
+    <h3>Jak se dítě učí číst</h3>
+    <ul>
+      <li><b>Nejdřív slyšet.</b> Poznat, na jakou hlásku slovo začíná, a vytleskat slabiky. To jsou hry <b>Na co začíná?</b> a <b>Slabiky</b>. Pro dítě s dysfázií je tohle nejdůležitější krok, vyplatí se ho netlačit.</li>
+      <li><b>Písmenko je obrázek zvuku.</b> Ve hře <b>Písmenka</b> má každé velké tiskací písmeno krátký příběh, proč vypadá tak, jak vypadá. Obtahuje se podle čísel ve správném pořadí tahů. Samohlásky jsou červeně, souhlásky modře.</li>
+      <li><b>Spojování.</b> Souhláska se „chytí za ruku“ se samohláskou: protáhnout <i>mmm</i>, přidat <i>a</i> a vznikne <i>ma</i>. Neříkat „em-á“. To je hra <b>Skládám slabiky</b>.</li>
+      <li><b>Slova.</b> Ze slabik se skládají slova: MÁ-MA, SO-VA. Slabiky jsou odlišené barvou jako ve slabikáři. To je hra <b>Čtu slova</b>.</li>
+      <li>Škola může učit podle slabikáře (analyticko-syntetická metoda), nebo genetickou metodou (čte se po hláskách, nejdřív jen velká tiskací písmena). Zeptejte se paní učitelky, kterou metodu používají a jaká písmena právě berou.</li>
+      <li>Obtížnost: <b>●</b> zvládne předškolák, <b>●●</b> je začátek 1. třídy, <b>●●●</b> přijde zhruba od pololetí.</li>
+    </ul>
     <h3>Jak to funguje</h3>
     <ul>
       <li><b>Poslouchej</b> a <b>Barvičky</b> trénují porozumění pokynu ve 1, 2 a 3 krocích. Pořadí je důležité.</li>
@@ -212,6 +298,9 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;gap:18px;paddi
       <li>Očko ukáže pokyn obrázky. Po dvou chybách se ukáže samo. Nejdřív zkuste bez něj, ať trénuje hlavně poslech.</li>
       <li><b>Slabiky</b> trénují sluchovou analýzu slova (vytleskávání). Po chybě sovička slovo vytleská s ní.</li>
       <li><b>Kreslení</b> je grafomotorika: tahy zleva doprava, kolečko proti směru hodinek jako při psaní „o“. Nejlépe prstem na tabletu nebo stylusem.</li>
+      <li><b>Oči</b> (Chyť berušku, Najdi stejný, Hledej, Pexeso) podporují sledování, přeskoky pohledu a zrakové rozlišování. Při sledování ať hýbe jen očima, ne hlavou. Pokud má předepsané nošení okluzoru nebo brýlí, ať je má i tady.</li>
+      <li><b>Ruka a tělo</b>: Bludiště a Kreslení trénují koordinaci oko–ruka, Hýbánky stranovost (pravá, levá) a překračování středu těla. Hýbánky jsou rozcvička, nenahrazují cviky z neurovývojové stimulace. Ty dělejte dál podle terapeutky. Dejte jí na pravou ruku červenou gumičku nebo náramek. Ve hře je pravá vždycky červená a levá modrá.</li>
+      <li>Po 10–15 minutách u obrazovky dejte očím pauzu: podívat se z okna do dálky.</li>
       <li>Nic se neměří na čas. Krátce a často (10–15 minut) funguje lépe než dlouho.</li>
       <li>Hra doplňuje práci s logopedem, nenahrazuje ji. Klidně jí ukažte, co tu dcera dělá.</li>
     </ul>
@@ -232,19 +321,36 @@ const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).
 const stage = $('#stage');
 
 /* ---------- settings ---------- */
-const DEF = { sound: true, text: true, rate: 0.85, stars: 0, levels: {}, ink: 'blue' };
+const DEF = { sound: true, text: true, rate: 0.8, pitch: 1, voiceURI: '', stars: 0, levels: {}, ink: 'blue' };
 const S = (() => { try { return { ...DEF, ...JSON.parse(localStorage.getItem('sovicka') || '{}') }; } catch (e) { return { ...DEF }; } })();
+S.rate = S.rate <= 0.7 ? 0.65 : S.rate <= 0.85 ? 0.8 : 0.95;
 const save = () => { try { localStorage.setItem('sovicka', JSON.stringify(S)); } catch (e) {} };
 
 /* ---------- voice ---------- */
-const V = { ok: 'speechSynthesis' in window, voice: null, cs: null };
+const V = { ok: 'speechSynthesis' in window, voice: null, cs: null, list: [] };
+const esc = x => String(x).replace(/[&"<>]/g, c => ({ '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' })[c]);
+// Natural-sounding neural voices first (Edge "Natural", iOS "Premium/Enhanced", Google), robotic ones last.
+function rankVoice(v) {
+  const n = (v.name + ' ' + v.voiceURI).toLowerCase(); let r = 0;
+  if (/natural|neural|premium|prémiov|enhanced|vylepšen|wavenet|online/.test(n)) r += 10;
+  if (/google/.test(n)) r += 5;
+  if (!v.localService) r += 1;
+  if (/compact|espeak/.test(n)) r -= 5;
+  return r;
+}
+function fillVoiceSel() {
+  const sel = $('#voiceSel'); if (!sel) return;
+  sel.innerHTML = V.list.length ? V.list.map(v => `<option value="${esc(v.voiceURI)}"${v === V.voice ? ' selected' : ''}>${esc(v.name)}${rankVoice(v) >= 10 ? ' ★' : ''}</option>`).join('') : '<option>Žádný český hlas</option>';
+  sel.disabled = !V.list.length;
+}
 function loadVoices() {
   if (!V.ok) { V.cs = false; voiceStatus(); return; }
   const vs = speechSynthesis.getVoices();
   if (!vs.length) return;
-  V.voice = vs.find(v => /^cs([-_]|$)/i.test(v.lang)) || null;
+  V.list = vs.filter(v => /^cs([-_]|$)/i.test(v.lang)).sort((a, b) => rankVoice(b) - rankVoice(a));
+  V.voice = V.list.find(v => v.voiceURI === S.voiceURI) || V.list[0] || null;
   V.cs = !!V.voice;
-  voiceStatus();
+  voiceStatus(); fillVoiceSel();
 }
 if (V.ok) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; setTimeout(() => { if (V.cs === null) { V.cs = false; voiceStatus(); } }, 2500); }
 function say(text, rate) {
@@ -254,7 +360,7 @@ function say(text, rate) {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'cs-CZ'; if (V.voice) u.voice = V.voice;
-      u.rate = rate || S.rate;
+      u.rate = rate || S.rate; u.pitch = S.pitch || 1;
       let done = false; const fin = () => { if (!done) { done = true; res(); } };
       u.onend = fin; u.onerror = fin;
       speechSynthesis.speak(u);
@@ -266,7 +372,7 @@ const voiceMissing = () => !S.sound || !V.ok || V.cs === false;
 function voiceStatus() {
   const el = $('#voiceStatus'); if (!el) return;
   if (!V.ok) el.textContent = 'Tento prohlížeč neumí předčítat. Pokyny se ukážou obrázky a textem.';
-  else if (V.cs) el.textContent = 'Český hlas: nalezen (' + V.voice.name + ').';
+  else if (V.cs) el.textContent = `Českých hlasů v zařízení: ${V.list.length}. Hvězdička ★ označuje přirozenější hlas.`;
   else if (V.cs === false) el.textContent = 'Český hlas v zařízení nevidím. Pokyny se ukážou obrázky a textem. Hlas přidáte v nastavení zařízení: Android › Převod textu na řeč › čeština; iPhone/iPad › Zpřístupnění › Předčítaný obsah › Hlasy › Čeština.';
   else el.textContent = 'Hledám český hlas…';
 }
@@ -314,9 +420,9 @@ function toast(t) {
   const el = $('#toast'); el.textContent = t; el.classList.add('show');
   clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 1100);
 }
-function setPrompt(text, speak = true) {
+function setPrompt(text, speak = true, shown) {
   A.prompt = text;
-  $('#prompt').textContent = S.text ? text : '';
+  $('#prompt').textContent = S.text ? (shown || text) : '';
   if (speak) say(text);
 }
 function setPict(html) { const p = $('#pict'); p.innerHTML = html || ''; p.hidden = !html; }
@@ -338,7 +444,7 @@ function start(key) {
   $('#title').textContent = def.name;
   $('#homeBtn').hidden = false; $('#hearBtn').hidden = false; $('#hintBtn').hidden = !def.hint;
   $('#gameHead').hidden = false;
-  levels(); task();
+  levels(); syncSpeed(); task();
 }
 function task() { if (A.cleanup) { A.cleanup(); A.cleanup = null; } A.errors = 0; setPict(''); dots(); A.def.next(); }
 async function success() {
@@ -363,12 +469,12 @@ function home() {
   $('#winBox').hidden = true;
   stage.innerHTML = `
     <div class="hello"><div class="owl" aria-hidden="true">🦉</div><p>Ahoj! Na co si dnes zahrajeme?</p></div>
-    <div class="tiles">
-      ${Object.entries(ACTS).map(([k, d]) => `
+    ${GROUPS.map(g => `<section class="group"><h2>${g.t} <small>${g.d}</small></h2><div class="tiles">
+      ${g.k.map(k => { const d = ACTS[k]; return `
         <button class="tile" data-k="${k}" style="--c:var(${d.color})">
           <span class="pic" aria-hidden="true">${d.pic}</span><span class="nm">${d.name}</span><span class="what">${d.what}</span>
-        </button>`).join('')}
-    </div>
+        </button>`; }).join('')}
+    </div></section>`).join('')}
     <button class="parentsBtn" id="openParents">Pro rodiče: nastavení a tipy</button>`;
   stage.querySelectorAll('.tile').forEach(b => b.onclick = () => { sfx.tap(); start(b.dataset.k); });
   $('#openParents').onclick = openParents;
@@ -398,26 +504,36 @@ function confetti() {
 $('#againBtn').onclick = () => { $('#winBox').hidden = true; start(A.key); };
 $('#winHome').onclick = home;
 $('#homeBtn').onclick = home;
-$('#hearBtn').onclick = () => { if (!A) return; if (voiceMissing()) { $('#prompt').textContent = A.prompt; A.def.hint && A.def.hint(false); } (A.def.replay || (() => say(A.prompt)))(); };
+$('#hearBtn').onclick = () => { if (!A) return; if (voiceMissing() && !['first', 'blend'].includes(A.key)) { $('#prompt').textContent = A.prompt; A.def.hint && A.def.hint(false); } (A.def.replay || (() => say(A.prompt)))(); };
 $('#hintBtn').onclick = () => A && A.def.hint && A.def.hint(false);
 
 /* ---------- parents ---------- */
+const NUM = ['rate', 'pitch'];
+const HELLO = 'Ahoj, já jsem sovička. Budeme si spolu hrát.';
+function syncSpeed() { document.querySelectorAll('#speed button').forEach(b => b.classList.toggle('on', +b.dataset.r === S.rate)); }
+$('#speed').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  S.rate = +b.dataset.r; save(); syncSpeed();
+  say(A && A.prompt ? A.prompt : HELLO);
+});
+$('#voiceSel').onchange = e => { S.voiceURI = e.target.value; V.voice = V.list.find(v => v.voiceURI === S.voiceURI) || V.voice; save(); say(HELLO); };
+$('#voiceTest').onclick = () => say(HELLO);
 function syncSeg() {
   document.querySelectorAll('.seg').forEach(seg => {
     const k = seg.dataset.key;
     seg.querySelectorAll('button').forEach(b => {
-      const v = k === 'rate' ? +b.dataset.v : b.dataset.v === '1';
+      const v = NUM.includes(k) ? +b.dataset.v : b.dataset.v === '1';
       b.classList.toggle('on', S[k] === v);
     });
   });
 }
 document.querySelectorAll('.seg').forEach(seg => seg.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
-  const k = seg.dataset.key; S[k] = k === 'rate' ? +b.dataset.v : b.dataset.v === '1';
-  save(); syncSeg();
-  if (k === 'rate') say('Takhle rychle budu mluvit.');
+  const k = seg.dataset.key; S[k] = NUM.includes(k) ? +b.dataset.v : b.dataset.v === '1';
+  save(); syncSeg(); syncSpeed();
+  if (NUM.includes(k)) say(HELLO);
 }));
-function openParents() { syncSeg(); voiceStatus(); $('#parentBox').hidden = false; }
+function openParents() { syncSeg(); voiceStatus(); fillVoiceSel(); $('#parentBox').hidden = false; }
 $('#closeParents').onclick = () => $('#parentBox').hidden = true;
 $('#resetStars').onclick = () => { S.stars = 0; save(); setStars(); $('#resetStars').textContent = 'Vynulováno'; };
 
@@ -781,6 +897,555 @@ const ACTS = {
     }
   }
 };
+
+/* ---------- home groups ---------- */
+const GROUPS = [
+  { t: 'Písmenka a čtení', d: 'předškoláci a 1. třída', k: ['letters', 'first', 'blend', 'read'] },
+  { t: 'Poslech a řeč', d: 'pokyny, slova, slabiky', k: ['listen', 'color', 'where', 'syl', 'story', 'simon'] },
+  { t: 'Oči', d: 'sledování, hledání, rozlišování', k: ['catch', 'same', 'search', 'pexeso'] },
+  { t: 'Ruka a tělo', d: 'grafomotorika, bludiště, pohyb', k: ['trace', 'maze', 'moves'] }
+];
+const cap = w => w.charAt(0).toUpperCase() + w.slice(1);
+function mountCanvas(cv, draw) {
+  const t = A.t;
+  const fit = () => { const r = cv.getBoundingClientRect(); if (!r.width) return; t.dpr = window.devicePixelRatio || 1; t.k = r.width / 400; cv.width = Math.round(r.width * t.dpr); cv.height = Math.round(r.height * t.dpr); draw(); };
+  const ro = new ResizeObserver(fit); ro.observe(cv);
+  A.cleanup = () => ro.disconnect();
+}
+const canvasPoint = (cv, e) => { const r = cv.getBoundingClientRect(), k = r.width / 400; return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k }; };
+const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+
+/* ---------- letters ---------- */
+const Ln = (x1, y1, x2, y2) => [{ x: x1, y: y1 }, { x: x2, y: y2 }];
+const Arc = (cx, cy, rx, ry, a0, a1, n = 60) => Array.from({ length: n + 1 }, (_, i) => { const a = (a0 + (a1 - a0) * i / n) * Math.PI / 180; return { x: cx + rx * Math.cos(a), y: cy + ry * Math.sin(a) }; });
+const Pl = (...p) => p.map(([x, y]) => ({ x, y }));
+const cat = (...parts) => parts.flat();
+const HACEK = Pl([182, 6], [200, 26], [218, 6]);
+const lower = strokes => strokes.map(s => s.map(p => ({ x: p.x, y: 70 + (p.y - 50) * 0.9 })));
+const ST = {
+  A: [Ln(200, 50, 120, 250), Ln(200, 50, 280, 250), Ln(150, 175, 250, 175)],
+  E: [Ln(140, 50, 140, 250), Ln(140, 50, 260, 50), Ln(140, 150, 240, 150), Ln(140, 250, 260, 250)],
+  I: [Ln(200, 50, 200, 250)],
+  O: [Arc(200, 150, 85, 100, -90, -450, 90)],
+  U: [cat(Pl([125, 50], [125, 170]), Arc(200, 170, 75, 80, 180, 0))],
+  M: [Pl([130, 250], [130, 50], [200, 170], [270, 50], [270, 250])],
+  L: [Pl([150, 50], [150, 250], [260, 250])],
+  P: [Ln(145, 50, 145, 250), cat(Pl([145, 50], [205, 50]), Arc(205, 105, 60, 55, -90, 90), Pl([205, 160], [145, 160]))],
+  S: [cat(Arc(200, 100, 58, 50, -25, -270), Arc(200, 200, 62, 50, -90, 150))],
+  T: [Ln(130, 50, 270, 50), Ln(200, 50, 200, 250)],
+  J: [cat(Pl([245, 50], [245, 190]), Arc(190, 190, 55, 60, 0, 180))],
+  N: [Pl([140, 250], [140, 50], [260, 250], [260, 50])],
+  V: [Pl([130, 50], [200, 250], [270, 50])],
+  D: [Ln(145, 50, 145, 250), cat(Pl([145, 50], [175, 50]), Arc(175, 150, 90, 100, -90, 90), Pl([175, 250], [145, 250]))],
+  K: [Ln(150, 50, 150, 250), Pl([260, 50], [150, 160], [260, 250])],
+  B: [Ln(145, 50, 145, 250), cat(Pl([145, 50], [200, 50]), Arc(200, 98, 55, 48, -90, 90), Pl([200, 146], [145, 146])), cat(Pl([145, 148], [205, 148]), Arc(205, 199, 62, 51, -90, 90), Pl([205, 250], [145, 250]))],
+  Z: [Pl([140, 50], [260, 50], [140, 250], [260, 250])],
+  H: [Ln(140, 50, 140, 250), Ln(260, 50, 260, 250), Ln(140, 150, 260, 150)],
+  C: [Arc(205, 150, 85, 100, -40, -320)],
+  F: [Ln(145, 50, 145, 250), Ln(145, 50, 260, 50), Ln(145, 150, 240, 150)],
+  G: [cat(Arc(205, 150, 85, 100, -40, -360), Pl([290, 150], [215, 150]))],
+  Ch: [Arc(135, 150, 60, 100, -40, -320), Ln(225, 50, 225, 250), Ln(325, 50, 325, 250), Ln(225, 150, 325, 150)]
+};
+ST.R = [...ST.P, Ln(195, 160, 265, 250)];
+ST['Č'] = [...lower(ST.C), HACEK];
+ST['Š'] = [...lower(ST.S), HACEK];
+ST['Ž'] = [...lower(ST.Z), HACEK];
+ST['Ř'] = [...lower(ST.R), HACEK];
+const LETTERS = [
+  [1, 'A', 'a', '🍍', 'ananas', 'A je jako stan. Má dvě nohy a uprostřed lavičku.'],
+  [1, 'E', 'e', '👧', 'Ema', 'E vypadá jako hřeben se třemi zuby.'],
+  [1, 'I', 'i', '🛖', 'iglú', 'I je rovné jako tužka. Stojí pěkně zpříma.'],
+  [1, 'O', 'o', '🐑', 'ovce', 'O je kulaté jako kolo. Když se divíš, uděláš pusou O.'],
+  [1, 'U', 'u', '👂', 'ucho', 'U je jako hrneček. Dá se do něj nalít čaj.'],
+  [2, 'M', 'm', '🐭', 'myš', 'M jsou dva kopce vedle sebe. Když nám něco chutná, říkáme mmm.'],
+  [2, 'L', 'l', '🦁', 'lev', 'L je jako noha s botičkou.'],
+  [2, 'P', 'p', '🐶', 'pes', 'P je jako vlaječka na tyči.'],
+  [2, 'S', 's', '🦉', 'sova', 'S se vlní jako had. A had syčí: sss.'],
+  [2, 'T', 't', '🐯', 'tygr', 'T je jako stůl na jedné noze.'],
+  [2, 'J', 'j', '🍓', 'jahoda', 'J je jako držadlo deštníku.'],
+  [2, 'N', 'n', '👃', 'nos', 'N má dvě nožičky a mezi nimi klouzačku.'],
+  [2, 'V', 'v', '🚂', 'vlak', 'V je jako kornoutek na zmrzlinu.'],
+  [2, 'D', 'd', '🏠', 'dům', 'D má rovná záda a velké bříško.'],
+  [2, 'K', 'k', '🐴', 'kůň', 'K má rovná záda a dvě ručičky. Jedna jde nahoru a druhá dolů.'],
+  [3, 'R', 'r', '🐟', 'ryba', 'R je jako P, které natáhlo nožičku a kope do míče.'],
+  [3, 'B', 'b', '🍌', 'banán', 'B má dvě bříška nad sebou.'],
+  [3, 'Z', 'z', '🦓', 'zebra', 'Z je jako blesk. Cik a cak.'],
+  [3, 'H', 'h', '🐍', 'had', 'H je jako žebřík. Dva sloupky a mezi nimi jedna příčka.'],
+  [3, 'C', 'c', '🍋', 'citron', 'C je jako ukousnutý koláč nebo měsíček.'],
+  [3, 'Č', 'č', '🧢', 'čepice', 'Č je C s háčkem. Háček je malá stříška a mění zvuk: z C je Č.'],
+  [3, 'Š', 'š', '🐌', 'šnek', 'Š je S s háčkem. Háček změní sss na ššš.'],
+  [3, 'Ž', 'ž', '🐸', 'žába', 'Ž je Z s háčkem. Z bzučí zzz a Ž bzučí žžž.'],
+  [3, 'Ř', 'ř', '⛓️', 'řetěz', 'Ř je R s háčkem.'],
+  [3, 'F', 'f', '📷', 'foťák', 'F je jako E, které ztratilo spodní nožičku.'],
+  [3, 'G', 'g', '🦍', 'gorila', 'G je jako C, které si postavilo stoleček.'],
+  [3, 'Ch', 'ch', '🍞', 'chleba', 'Ch jsou dvě písmenka, C a H. Čteme je ale dohromady jako jeden zvuk: ch.']
+].map(([lv, l, lo, e, w, st]) => ({ lv, l, lo, e, w, st, strokes: ST[l] }));
+const VOWELS = 'AEIOUY';
+const LONG = { M: 'mmm', L: 'lll', S: 'sss', V: 'vvv', Z: 'zzz', N: 'nnn', J: 'jjj', R: 'rrr', F: 'fff', H: 'hhh', Š: 'ššš', Ž: 'žžž' };
+
+/* ---------- reading ---------- */
+const FIRST = [['🐶', 'pes'], ['🐭', 'myš'], ['🦉', 'sova'], ['🦁', 'lev'], ['🚗', 'auto'], ['🐑', 'ovce'], ['👂', 'ucho'], ['🐟', 'ryba'], ['🐱', 'kočka'], ['🏠', 'dům'], ['🚂', 'vlak'], ['🦓', 'zebra'], ['🐍', 'had'], ['🐯', 'tygr'], ['👃', 'nos'], ['🍓', 'jahoda'], ['🍌', 'banán'], ['🍋', 'citron'], ['🐌', 'šnek'], ['🐸', 'žába'], ['🧢', 'čepice'], ['🍍', 'ananas'], ['🎈', 'balónek'], ['🐘', 'slon'], ['🦊', 'liška'], ['🌳', 'strom'], ['🍐', 'hruška'], ['☂️', 'deštník'], ['🐝', 'včela'], ['🥣', 'miska']];
+const NO_END = ['had', 'lev', 'dům'];
+const WORDS = [
+  [['MÁ', 'MA'], '👩'], [['TÁ', 'TA'], '👨'], [['SO', 'VA'], '🦉'], [['O', 'KO'], '👁️'], [['U', 'CHO'], '👂'], [['MÍ', 'SA'], '🥣'],
+  [['VO', 'DA'], '💧'], [['KO', 'LO'], '🚲'], [['NO', 'HA'], '🦵'], [['RU', 'KA'], '✋'], [['KO', 'ZA'], '🐐'], [['RY', 'BA'], '🐟'], [['DU', 'HA'], '🌈'], [['LU', 'PA'], '🔍'],
+  [['PES'], '🐶'], [['LES'], '🌲'], [['NOS'], '👃'], [['SÝR'], '🧀'], [['DŮM'], '🏠'], [['VLAK'], '🚂'], [['LEV'], '🦁'], [['LUK'], '🏹'], [['MÍČ'], '⚽'], [['KLÍČ'], '🔑'], [['STAN'], '⛺'],
+  [['JA', 'HO', 'DA'], '🍓'], [['RA', 'KE', 'TA'], '🚀'], [['KY', 'TA', 'RA'], '🎸'], [['TE', 'LE', 'FON'], '☎️'], [['MO', 'TÝ', 'LEK'], '🦋'], [['BE', 'RUŠ', 'KA'], '🐞'], [['ŽÁ', 'BA'], '🐸'], [['ČE', 'PI', 'CE'], '🧢'], [['BA', 'NÁN'], '🍌']
+].map(([s, e]) => ({ s, e, w: s.join(''), lv: s.length === 1 ? 2 : s.length === 3 || s.some(x => /[ČŠŽŘB]/.test(x)) ? 3 : 1 }));
+const sylHtml = s => s.map((x, i) => `<span style="color:var(${i % 2 ? '--blue' : '--red'})">${x}</span>`).join('');
+
+/* ---------- eyes ---------- */
+const ORIENT = ['🐌', '🦆', '🐘', '🦒', '🐿️', '🦕', '🐈', '🐕', '🦘', '👢', '🐓', '🦔'];
+const TF = ['none', 'rotate(90deg)', 'rotate(180deg)', 'rotate(270deg)', 'scaleX(-1)', 'scaleX(-1) rotate(90deg)', 'scaleX(-1) rotate(180deg)', 'scaleX(-1) rotate(270deg)'];
+const SEARCH = [
+  { t: '🐞', n: 'berušky', sim: ['🍓', '🍅', '🐜'] }, { t: '🐟', n: 'rybičky', sim: ['🐠', '🐡', '🐬'] },
+  { t: '🍎', n: 'jablíčka', sim: ['🍅', '🍒', '🍓'] }, { t: '⭐', n: 'hvězdičky', sim: ['🌟', '🌙', '☀️'] },
+  { t: '🐶', n: 'pejsky', sim: ['🐱', '🐻', '🦊'] }, { t: '🌷', n: 'tulipány', sim: ['🌹', '🌸', '🌺'] },
+  { t: '🚗', n: 'autíčka', sim: ['🚕', '🚙', '🚌'] }
+];
+const PADS = [{ e: '🐶', n: 'pejsek', f: 262, c: '--red' }, { e: '🐱', n: 'kočička', f: 330, c: '--blue' }, { e: '🐸', n: 'žabka', f: 392, c: '--green' }, { e: '🐤', n: 'kuřátko', f: 523, c: '--yellow' }];
+const ANIMALS = [['🐱', 'kočka'], ['🐶', 'pes'], ['🐭', 'myš'], ['🐰', 'zajíc'], ['🐸', 'žába'], ['🐥', 'kuřátko'], ['🦔', 'ježek']];
+const OBJ = {
+  stul: { na: 'na stole', pod: 'pod stolem', vedle: 'vedle stolu', vlevo: 'vlevo od stolu', vpravo: 'vpravo od stolu' },
+  krab: { na: 'na krabici', v: 'v krabici', vedle: 'vedle krabice', vlevo: 'vlevo od krabice', vpravo: 'vpravo od krabice' }
+};
+function sceneHtml(obj, pos, an) {
+  const side = pos === 'vlevo' || pos === 'vedleL' ? 'L' : pos === 'vpravo' || pos === 'vedleR' ? 'R' : null;
+  const ox = side === 'L' ? 62 : side === 'R' ? 38 : 50, ax = side === 'L' ? 18 : side === 'R' ? 82 : 50, w = 46, l = ox - w / 2;
+  const o = obj === 'stul'
+    ? `<i class="tbl-top" style="left:${l}%;width:${w}%"></i><i class="tbl-leg" style="left:${l + 3}%"></i><i class="tbl-leg" style="left:${l + w - 8}%"></i>`
+    : `<i class="box" style="left:${ox - 20}%;width:40%"></i>`;
+  const ay = pos === 'na' ? (obj === 'stul' ? 50 : 54) : pos === 'v' ? 66 : 88;
+  const a = `<span class="an" style="left:${ax}%;top:${ay}%;${pos === 'pod' ? 'font-size:20cqw;' : ''}">${an}</span>`;
+  return '<i class="floor"></i>' + (pos === 'v' ? a + o : o + a);
+}
+const MOVES = [
+  [['🙌', 'Zvedni obě ruce nahoru a protáhni se.'], ['👏', 'Tleskni třikrát.'], ['🦘', 'Skoč třikrát snožmo.'], ['🐸', 'Udělej dřep jako žabka a pomalu se postav.'], ['🦩', 'Postav se na jednu nohu jako čáp. Napočítej do pěti.'], ['👃', 'Zavři oči a dotkni se prstem nosu.']],
+  [['✋', 'Zvedni pravou ruku.', 'P'], ['✋', 'Zvedni levou ruku.', 'L'], ['🦶', 'Dupni třikrát pravou nohou.', 'P'], ['🦶', 'Dupni třikrát levou nohou.', 'L'], ['👂', 'Chyť se levou rukou za levé ucho.', 'L'], ['👁️', 'Zakryj si pravou rukou pravé oko.', 'P'], ['🦵', 'Postav se na levou nohu. Napočítej do pěti.', 'L'], ['🦵', 'Postav se na pravou nohu. Napočítej do pěti.', 'P']],
+  [['✋👂', 'Pravou rukou se chyť za levé ucho.'], ['✋🦵', 'Levou rukou se dotkni pravého kolena.'], ['💪🦵', 'Pravým loktem se dotkni levého kolena. Pak levým loktem pravého kolena. Udělej to pětkrát.'], ['♾️', 'Nakresli rukou ve vzduchu ležatou osmičku. Sleduj ruku očima, hlava zůstane v klidu.'], ['✋👁️', 'Levou rukou si zakryj pravé oko.'], ['🤗', 'Pravou rukou se dotkni levého ramene a levou rukou pravého ramene.']]
+];
+function makeMaze(c, r) {
+  const cells = Array.from({ length: c * r }, () => ({ w: [1, 1, 1, 1] }));
+  const stack = [0], seen = new Set([0]);
+  while (stack.length) {
+    const i = stack[stack.length - 1], x = i % c, y = i / c | 0;
+    const nb = [[0, -1, 0, 2], [1, 0, 1, 3], [0, 1, 2, 0], [-1, 0, 3, 1]].map(([dx, dy, a, b]) => ({ x: x + dx, y: y + dy, a, b })).filter(n => n.x >= 0 && n.y >= 0 && n.x < c && n.y < r && !seen.has(n.y * c + n.x));
+    if (!nb.length) { stack.pop(); continue; }
+    const n = pick(nb), j = n.y * c + n.x;
+    cells[i].w[n.a] = 0; cells[j].w[n.b] = 0; seen.add(j); stack.push(j);
+  }
+  return cells;
+}
+
+Object.assign(ACTS, {
+  /* ===== Písmenka a čtení ===== */
+  letters: {
+    name: 'Písmenka', pic: '<b style="font-family:var(--display)">Aa</b>', what: 'Proč vypadá, jak vypadá', color: '--red', total: 5,
+    next() {
+      const list = LETTERS.filter(x => x.lv === A.level);
+      S.lp = S.lp || {};
+      const idx = (S.lp[A.level] || 0) % list.length, L = list[idx];
+      stage.innerHTML = `<div class="letter-head">
+          <div class="glyph"><span>${L.l}</span><span class="lo">${L.lo}</span></div>
+          <div class="lpic" aria-hidden="true">${L.e}</div>
+          <div class="lstory">${S.text ? `${L.st}<br><b>${cap(L.w)}</b> začíná na ${L.l}.` : ''}</div>
+        </div>
+        <div class="trace-wrap letter-wrap"><canvas id="lc"></canvas></div>
+        <div class="abc">${list.map((x, i) => `<button data-i="${i}" class="${i === idx ? 'on' : ''} ${VOWELS.includes(x.l) ? 'vow' : ''}">${x.l}</button>`).join('')}</div>`;
+      stage.querySelectorAll('.abc button').forEach(b => b.onclick = () => { S.lp[A.level] = +b.dataset.i; save(); sfx.tap(); task(); });
+      const cv = $('#lc');
+      const t = A.t = { L, strokes: L.strokes.map(s => resample(s, 6)), si: 0, prog: 0, ink: [], cur: null, band: 36, tol: 30, cv, ctx: cv.getContext('2d'), anim: null };
+      mountCanvas(cv, () => this.draw());
+      cv.onpointerdown = e => { e.preventDefault(); if (A.busy || t.anim) return; try { cv.setPointerCapture(e.pointerId); } catch (_) {} t.cur = [canvasPoint(cv, e)]; t.ink.push(t.cur); this.move(t.cur[0]); this.draw(); };
+      cv.onpointermove = e => {
+        if (!t.cur) return;
+        const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+        (evs.length ? evs : [e]).forEach(ev => { const p = canvasPoint(cv, ev); t.cur.push(p); this.move(p); });
+        this.draw();
+      };
+      cv.onpointerup = cv.onpointercancel = () => { t.cur = null; };
+      const speech = `Písmenko ${L.l === 'Ch' ? 'chá' : L.l}. ${L.st} ${cap(L.w)} začíná na ${L.l === 'Ch' ? 'ch' : L.l}. Teď ho obtáhni podle čísel.`;
+      setPrompt(speech, false, 'Dívej se, jak se píše. Pak obtáhni podle čísel.');
+      say(speech);
+      this.demo();
+    },
+    demo() {
+      const t = A.t, me = A; if (t.anim) return;
+      t.anim = { s: 0, n: 0 };
+      const step = () => {
+        if (A !== me || A.t !== t) return;
+        const a = t.anim; a.n += 3;
+        if (a.n >= t.strokes[a.s].length) { a.s++; a.n = 0; }
+        if (a.s >= t.strokes.length) { t.anim = null; this.draw(); return; }
+        this.draw(); requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    },
+    move(p) {
+      const t = A.t; if (t.si >= t.strokes.length) return;
+      const pts = t.strokes[t.si], n = pts.length;
+      for (let j = t.prog; j < Math.min(t.prog + 9, n); j++) { const q = pts[j]; if (Math.hypot(p.x - q.x, p.y - q.y) < t.tol) t.prog = Math.max(t.prog, j); }
+      if (t.prog >= n - 2) {
+        t.si++; t.prog = 0; t.cur = null; sfx.tap();
+        if (t.si >= t.strokes.length && !A.busy) { S.lp[A.level] = (S.lp[A.level] || 0) + 1; save(); success(); }
+      }
+    },
+    draw() {
+      const t = A && A.t; if (!t || !t.k || !t.strokes) return;
+      const c = t.ctx, line = a => { c.beginPath(); a.forEach((p, i) => i ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y)); };
+      c.setTransform(t.k * t.dpr, 0, 0, t.k * t.dpr, 0, 0); c.clearRect(0, 0, 400, 300);
+      c.lineCap = c.lineJoin = 'round';
+      // school-style guide lines
+      c.strokeStyle = css('--grid'); c.lineWidth = 2; [50, 150, 250].forEach(y => { c.beginPath(); c.moveTo(10, y); c.lineTo(390, y); c.stroke(); });
+      t.strokes.forEach((s, i) => { line(s); c.strokeStyle = css(i < t.si ? '--road-done' : '--road'); c.lineWidth = t.band; c.stroke(); });
+      if (t.si < t.strokes.length && t.prog > 0) { line(t.strokes[t.si].slice(0, t.prog + 1)); c.strokeStyle = css('--road-done'); c.lineWidth = t.band; c.stroke(); }
+      c.setLineDash([1, 9]); c.lineWidth = 3; c.strokeStyle = css('--muted'); t.strokes.forEach(s => { line(s); c.stroke(); }); c.setLineDash([]);
+      // demo pen
+      if (t.anim) {
+        c.strokeStyle = css('--orange'); c.lineWidth = 9;
+        t.strokes.forEach((s, i) => { if (i < t.anim.s) { line(s); c.stroke(); } else if (i === t.anim.s && t.anim.n > 1) { line(s.slice(0, t.anim.n)); c.stroke(); } });
+      }
+      const col = COLORS.find(x => x.id === S.ink) || COLORS[1];
+      c.strokeStyle = css(col.v); c.lineWidth = 7; t.ink.forEach(a => { if (a.length > 1) { line(a); c.stroke(); } });
+      // stroke-order numbers
+      t.strokes.forEach((s, i) => {
+        const p = s[0], cur = i === t.si && !t.anim;
+        c.beginPath(); c.arc(p.x, p.y, cur ? 15 : 12, 0, 7); c.fillStyle = css(i < t.si ? '--green' : cur ? '--green' : '--muted'); c.globalAlpha = i < t.si ? .35 : 1; c.fill(); c.globalAlpha = 1;
+        c.fillStyle = '#fff'; c.font = `800 ${cur ? 18 : 15}px ${getComputedStyle(document.body).fontFamily}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), p.x, p.y + 1);
+      });
+    },
+    hint() { this.demo(); }
+  },
+
+  first: {
+    name: 'Na co začíná?', pic: '🐶<b style="font-family:var(--display)">P</b>', what: 'První hláska ve slově', color: '--orange', total: 5,
+    next() {
+      const L = A.level, end = L === 3;
+      const pool = FIRST.filter(w => !end || !NO_END.includes(w[1]));
+      let w; do { w = pick(pool); } while (A.t && A.t.w === w);
+      const ans = (end ? w[1].slice(-1) : w[1][0]).toUpperCase();
+      const letters = shuffle([...new Set(LETTERS.map(x => x.l).filter(x => x.length === 1 && x !== ans))]).slice(0, L === 1 ? 2 : 3);
+      const opts = shuffle([ans, ...letters]);
+      A.t = { w, ans, opts };
+      stage.innerHTML = `<div class="word-card"><div class="big" aria-hidden="true">${w[0]}</div></div>
+        <div class="pics letters-opt" style="grid-template-columns:repeat(${opts.length},minmax(0,1fr));width:min(100%,${opts.length * 130}px)">
+        ${opts.map((o, i) => `<button class="pic-btn ${VOWELS.includes(o) ? 'vow' : ''}" data-i="${i}">${o}</button>`).join('')}</div>`;
+      stage.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
+      setPrompt(`Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo ${w[1]}?`, true, `Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo? Poslouchej.`);
+    },
+    replay() { const t = A.t; say(`${t.w[1]}. ${A.level === 3 ? 'Na konci slyšíš' : 'Na začátku slyšíš'}...`); },
+    tap(b) {
+      const t = A.t; if (A.busy) return;
+      const o = t.opts[+b.dataset.i];
+      if (o === t.ans) {
+        b.classList.add('hit'); A.busy = true;
+        say(`Ano. ${cap(t.w[1])} ${A.level === 3 ? 'končí' : 'začíná'} na ${o}.`).then(() => { A.busy = false; success(); });
+      } else { miss(b); if (A.errors === 1) wait(500).then(() => this.replay()); }
+    },
+    hint() { const t = A.t; pulse(stage.querySelectorAll('.pic-btn')[t.opts.indexOf(t.ans)]); }
+  },
+
+  blend: {
+    name: 'Skládám slabiky', pic: '<b style="font-family:var(--display)"><span style="color:var(--blue)">M</span>+<span style="color:var(--red)">A</span></b>', what: 'Písmenka se chytí za ruce', color: '--blue', total: 5,
+    next() {
+      const L = A.level;
+      const C = L === 1 ? ['M', 'L', 'S', 'P'] : ['M', 'L', 'S', 'P', 'T', 'J', 'N', 'V', 'D', 'K'];
+      const Vw = L === 1 ? ['A', 'O', 'U'] : ['A', 'E', 'I', 'O', 'U'];
+      let c, v; do { c = pick(C); v = pick(Vw); } while (v === 'I' && 'DTN'.includes(c));
+      const syl = c + v;
+      const look = { M: 'N', N: 'M', P: 'R', L: 'T', T: 'L', S: 'Z', V: 'N', D: 'P', K: 'N', J: 'L' };
+      const oc = L === 3 && look[c] ? look[c] : pick(C.filter(x => x !== c));
+      const ov = pick(Vw.filter(x => x !== v));
+      const set = new Set([syl, c + ov, oc + v]);
+      if (L > 1) { let x; do { x = pick(C) + pick(Vw); } while (set.has(x) || /[DTN]I/.test(x)); set.add(x); }
+      A.t = { c, v, syl, opts: shuffle([...set]), quiz: L > 1 };
+      if (L === 1) {
+        stage.innerHTML = `<div class="join" id="join"><span class="ltile con">${c}</span><span class="ltile vow">${v}</span></div>
+          <button class="btn primary" id="joinBtn">Spoj je</button><div id="quiz" class="pics letters-opt" hidden></div>`;
+        $('#joinBtn').onclick = () => this.join();
+        setPrompt('Písmenka se chytí za ruce a čtou se spolu. Klepni na Spoj je.', true, 'Písmenka se chytí za ruce. Klepni na Spoj je.');
+      } else {
+        stage.innerHTML = `<div id="quiz" class="pics letters-opt"></div>`;
+        this.quiz();
+      }
+    },
+    async join() {
+      const t = A.t, me = A; if (t.joining) return; t.joining = true;
+      $('#joinBtn').hidden = true;
+      const tiles = stage.querySelectorAll('.ltile');
+      tiles[0].classList.add('lit'); await say(LONG[t.c] || t.c, .6); tiles[0].classList.remove('lit');
+      tiles[1].classList.add('lit'); await say(t.v.toLowerCase(), .6); tiles[1].classList.remove('lit');
+      $('#join').classList.add('on'); await wait(500);
+      await say(t.syl.toLowerCase(), .7);
+      if (A !== me || A.t !== t) return;
+      this.quiz();
+    },
+    quiz() {
+      const t = A.t; t.quiz = true;
+      const q = $('#quiz'); q.hidden = false;
+      q.style.gridTemplateColumns = `repeat(${t.opts.length},minmax(0,1fr))`; q.style.width = `min(100%,${t.opts.length * 140}px)`;
+      q.innerHTML = t.opts.map((o, i) => `<button class="pic-btn syl-opt" data-i="${i}"><span><span style="color:var(--blue)">${o[0]}</span><span style="color:var(--red)">${o.slice(1)}</span></span></button>`).join('');
+      q.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
+      setPrompt(`Kde je napsáno ${t.syl.toLowerCase()}?`, true, 'Kde je napsáno, co slyšíš?');
+    },
+    replay() { const t = A.t; if (t.quiz) say(t.syl.toLowerCase()); else say(A.prompt); },
+    tap(b) {
+      const t = A.t; if (A.busy) return;
+      if (t.opts[+b.dataset.i] === t.syl) { b.classList.add('hit'); success(); }
+      else { miss(b); if (A.errors === 1) wait(500).then(() => say(t.syl.toLowerCase())); }
+    },
+    hint() {
+      const t = A.t;
+      if (!t.quiz) return pulse($('#joinBtn'));
+      pulse(stage.querySelectorAll('#quiz .pic-btn')[t.opts.indexOf(t.syl)]);
+      say(`${LONG[t.c] || ''} ${t.v.toLowerCase()}. ${t.syl.toLowerCase()}.`, .6);
+    }
+  },
+
+  read: {
+    name: 'Čtu slova', pic: '<b style="font-family:var(--display)"><span style="color:var(--red)">SO</span><span style="color:var(--blue)">VA</span></b>', what: 'Přečti a najdi obrázek', color: '--green', total: 5,
+    next() {
+      const pool = WORDS.filter(w => w.lv === A.level);
+      let w; do { w = pick(pool); } while (A.t && A.t.w === w && pool.length > 1);
+      const opts = shuffle([w, ...shuffle(WORDS.filter(x => x !== w && x.e !== w.e)).slice(0, 2)]);
+      A.t = { w, opts };
+      stage.innerHTML = `<div class="read-word">${sylHtml(w.s)}</div>
+        <div class="pics" style="grid-template-columns:repeat(3,minmax(0,1fr));width:min(100%,460px)">${opts.map((o, i) => `<button class="pic-btn" data-i="${i}" aria-label="obrázek ${i + 1}">${o.e}</button>`).join('')}</div>`;
+      stage.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
+      setPrompt('Přečti slovo. Pak najdi obrázek.');
+    },
+    replay() { say('Přečti slovo. Pak najdi obrázek.'); },
+    tap(b) {
+      const t = A.t; if (A.busy) return;
+      if (t.opts[+b.dataset.i] === t.w) {
+        b.classList.add('hit'); A.busy = true;
+        (async () => { for (const s of t.w.s) { await say(s.toLowerCase(), .65); } await say(t.w.w.toLowerCase()); A.busy = false; success(); })();
+      } else miss(b);
+    },
+    async hint() {
+      const t = A.t, el = stage.querySelector('.read-word'); if (t.reading) return; t.reading = true;
+      const spans = el.querySelectorAll('span');
+      for (let i = 0; i < spans.length; i++) { spans[i].classList.add('lit'); await say(t.w.s[i].toLowerCase(), .6); spans[i].classList.remove('lit'); }
+      t.reading = false;
+    }
+  },
+
+  /* ===== Poslech a řeč ===== */
+  where: {
+    name: 'Kde je?', pic: '📦', what: 'Na, pod, v, vedle', color: '--orange', total: 5,
+    next() {
+      const L = A.level, obj = L === 1 ? 'stul' : pick(['stul', 'krab']);
+      const set = L === 3 ? (obj === 'stul' ? ['na', 'pod', 'vlevo', 'vpravo'] : ['na', 'v', 'vlevo', 'vpravo']) : (obj === 'stul' ? ['na', 'pod', 'vedle'] : ['na', 'v', 'vedle']);
+      const an = pick(ANIMALS), target = pick(set);
+      const opts = shuffle(set).map(p => ({ p, pos: p === 'vedle' ? pick(['vedleL', 'vedleR']) : p }));
+      A.t = { opts, target };
+      stage.innerHTML = `<div class="scenes" style="${set.length === 3 ? 'grid-template-columns:repeat(3,minmax(0,1fr));width:min(100%,620px)' : ''}">${opts.map((o, i) => `<button class="scene" data-i="${i}" aria-label="obrázek ${i + 1}">${sceneHtml(obj, o.pos, an[0])}</button>`).join('')}</div>`;
+      stage.querySelectorAll('.scene').forEach(b => b.onclick = () => this.tap(b));
+      setPrompt(`${cap(an[1])} je ${OBJ[obj][target]}. Najdi ten obrázek.`);
+      if (voiceMissing()) this.hint();
+    },
+    tap(b) {
+      const t = A.t; if (A.busy) return;
+      if (t.opts[+b.dataset.i].p === t.target) { b.classList.add('hit'); success(); }
+      else { miss(b); if (A.errors === 1) wait(500).then(() => say('Poslouchej ještě jednou. ' + A.prompt)); }
+    },
+    hint() { const t = A.t; pulse(stage.querySelectorAll('.scene')[t.opts.findIndex(o => o.p === t.target)]); }
+  },
+
+  simon: {
+    name: 'Opakuj po mně', pic: '🔁', what: 'Zapamatuj si pořadí', color: '--purple', total: 5,
+    next() {
+      const L = A.level, len = [2, 3, 3][L - 1] + (A.done >= 3 ? 1 : 0);
+      A.t = { seq: Array.from({ length: len }, () => Math.random() * 4 | 0), pos: 0, playing: true };
+      stage.innerHTML = `<div class="simon">${PADS.map((p, i) => `<button class="pad" data-i="${i}" style="--c:var(${p.c})" aria-label="${p.n}">${p.e}</button>`).join('')}</div>`;
+      stage.querySelectorAll('.pad').forEach(b => b.onclick = () => this.press(+b.dataset.i));
+      setPrompt(L === 3 ? 'Poslouchej, koho zavolám. Pak na ně klepni popořadě.' : 'Dívej se a poslouchej. Pak to zopakuj.', false);
+      const t = A.t;
+      say(A.prompt).then(() => wait(300)).then(() => { if (A && A.t === t) this.play(); });
+    },
+    async play() {
+      const me = A, t = A.t; t.playing = true; t.pos = 0;
+      const pads = stage.querySelectorAll('.pad');
+      for (const i of t.seq) {
+        if (A !== me || A.t !== t) return;
+        const p = PADS[i];
+        if (A.level < 3) pads[i].classList.add('lit');
+        tone(p.f, .45, 'triangle', 0, .12);
+        if (A.level !== 2) await Promise.all([say(p.n), wait(700)]); else await wait(650);
+        pads[i].classList.remove('lit'); await wait(250);
+      }
+      if (A === me && A.t === t) t.playing = false;
+    },
+    replay() { if (!A.t.playing) ACTS.simon.play(); },
+    press(i) {
+      const t = A.t; if (t.playing || A.busy) return;
+      const pad = stage.querySelectorAll('.pad')[i];
+      pad.classList.add('lit'); setTimeout(() => pad.classList.remove('lit'), 250); tone(PADS[i].f, .3, 'triangle', 0, .12);
+      if (t.seq[t.pos] === i) { t.pos++; if (t.pos === t.seq.length) success(); }
+      else {
+        miss(pad); t.pos = 0; t.playing = true;
+        wait(700).then(() => { if (A && A.t === t) say('Ještě jednou.').then(() => this.play()); });
+      }
+    }
+  },
+
+  /* ===== Oči ===== */
+  catch: {
+    name: 'Chyť berušku', pic: '🐞', what: 'Sleduj očima a chyť', color: '--red', total: 5,
+    next() {
+      const L = A.level, mode = L === 3 && A.done % 2 === 1 ? 'jump' : 'glide';
+      stage.innerHTML = `<div class="arena" id="arena"><button class="mover" id="tg" aria-label="beruška">🐞</button>${L === 3 && mode === 'glide' ? '<button class="mover" id="ds" aria-label="mravenec">🐜</button>' : ''}</div>`;
+      const ar = $('#arena'), tg = $('#tg'), ds = $('#ds'), size = [78, 60, 50][L - 1];
+      [tg, ds].forEach(b => { if (b) { b.style.width = b.style.height = size + 'px'; b.style.fontSize = size * .8 + 'px'; } });
+      const sp = [.45, .8, .9][L - 1], ph = Math.random() * 6, t0 = performance.now(), me = A;
+      let raf, jumpAt = 0, jx = .5, jy = .5;
+      const frame = now => {
+        if (A !== me) return;
+        const t = (now - t0) / 1000, W = ar.clientWidth, H = ar.clientHeight;
+        let x, y;
+        if (mode === 'glide') { x = .5 + .38 * Math.sin(sp * t + ph); y = .5 + .34 * Math.sin(sp * 1.37 * t); }
+        else { if (now > jumpAt) { jx = .12 + Math.random() * .76; jy = .15 + Math.random() * .7; jumpAt = now + 1700; } x = jx; y = jy; }
+        tg.style.transform = `translate(${x * W - size / 2}px,${y * H - size / 2}px)`;
+        if (ds) { const dx = .5 + .38 * Math.sin(sp * 1.1 * t + ph + 2.5), dy = .5 + .34 * Math.cos(sp * .9 * t); ds.style.transform = `translate(${dx * W - size / 2}px,${dy * H - size / 2}px)`; }
+        raf = requestAnimationFrame(frame);
+      };
+      raf = requestAnimationFrame(frame);
+      A.cleanup = () => cancelAnimationFrame(raf);
+      tg.onpointerdown = e => { e.preventDefault(); if (A.busy) return; tg.classList.add('caught'); A.cleanup(); success(); };
+      if (ds) ds.onpointerdown = e => { e.preventDefault(); miss(ds); };
+      setPrompt(mode === 'jump' ? 'Beruška skáče. Najdi ji očima a chyť ji.' : L === 3 ? 'Chyť berušku. Mravenečka nech běžet.' : 'Sleduj berušku očima a chyť ji.');
+    }
+  },
+
+  same: {
+    name: 'Najdi stejný', pic: '🔍', what: 'Který obrázek je stejný?', color: '--blue', total: 5,
+    next() {
+      const L = A.level; let opts, target;
+      if (L === 1) { const es = shuffle(ORIENT).slice(0, 4); target = { e: es[0], tf: 'none' }; opts = es.map(e => ({ e, tf: 'none' })); }
+      else {
+        const e = pick(ORIENT);
+        let idx;
+        if (L === 2) idx = shuffle([0, 1, 2, 3]);
+        else { const t = Math.random() * 8 | 0; idx = [t, t ^ 4, ...shuffle([0, 1, 2, 3, 4, 5, 6, 7].filter(i => i !== t && i !== (t ^ 4))).slice(0, 4)]; }
+        target = { e, tf: TF[idx[0]] }; opts = idx.map(i => ({ e, tf: TF[i] }));
+      }
+      opts = shuffle(opts);
+      A.t = { opts, target };
+      const g = x => `<span class="rot" style="transform:${x.tf}">${x.e}</span>`;
+      stage.innerHTML = `<div class="target-card">${g(target)}</div>
+        <div class="pics" style="grid-template-columns:repeat(${opts.length > 4 ? 3 : 4},minmax(0,1fr));width:min(100%,${opts.length > 4 ? 420 : 520}px)">${opts.map((o, i) => `<button class="pic-btn" data-i="${i}" aria-label="obrázek ${i + 1}">${g(o)}</button>`).join('')}</div>`;
+      stage.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
+      setPrompt(L === 1 ? 'Najdi stejný obrázek.' : 'Najdi úplně stejný obrázek. Dívej se, kam se otáčí.');
+    },
+    tap(b) {
+      const t = A.t; if (A.busy) return;
+      const o = t.opts[+b.dataset.i];
+      if (o.e === t.target.e && o.tf === t.target.tf) { b.classList.add('hit'); success(); } else miss(b);
+    },
+    hint() { const t = A.t; pulse(stage.querySelectorAll('.pic-btn')[t.opts.findIndex(o => o.e === t.target.e && o.tf === t.target.tf)]); }
+  },
+
+  search: {
+    name: 'Hledej', pic: '👀', what: 'Najdi všechny stejné', color: '--green', total: 5,
+    next() {
+      const L = A.level, s = pick(SEARCH), cols = [4, 5, 6][L - 1], N = cols * cols, k = [3, 4, 5][L - 1];
+      const others = ITEMS.map(i => i.e).filter(e => e !== s.t && !s.sim.includes(e));
+      const fill = Array.from({ length: N - k }, (_, i) => L === 1 ? pick(others) : L === 2 ? (i % 3 === 0 ? pick(s.sim) : pick(others)) : (i % 3 === 2 ? pick(others) : pick(s.sim)));
+      const cells = shuffle([...Array(k).fill(s.t), ...fill]);
+      A.t = { cells, s, k, found: 0, hit: new Set() };
+      stage.innerHTML = `<div class="counter" id="ctr">${'<i></i>'.repeat(k)}</div>
+        <div class="search" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${cells.map((e, i) => `<button class="pic-btn" data-i="${i}">${e}</button>`).join('')}</div>`;
+      stage.querySelectorAll('.search .pic-btn').forEach(b => b.onclick = () => this.tap(b));
+      setPrompt(`Najdi všechny ${s.n}.`);
+      setPict(s.t);
+    },
+    tap(b) {
+      const t = A.t, i = +b.dataset.i; if (A.busy || t.hit.has(i)) return;
+      if (t.cells[i] === t.s.t) {
+        t.hit.add(i); b.classList.add('hit'); sfx.tap(); t.found++;
+        $('#ctr').children[t.found - 1].classList.add('on');
+        if (t.found === t.k) success();
+      } else miss(b);
+    },
+    hint() { const t = A.t, i = t.cells.findIndex((e, j) => e === t.s.t && !t.hit.has(j)); if (i >= 0) pulse(stage.querySelectorAll('.search .pic-btn')[i]); }
+  },
+
+  /* ===== Ruka a tělo ===== */
+  maze: {
+    name: 'Bludiště', pic: '🧩', what: 'Najdi cestu prstem', color: '--yellow', total: 5,
+    next() {
+      const L = A.level, [c, r] = [[4, 3], [6, 4], [8, 6]][L - 1], pair = pick(PAIRS);
+      stage.innerHTML = `<div class="arena"><canvas id="mz"></canvas></div>`;
+      const cv = $('#mz'), cs = Math.min(370 / c, 270 / r);
+      const t = A.t = { c, r, cells: makeMaze(c, r), pair, cv, ctx: cv.getContext('2d'), cs, ox: (400 - cs * c) / 2, oy: (300 - cs * r) / 2, trail: [0], sol: null };
+      mountCanvas(cv, () => this.draw());
+      const at = e => { const p = canvasPoint(cv, e), x = Math.floor((p.x - t.ox) / cs), y = Math.floor((p.y - t.oy) / cs); return x >= 0 && y >= 0 && x < c && y < r ? y * c + x : -1; };
+      let down = false;
+      cv.onpointerdown = e => { e.preventDefault(); down = true; try { cv.setPointerCapture(e.pointerId); } catch (_) {} const j = at(e); if (j >= 0) this.step(j); };
+      cv.onpointermove = e => { if (!down) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; (evs.length ? evs : [e]).forEach(ev => { const j = at(ev); if (j >= 0) this.step(j); }); };
+      cv.onpointerup = cv.onpointercancel = () => { down = false; };
+      setPrompt(pair.say + ' Najdi cestu bludištěm.');
+    },
+    step(j) {
+      const t = A.t, cur = t.trail[t.trail.length - 1]; if (j === cur || A.busy) return;
+      const dx = j % t.c - cur % t.c, dy = (j / t.c | 0) - (cur / t.c | 0);
+      if (Math.abs(dx) + Math.abs(dy) !== 1) return;
+      const dir = dy === -1 ? 0 : dx === 1 ? 1 : dy === 1 ? 2 : 3;
+      if (t.cells[cur].w[dir]) return;
+      if (t.trail.length > 1 && t.trail[t.trail.length - 2] === j) t.trail.pop(); else t.trail.push(j);
+      this.draw();
+      if (j === t.c * t.r - 1) success();
+    },
+    draw() {
+      const t = A && A.t; if (!t || !t.k || !t.cells) return;
+      const c = t.ctx, cs = t.cs, cen = i => ({ x: t.ox + (i % t.c + .5) * cs, y: t.oy + ((i / t.c | 0) + .5) * cs });
+      const path = a => { c.beginPath(); a.forEach((i, n) => { const p = cen(i); n ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y); }); };
+      c.setTransform(t.k * t.dpr, 0, 0, t.k * t.dpr, 0, 0); c.clearRect(0, 0, 400, 300);
+      c.lineCap = c.lineJoin = 'round';
+      if (t.sol) { path(t.sol); c.strokeStyle = css('--yellow'); c.lineWidth = cs * .4; c.globalAlpha = .55; c.stroke(); c.globalAlpha = 1; }
+      const col = COLORS.find(x => x.id === S.ink) || COLORS[1];
+      path(t.trail); c.strokeStyle = css(col.v); c.lineWidth = Math.max(6, cs * .18); c.stroke();
+      c.strokeStyle = css('--ink'); c.lineWidth = 4; c.beginPath();
+      t.cells.forEach((cell, i) => {
+        const x = t.ox + (i % t.c) * cs, y = t.oy + (i / t.c | 0) * cs;
+        if (cell.w[0]) { c.moveTo(x, y); c.lineTo(x + cs, y); }
+        if (cell.w[3]) { c.moveTo(x, y); c.lineTo(x, y + cs); }
+        if (i % t.c === t.c - 1 && cell.w[1]) { c.moveTo(x + cs, y); c.lineTo(x + cs, y + cs); }
+        if ((i / t.c | 0) === t.r - 1 && cell.w[2]) { c.moveTo(x, y + cs); c.lineTo(x + cs, y + cs); }
+      });
+      c.stroke();
+      c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `${Math.round(cs * .6)}px ${EMOJI_FONT}`;
+      const g = cen(t.c * t.r - 1), m = cen(t.trail[t.trail.length - 1]);
+      c.fillText(t.pair.g, g.x, g.y); c.fillText(t.pair.m, m.x, m.y);
+    },
+    hint() {
+      const t = A.t, start = t.trail[t.trail.length - 1], goal = t.c * t.r - 1, prev = { [start]: -1 }, q = [start];
+      while (q.length) {
+        const i = q.shift(); if (i === goal) break;
+        [[0, -t.c], [1, 1], [2, t.c], [3, -1]].forEach(([d, off]) => { const j = i + off; if (!t.cells[i].w[d] && !(j in prev)) { prev[j] = i; q.push(j); } });
+      }
+      const sol = []; for (let i = goal; i !== -1 && i !== undefined; i = prev[i]) sol.unshift(i);
+      t.sol = sol; this.draw();
+      setTimeout(() => { if (A && A.t === t) { t.sol = null; this.draw(); } }, 2500);
+    }
+  },
+
+  moves: {
+    name: 'Hýbánky', pic: '🤸', what: 'Pravá, levá a pohyb', color: '--blue', total: 5,
+    next() {
+      const list = MOVES[A.level - 1];
+      let m; do { m = pick(list); } while (A.t && A.t.m === m);
+      A.t = { m, ready: false };
+      const side = m[2] ? `<span class="side" style="background:var(${m[2] === 'P' ? '--red' : '--blue'})">${m[2] === 'P' ? 'pravá' : 'levá'}</span>` : '';
+      stage.innerHTML = `<div class="move-card"><div class="big" aria-hidden="true">${m[0]}${side}</div><div class="txt">${S.text ? m[1] : ''}</div></div>
+        <button class="btn primary" id="mdone">Hotovo ✓</button>`;
+      const t = A.t;
+      setTimeout(() => { t.ready = true; }, 1500);
+      $('#mdone').onclick = () => { if (t.ready && !A.busy) success(); };
+      setPrompt(m[1]);
+    }
+  }
+});
 
 setStars();
 home();
