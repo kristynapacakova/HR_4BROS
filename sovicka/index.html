@@ -21,7 +21,8 @@ body{
   background-size:28px 28px;
   -webkit-tap-highlight-color:transparent;
 }
-button{font:inherit;color:inherit;cursor:pointer}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+#app{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 #app{display:flex;flex-direction:column;min-height:100%;max-width:980px;margin:0 auto;padding-inline:16px;box-sizing:border-box}
 
@@ -280,6 +281,8 @@ select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px
       <div class="line"><span class="note">Tón:</span><div class="seg" data-key="pitch"><button data-v="1">Běžný</button><button data-v="1.12">Vyšší, veselejší</button></div></div>
     </div>
     <div class="set"><span>Psaný text pokynu</span><div class="seg" data-key="text"><button data-v="1">Ukázat</button><button data-v="0">Skrýt</button></div></div>
+    <div class="set"><span>Kreslení s Apple Pencil</span><div class="seg" data-key="penMode"><button data-v="auto">Automaticky</button><button data-v="pen">Jen tužka</button><button data-v="any">Prst i tužka</button></div></div>
+    <p class="note">Automaticky: jakmile se dcera dotkne plochy tužkou, prsty a dlaň už při kreslení nekreslí. Volba „Jen tužka“ to zapne hned od začátku. Tlačítka jdou mačkat prstem vždycky.</p>
     <p class="note" id="voiceStatus"></p>
     <p class="note">Nejpřirozeněji zní hlasy s označením <b>Natural</b>, <b>Premium</b>, <b>Vylepšený</b> nebo <b>Google</b>. Na počítači otevřete hru v prohlížeči <b>Microsoft Edge</b>, tam jsou hlasy „Vlasta (Natural)“ a „Antonín (Natural)“. Na iPadu stáhněte v Nastavení › Zpřístupnění › Předčítaný obsah › Hlasy › Čeština hlas <b>Zuzana (Prémiový)</b>. Na Androidu nainstalujte „Převod textu na řeč Google“ a stáhněte český hlas. Pak hru načtěte znovu a hlas vyberte tady.</p>
     <h3>Jak se dítě učí číst</h3>
@@ -321,7 +324,7 @@ const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).
 const stage = $('#stage');
 
 /* ---------- settings ---------- */
-const DEF = { sound: true, text: true, rate: 0.8, pitch: 1, voiceURI: '', stars: 0, levels: {}, ink: 'blue' };
+const DEF = { sound: true, text: true, rate: 0.8, pitch: 1, voiceURI: '', stars: 0, levels: {}, ink: 'blue', penMode: 'auto' };
 const S = (() => { try { return { ...DEF, ...JSON.parse(localStorage.getItem('sovicka') || '{}') }; } catch (e) { return { ...DEF }; } })();
 S.rate = S.rate <= 0.7 ? 0.65 : S.rate <= 0.85 ? 0.8 : 0.95;
 const save = () => { try { localStorage.setItem('sovicka', JSON.stringify(S)); } catch (e) {} };
@@ -409,6 +412,23 @@ const ITEMS = [
   { e: '🐞', n: 'beruška', a: 'berušku' }, { e: '✈️', n: 'letadlo', a: 'letadlo' }, { e: '🍓', n: 'jahoda', a: 'jahodu' }
 ];
 const PRAISE = ['Výborně!', 'Super!', 'Paráda!', 'Bravo!', 'Skvělé!', 'Jupí!'];
+
+/* ---------- pen (Apple Pencil): palm rejection + pressure ---------- */
+const PEN = { seen: false };
+function penAccept(e) {
+  if (e.pointerType === 'pen') { PEN.seen = true; return true; }
+  if (e.pointerType === 'touch' && (S.penMode === 'pen' || (S.penMode === 'auto' && PEN.seen))) return false;
+  return true;
+}
+const penW = e => e.pointerType === 'pen' ? Math.max(.15, e.pressure || .5) : .55;
+function inkLine(c, a, color) {
+  c.strokeStyle = c.fillStyle = color;
+  if (a.length === 1) { c.beginPath(); c.arc(a[0].x, a[0].y, 2 + a[0].w * 5, 0, 7); c.fill(); return; }
+  for (let i = 1; i < a.length; i++) {
+    c.beginPath(); c.moveTo(a[i - 1].x, a[i - 1].y); c.lineTo(a[i].x, a[i].y);
+    c.lineWidth = 3 + (a[i - 1].w + a[i].w) * 4; c.stroke();
+  }
+}
 
 /* ---------- engine ---------- */
 let A = null;
@@ -508,7 +528,8 @@ $('#hearBtn').onclick = () => { if (!A) return; if (voiceMissing() && !['first',
 $('#hintBtn').onclick = () => A && A.def.hint && A.def.hint(false);
 
 /* ---------- parents ---------- */
-const NUM = ['rate', 'pitch'];
+const NUM = ['rate', 'pitch'], STR = ['penMode'];
+const segVal = (k, v) => NUM.includes(k) ? +v : STR.includes(k) ? v : v === '1';
 const HELLO = 'Ahoj, já jsem sovička. Budeme si spolu hrát.';
 function syncSpeed() { document.querySelectorAll('#speed button').forEach(b => b.classList.toggle('on', +b.dataset.r === S.rate)); }
 $('#speed').addEventListener('click', e => {
@@ -522,14 +543,14 @@ function syncSeg() {
   document.querySelectorAll('.seg').forEach(seg => {
     const k = seg.dataset.key;
     seg.querySelectorAll('button').forEach(b => {
-      const v = NUM.includes(k) ? +b.dataset.v : b.dataset.v === '1';
+      const v = segVal(k, b.dataset.v);
       b.classList.toggle('on', S[k] === v);
     });
   });
 }
 document.querySelectorAll('.seg').forEach(seg => seg.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
-  const k = seg.dataset.key; S[k] = NUM.includes(k) ? +b.dataset.v : b.dataset.v === '1';
+  const k = seg.dataset.key; S[k] = segVal(k, b.dataset.v);
   save(); syncSeg(); syncSpeed();
   if (NUM.includes(k)) say(HELLO);
 }));
@@ -812,14 +833,15 @@ const ACTS = {
       const ro = new ResizeObserver(fit); ro.observe(cv);
       A.cleanup = () => ro.disconnect();
       const at = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / t.k, y: (e.clientY - r.top) / t.k }; };
-      cv.onpointerdown = e => { e.preventDefault(); if (A.busy) return; try { cv.setPointerCapture(e.pointerId); } catch (_) {} t.cur = [at(e)]; t.ink.push(t.cur); this.move(t.cur[0]); };
+      const pt = e => ({ ...at(e), w: penW(e) });
+      cv.onpointerdown = e => { e.preventDefault(); if (A.busy || !penAccept(e)) return; try { cv.setPointerCapture(e.pointerId); } catch (_) {} t.pid = e.pointerId; t.cur = [pt(e)]; t.ink.push(t.cur); this.move(t.cur[0]); };
       cv.onpointermove = e => {
-        if (!t.cur) return;
+        if (!t.cur || e.pointerId !== t.pid) return;
         const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
-        (evs.length ? evs : [e]).forEach(ev => { const p = at(ev); t.cur.push(p); this.move(p, true); });
+        (evs.length ? evs : [e]).forEach(ev => { const p = pt(ev); t.cur.push(p); this.move(p, true); });
         this.draw();
       };
-      cv.onpointerup = cv.onpointercancel = () => { t.cur = null; };
+      cv.onpointerup = cv.onpointercancel = e => { if (e.pointerId === t.pid) t.cur = null; };
       stage.querySelectorAll('.crayon').forEach(b => b.onclick = () => { S.ink = b.dataset.c; save(); sfx.tap(); stage.querySelectorAll('.crayon').forEach(x => x.classList.toggle('on', x === b)); this.draw(); });
       $('#wipe').onclick = () => { t.ink = []; t.prog = 0; this.draw(); };
       setPrompt(pat.name + '. ' + (pat.closed ? `Obtáhni ${pat.acc}. Začni u zvířátka.` : pair.say));
@@ -848,8 +870,7 @@ const ACTS = {
       c.save(); c.translate(ax, ay); c.rotate(ang); c.beginPath(); c.moveTo(8, 0); c.lineTo(-6, -8); c.lineTo(-6, 8); c.closePath(); c.fillStyle = css('--green'); c.fill(); c.restore();
       // child's ink
       const col = COLORS.find(x => x.id === S.ink) || COLORS[1];
-      c.strokeStyle = css(col.v); c.lineWidth = 7;
-      t.ink.forEach(a => { if (a.length > 1) { line(a); c.stroke(); } else { c.beginPath(); c.arc(a[0].x, a[0].y, 3.5, 0, 7); c.fillStyle = css(col.v); c.fill(); } });
+      const inkCol = css(col.v); t.ink.forEach(a => inkLine(c, a, inkCol));
       // ghost (hint)
       if (t.ghost >= 0) { const g = pts[t.ghost]; c.beginPath(); c.arc(g.x, g.y, 12, 0, 7); c.fillStyle = css('--yellow'); c.globalAlpha = .85; c.fill(); c.globalAlpha = 1; }
       c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = '34px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
@@ -1056,14 +1077,15 @@ Object.assign(ACTS, {
       const cv = $('#lc');
       const t = A.t = { L, strokes: L.strokes.map(s => resample(s, 6)), si: 0, prog: 0, ink: [], cur: null, band: 36, tol: 30, cv, ctx: cv.getContext('2d'), anim: null };
       mountCanvas(cv, () => this.draw());
-      cv.onpointerdown = e => { e.preventDefault(); if (A.busy || t.anim) return; try { cv.setPointerCapture(e.pointerId); } catch (_) {} t.cur = [canvasPoint(cv, e)]; t.ink.push(t.cur); this.move(t.cur[0]); this.draw(); };
+      const pt = e => ({ ...canvasPoint(cv, e), w: penW(e) });
+      cv.onpointerdown = e => { e.preventDefault(); if (A.busy || t.anim || !penAccept(e)) return; try { cv.setPointerCapture(e.pointerId); } catch (_) {} t.pid = e.pointerId; t.cur = [pt(e)]; t.ink.push(t.cur); this.move(t.cur[0]); this.draw(); };
       cv.onpointermove = e => {
-        if (!t.cur) return;
+        if (!t.cur || e.pointerId !== t.pid) return;
         const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
-        (evs.length ? evs : [e]).forEach(ev => { const p = canvasPoint(cv, ev); t.cur.push(p); this.move(p); });
+        (evs.length ? evs : [e]).forEach(ev => { const p = pt(ev); t.cur.push(p); this.move(p); });
         this.draw();
       };
-      cv.onpointerup = cv.onpointercancel = () => { t.cur = null; };
+      cv.onpointerup = cv.onpointercancel = e => { if (e.pointerId === t.pid) t.cur = null; };
       const speech = `Písmenko ${L.l === 'Ch' ? 'chá' : L.l}. ${L.st} ${cap(L.w)} začíná na ${L.l === 'Ch' ? 'ch' : L.l}. Teď ho obtáhni podle čísel.`;
       setPrompt(speech, false, 'Dívej se, jak se píše. Pak obtáhni podle čísel.');
       say(speech);
@@ -1106,7 +1128,7 @@ Object.assign(ACTS, {
         t.strokes.forEach((s, i) => { if (i < t.anim.s) { line(s); c.stroke(); } else if (i === t.anim.s && t.anim.n > 1) { line(s.slice(0, t.anim.n)); c.stroke(); } });
       }
       const col = COLORS.find(x => x.id === S.ink) || COLORS[1];
-      c.strokeStyle = css(col.v); c.lineWidth = 7; t.ink.forEach(a => { if (a.length > 1) { line(a); c.stroke(); } });
+      const inkCol = css(col.v); t.ink.forEach(a => inkLine(c, a, inkCol));
       // stroke-order numbers
       t.strokes.forEach((s, i) => {
         const p = s[0], cur = i === t.si && !t.anim;
@@ -1380,10 +1402,10 @@ Object.assign(ACTS, {
       const t = A.t = { c, r, cells: makeMaze(c, r), pair, cv, ctx: cv.getContext('2d'), cs, ox: (400 - cs * c) / 2, oy: (300 - cs * r) / 2, trail: [0], sol: null };
       mountCanvas(cv, () => this.draw());
       const at = e => { const p = canvasPoint(cv, e), x = Math.floor((p.x - t.ox) / cs), y = Math.floor((p.y - t.oy) / cs); return x >= 0 && y >= 0 && x < c && y < r ? y * c + x : -1; };
-      let down = false;
-      cv.onpointerdown = e => { e.preventDefault(); down = true; try { cv.setPointerCapture(e.pointerId); } catch (_) {} const j = at(e); if (j >= 0) this.step(j); };
-      cv.onpointermove = e => { if (!down) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; (evs.length ? evs : [e]).forEach(ev => { const j = at(ev); if (j >= 0) this.step(j); }); };
-      cv.onpointerup = cv.onpointercancel = () => { down = false; };
+      let down = false; // id of the drawing pointer
+      cv.onpointerdown = e => { e.preventDefault(); if (!penAccept(e)) return; down = e.pointerId; try { cv.setPointerCapture(e.pointerId); } catch (_) {} const j = at(e); if (j >= 0) this.step(j); };
+      cv.onpointermove = e => { if (down !== e.pointerId) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : []; (evs.length ? evs : [e]).forEach(ev => { const j = at(ev); if (j >= 0) this.step(j); }); };
+      cv.onpointerup = cv.onpointercancel = e => { if (e.pointerId === down) down = false; };
       setPrompt(pair.say + ' Najdi cestu bludištěm.');
     },
     step(j) {
