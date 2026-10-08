@@ -183,6 +183,62 @@ select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px
 .move-card .big{font-size:clamp(80px,20vw,120px);line-height:1.1;display:flex;gap:10px;align-items:center}
 .move-card .side{font:800 28px var(--display);border-radius:12px;padding:0 12px;color:#fff}
 .move-card .txt{font-size:22px;font-weight:700;text-align:center;line-height:1.35;max-width:30ch}
+/* icon buttons */
+.roundbtn{width:84px;height:84px;border-radius:50%;border:4px solid var(--rb,var(--ink));background:var(--card);color:var(--ink);display:grid;place-items:center;box-shadow:0 6px 0 var(--rb,var(--ink));font-size:42px;line-height:1;flex:none;padding:0;--rb:var(--ink)}
+.roundbtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--rb)}
+.roundbtn svg{width:44px;height:44px}
+.roundbtn.go{--rb:#2A7F45;background:var(--green);color:#fff}
+.roundbtn.soft{--rb:var(--line);color:var(--muted);width:68px;height:68px}
+.roundbtn.soft svg{width:34px;height:34px}
+.roundbtn.huge{width:140px;height:140px;font-size:76px}
+.roundbtn[disabled]{opacity:.3;pointer-events:none}
+.owlbtn{background:none;border:0;padding:0;position:relative;cursor:pointer}
+.owlbtn::after{content:"?";position:absolute;right:-8px;top:-4px;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font:800 15px/22px var(--display);text-align:center}
+.con{color:var(--blue)} .vow{color:var(--red)}
+/* lesson */
+.lesson{min-height:min(48vh,400px);width:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.lesson-pic{font-size:clamp(80px,22vw,140px);line-height:1.1}
+.lesson-word{font:700 clamp(64px,16vw,110px)/1.1 var(--body);letter-spacing:.04em}
+.lesson-nav{display:flex;align-items:center;justify-content:center;gap:14px;width:100%}
+.lesson-nav .dots{gap:5px;flex-wrap:wrap;justify-content:center;min-width:0}
+.lesson-nav .dots i{width:12px;height:12px;border-width:2px}
+.ltile.big-t{width:130px;height:150px;font-size:100px}
+.joined-big{display:flex;font:700 clamp(80px,20vw,120px)/1 var(--body);background:var(--card);border:4px solid var(--yellow);border-radius:24px;padding:10px 24px;animation:pop .4s}
+/* slide */
+.slide-scene{position:relative;width:min(100%,560px);aspect-ratio:16/10;container-type:inline-size;background:var(--card);border-radius:24px;border:3px solid var(--line);overflow:hidden;touch-action:none}
+.ramp{position:absolute;inset:0;width:100%;height:100%}
+.ramp path{fill:none;vector-effect:non-scaling-stroke}
+.ramp .wood{stroke:#A86B3C;stroke-width:6}
+.ramp .slide-l{stroke:var(--orange);stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
+.ramp .floor-l{stroke:var(--grid);stroke-width:8}
+.slide-scene .ltile{position:absolute;width:17%;height:auto;aspect-ratio:1/1.15;font-size:12cqw;transform:translate(-50%,-50%);touch-action:none;cursor:grab;box-sizing:border-box}
+.slide-scene .ltile.stop{animation:hop 1.3s ease-in-out infinite}
+.slide-scene .ltile.joined{animation:none;box-shadow:0 0 0 5px var(--yellow)}
+.slide-after{min-height:84px;display:flex;align-items:center}
+@keyframes hop{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-64%)}}
+/* ladder */
+.ladder{display:flex;flex-direction:column;width:min(100%,340px)}
+.rung-row{display:grid;grid-template-columns:56px 1fr;align-items:center}
+.perch{font-size:42px;text-align:center;line-height:1}
+.rung-col{border-inline:10px solid #A86B3C;padding:7px 12px}
+.rung{width:100%;height:62px;border-radius:14px;border:3px solid #C99A63;background:var(--card);font:700 42px/1 var(--body);display:flex;justify-content:center;align-items:center;position:relative;padding:0}
+.rung.done{background:color-mix(in srgb,var(--green) 16%,var(--card));border-color:var(--green)}
+.rung.next{border-color:var(--blue);box-shadow:0 0 0 4px color-mix(in srgb,var(--blue) 30%,transparent)}
+.rung.armed{background:color-mix(in srgb,var(--yellow) 32%,var(--card))}
+.rung .ear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:30px;height:30px;color:var(--blue);display:block}
+.rung .ear svg{width:100%;height:100%}
+.ladder-top{font-size:40px;text-align:center;padding-left:56px;line-height:1.2}
+.ground .grass{display:block;height:14px;margin-inline:0;background:var(--green);border-radius:8px;opacity:.55}
+/* train */
+.train{display:flex;align-items:flex-end;gap:10px;transition:gap .5s;max-width:100%}
+.train .loco{font-size:clamp(60px,15vw,92px);line-height:1;margin-bottom:6px}
+.car{min-width:clamp(72px,21vw,128px);height:clamp(76px,19vw,106px);border-radius:16px 16px 10px 10px;border:4px solid var(--cc);background:var(--card);font:700 clamp(32px,9vw,54px)/1 var(--body);color:var(--cc);position:relative;margin-bottom:16px;padding:0 6px}
+.car::before,.car::after{content:"";position:absolute;bottom:-18px;width:20px;height:20px;border-radius:50%;background:var(--ink)}
+.car::before{left:12px}.car::after{right:12px}
+.car.read{background:color-mix(in srgb,var(--cc) 16%,var(--card))}
+.train.merged{gap:0}
+.train.go{animation:chug .35s 4}
+@keyframes chug{50%{transform:translateY(-4px)}}
 /* letters & reading */
 .letter-head{width:min(100%,640px);display:grid;grid-template-columns:auto auto 1fr;gap:14px;align-items:center}
 .glyph{font-family:var(--body);font-weight:700;font-size:clamp(56px,13vw,86px);line-height:1;display:flex;gap:10px;align-items:baseline;color:var(--red)}
@@ -239,7 +295,7 @@ select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px
   </header>
   <div id="gameHead" hidden>
     <div class="strip">
-      <div class="owl" aria-hidden="true">🦉</div>
+      <button class="owl owlbtn" id="owlBtn" aria-label="Sovička vysvětlí, jak se to hraje">🦉</button>
       <div class="prompt" id="prompt"></div>
       <div class="pict" id="pict" hidden></div>
     </div>
@@ -265,8 +321,8 @@ select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px
     <h2>Hotovo!</h2>
     <p id="winText"></p>
     <div class="row">
-      <button class="btn primary" id="againBtn">Ještě jednou</button>
-      <button class="btn" id="winHome">Domů</button>
+      <button class="roundbtn go" id="againBtn" aria-label="Hrát ještě jednou"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg></button>
+      <button class="roundbtn" id="winHome" aria-label="Domů"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></button>
     </div>
   </div>
 </div>
@@ -276,6 +332,7 @@ select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px
     <h2 id="pTitle">Pro rodiče</h2>
     <div class="set"><span>Hlas a zvuky</span><div class="seg" data-key="sound"><button data-v="1">Zapnuto</button><button data-v="0">Vypnuto</button></div></div>
     <div class="set"><span>Rychlost hlasu</span><div class="seg" data-key="rate"><button data-v="0.65">🐌 Pomalu</button><button data-v="0.8">🐢 Středně</button><button data-v="0.95">🐇 Rychleji</button></div></div>
+    <div class="set"><span>Výrazné čtení <small class="note">(melodie, důraz na hlavní slova)</small></span><div class="seg" data-key="expressive"><button data-v="1">Zapnuto</button><button data-v="0">Vypnuto</button></div></div>
     <div class="set col"><span>Hlas sovičky</span>
       <div class="line"><select id="voiceSel" aria-label="Hlas sovičky"></select><button class="btn" id="voiceTest" style="font-size:16px;padding:4px 14px">▶ Vyzkoušet</button></div>
       <div class="line"><span class="note">Tón:</span><div class="seg" data-key="pitch"><button data-v="1">Běžný</button><button data-v="1.12">Vyšší, veselejší</button></div></div>
@@ -289,8 +346,11 @@ select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px
     <ul>
       <li><b>Nejdřív slyšet.</b> Poznat, na jakou hlásku slovo začíná, a vytleskat slabiky. To jsou hry <b>Na co začíná?</b> a <b>Slabiky</b>. Pro dítě s dysfázií je tohle nejdůležitější krok, vyplatí se ho netlačit.</li>
       <li><b>Písmenko je obrázek zvuku.</b> Ve hře <b>Písmenka</b> má každé velké tiskací písmeno krátký příběh, proč vypadá tak, jak vypadá. Obtahuje se podle čísel ve správném pořadí tahů. Samohlásky jsou červeně, souhlásky modře.</li>
-      <li><b>Spojování.</b> Souhláska se „chytí za ruku“ se samohláskou: protáhnout <i>mmm</i>, přidat <i>a</i> a vznikne <i>ma</i>. Neříkat „em-á“. To je hra <b>Skládám slabiky</b>.</li>
-      <li><b>Slova.</b> Ze slabik se skládají slova: MÁ-MA, SO-VA. Slabiky jsou odlišené barvou jako ve slabikáři. To je hra <b>Čtu slova</b>.</li>
+      <li><b>Jak se čte</b> je krátká obrázková pohádka o tom, proč a jak se písmenka spojují. Projděte ji spolu jako první.</li>
+      <li><b>Klouzačka</b> je spojování: souhláska jede prstem po klouzačce k samohlásce a cestou „zpívá“ (<i>mmmá → ma</i>). Písmenka, která zpívat neumí (P, T, D, K, B), na samohlásku skočí. Ať u toho nahlas zpívá s ní a neříká „em-á“.</li>
+      <li><b>Žebříček</b> je samostatné čtení slabik jako ve slabikáři. Dcera slabiku přečte nahlas a druhým klepnutím si poslechne, jestli ji přečetla dobře. Hra ji neposlouchá, takže je dobré sedět u toho.</li>
+      <li><b>Vláček</b> skládá slova po slabikách. Každý vagónek je slabika, na konci je řeknou rychle za sebou a dcera najde obrázek.</li>
+      <li>Když dcera neví, jak se hraje, ať klepne na <b>sovičku</b> s otazníkem. Sovička to vysvětlí a ukáže.</li>
       <li>Škola může učit podle slabikáře (analyticko-syntetická metoda), nebo genetickou metodou (čte se po hláskách, nejdřív jen velká tiskací písmena). Zeptejte se paní učitelky, kterou metodu používají a jaká písmena právě berou.</li>
       <li>Obtížnost: <b>●</b> zvládne předškolák, <b>●●</b> je začátek 1. třídy, <b>●●●</b> přijde zhruba od pololetí.</li>
     </ul>
@@ -324,7 +384,7 @@ const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).
 const stage = $('#stage');
 
 /* ---------- settings ---------- */
-const DEF = { sound: true, text: true, rate: 0.8, pitch: 1, voiceURI: '', stars: 0, levels: {}, ink: 'blue', penMode: 'auto' };
+const DEF = { sound: true, text: true, rate: 0.8, pitch: 1, voiceURI: '', stars: 0, levels: {}, ink: 'blue', penMode: 'auto', expressive: true };
 const S = (() => { try { return { ...DEF, ...JSON.parse(localStorage.getItem('sovicka') || '{}') }; } catch (e) { return { ...DEF }; } })();
 S.rate = S.rate <= 0.7 ? 0.65 : S.rate <= 0.85 ? 0.8 : 0.95;
 const save = () => { try { localStorage.setItem('sovicka', JSON.stringify(S)); } catch (e) {} };
@@ -356,18 +416,38 @@ function loadVoices() {
   voiceStatus(); fillVoiceSel();
 }
 if (V.ok) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; setTimeout(() => { if (V.cs === null) { V.cs = false; voiceStatus(); } }, 2500); }
+// Web speech has no SSML, so intonation is shaped by hand: each sentence and each *emphasised* word
+// becomes its own utterance with its own pitch and pace (questions rise, praise is bright, key words slow down).
+const plain = t => String(t).replace(/\*/g, '');
+function prosody(text) {
+  const out = [];
+  (text.match(/[^.!?]+[.!?]*/g) || [text]).forEach(sent => {
+    const end = sent.trim().slice(-1), sp = end === '?' ? 1.12 : end === '!' ? 1.22 : 1, sr = end === '!' ? 1.06 : 1;
+    sent.split(/\*([^*]+)\*/).forEach((chunk, j) => {
+      chunk = chunk.trim();
+      if (!chunk) return;
+      if (/^[.,!?]+$/.test(chunk)) { if (out.length) out[out.length - 1].t += chunk; return; }
+      out.push(j % 2 ? { t: chunk, p: sp * 1.15, r: sr * .88 } : { t: chunk, p: sp, r: sr });
+    });
+  });
+  return out.length ? out : [{ t: plain(text), p: 1, r: 1 }];
+}
 function say(text, rate) {
   return new Promise(res => {
     if (!S.sound || !V.ok || !text) return res();
     try {
       speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'cs-CZ'; if (V.voice) u.voice = V.voice;
-      u.rate = rate || S.rate; u.pitch = S.pitch || 1;
+      const base = rate || S.rate, bp = S.pitch || 1;
+      const parts = S.expressive ? prosody(text) : [{ t: plain(text), p: 1, r: 1 }];
       let done = false; const fin = () => { if (!done) { done = true; res(); } };
-      u.onend = fin; u.onerror = fin;
-      speechSynthesis.speak(u);
-      setTimeout(fin, 1800 + text.length * 110 / u.rate);
+      parts.forEach((pt, i) => {
+        const u = new SpeechSynthesisUtterance(pt.t);
+        u.lang = 'cs-CZ'; if (V.voice) u.voice = V.voice;
+        u.rate = Math.min(1.6, base * pt.r); u.pitch = Math.min(2, bp * pt.p);
+        if (i === parts.length - 1) { u.onend = fin; u.onerror = fin; }
+        speechSynthesis.speak(u);
+      });
+      setTimeout(fin, 1800 + plain(text).length * 110 / base + parts.length * 400);
     } catch (e) { res(); }
   });
 }
@@ -430,6 +510,47 @@ function inkLine(c, a, color) {
   }
 }
 
+/* ---------- icons ---------- */
+const svgI = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const ICON = {
+  check: svgI('<path d="M5 12.5l4.5 4.5L19 7"/>'),
+  undo: svgI('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
+  next: svgI('<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>'),
+  prev: svgI('<path d="M19 12H5"/><path d="m11 6-6 6 6 6"/>'),
+  ear: svgI('<path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/>')
+};
+
+/* ---------- slide (klouzačka): consonant rides down to the vowel ---------- */
+const SL = { s: { x: 17, y: 30 }, e: { x: 66, y: 69 }, vx: 83 };
+function slideScene(c, v) {
+  const rungs = [54, 62, 70, 78].map(y => `M4 ${y}H12`).join('');
+  return `<div class="slide-scene">
+    <svg class="ramp" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 85.5H100" class="floor-l"/>
+      <path d="M4 47V85M12 47V85${rungs}" class="wood"/>
+      <path d="M1 46.5H18L60 82Q63 85 68 85H76" class="slide-l"/>
+    </svg>
+    <div class="ltile con ${LONG[c] ? '' : 'stop'}" style="left:${SL.s.x}%;top:${SL.s.y}%">${c}</div>
+    <div class="ltile vow" style="left:${SL.vx}%;top:${SL.e.y}%">${v}</div>
+  </div>`;
+}
+// sound: 'all' = sing on the way + syllable at the end, 'end' = syllable only, false = silent
+async function slideDemo(el, c, v, dur, sound) {
+  const tile = el.querySelector('.ltile.con'), vt = el.querySelector('.ltile.vow'); if (!tile) return;
+  const sing = !!LONG[c], from = { left: tile.style.left, top: tile.style.top }, to = { left: SL.e.x + '%', top: SL.e.y + '%' };
+  const kf = sing ? [from, to] : [from, { left: (SL.s.x + SL.e.x) / 2 + '%', top: '4%' }, to];
+  if (sing && sound === 'all') say(LONG[c] + LONG[c].slice(-1) + v.toLowerCase(), .5);
+  try { await tile.animate(kf, { duration: dur, easing: sing ? 'ease-in' : 'ease-in-out' }).finished; } catch (e) {}
+  tile.style.left = to.left; tile.style.top = to.top;
+  tile.classList.add('joined'); vt.classList.add('joined'); sfx.tap();
+  if (sound) await say((c + v).toLowerCase(), .7);
+}
+function resetSlide(el) {
+  const tile = el.querySelector('.ltile.con');
+  tile.classList.remove('joined'); el.querySelector('.ltile.vow').classList.remove('joined');
+  tile.style.left = SL.s.x + '%'; tile.style.top = SL.s.y + '%';
+}
+
 /* ---------- engine ---------- */
 let A = null;
 function setStars(bump) {
@@ -442,7 +563,7 @@ function toast(t) {
 }
 function setPrompt(text, speak = true, shown) {
   A.prompt = text;
-  $('#prompt').textContent = S.text ? (shown || text) : '';
+  $('#prompt').textContent = S.text ? plain(shown || text) : '';
   if (speak) say(text);
 }
 function setPict(html) { const p = $('#pict'); p.innerHTML = html || ''; p.hidden = !html; }
@@ -464,7 +585,9 @@ function start(key) {
   $('#title').textContent = def.name;
   $('#homeBtn').hidden = false; $('#hearBtn').hidden = false; $('#hintBtn').hidden = !def.hint;
   $('#gameHead').hidden = false;
-  levels(); syncSpeed(); task();
+  levels(); $('#levels').hidden = !!def.noLevels; syncSpeed(); task();
+  S.seen = S.seen || {};
+  if (def.intro && !S.seen[key]) { S.seen[key] = 1; save(); const me = A; setTimeout(() => { if (A === me) def.intro(); }, 60); }
 }
 function task() { if (A.cleanup) { A.cleanup(); A.cleanup = null; } A.errors = 0; setPict(''); dots(); A.def.next(); }
 async function success() {
@@ -505,7 +628,7 @@ function celebrate() {
   sfx.win();
   $('#winText').textContent = `Máš ${S.stars} ${S.stars === 1 ? 'hvězdičku' : S.stars < 5 ? 'hvězdičky' : 'hvězdiček'}.`;
   $('#winBox').hidden = false;
-  say('Hotovo! Jsi šikulka.');
+  say('Hotovo! Jsi *šikulka*!');
   confetti();
 }
 function confetti() {
@@ -524,13 +647,14 @@ function confetti() {
 $('#againBtn').onclick = () => { $('#winBox').hidden = true; start(A.key); };
 $('#winHome').onclick = home;
 $('#homeBtn').onclick = home;
-$('#hearBtn').onclick = () => { if (!A) return; if (voiceMissing() && !['first', 'blend'].includes(A.key)) { $('#prompt').textContent = A.prompt; A.def.hint && A.def.hint(false); } (A.def.replay || (() => say(A.prompt)))(); };
+$('#hearBtn').onclick = () => { if (!A) return; if (voiceMissing() && !['first', 'blend'].includes(A.key)) { $('#prompt').textContent = plain(A.prompt); A.def.hint && A.def.hint(false); } (A.def.replay || (() => say(A.prompt)))(); };
+$('#owlBtn').onclick = () => { if (!A) return; A.def.intro ? A.def.intro() : say(A.prompt); };
 $('#hintBtn').onclick = () => A && A.def.hint && A.def.hint(false);
 
 /* ---------- parents ---------- */
 const NUM = ['rate', 'pitch'], STR = ['penMode'];
 const segVal = (k, v) => NUM.includes(k) ? +v : STR.includes(k) ? v : v === '1';
-const HELLO = 'Ahoj, já jsem sovička. Budeme si spolu hrát.';
+const HELLO = 'Ahoj! Já jsem *sovička*. Budeme si spolu hrát. Půjdeš si hrát se mnou?';
 function syncSpeed() { document.querySelectorAll('#speed button').forEach(b => b.classList.toggle('on', +b.dataset.r === S.rate)); }
 $('#speed').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
@@ -552,7 +676,7 @@ document.querySelectorAll('.seg').forEach(seg => seg.addEventListener('click', e
   const b = e.target.closest('button'); if (!b) return;
   const k = seg.dataset.key; S[k] = segVal(k, b.dataset.v);
   save(); syncSeg(); syncSpeed();
-  if (NUM.includes(k)) say(HELLO);
+  if (NUM.includes(k) || k === 'expressive') say(HELLO);
 }));
 function openParents() { syncSeg(); voiceStatus(); fillVoiceSel(); $('#parentBox').hidden = false; }
 $('#closeParents').onclick = () => $('#parentBox').hidden = true;
@@ -652,7 +776,7 @@ const ACTS = {
     next() {
       const n = A.level, pool = shuffle(ITEMS).slice(0, [4, 6, 8][n - 1]), targets = pool.slice(0, n);
       const a = targets.map(x => x.a);
-      const text = n === 1 ? `Najdi ${a[0]}.` : n === 2 ? `Najdi ${a[0]} a potom ${a[1]}.` : `Najdi ${a[0]}, potom ${a[1]} a nakonec ${a[2]}.`;
+      const text = n === 1 ? `Najdi *${a[0]}*.` : n === 2 ? `Najdi *${a[0]}* a potom *${a[1]}*.` : `Najdi *${a[0]}*, potom *${a[1]}* a nakonec *${a[2]}*.`;
       A.t = { pool: shuffle(pool), targets, step: 0 };
       stage.innerHTML = `<div class="slots">${targets.map((_, i) => `<div class="slot" data-n="${i + 1}"></div>`).join('')}</div>
         <div class="pics" style="grid-template-columns:repeat(${n === 3 ? 4 : n === 2 ? 3 : 2},minmax(0,1fr));width:min(100%,${n === 1 ? 380 : 560}px)">
@@ -686,7 +810,7 @@ const ACTS = {
       else board = shuffle(SHAPES).slice(0, L === 1 ? 4 : 5).map(sh => ({ sh, big: true }));
       const nT = L === 1 ? 1 : 2, cols = shuffle(palette);
       const targets = shuffle(board.map((_, i) => i)).slice(0, nT).map((i, k) => ({ i, c: cols[k], done: false }));
-      const phrase = t => { const b = board[t.i]; return (L === 3 ? ADJ[b.sh.g][b.big ? 0 : 1] + ' ' : '') + b.sh.acc + ' ' + t.c.adv; };
+      const phrase = t => { const b = board[t.i]; return '*' + (L === 3 ? ADJ[b.sh.g][b.big ? 0 : 1] + ' ' : '') + b.sh.acc + '* *' + t.c.adv + '*'; };
       const text = 'Vybarvi ' + targets.map(phrase).join(' a ') + '.';
       A.t = { board, targets, sel: null, fills: {}, palette };
       this.draw();
@@ -733,14 +857,14 @@ const ACTS = {
       stage.innerHTML = `<div class="word-card"><div class="big" aria-hidden="true">${w[0]}</div>${S.text ? `<div class="w">${w[1]}</div>` : ''}</div>
         <div class="claps" id="claps"><span class="empty">Tleskni pro každou slabiku</span></div>
         <div class="row" style="align-items:center">
-          <button class="btn" id="clr" aria-label="Smazat">↺</button>
+          <button class="roundbtn soft" id="clr" aria-label="Smazat">${ICON.undo}</button>
           <button class="clapBtn" id="clap" aria-label="Tlesk">👏</button>
-          <button class="btn primary" id="chk">Hotovo</button>
+          <button class="roundbtn go" id="chk" aria-label="Hotovo, zkontrolovat">${ICON.check}</button>
         </div>`;
       $('#clap').onclick = () => this.clap();
       $('#clr').onclick = () => { A.t.n = 0; this.drawClaps(); };
       $('#chk').onclick = () => this.check();
-      setPrompt('Vytleskej slovo: ' + w[1] + '.');
+      setPrompt('Vytleskej slovo: *' + w[1] + '*. Pak klepni na fajfku.');
     },
     replay() { say(A.t.w[1]); },
     clap() { if (A.busy || A.t.n >= 5) return; sfx.clap(); A.t.n++; this.drawClaps(); },
@@ -784,7 +908,7 @@ const ACTS = {
         <div class="pics" style="grid-template-columns:repeat(${steps.length},minmax(0,1fr));width:min(100%,${steps.length * 140}px)">
         ${A.t.cards.map((c, k) => `<button class="pic-btn${A.t.ready ? '' : ' card-back'}" data-k="${k}" aria-label="obrázek">${A.t.ready ? c.s[0] : ''}</button>`).join('')}</div>`;
       stage.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
-      if (A.t.ready) setPrompt('Seřaď obrázky. Co bylo první?');
+      if (A.t.ready) setPrompt('Seřaď obrázky. Co bylo *první*?');
       else this.tell();
     },
     async tell() {
@@ -825,7 +949,7 @@ const ACTS = {
     next() {
       const ids = TR_LEVELS[A.level - 1], pat = TR[ids[A.done % ids.length]], pair = pick(PAIRS);
       stage.innerHTML = `<div class="trace"><div class="trace-wrap"><canvas id="cv"></canvas></div>
-        <div class="tools">${crayonRow(COLORS, S.ink, true)}<button class="btn" id="wipe">Smazat</button></div></div>`;
+        <div class="tools">${crayonRow(COLORS, S.ink, true)}<button class="roundbtn soft" id="wipe" aria-label="Smazat">${ICON.undo}</button></div></div>`;
       const cv = $('#cv');
       const t = A.t = { pat, pair, pts: resample(pat.fn(), 6), ink: [], cur: null, prog: 0, band: [48, 36, 26][A.level - 1], cv, ctx: cv.getContext('2d'), ghost: -1 };
       t.tol = t.band / 2 + 10;
@@ -921,7 +1045,7 @@ const ACTS = {
 
 /* ---------- home groups ---------- */
 const GROUPS = [
-  { t: 'Písmenka a čtení', d: 'předškoláci a 1. třída', k: ['letters', 'first', 'blend', 'read'] },
+  { t: 'Čtení a písmenka', d: 'předškoláci a 1. třída', k: ['howto', 'blend', 'ladder', 'read', 'letters', 'first'] },
   { t: 'Poslech a řeč', d: 'pokyny, slova, slabiky', k: ['listen', 'color', 'where', 'syl', 'story', 'simon'] },
   { t: 'Oči', d: 'sledování, hledání, rozlišování', k: ['catch', 'same', 'search', 'pexeso'] },
   { t: 'Ruka a tělo', d: 'grafomotorika, bludiště, pohyb', k: ['trace', 'maze', 'moves'] }
@@ -1008,11 +1132,13 @@ const LONG = { M: 'mmm', L: 'lll', S: 'sss', V: 'vvv', Z: 'zzz', N: 'nnn', J: 'j
 const FIRST = [['🐶', 'pes'], ['🐭', 'myš'], ['🦉', 'sova'], ['🦁', 'lev'], ['🚗', 'auto'], ['🐑', 'ovce'], ['👂', 'ucho'], ['🐟', 'ryba'], ['🐱', 'kočka'], ['🏠', 'dům'], ['🚂', 'vlak'], ['🦓', 'zebra'], ['🐍', 'had'], ['🐯', 'tygr'], ['👃', 'nos'], ['🍓', 'jahoda'], ['🍌', 'banán'], ['🍋', 'citron'], ['🐌', 'šnek'], ['🐸', 'žába'], ['🧢', 'čepice'], ['🍍', 'ananas'], ['🎈', 'balónek'], ['🐘', 'slon'], ['🦊', 'liška'], ['🌳', 'strom'], ['🍐', 'hruška'], ['☂️', 'deštník'], ['🐝', 'včela'], ['🥣', 'miska']];
 const NO_END = ['had', 'lev', 'dům'];
 const WORDS = [
-  [['MÁ', 'MA'], '👩'], [['TÁ', 'TA'], '👨'], [['SO', 'VA'], '🦉'], [['O', 'KO'], '👁️'], [['U', 'CHO'], '👂'], [['MÍ', 'SA'], '🥣'],
-  [['VO', 'DA'], '💧'], [['KO', 'LO'], '🚲'], [['NO', 'HA'], '🦵'], [['RU', 'KA'], '✋'], [['KO', 'ZA'], '🐐'], [['RY', 'BA'], '🐟'], [['DU', 'HA'], '🌈'], [['LU', 'PA'], '🔍'],
-  [['PES'], '🐶'], [['LES'], '🌲'], [['NOS'], '👃'], [['SÝR'], '🧀'], [['DŮM'], '🏠'], [['VLAK'], '🚂'], [['LEV'], '🦁'], [['LUK'], '🏹'], [['MÍČ'], '⚽'], [['KLÍČ'], '🔑'], [['STAN'], '⛺'],
-  [['JA', 'HO', 'DA'], '🍓'], [['RA', 'KE', 'TA'], '🚀'], [['KY', 'TA', 'RA'], '🎸'], [['TE', 'LE', 'FON'], '☎️'], [['MO', 'TÝ', 'LEK'], '🦋'], [['BE', 'RUŠ', 'KA'], '🐞'], [['ŽÁ', 'BA'], '🐸'], [['ČE', 'PI', 'CE'], '🧢'], [['BA', 'NÁN'], '🍌']
-].map(([s, e]) => ({ s, e, w: s.join(''), lv: s.length === 1 ? 2 : s.length === 3 || s.some(x => /[ČŠŽŘB]/.test(x)) ? 3 : 1 }));
+  [1, ['SO', 'VA'], '🦉'], [1, ['O', 'KO'], '👁️'], [1, ['VO', 'DA'], '💧'], [1, ['KO', 'LO'], '🚲'], [1, ['NO', 'HA'], '🦵'], [1, ['RU', 'KA'], '✋'],
+  [1, ['KO', 'ZA'], '🐐'], [1, ['RY', 'BA'], '🐟'], [1, ['DU', 'HA'], '🌈'], [1, ['LU', 'PA'], '🔍'], [1, ['MA', 'SO'], '🥩'], [1, ['PI', 'LA'], '🪚'],
+  [2, ['MÁ', 'MA'], '👩'], [2, ['TÁ', 'TA'], '👨'], [2, ['MÍ', 'SA'], '🥣'], [2, ['ŽÁ', 'BA'], '🐸'], [2, ['U', 'CHO'], '👂'], [2, ['JA', 'HO', 'DA'], '🍓'],
+  [2, ['RA', 'KE', 'TA'], '🚀'], [2, ['KY', 'TA', 'RA'], '🎸'], [2, ['ČE', 'PI', 'CE'], '🧢'],
+  [3, ['PES'], '🐶'], [3, ['LES'], '🌲'], [3, ['NOS'], '👃'], [3, ['SÝR'], '🧀'], [3, ['DŮM'], '🏠'], [3, ['VLAK'], '🚂'], [3, ['LUK'], '🏹'], [3, ['MÍČ'], '⚽'],
+  [3, ['KLÍČ'], '🔑'], [3, ['STAN'], '⛺'], [3, ['BA', 'NÁN'], '🍌'], [3, ['TE', 'LE', 'FON'], '☎️'], [3, ['MO', 'TÝ', 'LEK'], '🦋'], [3, ['BE', 'RUŠ', 'KA'], '🐞']
+].map(([lv, s, e]) => ({ lv, s, e, w: s.join('') }));
 const sylHtml = s => s.map((x, i) => `<span style="color:var(${i % 2 ? '--blue' : '--red'})">${x}</span>`).join('');
 
 /* ---------- eyes ---------- */
@@ -1086,7 +1212,7 @@ Object.assign(ACTS, {
         this.draw();
       };
       cv.onpointerup = cv.onpointercancel = e => { if (e.pointerId === t.pid) t.cur = null; };
-      const speech = `Písmenko ${L.l === 'Ch' ? 'chá' : L.l}. ${L.st} ${cap(L.w)} začíná na ${L.l === 'Ch' ? 'ch' : L.l}. Teď ho obtáhni podle čísel.`;
+      const speech = `Tohle je písmenko *${L.l === 'Ch' ? 'chá' : L.l}*. ${L.st} *${cap(L.w)}* začíná na ${L.l === 'Ch' ? 'ch' : L.l}! Teď ho obtáhni podle čísel.`;
       setPrompt(speech, false, 'Dívej se, jak se píše. Pak obtáhni podle čísel.');
       say(speech);
       this.demo();
@@ -1153,7 +1279,7 @@ Object.assign(ACTS, {
         <div class="pics letters-opt" style="grid-template-columns:repeat(${opts.length},minmax(0,1fr));width:min(100%,${opts.length * 130}px)">
         ${opts.map((o, i) => `<button class="pic-btn ${VOWELS.includes(o) ? 'vow' : ''}" data-i="${i}">${o}</button>`).join('')}</div>`;
       stage.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
-      setPrompt(`Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo ${w[1]}?`, true, `Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo? Poslouchej.`);
+      setPrompt(`Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo *${w[1]}*?`, true, `Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo? Poslouchej.`);
     },
     replay() { const t = A.t; say(`${t.w[1]}. ${A.level === 3 ? 'Na konci slyšíš' : 'Na začátku slyšíš'}...`); },
     tap(b) {
@@ -1162,94 +1288,189 @@ Object.assign(ACTS, {
       if (o === t.ans) {
         b.classList.add('hit'); A.busy = true;
         say(`Ano. ${cap(t.w[1])} ${A.level === 3 ? 'končí' : 'začíná'} na ${o}.`).then(() => { A.busy = false; success(); });
-      } else { miss(b); if (A.errors === 1) wait(500).then(() => this.replay()); }
+      } else { miss(b); if (A.errors === 1) wait(500).then(() => { if (A && A.t === t) this.replay(); }); }
     },
     hint() { const t = A.t; pulse(stage.querySelectorAll('.pic-btn')[t.opts.indexOf(t.ans)]); }
   },
 
-  blend: {
-    name: 'Skládám slabiky', pic: '<b style="font-family:var(--display)"><span style="color:var(--blue)">M</span>+<span style="color:var(--red)">A</span></b>', what: 'Písmenka se chytí za ruce', color: '--blue', total: 5,
-    next() {
-      const L = A.level;
-      const C = L === 1 ? ['M', 'L', 'S', 'P'] : ['M', 'L', 'S', 'P', 'T', 'J', 'N', 'V', 'D', 'K'];
-      const Vw = L === 1 ? ['A', 'O', 'U'] : ['A', 'E', 'I', 'O', 'U'];
-      let c, v; do { c = pick(C); v = pick(Vw); } while (v === 'I' && 'DTN'.includes(c));
-      const syl = c + v;
-      const look = { M: 'N', N: 'M', P: 'R', L: 'T', T: 'L', S: 'Z', V: 'N', D: 'P', K: 'N', J: 'L' };
-      const oc = L === 3 && look[c] ? look[c] : pick(C.filter(x => x !== c));
-      const ov = pick(Vw.filter(x => x !== v));
-      const set = new Set([syl, c + ov, oc + v]);
-      if (L > 1) { let x; do { x = pick(C) + pick(Vw); } while (set.has(x) || /[DTN]I/.test(x)); set.add(x); }
-      A.t = { c, v, syl, opts: shuffle([...set]), quiz: L > 1 };
-      if (L === 1) {
-        stage.innerHTML = `<div class="join" id="join"><span class="ltile con">${c}</span><span class="ltile vow">${v}</span></div>
-          <button class="btn primary" id="joinBtn">Spoj je</button><div id="quiz" class="pics letters-opt" hidden></div>`;
-        $('#joinBtn').onclick = () => this.join();
-        setPrompt('Písmenka se chytí za ruce a čtou se spolu. Klepni na Spoj je.', true, 'Písmenka se chytí za ruce. Klepni na Spoj je.');
-      } else {
-        stage.innerHTML = `<div id="quiz" class="pics letters-opt"></div>`;
-        this.quiz();
-      }
-    },
-    async join() {
-      const t = A.t, me = A; if (t.joining) return; t.joining = true;
-      $('#joinBtn').hidden = true;
-      const tiles = stage.querySelectorAll('.ltile');
-      tiles[0].classList.add('lit'); await say(LONG[t.c] || t.c, .6); tiles[0].classList.remove('lit');
-      tiles[1].classList.add('lit'); await say(t.v.toLowerCase(), .6); tiles[1].classList.remove('lit');
-      $('#join').classList.add('on'); await wait(500);
-      await say(t.syl.toLowerCase(), .7);
-      if (A !== me || A.t !== t) return;
-      this.quiz();
-    },
-    quiz() {
-      const t = A.t; t.quiz = true;
-      const q = $('#quiz'); q.hidden = false;
-      q.style.gridTemplateColumns = `repeat(${t.opts.length},minmax(0,1fr))`; q.style.width = `min(100%,${t.opts.length * 140}px)`;
-      q.innerHTML = t.opts.map((o, i) => `<button class="pic-btn syl-opt" data-i="${i}"><span><span style="color:var(--blue)">${o[0]}</span><span style="color:var(--red)">${o.slice(1)}</span></span></button>`).join('');
-      q.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
-      setPrompt(`Kde je napsáno ${t.syl.toLowerCase()}?`, true, 'Kde je napsáno, co slyšíš?');
-    },
-    replay() { const t = A.t; if (t.quiz) say(t.syl.toLowerCase()); else say(A.prompt); },
-    tap(b) {
-      const t = A.t; if (A.busy) return;
-      if (t.opts[+b.dataset.i] === t.syl) { b.classList.add('hit'); success(); }
-      else { miss(b); if (A.errors === 1) wait(500).then(() => say(t.syl.toLowerCase())); }
-    },
-    hint() {
-      const t = A.t;
-      if (!t.quiz) return pulse($('#joinBtn'));
-      pulse(stage.querySelectorAll('#quiz .pic-btn')[t.opts.indexOf(t.syl)]);
-      say(`${LONG[t.c] || ''} ${t.v.toLowerCase()}. ${t.syl.toLowerCase()}.`, .6);
+  /* ===== Čtení: lekce, klouzačka, žebříček, vláček ===== */
+  howto: {
+    name: 'Jak se čte', pic: '🦉📖', what: 'Začni tady', color: '--purple', total: 1, noLevels: true,
+    steps: [
+      { say: 'Ahoj! Ukážu ti, jak se čte. Je to jako *kouzlo*. A ty se ho naučíš!', html: () => `<div class="lesson-pic">🦉📖✨</div>` },
+      { say: 'Každé písmenko má svůj *zvuk*. Písmenko *M* zní mmm. Písmenko *A* zní ááá. Klepni na ně a poslechni si je.',
+        html: () => `<div class="row" style="gap:28px"><button class="ltile con big-t" data-snd="mmm">M</button><button class="ltile vow big-t" data-snd="á">A</button></div>`,
+        init: el => el.querySelectorAll('[data-snd]').forEach(b => b.onclick = () => { b.classList.remove('lit'); void b.offsetWidth; b.classList.add('lit'); say(b.dataset.snd, .6); setTimeout(() => b.classList.remove('lit'), 900); }) },
+      { say: 'Když chceme číst, písmenko *M* se rozjede po klouzačce k písmenku *A*. Cestou zpívá: mmmmá.',
+        html: () => slideScene('M', 'A'), after: el => slideDemo(el, 'M', 'A', 2600, 'all') },
+      { say: 'Když ty dva zvuky řekneš hned za sebou, vyjde *slabika*. Mmm á, *ma*. To je čtení!',
+        html: () => `<div class="joined-big"><span class="con">M</span><span class="vow">A</span></div>`, after: () => say('ma', .7) },
+      { say: 'Některá písmenka zpívat neumí. Třeba *P*. Zkus říct ppp. Nejde to, viď? Proto P rovnou *skočí* k A a řekne *pa*.',
+        html: () => slideScene('P', 'A'), after: el => slideDemo(el, 'P', 'A', 900, 'all') },
+      { say: 'Vidíš tu *čárku* nad písmenkem? Čárka znamená: zpívej *dlouho*. Ma je krátce. Má je dlouze.',
+        html: () => `<div class="row" style="gap:24px"><div class="joined-big"><span class="con">M</span><span class="vow">A</span></div><div class="joined-big"><span class="con">M</span><span class="vow">Á</span></div></div>` },
+      { say: 'Ze slabik se skládají *slova*. Má a ma. Když to řekneš rychle, vyjde *máma*!',
+        html: () => `<div class="lesson-word">${sylHtml(['MÁ', 'MA'])}</div><div class="lesson-pic">👩</div>` },
+      { say: 'Teď to zkus *sama*! Klepni na klouzačku a jdeme na to.',
+        html: () => `<button class="roundbtn go huge" id="toSlide" aria-label="Na klouzačku">🛝</button>`,
+        init: el => { el.querySelector('#toSlide').onclick = () => { S.stars++; save(); setStars(true); sfx.ok(); start('blend'); }; } }
+    ],
+    next() { A.t = { i: 0 }; this.show(); },
+    show() {
+      const t = A.t, st = this.steps[t.i], n = this.steps.length;
+      stage.innerHTML = `<div class="lesson">${st.html()}</div>
+        <div class="lesson-nav">
+          <button class="roundbtn soft" id="lPrev" aria-label="Zpět" ${t.i ? '' : 'disabled'}>${ICON.prev}</button>
+          <div class="dots">${this.steps.map((_, j) => `<i class="${j <= t.i ? 'on' : ''}"></i>`).join('')}</div>
+          <button class="roundbtn go" id="lNext" aria-label="Dál" ${t.i < n - 1 ? '' : 'hidden'}>${ICON.next}</button>
+        </div>`;
+      const el = stage.querySelector('.lesson');
+      $('#lPrev').onclick = () => { if (t.i) { t.i--; this.show(); } };
+      $('#lNext').onclick = () => { if (t.i < n - 1) { t.i++; this.show(); } };
+      setPrompt(st.say, false);
+      const me = A, tok = t.tok = (t.tok || 0) + 1, live = () => A === me && A.t === t && t.tok === tok;
+      if (st.init) st.init(el);
+      say(st.say).then(async () => {
+        if (live() && st.after) await st.after(el);
+        if (live()) pulse($('#lNext') || $('#toSlide'));
+      });
     }
   },
 
+  blend: {
+    name: 'Klouzačka', pic: '🛝', what: 'Písmenka jedou k sobě', color: '--blue', total: 5,
+    next() {
+      const L = A.level;
+      const SING = ['M', 'L', 'S', 'V', 'J', 'N', 'Z', 'R', 'Š', 'Ž'], STOP = ['P', 'T', 'D', 'K', 'B'];
+      const C = L === 1 ? SING : L === 2 ? STOP : [...SING, ...STOP];
+      const Vw = L === 3 ? ['A', 'E', 'I', 'O', 'U', 'Á', 'É', 'Í'] : ['A', 'E', 'I', 'O', 'U'];
+      let c, v; do { c = pick(C); v = pick(Vw); } while (/[IÍ]/.test(v) && 'DTN'.includes(c) || A.t && A.t.c + A.t.v === c + v);
+      const sing = !!LONG[c];
+      A.t = { c, v, sing, done: false };
+      stage.innerHTML = slideScene(c, v) + `<div class="slide-after" id="after"></div>`;
+      const el = stage.querySelector('.slide-scene'), tile = el.querySelector('.ltile.con');
+      const scene = () => el.getBoundingClientRect();
+      let drag = false, last = 0;
+      const place = k => { tile.style.left = (SL.s.x + (SL.e.x - SL.s.x) * k) + '%'; tile.style.top = (SL.s.y + (SL.e.y - SL.s.y) * k) + '%'; };
+      tile.onpointerdown = e => {
+        e.preventDefault(); if (A.t.done || A.busy) return;
+        if (!sing) { this.finish(el); return; }
+        drag = true; try { tile.setPointerCapture(e.pointerId); } catch (_) {}
+        say(LONG[c] + LONG[c].slice(-1) + v.toLowerCase(), .5);
+      };
+      tile.onpointermove = e => {
+        if (!drag) return;
+        const r = scene(), sx = SL.s.x / 100 * r.width, sy = SL.s.y / 100 * r.height, ex = SL.e.x / 100 * r.width, ey = SL.e.y / 100 * r.height;
+        const px = e.clientX - r.left, py = e.clientY - r.top, dx = ex - sx, dy = ey - sy;
+        const k = Math.max(0, Math.min(1, ((px - sx) * dx + (py - sy) * dy) / (dx * dx + dy * dy)));
+        last = k; place(k);
+        if (k > .9) { drag = false; this.finish(el); }
+      };
+      tile.onpointerup = tile.onpointercancel = () => { drag = false; };
+      setPrompt(sing
+        ? `Posuň *${c}* po klouzačce k *${v}*. Cestou zpívej: ${LONG[c]}${v.toLowerCase()}.`
+        : `*${c}* neumí zpívat. Klepni na něj a skočí rovnou k *${v}*.`, true,
+        sing ? `Posuň ${c} prstem po klouzačce k ${v}. Zpívej s ním.` : `${c} neumí zpívat. Klepni na něj a skočí k ${v}.`);
+    },
+    async finish(el) {
+      const t = A.t, me = A; if (t.done) return; t.done = true;
+      await slideDemo(el, t.c, t.v, t.sing ? 350 : 800, t.sing ? 'end' : 'all');
+      if (A !== me || A.t !== t) return;
+      $('#after').innerHTML = `<button class="roundbtn soft" id="again" aria-label="Ještě jednou poslechnout">${ICON.ear}</button>`;
+      $('#again').onclick = () => say((t.c + t.v).toLowerCase(), .7);
+      success();
+    },
+    async intro() {
+      const t = A.t, el = stage.querySelector('.slide-scene');
+      if (!el || t.done) return;
+      await say(t.sing ? 'Podívej, jak to dělám já.' : 'Podívej se.');
+      await slideDemo(el, t.c, t.v, t.sing ? 2400 : 800, 'all');
+      if (A && A.t === t) { resetSlide(el); say('Teď ty!'); }
+    },
+    hint() { pulse(stage.querySelector('.slide-scene .ltile.con')); }
+  },
+
+  ladder: {
+    name: 'Žebříček', pic: '🪜', what: 'Čtu slabiky sama', color: '--orange', total: 5,
+    next() {
+      const L = A.level;
+      const SING = ['M', 'L', 'S', 'V', 'J', 'N', 'Z', 'R'], STOP = ['P', 'T', 'D', 'K', 'B'];
+      const fix = (c, v) => /[IÍ]/.test(v) && 'DTN'.includes(c) ? c + (v === 'I' ? 'Y' : 'Ý') : c + v;
+      let rungs;
+      if (L < 3) { const c = pick(L === 1 ? SING : STOP); rungs = shuffle(['A', 'E', 'I', 'O', 'U']).map(v => fix(c, v)); }
+      else rungs = Array.from({ length: 5 }, () => fix(pick([...SING, ...STOP]), pick(['A', 'E', 'I', 'O', 'U', 'Á', 'É', 'Í'])));
+      A.t = { rungs, step: 0, armed: false };
+      this.draw();
+      setPrompt('Přečti slabiku *nahlas*. Pak na ni klepni ještě jednou a sovička ti řekne, jestli to bylo dobře.', true, 'Přečti nahlas. Pak klepni znovu a sovička to zopakuje.');
+    },
+    draw() {
+      const t = A.t, n = t.rungs.length;
+      stage.innerHTML = `<div class="ladder">
+        <div class="ladder-top">${t.step >= n ? '🦉' : ''}⭐</div>
+        ${t.rungs.map((s, i) => ({ s, i })).reverse().map(({ s, i }) => `
+          <div class="rung-row"><span class="perch">${i === t.step - 1 && t.step < n ? '🦉' : ''}</span><div class="rung-col">
+          <button class="rung ${i < t.step ? 'done' : ''} ${i === t.step ? 'next' : ''} ${i === t.step && t.armed ? 'armed' : ''}" data-i="${i}"><span class="con">${s[0]}</span><span class="vow">${s.slice(1)}</span>${i === t.step && t.armed ? `<i class="ear">${ICON.ear}</i>` : ''}</button></div></div>`).join('')}
+        <div class="rung-row ground"><span class="perch">${t.step === 0 ? '🦉' : ''}</span><span class="grass"></span></div>
+      </div>`;
+      stage.querySelectorAll('.rung').forEach(b => b.onclick = () => this.tap(+b.dataset.i));
+    },
+    async tap(i) {
+      const t = A.t; if (A.busy || t.reading) return;
+      if (i !== t.step) { pulse(stage.querySelector('.rung.next')); return; }
+      if (!t.armed) { t.armed = true; sfx.tap(); this.draw(); return; }
+      t.reading = true;
+      await say(t.rungs[i].toLowerCase(), .7);
+      t.reading = false; t.armed = false; t.step++; sfx.tap(); this.draw();
+      if (t.step === t.rungs.length) success();
+    },
+    async intro() {
+      await say('Sovička leze po žebříku ke hvězdičce. Na každé příčce je slabika. Klepni na ni a přečti ji nahlas. Pak klepni ještě jednou, sovička ji přečte taky a vyleze o kousek výš.');
+      if (A) pulse(stage.querySelector('.rung.next'));
+    },
+    hint() { const t = A.t; say(t.rungs[t.step].toLowerCase(), .6); }
+  },
+
   read: {
-    name: 'Čtu slova', pic: '<b style="font-family:var(--display)"><span style="color:var(--red)">SO</span><span style="color:var(--blue)">VA</span></b>', what: 'Přečti a najdi obrázek', color: '--green', total: 5,
+    name: 'Vláček', pic: '🚂', what: 'Čtu slova po slabikách', color: '--green', total: 5,
     next() {
       const pool = WORDS.filter(w => w.lv === A.level);
       let w; do { w = pick(pool); } while (A.t && A.t.w === w && pool.length > 1);
-      const opts = shuffle([w, ...shuffle(WORDS.filter(x => x !== w && x.e !== w.e)).slice(0, 2)]);
-      A.t = { w, opts };
-      stage.innerHTML = `<div class="read-word">${sylHtml(w.s)}</div>
-        <div class="pics" style="grid-template-columns:repeat(3,minmax(0,1fr));width:min(100%,460px)">${opts.map((o, i) => `<button class="pic-btn" data-i="${i}" aria-label="obrázek ${i + 1}">${o.e}</button>`).join('')}</div>`;
-      stage.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
-      setPrompt('Přečti slovo. Pak najdi obrázek.');
+      A.t = { w, step: 0 };
+      stage.innerHTML = `<div class="train" id="train"><span class="loco" aria-hidden="true">🚂</span>${w.s.map((s, i) => `<button class="car" data-i="${i}" style="--cc:var(${i % 2 ? '--blue' : '--red'})">${s}</button>`).join('')}</div>
+        <div id="picks"></div>`;
+      stage.querySelectorAll('.car').forEach(b => b.onclick = () => this.tap(+b.dataset.i));
+      pulse(stage.querySelector('.car'));
+      setPrompt('Klepni na vagónky *popořadě* a čti se mnou.');
     },
-    replay() { say('Přečti slovo. Pak najdi obrázek.'); },
-    tap(b) {
+    async tap(i) {
+      const t = A.t, cars = stage.querySelectorAll('.car'); if (A.busy || t.reading) return;
+      if (i !== t.step) { if (t.step < cars.length) pulse(cars[t.step]); return; }
+      t.reading = true; cars[i].classList.add('read');
+      await say(t.w.s[i].toLowerCase(), .7);
+      t.reading = false; t.step++;
+      if (t.step < cars.length) { pulse(cars[t.step]); return; }
+      const me = A;
+      $('#train').classList.add('merged');
+      await wait(500);
+      await say('Teď rychle za sebou: *' + t.w.w.toLowerCase() + '*!');
+      if (A !== me || A.t !== t) return;
+      $('#train').classList.add('go');
+      const opts = shuffle([t.w, ...shuffle(WORDS.filter(x => x !== t.w && x.e !== t.w.e)).slice(0, 2)]);
+      t.opts = opts;
+      $('#picks').innerHTML = `<div class="pics" style="grid-template-columns:repeat(3,minmax(0,1fr));width:min(100%,460px)">${opts.map((o, j) => `<button class="pic-btn" data-j="${j}" aria-label="obrázek ${j + 1}">${o.e}</button>`).join('')}</div>`;
+      $('#picks').querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.pickPic(b));
+      setPrompt('Co jsi přečetla? Najdi obrázek.');
+    },
+    pickPic(b) {
       const t = A.t; if (A.busy) return;
-      if (t.opts[+b.dataset.i] === t.w) {
-        b.classList.add('hit'); A.busy = true;
-        (async () => { for (const s of t.w.s) { await say(s.toLowerCase(), .65); } await say(t.w.w.toLowerCase()); A.busy = false; success(); })();
-      } else miss(b);
+      if (t.opts[+b.dataset.j] === t.w) { b.classList.add('hit'); success(); }
+      else { miss(b); if (A.errors === 1) wait(400).then(() => { if (A && A.t === t) say(t.w.w.toLowerCase()); }); }
     },
-    async hint() {
-      const t = A.t, el = stage.querySelector('.read-word'); if (t.reading) return; t.reading = true;
-      const spans = el.querySelectorAll('span');
-      for (let i = 0; i < spans.length; i++) { spans[i].classList.add('lit'); await say(t.w.s[i].toLowerCase(), .6); spans[i].classList.remove('lit'); }
-      t.reading = false;
-    }
+    async intro() {
+      await say('Slova jezdí ve vláčku. Každý vagónek je jedna *slabika*. Klepni na vagónky popořadě a čti se mnou. Na konci je řekneme rychle za sebou a vyjde slovo.');
+      const t = A && A.t; if (t && t.step < t.w.s.length) pulse(stage.querySelectorAll('.car')[t.step]);
+    },
+    hint() { const t = A.t; if (t.opts) pulse($('#picks').querySelectorAll('.pic-btn')[t.opts.indexOf(t.w)]); else pulse(stage.querySelectorAll('.car')[t.step]); }
   },
 
   /* ===== Poslech a řeč ===== */
@@ -1263,7 +1484,7 @@ Object.assign(ACTS, {
       A.t = { opts, target };
       stage.innerHTML = `<div class="scenes" style="${set.length === 3 ? 'grid-template-columns:repeat(3,minmax(0,1fr));width:min(100%,620px)' : ''}">${opts.map((o, i) => `<button class="scene" data-i="${i}" aria-label="obrázek ${i + 1}">${sceneHtml(obj, o.pos, an[0])}</button>`).join('')}</div>`;
       stage.querySelectorAll('.scene').forEach(b => b.onclick = () => this.tap(b));
-      setPrompt(`${cap(an[1])} je ${OBJ[obj][target]}. Najdi ten obrázek.`);
+      setPrompt(`${cap(an[1])} je *${OBJ[obj][target]}*. Najdi ten obrázek.`);
       if (voiceMissing()) this.hint();
     },
     tap(b) {
@@ -1460,7 +1681,7 @@ Object.assign(ACTS, {
       A.t = { m, ready: false };
       const side = m[2] ? `<span class="side" style="background:var(${m[2] === 'P' ? '--red' : '--blue'})">${m[2] === 'P' ? 'pravá' : 'levá'}</span>` : '';
       stage.innerHTML = `<div class="move-card"><div class="big" aria-hidden="true">${m[0]}${side}</div><div class="txt">${S.text ? m[1] : ''}</div></div>
-        <button class="btn primary" id="mdone">Hotovo ✓</button>`;
+        <button class="roundbtn go huge" id="mdone" aria-label="Hotovo">👍</button>`;
       const t = A.t;
       setTimeout(() => { t.ready = true; }, 1500);
       $('#mdone').onclick = () => { if (t.ready && !A.busy) success(); };
