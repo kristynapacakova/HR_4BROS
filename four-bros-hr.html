@@ -428,6 +428,16 @@ td.head-cell { color: var(--ink-soft); font-size: .88rem; min-width: 220px; }
 .src { display: block; font-size: .75rem; color: var(--muted); margin-top: 2px; }
 .doc-takeaways { margin: 0; padding-left: 18px; }
 .doc-takeaways li + li { margin-top: 4px; }
+.modal-card.wide { width: min(820px, 100%); }
+.pf-people { display: grid; gap: 10px 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.pf-people .field + .field { margin-top: 0; }
+.pf-people .pf-wide { grid-column: 1 / -1; }
+.pf-sec { display: grid; gap: 6px; padding: 12px; border-radius: 12px; background: var(--bg); border: 2px dashed transparent; }
+.pf-sec.over { border-color: var(--aqua-deep); background: var(--aqua-bg); }
+.pf-sec textarea { min-height: 0; }
+.pf-files { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-files:empty { display: none; }
+.pf-x { border: 0; background: none; color: inherit; font: inherit; font-weight: 700; cursor: pointer; padding: 0 0 0 2px; line-height: 1; }
 
 </style>
 <header class="topbar">
@@ -546,7 +556,8 @@ function toast(msg) {
   toastTimer = setTimeout(() => (t.hidden = true), 4200);
 }
 
-function openModal(html) {
+function openModal(html, size = "") {
+  $("#modal .modal-card").classList.toggle("wide", size === "wide");
   $("#modal-body").innerHTML = html;
   $("#modal").hidden = false;
   setTimeout(() => $("#modal-body input, #modal-body textarea, #modal-body button")?.focus(), 0);
@@ -846,28 +857,6 @@ async function addFiles(posId, files) {
     }
   }
   if (ok) toast(`${ok} ${plural(ok, "profil založen", "profily založeny", "profilů založeno")}` + (state.aiReady ? " – teď je můžeš vyhodnotit." : "."));
-}
-
-/** Nahrání dalších dokumentů do existujícího profilu. */
-async function addDocsToCandidate(c, files, kind) {
-  const list = [...files];
-  state.extracting += list.length;
-  render();
-  let ok = 0;
-  for (const f of list) {
-    try {
-      const { text, note } = await fileToDocText(f, kind);
-      if (!text && note) toast(`${f.name}: ${note}`);
-      saveDoc({ id: uid(), candidateId: c.id, kind, name: f.name, text, addedAt: new Date().toISOString() });
-      ok++;
-    } catch (err) {
-      toast(err?.message || `${f.name}: soubor se nepodařilo přečíst.`);
-    } finally {
-      state.extracting--;
-      render();
-    }
-  }
-  if (ok) toast(`${ok} ${plural(ok, "dokument přidán", "dokumenty přidány", "dokumentů přidáno")}` + (findCand(c.id)?.analysis ? " – vyhodnoť profil znovu, ať se započítají." : "."));
 }
 
 function newCandidate(positionId, extra = {}) {
@@ -1229,10 +1218,10 @@ function viewPosition(id) {
 
     <div class="dropzone" id="drop" style="margin-bottom:16px">
       <div class="row" style="justify-content:center;margin-bottom:10px">
-        <button class="btn" data-act="add-manual">+ Nový profil uchazeče</button>
+        <button class="btn" data-act="add-manual">+ Nový uchazeč</button>
         <button class="btn secondary" data-act="pick">Rychlé nahrání CV</button>
       </div>
-      <p class="small" style="margin:0"><b>Profil</b> = člověk, ke kterému nahraješ víc dokumentů (CV, dopis, portfolio, poznámky z hovoru) a Claude je vyhodnotí dohromady.<br><b>Rychlé nahrání</b> = přetáhni sem víc CV najednou, každý soubor založí vlastní profil. Další dokumenty k nim můžeš přidat později.</p>
+      <p class="small" style="margin:0"><b>Nový uchazeč</b> otevře jeden formulář na všechno – CV, dopis, portfolio, tvoje poznámky – a Claude to vyhodnotí dohromady.<br><b>Rychlé nahrání</b>: přetáhni sem víc CV najednou, každý soubor založí vlastního uchazeče.</p>
       ${state.extracting ? `<p class="small row" style="justify-content:center;margin:10px 0 0"><span class="spinner"></span> Čtu ${state.extracting} ${plural(state.extracting, "soubor", "soubory", "souborů")}…</p>` : ""}
     </div>
 
@@ -1364,22 +1353,11 @@ function docsChangedSince(c) {
 
 function docsCard(c) {
   const docs = docsOf(c.id);
-  const k = state.docKind;
   return `
     <div class="card stack" style="margin-bottom:16px">
       <div class="row between"><h2 style="margin:0">Dokumenty profilu <span class="muted">(${docs.length})</span></h2></div>
       ${c.importNote ? `<div class="banner">${esc(c.importNote)}</div>` : ""}
-      <div class="dropzone" id="doc-drop">
-        <p style="margin:0 0 10px"><b>Přidej, co o člověku máš</b> – CV, motivační dopis, portfolio, ukázky práce, poznámky z telefonátu. Přetáhni soubory sem, nebo je vyber.</p>
-        <div class="row" style="justify-content:center">
-          <label for="doc-kind" style="margin:0">Typ</label>
-          <select id="doc-kind" style="width:auto">${DOC_KINDS.map((x) => `<option value="${x.id}" ${x.id === k ? "selected" : ""}>${x.label}</option>`).join("")}</select>
-          <button class="btn sm" data-act="pick-docs">Vybrat soubory</button>
-          <button class="btn secondary sm" data-act="paste-doc">Vložit text</button>
-        </div>
-        <p class="small muted" style="margin:10px 0 0">${state.imgLimits ? "U portfolia a ukázek práce si Claude prohlédne i náhledy stránek (až 8) a popíše, co na nich je." : "PDF, Word, text. Obrázky a skeny tu teď přečíst nejde – vlož jejich text."}</p>
-        ${state.extracting ? `<p class="small row" style="justify-content:center;margin:10px 0 0"><span class="spinner"></span> Čtu ${state.extracting} ${plural(state.extracting, "soubor", "soubory", "souborů")}…</p>` : ""}
-      </div>
+      <div class="row"><button class="btn" data-act="add-docs">+ Doplnit profil (texty a soubory)</button>${state.extracting ? `<span class="small row"><span class="spinner"></span> Čtu soubory…</span>` : ""}</div>
       ${docs.length ? `<ul class="doc-list">${docs.map((d) => `
         <li class="doc">
           <div class="doc-head">
@@ -1488,39 +1466,129 @@ function positionForm(p) {
   }
 }
 
-function candidateForm(posId, c) {
+/** Jedno okno na celý profil: údaje + všechny dokumenty naráz. U existujícího profilu doplní nové dokumenty. */
+const FORM_SECTIONS = [
+  { kind: "cv", label: "Životopis", hint: "Přilož PDF / Word, nebo vlož text CV.", rows: 4 },
+  { kind: "message", label: "Zpráva / motivační dopis", hint: "Co ti uchazeč napsal – e-mail, dopis, odpovědi z formuláře.", rows: 4 },
+  { kind: "portfolio", label: "Portfolio a ukázky práce", hint: "PDF nebo screenshoty – Claude si prohlédne i náhledy. Případně popiš, co jsi viděla.", rows: 3 },
+  { kind: "call", label: "Moje poznámky (z hovoru, z LinkedInu…)", hint: "Cokoli, co o člověku víš ty.", rows: 3 },
+  { kind: "other", label: "Něco dalšího", hint: "Reference, výsledek úkolu, certifikáty…", rows: 2 },
+];
+
+function profileForm(posId, c) {
   const isNew = !c;
   c = c || newCandidate(posId);
+  const pending = Object.fromEntries(FORM_SECTIONS.map((s) => [s.kind, []]));
   openModal(`
-    <h2>${isNew ? "Nový profil uchazeče" : "Upravit údaje"}</h2>
+    <h2 style="margin-bottom:4px">${isNew ? "Nový uchazeč" : `Doplnit profil – ${esc(c.name)}`}</h2>
+    <p class="muted small" style="margin:0 0 16px">Vyplň, co máš – nic není povinné. Do každé kolonky můžeš vložit text, přiložit soubory, nebo obojí. Soubory můžeš i přetáhnout.</p>
+    <form id="profile-form" class="stack">
+      <div class="pf-people">
+        <div class="field"><label for="k-name">Jméno</label><input id="k-name" value="${isNew ? "" : esc(c.name)}" placeholder="Doplní se z CV"></div>
+        <div class="field"><label for="k-email">E-mail</label><input id="k-email" type="email" value="${esc(c.email)}"></div>
+        <div class="field"><label for="k-phone">Telefon</label><input id="k-phone" value="${esc(c.phone)}"></div>
+        <div class="field"><label for="k-src">Odkud</label><input id="k-src" value="${esc(c.source)}" placeholder="Jobs.cz, LinkedIn…"></div>
+        <div class="field pf-wide"><label for="k-link">Odkaz na portfolio / LinkedIn</label><input id="k-link" value="${esc(c.link)}" placeholder="behance.net/…"></div>
+      </div>
+      ${FORM_SECTIONS.map((s) => `
+        <div class="pf-sec" data-sec="${s.kind}">
+          <div class="row between" style="gap:6px">
+            <label for="pf-${s.kind}" style="margin:0">${s.label}</label>
+            <button type="button" class="btn secondary sm" data-pf-pick="${s.kind}">+ Přiložit soubor</button>
+          </div>
+          <textarea id="pf-${s.kind}" rows="${s.rows}" placeholder="${esc(s.hint)}"></textarea>
+          <div class="pf-files" id="pf-files-${s.kind}"></div>
+        </div>`).join("")}
+      <div id="pf-progress" class="small" hidden></div>
+      <div class="row between" style="margin-top:4px">
+        <label class="row" style="font-weight:500;margin:0">${state.aiReady ? `<input type="checkbox" id="pf-run" style="width:auto" checked> Rovnou vyhodnotit` : ""}</label>
+        <span class="row"><button type="button" class="btn secondary" id="pf-cancel">Zrušit</button><button class="btn" id="pf-save">${isNew ? "Uložit" : "Přidat do profilu"}${state.aiReady ? " a vyhodnotit" : ""}</button></span>
+      </div>
+    </form>`, "wide");
+  const runBox = $("#pf-run");
+  const saveBtn = $("#pf-save");
+  if (runBox) runBox.onchange = () => { saveBtn.textContent = (isNew ? "Uložit" : "Přidat do profilu") + (runBox.checked ? " a vyhodnotit" : ""); };
+  const drawFiles = (kind) => {
+    $(`#pf-files-${kind}`).innerHTML = pending[kind].map((f, i) => `<span class="chip blue">${esc(f.name)} <button type="button" class="pf-x" data-pf-del="${kind}:${i}" aria-label="Odebrat ${esc(f.name)}">×</button></span>`).join("");
+  };
+  const addTo = (kind, files) => { pending[kind].push(...files); drawFiles(kind); };
+  const form = $("#profile-form");
+  form.addEventListener("click", (e) => {
+    const pick = e.target.closest("[data-pf-pick]");
+    if (pick) return pickFiles(ACCEPT, true, (files) => addTo(pick.dataset.pfPick, [...files]));
+    const del = e.target.closest("[data-pf-del]");
+    if (del) { const [k, i] = del.dataset.pfDel.split(":"); pending[k].splice(+i, 1); drawFiles(k); }
+  });
+  $$(".pf-sec", form).forEach((sec) => {
+    ["dragenter", "dragover"].forEach((ev) => sec.addEventListener(ev, (e) => { e.preventDefault(); sec.classList.add("over"); }));
+    ["dragleave", "drop"].forEach((ev) => sec.addEventListener(ev, () => sec.classList.remove("over")));
+    sec.addEventListener("drop", (e) => { e.preventDefault(); if (e.dataTransfer.files.length) addTo(sec.dataset.sec, [...e.dataTransfer.files]); });
+  });
+  $("#pf-cancel").onclick = closeModal;
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const texts = FORM_SECTIONS.map((s) => ({ kind: s.kind, label: s.label, text: tidy($(`#pf-${s.kind}`).value) })).filter((t) => t.text);
+    const files = FORM_SECTIONS.flatMap((s) => pending[s.kind].map((f) => ({ kind: s.kind, file: f })));
+    const name = $("#k-name").value.trim();
+    const contact = { email: $("#k-email").value.trim(), phone: $("#k-phone").value.trim(), source: $("#k-src").value.trim(), link: $("#k-link").value.trim() };
+    if (isNew && !name && !texts.length && !files.length) return toast("Vyplň aspoň jméno, nebo přidej nějaký dokument.");
+    saveBtn.disabled = true;
+    $("#pf-cancel").disabled = true;
+    const prog = $("#pf-progress");
+    prog.hidden = false;
+    const at = new Date().toISOString();
+    const docs = texts.map((t) => ({ id: uid(), candidateId: c.id, kind: t.kind, name: `${t.label.split(" (")[0]} – vložený text`, text: t.text.slice(0, MAX_DOC), addedAt: at }));
+    const notes = [];
+    for (const [i, { kind, file }] of files.entries()) {
+      prog.innerHTML = `<span class="row"><span class="spinner"></span> Čtu soubor ${i + 1} z ${files.length}: ${esc(file.name)}…</span>`;
+      try {
+        const { text, note } = await fileToDocText(file, kind);
+        if (note) notes.push(`${file.name}: ${note}`);
+        docs.push({ id: uid(), candidateId: c.id, kind, name: file.name, text, addedAt: new Date().toISOString() });
+      } catch (err) {
+        notes.push(err?.message || `${file.name}: soubor se nepodařilo přečíst.`);
+      }
+    }
+    const target = isNew ? c : findCand(c.id) || c;
+    if (name) { target.name = name; target.nameAuto = false; }
+    else if (isNew) { const cv = files.find((f) => f.kind === "cv"); if (cv) target.name = nameFromFile(cv.file.name); }
+    Object.assign(target, contact);
+    if (notes.length) target.importNote = notes.join(" ");
+    saveCand(target);
+    docs.forEach(saveDoc);
+    closeModal();
+    go(`#/vyberko-uchazec/${target.id}`);
+    if (notes.length) toast(notes[0]);
+    if (runBox?.checked && hasDocs(target.id)) analyze(target.id).catch(() => {});
+    else if (docs.length) toast(`Uloženo: ${docs.length} ${plural(docs.length, "dokument", "dokumenty", "dokumentů")}.`);
+  };
+}
+
+/** Jen kontaktní údaje. */
+function contactForm(c) {
+  openModal(`
+    <h2>Upravit údaje</h2>
     <form id="cand-form" class="stack">
-      <div class="field"><label for="k-name">Jméno</label><input id="k-name" value="${isNew ? "" : esc(c.name)}" placeholder="Když necháš prázdné, Claude ho vytáhne z CV"></div>
+      <div class="field"><label for="k-name">Jméno</label><input id="k-name" value="${esc(c.name)}"></div>
       <div class="fields-2">
         <div class="field"><label for="k-email">E-mail</label><input id="k-email" type="email" value="${esc(c.email)}"></div>
         <div class="field"><label for="k-phone">Telefon</label><input id="k-phone" value="${esc(c.phone)}"></div>
+        <div class="field"><label for="k-src">Odkud</label><input id="k-src" value="${esc(c.source)}"></div>
+        <div class="field"><label for="k-link">Odkaz na portfolio / LinkedIn</label><input id="k-link" value="${esc(c.link)}"></div>
       </div>
-      <div class="fields-2">
-        <div class="field"><label for="k-src">Odkud přišel/a</label><input id="k-src" value="${esc(c.source)}" placeholder="Jobs.cz, LinkedIn, doporučení…"></div>
-        <div class="field"><label for="k-link">Odkaz na portfolio / LinkedIn</label><input id="k-link" value="${esc(c.link)}" placeholder="behance.net/…"></div>
-      </div>
-      ${isNew ? `<p class="small muted" style="margin:0">Dokumenty (CV, portfolio, dopis…) nahraješ v dalším kroku přímo do profilu.</p>` : ""}
-      <div class="row" style="justify-content:flex-end"><button type="button" class="btn secondary" id="k-cancel">Zrušit</button><button class="btn">${isNew ? "Založit profil" : "Uložit"}</button></div>
+      <div class="row" style="justify-content:flex-end"><button type="button" class="btn secondary" id="k-cancel">Zrušit</button><button class="btn">Uložit</button></div>
     </form>`);
   $("#k-cancel").onclick = closeModal;
   $("#cand-form").onsubmit = (e) => {
     e.preventDefault();
-    const target = isNew ? c : findCand(c.id);
     const name = $("#k-name").value.trim();
-    target.name = name || target.name;
-    if (name) target.nameAuto = false;
-    target.email = $("#k-email").value.trim();
-    target.phone = $("#k-phone").value.trim();
-    target.source = $("#k-src").value.trim();
-    target.link = $("#k-link").value.trim();
-    saveCand(target);
-    $("#modal").hidden = true;
-    if (isNew) go(`#/vyberko-uchazec/${target.id}`);
-    render();
+    if (name) { c.name = name; c.nameAuto = false; }
+    c.email = $("#k-email").value.trim();
+    c.phone = $("#k-phone").value.trim();
+    c.source = $("#k-src").value.trim();
+    c.link = $("#k-link").value.trim();
+    saveCand(c);
+    closeModal();
   };
 }
 
@@ -1604,7 +1672,7 @@ function bind(route, id) {
       case "edit-pos": return positionForm(p);
       case "export": return exportCsv(p);
       case "pick": return pickFiles(ACCEPT, true, (files) => addFiles(p.id, files));
-      case "add-manual": return candidateForm(p.id, null);
+      case "add-manual": return profileForm(p.id, null);
       case "analyze-pending": return analyzeBatch(p.id, sortCands(candsOf(p.id)).filter((x) => !x.analysis && hasDocs(x.id)).map((x) => x.id));
       case "stop-batch": return stopBatch();
       case "suggest": {
@@ -1625,10 +1693,10 @@ function bind(route, id) {
         return;
       }
       case "analyze": return analyze(c.id).catch(() => {});
-      case "pick-docs": return pickFiles(ACCEPT, true, (files) => addDocsToCandidate(c, files, state.docKind));
-      case "paste-doc": return pasteDocForm(c);
+
       case "cancel": return state.analyzing.get(c.id)?.abort();
-      case "edit-cand": return candidateForm(c.positionId, c);
+      case "edit-cand": return contactForm(c);
+      case "add-docs": return profileForm(c.positionId, c);
       case "del-cand": {
         if (!(await ask(`Smazat profil ${c.name} včetně všech dokumentů?`, { ok: "Smazat", danger: true }))) return;
         deleteCandidate(c.id);
@@ -1666,13 +1734,6 @@ function bind(route, id) {
     const c = findCand(id);
     if (!c) return;
     $("#c-note")?.addEventListener("change", (e) => { c.note = e.target.value; saveCand(c); });
-    $("#doc-kind")?.addEventListener("change", (e) => { state.docKind = e.target.value; });
-    const drop = $("#doc-drop");
-    if (drop) {
-      ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
-      ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, () => drop.classList.remove("over")));
-      drop.addEventListener("drop", (e) => { e.preventDefault(); if (e.dataTransfer.files.length) addDocsToCandidate(c, e.dataTransfer.files, state.docKind); });
-    }
     $$("[data-doc-kind]").forEach((el) => el.addEventListener("change", () => {
       const d = state.docs.find((x) => x.id === el.dataset.docKind);
       if (!d) return;
@@ -1687,30 +1748,6 @@ function bind(route, id) {
       toast("Text uložen" + (c.analysis ? " – vyhodnoť profil znovu, ať se změna započítá." : "."));
     }));
   }
-}
-
-function pasteDocForm(c) {
-  openModal(`
-    <h2>Vložit text do profilu</h2>
-    <form id="doc-form" class="stack">
-      <div class="fields-2">
-        <div class="field"><label for="d-kind">Typ</label><select id="d-kind">${DOC_KINDS.map((x) => `<option value="${x.id}" ${x.id === state.docKind ? "selected" : ""}>${x.label}</option>`).join("")}</select></div>
-        <div class="field"><label for="d-name">Název</label><input id="d-name" placeholder="Např. E-mail z 8. 10."></div>
-      </div>
-      <div class="field"><label for="d-text">Text</label><textarea id="d-text" rows="12" required placeholder="Vlož text CV, e-mailu, popis portfolia, poznámky z hovoru…"></textarea></div>
-      <div class="row" style="justify-content:flex-end"><button type="button" class="btn secondary" id="d-cancel">Zrušit</button><button class="btn">Přidat do profilu</button></div>
-    </form>`);
-  $("#d-cancel").onclick = closeModal;
-  $("#doc-form").onsubmit = (e) => {
-    e.preventDefault();
-    const kind = $("#d-kind").value;
-    const text = tidy($("#d-text").value).slice(0, MAX_DOC);
-    if (!text) return;
-    saveDoc({ id: uid(), candidateId: c.id, kind, name: $("#d-name").value.trim() || kindLabel(kind), text, addedAt: new Date().toISOString() });
-    state.docKind = kind;
-    closeModal();
-    toast("Přidáno do profilu" + (c.analysis ? " – vyhodnoť znovu, ať se započítá." : "."));
-  };
 }
 
 function collectValues() {
@@ -2199,6 +2236,7 @@ function emptyState(title, text, action = "") {
 // ---------- modal ----------
 
 function openModal(html, onMount) {
+  $("#modal .modal-card").classList.remove("wide");
   $("#modal-body").innerHTML = html;
   $("#modal").hidden = false;
   onMount?.($("#modal-body"));
