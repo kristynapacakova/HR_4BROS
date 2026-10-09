@@ -340,6 +340,7 @@ select{font:inherit;font-size:15px;padding:6px 8px;border-radius:10px;border:2px
     <div class="set"><span>Psaný text pokynu</span><div class="seg" data-key="text"><button data-v="1">Ukázat</button><button data-v="0">Skrýt</button></div></div>
     <div class="set"><span>Kreslení s Apple Pencil</span><div class="seg" data-key="penMode"><button data-v="auto">Automaticky</button><button data-v="pen">Jen tužka</button><button data-v="any">Prst i tužka</button></div></div>
     <p class="note">Automaticky: jakmile se dcera dotkne plochy tužkou, prsty a dlaň už při kreslení nekreslí. Volba „Jen tužka“ to zapne hned od začátku. Tlačítka jdou mačkat prstem vždycky.</p>
+    <p class="note"><b>Lidský hlas:</b> sovička umí mluvit vaším hlasem. Seznam vět a slabik k namluvení je tady: <a href="https://claude.ai/artifact/AHuCWvHszJ9sMpiC6QKphY" target="_blank" rel="noopener">Nahrávání hlasu sovičky</a>. Co je namluvené, přehrává se místo hlasu zařízení.</p>
     <p class="note" id="voiceStatus"></p>
     <p class="note">Nejpřirozeněji zní hlasy s označením <b>Natural</b>, <b>Premium</b>, <b>Vylepšený</b> nebo <b>Google</b>. Na počítači otevřete hru v prohlížeči <b>Microsoft Edge</b>, tam jsou hlasy „Vlasta (Natural)“ a „Antonín (Natural)“. Na iPadu stáhněte v Nastavení › Zpřístupnění › Předčítaný obsah › Hlasy › Čeština hlas <b>Zuzana (Prémiový)</b>. Na Androidu nainstalujte „Převod textu na řeč Google“ a stáhněte český hlas. Pak hru načtěte znovu a hlas vyberte tady.</p>
     <h3>Jak se dítě učí číst</h3>
@@ -432,7 +433,39 @@ function prosody(text) {
   });
   return out.length ? out : [{ t: plain(text), p: 1, r: 1 }];
 }
+/* ---------- recorded human voice ----------
+   Every line in buildScript() can be recorded once; a recorded line always wins over the device voice. */
+const REC_HAVE = []; // ids of published recordings, e.g. 'p2-14' -> audio/p2-14.m4a
+const nkey = t => plain(t).toLowerCase().replace(/[.,!?:;…„“"]/g, '').replace(/\s+/g, ' ').trim();
+let REC = null, curAudio = null, sayTok = 0;
+function recMap() {
+  if (REC) return REC;
+  REC = {};
+  try { buildScript().forEach((part, pi) => part.items.forEach((it, ii) => { const id = `p${pi + 1}-${ii + 1}`; if (REC_HAVE.includes(id)) REC[nkey(it.k)] = `audio/${id}.m4a`; })); } catch (e) { REC = {}; }
+  return REC;
+}
+function stopAudio() { if (curAudio) { try { curAudio.pause(); } catch (e) {} curAudio = null; } }
+function playClip(src, tok) {
+  return new Promise(res => {
+    if (tok !== sayTok) return res();
+    stopAudio();
+    const a = new Audio(src); curAudio = a;
+    a.playbackRate = { 0.65: .85, 0.8: 1, 0.95: 1.12 }[S.rate] || 1;
+    let done = false; const fin = () => { if (!done) { done = true; res(); } };
+    a.onended = fin; a.onerror = fin;
+    a.play().catch(fin);
+    setTimeout(fin, 15000);
+  });
+}
 function say(text, rate) {
+  const tok = ++sayTok;
+  if (S.sound && text) {
+    const m = recMap();
+    if (m[nkey(text)]) { try { speechSynthesis.cancel(); } catch (e) {} return playClip(m[nkey(text)], tok); }
+    const sents = plain(text).match(/[^.!?]+[.!?]*/g) || [];
+    if (sents.length > 1 && sents.every(x => m[nkey(x)])) { try { speechSynthesis.cancel(); } catch (e) {} return sents.reduce((pr, x) => pr.then(() => playClip(m[nkey(x)], tok)), Promise.resolve()); }
+  }
+  stopAudio();
   return new Promise(res => {
     if (!S.sound || !V.ok || !text) return res();
     try {
@@ -492,6 +525,24 @@ const ITEMS = [
   { e: '🐞', n: 'beruška', a: 'berušku' }, { e: '✈️', n: 'letadlo', a: 'letadlo' }, { e: '🍓', n: 'jahoda', a: 'jahodu' }
 ];
 const PRAISE = ['Výborně!', 'Super!', 'Paráda!', 'Bravo!', 'Skvělé!', 'Jupí!'];
+const sayAll = list => list.reduce((pr, x) => pr.then(() => (A ? say(x) : null)), Promise.resolve());
+// Spoken lines of the reading games, kept here so the recording script lists exactly what the game says.
+const RL = {
+  slideSing: 'Posuň písmenko prstem po klouzačce. *Zpívej* s ním!',
+  slideStop: 'Tohle písmenko zpívat *neumí*. Klepni na něj a skočí!',
+  demo: 'Podívej, jak to dělám já.',
+  yourTurn: 'Teď ty!',
+  ladder: 'Přečti slabiku *nahlas*. Pak na ni klepni ještě jednou a sovička ti řekne, jestli to bylo dobře.',
+  ladderIntro: 'Sovička leze po žebříku ke hvězdičce. Na každé příčce je slabika. Klepni na ni a přečti ji nahlas. Pak klepni ještě jednou, sovička ji přečte taky a vyleze o kousek výš.',
+  train: 'Klepni na vagónky *popořadě* a čti se mnou.',
+  trainFast: 'A teď rychle za sebou!',
+  trainPick: 'Co jsi přečetla? Najdi obrázek.',
+  trainIntro: 'Slova jezdí ve vláčku. Každý vagónek je jedna *slabika*. Klepni na vagónky popořadě a čti se mnou. Na konci je řekneme rychle za sebou a vyjde slovo.',
+  trace: 'Teď ho obtáhni podle čísel.',
+  firstQ: 'Na jaké písmenko začíná slovo',
+  lastQ: 'Na jaké písmenko končí slovo',
+  win: 'Hotovo! Jsi *šikulka*!'
+};
 
 /* ---------- pen (Apple Pencil): palm rejection + pressure ---------- */
 const PEN = { seen: false };
@@ -539,7 +590,7 @@ async function slideDemo(el, c, v, dur, sound) {
   const tile = el.querySelector('.ltile.con'), vt = el.querySelector('.ltile.vow'); if (!tile) return;
   const sing = !!LONG[c], from = { left: tile.style.left, top: tile.style.top }, to = { left: SL.e.x + '%', top: SL.e.y + '%' };
   const kf = sing ? [from, to] : [from, { left: (SL.s.x + SL.e.x) / 2 + '%', top: '4%' }, to];
-  if (sing && sound === 'all') say(LONG[c] + LONG[c].slice(-1) + v.toLowerCase(), .5);
+  if (sing && sound === 'all') say(LONG[c], .5);
   try { await tile.animate(kf, { duration: dur, easing: sing ? 'ease-in' : 'ease-in-out' }).finished; } catch (e) {}
   tile.style.left = to.left; tile.style.top = to.top;
   tile.classList.add('joined'); vt.classList.add('joined'); sfx.tap();
@@ -606,7 +657,7 @@ function miss(el) {
 }
 function home() {
   if (A && A.cleanup) A.cleanup();
-  A = null; try { speechSynthesis.cancel(); } catch (e) {}
+  A = null; sayTok++; stopAudio(); try { speechSynthesis.cancel(); } catch (e) {}
   $('#title').textContent = 'Sovičkovy hrátky';
   ['#homeBtn', '#hearBtn', '#hintBtn', '#gameHead'].forEach(s => $(s).hidden = true);
   $('#winBox').hidden = true;
@@ -628,7 +679,7 @@ function celebrate() {
   sfx.win();
   $('#winText').textContent = `Máš ${S.stars} ${S.stars === 1 ? 'hvězdičku' : S.stars < 5 ? 'hvězdičky' : 'hvězdiček'}.`;
   $('#winBox').hidden = false;
-  say('Hotovo! Jsi *šikulka*!');
+  say(RL.win);
   confetti();
 }
 function confetti() {
@@ -1043,6 +1094,33 @@ const ACTS = {
   }
 };
 
+/* ---------- recording script: everything the reading part says, in parts to record in one go each ---------- */
+function buildScript() {
+  const SING = ['M', 'L', 'S', 'V', 'J', 'N', 'Z', 'R', 'Š', 'Ž'], V5 = ['A', 'E', 'I', 'O', 'U'];
+  const syl = (c, v) => (v === 'I' && 'DTN'.includes(c) ? c + 'Y' : c + v).toLowerCase();
+  const sylls = cs => cs.flatMap(c => V5.map(v => syl(c, v)));
+  const base = new Set([...sylls(SING), ...sylls(['P', 'T', 'D', 'K', 'B']), 'a', 'e', 'i', 'o', 'u', 'á', 'má', 'ma', 'pa']);
+  const wordSyl = [...new Set(WORDS.flatMap(w => w.s.length > 1 ? w.s.map(x => x.toLowerCase()) : []))].filter(x => !base.has(x));
+  const words = [...new Set(WORDS.map(w => w.w.toLowerCase()))];
+  const firstWords = [...new Set(FIRST.map(w => w[1]))].filter(w => !words.includes(w));
+  const L12 = LETTERS.filter(l => l.lv < 3), L3 = LETTERS.filter(l => l.lv === 3);
+  const it = (k, show) => ({ k, show: show || k });
+  return [
+    { t: 'Zpívající hlásky', how: 'Každou souhlásku protáhněte asi 2 vteřiny, jako když zpíváte jeden tón. Samohlásky krátce, jen á dlouze.',
+      items: [...SING.map(c => it(LONG[c], LONG[c] + '…')), ...['a', 'e', 'i', 'o', 'u', 'á'].map(v => it(v))] },
+    { t: 'Slabiky – M L S V J', how: 'Krátce a jasně, jako ve slabikáři. Mezi slabikami vždy pauza.', items: sylls(['M', 'L', 'S', 'V', 'J']).map(k => it(k)) },
+    { t: 'Slabiky – N Z R Š Ž', how: 'Ny čtěte tvrdě jako v „nyní“.', items: sylls(['N', 'Z', 'R', 'Š', 'Ž']).map(k => it(k)) },
+    { t: 'Slabiky – P T D K B', how: 'Ty a dy čtěte tvrdě. Na konci dlouhé má.', items: [...sylls(['P', 'T', 'D', 'K', 'B']), 'má'].map(k => it(k)) },
+    { t: 'Vláček – další slabiky', how: 'Krátce a jasně.', items: wordSyl.map(k => it(k)) },
+    { t: 'Vláček – slova', how: 'Každé slovo vesele a celé, jako odpověď na hádanku.', items: words.map(k => it(k)) },
+    { t: 'Pohádka Jak se čte', how: 'Pomalu a vlídně, jako když čtete pohádku. Slova psaná tučně trochu zdůrazněte. Hlásky jako mmm protáhněte.', items: ACTS.howto.steps.map(x => it(x.say)) },
+    { t: 'Pokyny a pochvaly', how: 'Pochvaly radostně, pokyny klidně.', items: [...PRAISE, RL.win, HELLO, RL.slideSing, RL.slideStop, RL.demo, RL.yourTurn, RL.ladder, RL.ladderIntro, RL.train, RL.trainFast, RL.trainPick, RL.trainIntro, RL.trace, RL.firstQ, RL.lastQ].map(k => it(k)) },
+    { t: 'Písmenka 1', how: 'Písmenko vyslovte tak, jak se učí ve škole: M jako „m“, ne „em“.', items: L12.flatMap(l => [it(l.st), it(startsWith(l))]) },
+    { t: 'Písmenka 2', how: 'Stejně jako minule.', items: L3.flatMap(l => [it(l.st), it(startsWith(l))]) },
+    { t: 'Na co začíná – slova', how: 'Každé slovo zřetelně.', items: firstWords.map(k => it(k)) }
+  ];
+}
+
 /* ---------- home groups ---------- */
 const GROUPS = [
   { t: 'Čtení a písmenka', d: 'předškoláci a 1. třída', k: ['howto', 'blend', 'ladder', 'read', 'letters', 'first'] },
@@ -1126,6 +1204,7 @@ const LETTERS = [
   [3, 'Ch', 'ch', '🍞', 'chleba', 'Ch jsou dvě písmenka, C a H. Čteme je ale dohromady jako jeden zvuk: ch.']
 ].map(([lv, l, lo, e, w, st]) => ({ lv, l, lo, e, w, st, strokes: ST[l] }));
 const VOWELS = 'AEIOUY';
+const startsWith = L => `${cap(L.w)} začíná na ${L.l === 'Ch' ? 'ch' : L.l}.`;
 const LONG = { M: 'mmm', L: 'lll', S: 'sss', V: 'vvv', Z: 'zzz', N: 'nnn', J: 'jjj', R: 'rrr', F: 'fff', H: 'hhh', Š: 'ššš', Ž: 'žžž' };
 
 /* ---------- reading ---------- */
@@ -1212,9 +1291,9 @@ Object.assign(ACTS, {
         this.draw();
       };
       cv.onpointerup = cv.onpointercancel = e => { if (e.pointerId === t.pid) t.cur = null; };
-      const speech = `Tohle je písmenko *${L.l === 'Ch' ? 'chá' : L.l}*. ${L.st} *${cap(L.w)}* začíná na ${L.l === 'Ch' ? 'ch' : L.l}! Teď ho obtáhni podle čísel.`;
-      setPrompt(speech, false, 'Dívej se, jak se píše. Pak obtáhni podle čísel.');
-      say(speech);
+      const lines = [L.st, startsWith(L), RL.trace];
+      setPrompt(lines.join(' '), false, 'Dívej se, jak se píše. Pak obtáhni podle čísel.');
+      sayAll(lines);
       this.demo();
     },
     demo() {
@@ -1279,15 +1358,16 @@ Object.assign(ACTS, {
         <div class="pics letters-opt" style="grid-template-columns:repeat(${opts.length},minmax(0,1fr));width:min(100%,${opts.length * 130}px)">
         ${opts.map((o, i) => `<button class="pic-btn ${VOWELS.includes(o) ? 'vow' : ''}" data-i="${i}">${o}</button>`).join('')}</div>`;
       stage.querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.tap(b));
-      setPrompt(`Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo *${w[1]}*?`, true, `Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo? Poslouchej.`);
+      setPrompt(`${end ? RL.lastQ : RL.firstQ} *${w[1]}*?`, false, `Na jaké písmenko ${end ? 'končí' : 'začíná'} slovo? Poslouchej.`);
+      sayAll([end ? RL.lastQ : RL.firstQ, w[1]]);
     },
-    replay() { const t = A.t; say(`${t.w[1]}. ${A.level === 3 ? 'Na konci slyšíš' : 'Na začátku slyšíš'}...`); },
+    replay() { const t = A.t; sayAll([A.level === 3 ? RL.lastQ : RL.firstQ, t.w[1]]); },
     tap(b) {
       const t = A.t; if (A.busy) return;
       const o = t.opts[+b.dataset.i];
       if (o === t.ans) {
         b.classList.add('hit'); A.busy = true;
-        say(`Ano. ${cap(t.w[1])} ${A.level === 3 ? 'končí' : 'začíná'} na ${o}.`).then(() => { A.busy = false; success(); });
+        A.busy = false; success();
       } else { miss(b); if (A.errors === 1) wait(500).then(() => { if (A && A.t === t) this.replay(); }); }
     },
     hint() { const t = A.t; pulse(stage.querySelectorAll('.pic-btn')[t.opts.indexOf(t.ans)]); }
@@ -1343,7 +1423,7 @@ Object.assign(ACTS, {
       const L = A.level;
       const SING = ['M', 'L', 'S', 'V', 'J', 'N', 'Z', 'R', 'Š', 'Ž'], STOP = ['P', 'T', 'D', 'K', 'B'];
       const C = L === 1 ? SING : L === 2 ? STOP : [...SING, ...STOP];
-      const Vw = L === 3 ? ['A', 'E', 'I', 'O', 'U', 'Á', 'É', 'Í'] : ['A', 'E', 'I', 'O', 'U'];
+      const Vw = ['A', 'E', 'I', 'O', 'U'];
       let c, v; do { c = pick(C); v = pick(Vw); } while (/[IÍ]/.test(v) && 'DTN'.includes(c) || A.t && A.t.c + A.t.v === c + v);
       const sing = !!LONG[c];
       A.t = { c, v, sing, done: false };
@@ -1356,7 +1436,7 @@ Object.assign(ACTS, {
         e.preventDefault(); if (A.t.done || A.busy) return;
         if (!sing) { this.finish(el); return; }
         drag = true; try { tile.setPointerCapture(e.pointerId); } catch (_) {}
-        say(LONG[c] + LONG[c].slice(-1) + v.toLowerCase(), .5);
+        say(LONG[c], .5);
       };
       tile.onpointermove = e => {
         if (!drag) return;
@@ -1367,9 +1447,7 @@ Object.assign(ACTS, {
         if (k > .9) { drag = false; this.finish(el); }
       };
       tile.onpointerup = tile.onpointercancel = () => { drag = false; };
-      setPrompt(sing
-        ? `Posuň *${c}* po klouzačce k *${v}*. Cestou zpívej: ${LONG[c]}${v.toLowerCase()}.`
-        : `*${c}* neumí zpívat. Klepni na něj a skočí rovnou k *${v}*.`, true,
+      setPrompt(sing ? RL.slideSing : RL.slideStop, true,
         sing ? `Posuň ${c} prstem po klouzačce k ${v}. Zpívej s ním.` : `${c} neumí zpívat. Klepni na něj a skočí k ${v}.`);
     },
     async finish(el) {
@@ -1383,9 +1461,9 @@ Object.assign(ACTS, {
     async intro() {
       const t = A.t, el = stage.querySelector('.slide-scene');
       if (!el || t.done) return;
-      await say(t.sing ? 'Podívej, jak to dělám já.' : 'Podívej se.');
+      await say(RL.demo);
       await slideDemo(el, t.c, t.v, t.sing ? 2400 : 800, 'all');
-      if (A && A.t === t) { resetSlide(el); say('Teď ty!'); }
+      if (A && A.t === t) { resetSlide(el); say(RL.yourTurn); }
     },
     hint() { pulse(stage.querySelector('.slide-scene .ltile.con')); }
   },
@@ -1398,10 +1476,10 @@ Object.assign(ACTS, {
       const fix = (c, v) => /[IÍ]/.test(v) && 'DTN'.includes(c) ? c + (v === 'I' ? 'Y' : 'Ý') : c + v;
       let rungs;
       if (L < 3) { const c = pick(L === 1 ? SING : STOP); rungs = shuffle(['A', 'E', 'I', 'O', 'U']).map(v => fix(c, v)); }
-      else rungs = Array.from({ length: 5 }, () => fix(pick([...SING, ...STOP]), pick(['A', 'E', 'I', 'O', 'U', 'Á', 'É', 'Í'])));
+      else { const seen = new Set(); rungs = []; while (rungs.length < 5) { const x = fix(pick([...SING, ...STOP]), pick(['A', 'E', 'I', 'O', 'U'])); if (!seen.has(x)) { seen.add(x); rungs.push(x); } } }
       A.t = { rungs, step: 0, armed: false };
       this.draw();
-      setPrompt('Přečti slabiku *nahlas*. Pak na ni klepni ještě jednou a sovička ti řekne, jestli to bylo dobře.', true, 'Přečti nahlas. Pak klepni znovu a sovička to zopakuje.');
+      setPrompt(RL.ladder, true, 'Přečti nahlas. Pak klepni znovu a sovička to zopakuje.');
     },
     draw() {
       const t = A.t, n = t.rungs.length;
@@ -1424,7 +1502,7 @@ Object.assign(ACTS, {
       if (t.step === t.rungs.length) success();
     },
     async intro() {
-      await say('Sovička leze po žebříku ke hvězdičce. Na každé příčce je slabika. Klepni na ni a přečti ji nahlas. Pak klepni ještě jednou, sovička ji přečte taky a vyleze o kousek výš.');
+      await say(RL.ladderIntro);
       if (A) pulse(stage.querySelector('.rung.next'));
     },
     hint() { const t = A.t; say(t.rungs[t.step].toLowerCase(), .6); }
@@ -1440,7 +1518,7 @@ Object.assign(ACTS, {
         <div id="picks"></div>`;
       stage.querySelectorAll('.car').forEach(b => b.onclick = () => this.tap(+b.dataset.i));
       pulse(stage.querySelector('.car'));
-      setPrompt('Klepni na vagónky *popořadě* a čti se mnou.');
+      setPrompt(RL.train);
     },
     async tap(i) {
       const t = A.t, cars = stage.querySelectorAll('.car'); if (A.busy || t.reading) return;
@@ -1452,14 +1530,14 @@ Object.assign(ACTS, {
       const me = A;
       $('#train').classList.add('merged');
       await wait(500);
-      await say('Teď rychle za sebou: *' + t.w.w.toLowerCase() + '*!');
+      await say(RL.trainFast); if (A === me && A.t === t) await say(t.w.w.toLowerCase());
       if (A !== me || A.t !== t) return;
       $('#train').classList.add('go');
       const opts = shuffle([t.w, ...shuffle(WORDS.filter(x => x !== t.w && x.e !== t.w.e)).slice(0, 2)]);
       t.opts = opts;
       $('#picks').innerHTML = `<div class="pics" style="grid-template-columns:repeat(3,minmax(0,1fr));width:min(100%,460px)">${opts.map((o, j) => `<button class="pic-btn" data-j="${j}" aria-label="obrázek ${j + 1}">${o.e}</button>`).join('')}</div>`;
       $('#picks').querySelectorAll('.pic-btn').forEach(b => b.onclick = () => this.pickPic(b));
-      setPrompt('Co jsi přečetla? Najdi obrázek.');
+      setPrompt(RL.trainPick);
     },
     pickPic(b) {
       const t = A.t; if (A.busy) return;
@@ -1467,7 +1545,7 @@ Object.assign(ACTS, {
       else { miss(b); if (A.errors === 1) wait(400).then(() => { if (A && A.t === t) say(t.w.w.toLowerCase()); }); }
     },
     async intro() {
-      await say('Slova jezdí ve vláčku. Každý vagónek je jedna *slabika*. Klepni na vagónky popořadě a čti se mnou. Na konci je řekneme rychle za sebou a vyjde slovo.');
+      await say(RL.trainIntro);
       const t = A && A.t; if (t && t.step < t.w.s.length) pulse(stage.querySelectorAll('.car')[t.step]);
     },
     hint() { const t = A.t; if (t.opts) pulse($('#picks').querySelectorAll('.pic-btn')[t.opts.indexOf(t.w)]); else pulse(stage.querySelectorAll('.car')[t.step]); }
