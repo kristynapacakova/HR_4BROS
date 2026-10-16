@@ -1,0 +1,23 @@
+{
+ "date": "2026-10-06",
+ "category": "Trendy a strategie",
+ "kind": "trend",
+ "region": "Svět",
+ "title": "Gartner: priority personálních ředitelů pro rok 2027",
+ "summary": "Podle Gartneru mají CHRO v roce 2027 dodat růst a produktivitu, které čekají generální ředitelé, a zároveň snižovat organizační riziko. Na HR Symposiu v Londýně zaznělo, že HR je díky efektivním procesům rychlejší v provedení, ale ne v dodání hodnoty, a že u rozhodnutí s AI se ztrácí jasná lidská odpovědnost.",
+ "tags": [
+  "CHRO",
+  "strategie",
+  "Gartner"
+ ],
+ "sources": [
+  {
+   "name": "Gartner",
+   "url": "https://www.gartner.com/en/newsroom/press-releases/2026-10-6-gartner-says-chros-top-priorities-for-2027-focus-on-meeting-ceos-expectations-while-minimizing-organizational-risk"
+  },
+  {
+   "name": "Gartner HR Symposium London",
+   "url": "https://www.gartner.com/en/newsroom/press-releases/2026-10-6-gartner-hr-symposium-xpo-london-day-1-highlights"
+  }
+ ]
+}

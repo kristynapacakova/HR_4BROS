@@ -1,0 +1,26 @@
+{
+ "date": "2026-10-16",
+ "category": "Mzdy a odvody",
+ "kind": "zmena",
+ "region": "ČR",
+ "status": "Schváleno",
+ "effectiveDate": "2027-01-01",
+ "title": "Jednotné měsíční hlášení zaměstnavatele se od ledna mění",
+ "summary": "MPSV zveřejnilo finální podobu změn JMHZ platných od 1. 1. 2027 a dodavatelé mzdových programů už mají technické podklady. Změny vycházejí z novel zákona o daních z příjmů a zákona o zaměstnanosti.",
+ "action": "Ověřte u dodavatele mzdového softwaru termín aktualizace a otestujte první lednové hlášení s předstihem.",
+ "tags": [
+  "JMHZ",
+  "mzdový software",
+  "ČSSZ"
+ ],
+ "sources": [
+  {
+   "name": "Úřad práce ČR",
+   "url": "https://up.gov.cz/jmhz"
+  },
+  {
+   "name": "POHODA portál",
+   "url": "https://portal.pohoda.cz/rychle-zpravy/jmhz-od-roku-2027-mpsv-zverejnilo-finalni-zmeny/"
+  }
+ ]
+}

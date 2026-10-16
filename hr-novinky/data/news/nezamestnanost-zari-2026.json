@@ -1,0 +1,22 @@
+{
+ "date": "2026-10-16",
+ "category": "Trh práce",
+ "kind": "zmena",
+ "region": "ČR",
+ "title": "Nezaměstnanost v září zůstala na 5,0 %",
+ "summary": "Úřady práce evidovaly na konci září 368 377 uchazečů, o 5 514 méně než v srpnu. Volných míst přibylo na 104 359. Meziročně je nezaměstnanost vyšší, v září 2025 byla 4,5 %.",
+ "tags": [
+  "Úřad práce",
+  "statistika"
+ ],
+ "sources": [
+  {
+   "name": "ČTK / České noviny",
+   "url": "https://www.ceskenoviny.cz/zpravy/nezamestnanost-v-cesku-zustala-v-zari-na-peti-procentech/2884375"
+  },
+  {
+   "name": "Úřad práce ČR",
+   "url": "https://up.gov.cz/"
+  }
+ ]
+}

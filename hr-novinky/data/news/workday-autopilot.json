@@ -1,0 +1,20 @@
+{
+ "date": "2026-10-13",
+ "category": "AI v HR",
+ "kind": "hlavni",
+ "region": "Svět",
+ "title": "Workday spouští autopilot agenty pro nábor",
+ "summary": "Talent Acquisition Agent hlídá otevřené pozice, u kterých hrozí zpoždění obsazení, vyhledává kandidáty, plánuje pohovory a připravuje podklady pro hodnotitele. Oslovení kandidáta musí vždy schválit recruiter a každý krok agenta se zaznamenává. Early adopters ho mohou používat hned, plná dostupnost je plánovaná na začátek roku 2027.",
+ "action": "Pokud používáte Workday, HiredScore nebo Paradox, rozhodněte předem, které kroky smí agent dělat sám a kdo je schvaluje.",
+ "tags": [
+  "agenti",
+  "recruiting",
+  "Workday Rising"
+ ],
+ "sources": [
+  {
+   "name": "Workday Newsroom",
+   "url": "https://newsroom.workday.com/2026-10-13-Workday-Launches-Autopilot-Agents-That-Get-Real-Work-Done-Across-HR,-Finance,-and-IT"
+  }
+ ]
+}

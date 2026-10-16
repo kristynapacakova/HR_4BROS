@@ -1,0 +1,27 @@
+{
+ "date": "2026-07-24",
+ "category": "AI v HR",
+ "kind": "hlavni",
+ "region": "EU",
+ "status": "Platí",
+ "effectiveDate": "2027-12-02",
+ "title": "AI Act: povinnosti pro AI v náboru a řízení lidí se posouvají na prosinec 2027",
+ "summary": "Nařízení (EU) 2026/1744 (Digital Omnibus) posunulo povinnosti pro vysoce rizikové AI systémy z přílohy III, kam patří i nábor, hodnocení a řízení zaměstnanců, z 2. 8. 2026 na 2. 12. 2027. Platí od 27. 7. 2026. Pravidla transparentnosti podle článku 50 se uplatňují od 2. 8. 2026 a zaměstnavatelé dál mají přijímat opatření k AI gramotnosti zaměstnanců.",
+ "action": "Odklad neberte jako pauzu: sepište AI nástroje v náboru a hodnocení, kdo za ně odpovídá a jaká data používají.",
+ "tags": [
+  "AI Act",
+  "Digital Omnibus",
+  "vysoce rizikové AI",
+  "AI gramotnost"
+ ],
+ "sources": [
+  {
+   "name": "AI Act Explorer",
+   "url": "https://artificialintelligenceact.eu/ai-act-explorer/digital-omnibus/"
+  },
+  {
+   "name": "Cooley",
+   "url": "https://cdp.cooley.com/digital-ai-omnibus-delays-key-deadlines-introduces-new-rules/"
+  }
+ ]
+}

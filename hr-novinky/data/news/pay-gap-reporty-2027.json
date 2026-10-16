@@ -1,0 +1,25 @@
+{
+ "date": "2026-10-16",
+ "category": "Odměňování",
+ "kind": "zmena",
+ "region": "EU",
+ "status": "Lhůta EU",
+ "effectiveDate": "2027-06-07",
+ "title": "Červen 2027: první reporty o rozdílech v odměňování podle směrnice",
+ "summary": "Směrnice počítá s prvními reporty o rozdílech v odměňování mužů a žen do 7. června 2027. Česká novela ale podle EY posouvá reportování pro firmy nad 100 zaměstnanců až na rok 2028, resp. 2031.",
+ "action": "Už teď sbírejte data o mzdách podle pohlaví a skupin prací, ať první report nevzniká narychlo.",
+ "tags": [
+  "gender pay gap",
+  "reporting"
+ ],
+ "sources": [
+  {
+   "name": "EY",
+   "url": "https://www.ey.com/cs_cz/technical/tax/tax-alerts/2026/03/novela-zakoniku-prace-ve-vztahu-k-transparentnimu-odmenovani"
+  },
+  {
+   "name": "Mirro",
+   "url": "https://mirro.io/eu-pay-transparency/timeline-checklist/"
+  }
+ ]
+}

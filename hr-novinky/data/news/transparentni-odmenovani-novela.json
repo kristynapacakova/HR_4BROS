@@ -1,0 +1,27 @@
+{
+ "date": "2026-08-31",
+ "category": "Odměňování",
+ "kind": "hlavni",
+ "region": "ČR",
+ "status": "Návrh ve Sněmovně",
+ "effectiveDate": "2027-01-01",
+ "title": "Transparentní odměňování: novela zákoníku práce míří do Sněmovny",
+ "summary": "Vláda schválila novelu, která převádí směrnici EU 2023/970. Zaměstnavatelé se nebudou smět ptát uchazečů na předchozí mzdu, budou jim muset sdělit nabízenou mzdu a zaměstnanci získají právo na informace o odměňování. Účinnost se předpokládá od 1. 1. 2027, reporty o rozdílech v odměňování pro firmy nad 100 zaměstnanců až od roku 2028, resp. 2031. Termíny se v Parlamentu ještě mohou změnit.",
+ "action": "Začněte třídit pozice do skupin podle hodnoty práce (složitost, odpovědnost, namáhavost) a upravte náborové šablony a inzeráty.",
+ "tags": [
+  "rovné odměňování",
+  "směrnice 2023/970",
+  "nábor",
+  "mzdová historie"
+ ],
+ "sources": [
+  {
+   "name": "Alveno",
+   "url": "https://www.alveno.cz/blog/transparentni-odmenovani-2026"
+  },
+  {
+   "name": "EY",
+   "url": "https://www.ey.com/cs_cz/technical/tax/tax-alerts/2026/03/novela-zakoniku-prace-ve-vztahu-k-transparentnimu-odmenovani"
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "date": "2026-09-07",
+ "category": "Mzdy a odvody",
+ "kind": "hlavni",
+ "region": "ČR",
+ "status": "Schváleno",
+ "effectiveDate": "2027-01-01",
+ "title": "Minimální mzda od ledna 24 900 Kč",
+ "summary": "Vláda schválila koeficienty pro výpočet minimální mzdy na roky 2027 a 2028 (0,446 a 0,458). Od 1. ledna 2027 bude minimální mzda 24 900 Kč měsíčně, o 2 500 Kč víc než letos. Hodinová sazba bude 148,30 Kč.",
+ "action": "Projděte mzdové výměry na minimu, přepočtěte příplatky odvozené od minimální mzdy a promítněte zvýšení do rozpočtu na rok 2027.",
+ "tags": [
+  "minimální mzda",
+  "nařízení vlády",
+  "koeficient"
+ ],
+ "sources": [
+  {
+   "name": "Daně Běhounek",
+   "url": "https://www.behounek.eu/l/zvyseni-minimalni-mzdy/"
+  },
+  {
+   "name": "Odborový svaz zdravotnictví",
+   "url": "https://www.zdravotnickeodbory.cz/aktuality/minimalni-mzda-bude-v-roce-2027-cinit-24-900-kc/"
+  }
+ ]
+}
