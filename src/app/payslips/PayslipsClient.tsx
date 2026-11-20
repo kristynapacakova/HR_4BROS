@@ -201,7 +201,7 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+          <tr className="bg-navy text-left text-xs text-white/70 uppercase tracking-wide">
             <th className="px-6 py-3 font-medium">Období</th>
             <th className="px-4 py-3 font-medium">Paušál</th>
             <th className="px-4 py-3 font-medium">Místo</th>
@@ -352,7 +352,7 @@ function HppYearTable({ year, payslips, benefitType, sportRequests, expenseReque
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+          <tr className="bg-navy text-left text-xs text-white/70 uppercase tracking-wide">
             <th className="px-6 py-3 font-medium">Období</th>
             <th className="px-4 py-3 font-medium">Hrubá mzda</th>
             <th className="px-4 py-3 font-medium">Čistá mzda</th>
@@ -617,7 +617,7 @@ export function PayslipsClient({
 
       {/* Doklady k proplacení — sbalitelné, samo se rozbalí když je letos co řešit */}
       {employeeId && (
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
           <button
             type="button"
             onClick={() => setExpSectionOpen((o) => !o)}
@@ -828,7 +828,7 @@ export function PayslipsClient({
         const adjustedNet = latestReal.netAmount + benefitAmount + icoExpensesTotal + approvedExpensesTotal - (sick?.deduction ?? 0)
 
         return (
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
             <p className="text-sm font-semibold text-navy mb-3">Rozpis odměny — {MONTH_NAMES[latestReal.month - 1]} {latestReal.year}</p>
             <div className="space-y-2 text-sm">
               {isICO ? (() => {
@@ -954,7 +954,7 @@ export function PayslipsClient({
       })()}
 
       {/* Přehled výplat — klikatelné roky nahoře, výchozí je aktuální rok */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy mb-3">
             {isICO ? 'Přehled faktur' : 'Přehled výplat'}

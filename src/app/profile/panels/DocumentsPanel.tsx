@@ -75,7 +75,7 @@ export function DocumentsPanel({ isHPP }: { isHPP: boolean }) {
       />
 
       {/* Smlouvy */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy">Smlouvy</h3>
           <p className="text-xs text-slate-400 mt-0.5">{contracts.length} dokumentů</p>
@@ -91,7 +91,7 @@ export function DocumentsPanel({ isHPP }: { isHPP: boolean }) {
 
       {/* Výplatní pásky — only HPP */}
       {isHPP && (
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Výplatní pásky</h3>
             <p className="text-xs text-slate-400 mt-0.5">{payslips.length} dokumentů</p>

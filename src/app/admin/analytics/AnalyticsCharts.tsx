@@ -46,7 +46,7 @@ export function AnalyticsCharts({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Headcount trend - spans 2 cols */}
-      <div className="lg:col-span-2 bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+      <div className="lg:col-span-2 bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <h3 className="font-headline font-semibold text-navy mb-1">Vývoj počtu zaměstnanců</h3>
         <p className="text-xs text-slate-400 mb-5">Celkový počet zaměstnanců v průběhu roku 2024</p>
         <ResponsiveContainer width="100%" height={200}>
@@ -76,7 +76,7 @@ export function AnalyticsCharts({
       </div>
 
       {/* Department pie */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <h3 className="font-headline font-semibold text-navy mb-1">Oddělení</h3>
         <p className="text-xs text-slate-400 mb-4">Rozložení zaměstnanců</p>
         <ResponsiveContainer width="100%" height={140}>
@@ -112,7 +112,7 @@ export function AnalyticsCharts({
       </div>
 
       {/* Fluctuation bar chart - full width */}
-      <div className="lg:col-span-3 bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+      <div className="lg:col-span-3 bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <div className="flex items-start justify-between mb-5">
           <div>
             <h3 className="font-headline font-semibold text-navy mb-1">Fluktuace — nástupy a odchody</h3>

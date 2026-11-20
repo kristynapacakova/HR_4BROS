@@ -12,7 +12,7 @@ const buttonVariants = cva(
         cta: "bg-gold text-navy font-bold uppercase tracking-wide hover:bg-gold-dark hover:text-white",
         navy: "bg-navy text-white hover:bg-navy-700",
         destructive: "bg-red-600 text-white hover:bg-red-700",
-        outline: "shadow-[inset_0_0_0_1px_#0D214F] bg-white text-navy hover:bg-navy/5",
+        outline: "border border-[#0D214F] bg-white text-navy hover:bg-navy/5",
         secondary: "bg-navy/5 text-navy hover:bg-navy/10",
         ghost: "hover:bg-navy/5 text-navy",
         link: "text-violet underline-offset-4 hover:underline",

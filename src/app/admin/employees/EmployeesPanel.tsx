@@ -30,30 +30,30 @@ export function EmployeesPanel({ employees }: { employees: DemoEmployee[] }) {
     <div className="space-y-6">
 
       {/* Create employee */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <h3 className="font-headline font-semibold text-navy mb-4">Přidat uživatele</h3>
         <CreateEmployeeForm />
       </div>
 
       {/* Table */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy">Přehled uživatelů ({employees.length})</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Jméno</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Pozice / Level</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Úvazek</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Mzda / měs</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Efektivita</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Ve firmě</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Role</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Team lead</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Dovolená (dní/rok)</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">OSVČ — IČO / kancelář / obč.</th>
+              <tr className="bg-navy">
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Jméno</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Pozice / Level</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Úvazek</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Mzda / měs</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Efektivita</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Ve firmě</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Role</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Team lead</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Dovolená (dní/rok)</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">OSVČ — IČO / kancelář / obč.</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">

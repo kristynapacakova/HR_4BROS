@@ -204,7 +204,7 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       {/* Summary Card */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="text-base font-semibold text-slate-800">Přehled souhlasů</h2>
@@ -233,7 +233,7 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
             <button
               key={directive.id}
               onClick={() => setSelectedDirective(directive)}
-              className={`w-full text-left bg-white  shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] border-l-4 ${config.borderColor} px-5 py-4 hover:shadow-md transition-shadow`}
+              className={`w-full text-left bg-white  border border-[rgba(13,33,79,0.14)] border-l-4 ${config.borderColor} px-5 py-4 hover:shadow-md transition-shadow`}
             >
               <div className="flex items-start gap-4">
                 <div className={`mt-0.5 ${config.iconColor} flex-shrink-0`}>

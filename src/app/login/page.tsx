@@ -53,7 +53,7 @@ function LoginForm() {
             <img src="/brand/logo.svg" alt="4BROS" className="h-9 mx-auto" />
           </div>
 
-          <div className="rozky bg-white shadow-[inset_0_0_0_1px_#0D214F] p-8">
+          <div className="rozky bg-white border border-[#0D214F] p-8">
             <div className="flex items-center gap-2 mb-5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/symbol.svg" alt="4B" className="h-5 w-auto" />
@@ -65,12 +65,12 @@ function LoginForm() {
             </p>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 shadow-[inset_0_0_0_1px_rgba(220,38,38,0.3)]">
+              <div className="mb-4 p-3 bg-red-50 border border-[rgba(220,38,38,0.3)]">
                 <p className="text-red-700 text-sm">Nastala chyba při přihlášení. Zkuste to prosím znovu.</p>
               </div>
             )}
 
-            <div className="mb-5 p-3 bg-gold-tint shadow-[inset_0_0_0_1px_rgba(240,225,0,0.4)]">
+            <div className="mb-5 p-3 bg-gold-tint border border-[rgba(240,225,0,0.4)]">
               <p className="text-navy text-xs font-bold mb-1">Demo verze</p>
               <p className="text-navy/70 text-xs leading-relaxed">
                 <strong>admin@fourbros.cz</strong> — Admin &amp; HR,{' '}
@@ -94,7 +94,7 @@ function LoginForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="vas@fourbros.cz"
                   required
-                  className="w-full px-4 py-3 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F] transition-all"
+                  className="w-full px-4 py-3 border border-[rgba(13,33,79,0.14)] text-sm focus:outline-none focus:border-[#0D214F] transition-all"
                 />
               </div>
               <button

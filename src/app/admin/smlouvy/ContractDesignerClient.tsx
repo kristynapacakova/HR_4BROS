@@ -276,7 +276,7 @@ function HeaderPreview({ design }: { design: ContractDesign }) {
   const bStyle = design.typo.body
 
   return (
-    <div className="overflow-hidden shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] bg-white">
+    <div className="overflow-hidden border border-[rgba(13,33,79,0.14)] bg-white">
       {/* Header area */}
       <div className="relative p-6 border-b border-slate-100 overflow-hidden" style={{ minHeight: 120 }}>
         <img
@@ -373,7 +373,7 @@ export function ContractDesignerClient() {
         <div className="space-y-5">
 
           {/* Images */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 space-y-4">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5 space-y-4">
             <div className="flex items-center gap-2 mb-1">
               <ImageIcon className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Obrázky</h3>
@@ -395,7 +395,7 @@ export function ContractDesignerClient() {
           </div>
 
           {/* Colors */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 space-y-4">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5 space-y-4">
             <div className="flex items-center gap-2 mb-1">
               <Palette className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Barvy</h3>
@@ -405,7 +405,7 @@ export function ContractDesignerClient() {
           </div>
 
           {/* Typography */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 space-y-3">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5 space-y-3">
             <div className="flex items-center gap-2 mb-2">
               <Type className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Typografie</h3>
@@ -428,7 +428,7 @@ export function ContractDesignerClient() {
           </div>
 
           {/* Company info */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 space-y-3">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
               <Building2 className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Údaje firmy v zápatí</h3>

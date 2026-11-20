@@ -31,22 +31,22 @@ export default async function AdminPage() {
           }}
           header={
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="animate-rise bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '0ms' }}>
+              <div className="animate-rise bg-white border border-[rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '0ms' }}>
                 <p className="text-xs font-medium text-slate-400 mb-2">Aktivních lidí</p>
                 <p className="text-3xl font-headline font-bold text-navy"><CountUp value={s.activePeople} /></p>
                 <p className="text-xs text-slate-400 mt-1">{s.paidPeople} placených</p>
               </div>
-              <div className="animate-rise bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '60ms' }}>
+              <div className="animate-rise bg-white border border-[rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '60ms' }}>
                 <p className="text-xs font-medium text-slate-400 mb-2">Měsíční náklady</p>
                 <p className="text-2xl font-headline font-bold text-navy">{fmt(s.monthlyCost)}</p>
                 <p className="text-xs text-slate-400 mt-1">{fmt(s.annualCost)} / rok</p>
               </div>
-              <div className="animate-rise bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '120ms' }}>
+              <div className="animate-rise bg-white border border-[rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '120ms' }}>
                 <p className="text-xs font-medium text-slate-400 mb-2">Průměr na osobu</p>
                 <p className="text-2xl font-headline font-bold text-navy">{fmt(s.avgCostPerPerson)}</p>
                 <p className="text-xs text-slate-400 mt-1">z {s.paidPeople} placených</p>
               </div>
-              <div className="animate-rise bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '180ms' }}>
+              <div className="animate-rise bg-white border border-[rgba(13,33,79,0.14)] p-5" style={{ animationDelay: '180ms' }}>
                 <p className="text-xs font-medium text-slate-400 mb-2">Efektivita</p>
                 <p className="text-3xl font-headline font-bold text-violet"><CountUp value={s.efficiency} />%</p>
                 <p className="text-xs text-slate-400 mt-1">{s.clientHoursPerMonth.toLocaleString('cs-CZ')} / {s.totalHoursPerMonth.toLocaleString('cs-CZ')} h</p>

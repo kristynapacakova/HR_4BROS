@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Bell } from 'lucide-react'
+import { IconBell } from '@/components/BrandIcons'
 import { DEMO_NOTIFICATIONS } from '@/lib/mock-data'
 import {
   loadNotifications, markRead, markAllRead,
@@ -62,7 +62,7 @@ export function NotificationBell({ userEmail }: { userEmail?: string | null }) {
         onClick={() => setOpen((o) => !o)}
         className="relative p-2 text-slate-400 hover:text-navy rounded-full hover:bg-slate-100 transition-all duration-150"
       >
-        <Bell className="w-5 h-5" />
+        <IconBell className="w-5 h-5" />
         {unreadCount > 0 && (
           <span className="absolute top-1 right-1 w-2 h-2 bg-violet rounded-full ring-2 ring-white" />
         )}

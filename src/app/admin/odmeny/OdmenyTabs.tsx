@@ -39,7 +39,7 @@ export function OdmenyTabs({ payslips }: OdmenyTabsProps) {
   const rows = payslips.filter(p => p.year === year).sort((a, b) => b.month - a.month)
 
   return (
-    <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+    <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
         <h3 className="font-headline font-semibold text-navy">Přehled výplat ({rows.length})</h3>
         <div className="flex gap-1 bg-slate-50 p-1">
@@ -59,12 +59,12 @@ export function OdmenyTabs({ payslips }: OdmenyTabsProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-100">
-              <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Zaměstnanec</th>
-              <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Typ</th>
-              <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Období</th>
-              <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Hrubá</th>
-              <th className="text-right px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Čistá</th>
+            <tr className="bg-navy">
+              <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Zaměstnanec</th>
+              <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Typ</th>
+              <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Období</th>
+              <th className="text-right px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Hrubá</th>
+              <th className="text-right px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Čistá</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">

@@ -35,7 +35,7 @@ export function OdmenySection({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-1 bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-1 mb-6 w-fit">
+      <div className="flex flex-wrap gap-1 bg-white border border-[rgba(13,33,79,0.14)] p-1 mb-6 w-fit">
         {SUB_TABS.map(t => {
           const Icon = t.icon
           const active = sub === t.id
