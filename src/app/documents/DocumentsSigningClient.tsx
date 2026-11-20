@@ -293,7 +293,7 @@ export function DocumentsSigningClient({ contracts, templates }: {
   if (pending.length === 0 && signed.length === 0) return null
 
   return (
-    <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+    <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2">
         <FileText className="w-4 h-4 text-violet" />
         <h3 className="font-headline font-semibold text-navy">Smlouvy k podpisu</h3>

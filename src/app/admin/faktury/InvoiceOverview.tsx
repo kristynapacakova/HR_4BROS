@@ -254,7 +254,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
 
       {/* HR — čekající návrhy od team leadů */}
       {isHrReviewer && (pendingAdjustments.length > 0 || pendingRateChanges.length > 0) && (
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
             <h3 className="font-headline font-semibold text-navy">Návrhy od team leadů</h3>
             <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full">
@@ -320,7 +320,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
         </div>
       )}
 
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
         {/* Month nav */}
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <button
@@ -342,7 +342,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+              <tr className="bg-navy text-left text-xs text-white/70 uppercase tracking-wide">
                 <th className="px-6 py-3 font-medium">Období</th>
                 <th className="px-4 py-3 font-medium">Plat</th>
                 <th className="px-4 py-3 font-medium">Místo</th>
@@ -590,7 +590,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+                  <tr className="bg-navy text-left text-xs text-white/70 uppercase tracking-wide">
                     <th className="px-6 py-3 font-medium">Období</th>
                     <th className="px-4 py-3 font-medium">Plat</th>
                     <th className="px-4 py-3 font-medium">Místo</th>

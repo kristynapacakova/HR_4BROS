@@ -21,7 +21,7 @@ export function AnalyticsPanel() {
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
           <div className="flex items-start justify-between mb-3">
             <div className="w-9 h-9 bg-alice flex items-center justify-center">
               <Users className="w-4 h-4 text-navy" />
@@ -34,7 +34,7 @@ export function AnalyticsPanel() {
           <p className="text-xs text-slate-400 mt-0.5">Celkem zaměstnanců</p>
         </div>
 
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
           <div className="flex items-start justify-between mb-3">
             <div className="w-9 h-9 bg-red-50 flex items-center justify-center">
               <TrendingDown className="w-4 h-4 text-red-500" />
@@ -45,7 +45,7 @@ export function AnalyticsPanel() {
           <p className="text-xs text-slate-400 mt-0.5">Míra fluktuace</p>
         </div>
 
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
           <div className="flex items-start justify-between mb-3">
             <div className="w-9 h-9 bg-alice flex items-center justify-center">
               <Clock className="w-4 h-4 text-navy" />
@@ -55,7 +55,7 @@ export function AnalyticsPanel() {
           <p className="text-xs text-slate-400 mt-0.5">Průměrná délka (měs.)</p>
         </div>
 
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
           <p className="text-2xl font-headline font-semibold text-navy">{DEMO_OPEN_POSITIONS}</p>
           <p className="text-xs text-slate-400 mt-0.5">Otevřené pozice</p>
         </div>
@@ -72,7 +72,7 @@ export function AnalyticsPanel() {
 
       {/* Tenure & employment type breakdown */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
           <h3 className="font-headline font-semibold text-navy mb-4">Délka spolupráce</h3>
           <div className="space-y-3">
             {DEMO_EMPLOYEE_PERFORMANCE.sort((a, b) => b.tenure - a.tenure).map((emp) => (
@@ -97,7 +97,7 @@ export function AnalyticsPanel() {
           </div>
         </div>
 
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
           <h3 className="font-headline font-semibold text-navy mb-4">Typy spolupráce</h3>
           <div className="space-y-3">
             {EMPLOYMENT_TYPES.map((et) => {

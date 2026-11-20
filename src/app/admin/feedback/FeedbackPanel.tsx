@@ -51,15 +51,15 @@ export function FeedbackPanel() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
           <p className="text-2xl font-headline text-navy">{items.length}</p>
           <p className="text-xs text-slate-400 mt-0.5">Celkem zpráv</p>
         </div>
-        <div className={`shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 ${newCount > 0 ? 'bg-violet/5' : 'bg-white'}`}>
+        <div className={`border border-[rgba(13,33,79,0.14)] p-5 ${newCount > 0 ? 'bg-violet/5' : 'bg-white'}`}>
           <p className={`text-2xl font-headline ${newCount > 0 ? 'text-violet' : 'text-navy'}`}>{newCount}</p>
           <p className="text-xs text-slate-400 mt-0.5">Nových zpráv</p>
         </div>
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
           <p className="text-2xl font-headline text-navy">{anonymousCount}</p>
           <p className="text-xs text-slate-400 mt-0.5">Anonymních</p>
         </div>
@@ -70,7 +70,7 @@ export function FeedbackPanel() {
       {/* Messages */}
       <div className="space-y-4">
         {items.length === 0 ? (
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-12 text-center">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-12 text-center">
             <MessageSquareHeart className="w-10 h-10 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-400">Zatím žádné zprávy.</p>
           </div>
@@ -80,7 +80,7 @@ export function FeedbackPanel() {
             const categoryLabel = FEEDBACK_CATEGORIES.find(c => c.value === item.category)?.label
 
             return (
-              <div key={item.id} className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+              <div key={item.id} className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-50 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 flex items-center justify-center ${item.anonymous ? 'bg-slate-100' : 'bg-navy'}`}>
@@ -110,7 +110,7 @@ export function FeedbackPanel() {
 
                 {item.adminNote && (
                   <div className="px-6 pb-5">
-                    <div className="bg-violet/5 shadow-[inset_0_0_0_1px_rgba(131,77,251,0.2)] px-4 py-3">
+                    <div className="bg-violet/5 border border-[rgba(131,77,251,0.2)] px-4 py-3">
                       <p className="text-xs font-medium text-violet mb-1">Odpověď HR</p>
                       <p className="text-sm text-navy/80">{item.adminNote}</p>
                     </div>
@@ -121,7 +121,7 @@ export function FeedbackPanel() {
                   <div className="px-6 pb-4 flex gap-2">
                     <button
                       onClick={() => saveFeedbackOverride(item.id, { status: 'READ' })}
-                      className="text-xs text-slate-500 hover:text-navy shadow-[inset_0_0_0_1px_rgba(13,33,79,0.2)] px-3 py-1.5 transition-colors"
+                      className="text-xs text-slate-500 hover:text-navy border border-[rgba(13,33,79,0.2)] px-3 py-1.5 transition-colors"
                     >
                       Označit jako přečteno
                     </button>
@@ -141,10 +141,10 @@ export function FeedbackPanel() {
                       onChange={(e) => setReplyText(e.target.value)}
                       placeholder="Volitelná odpověď pro odesílatele..."
                       rows={2}
-                      className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]"
+                      className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:border-[#0D214F]"
                     />
                     <div className="flex gap-2">
-                      <button onClick={() => setReplyingTo(null)} className="text-xs text-slate-500 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.2)] px-3 py-1.5">Zrušit</button>
+                      <button onClick={() => setReplyingTo(null)} className="text-xs text-slate-500 border border-[rgba(13,33,79,0.2)] px-3 py-1.5">Zrušit</button>
                       <button onClick={() => submitReply(item.id)} className="text-xs text-white bg-violet hover:bg-violet-dark px-3 py-1.5">Uložit a vyřešit</button>
                     </div>
                   </div>

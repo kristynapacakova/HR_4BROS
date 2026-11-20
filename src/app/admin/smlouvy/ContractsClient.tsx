@@ -189,7 +189,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
   return (
     <div className="space-y-5">
       {/* Tab bar */}
-      <div className="flex gap-1 bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-1">
+      <div className="flex gap-1 bg-white border border-[rgba(13,33,79,0.14)] p-1">
         {([['smlouvy', 'Smlouvy'], ['sablony', 'Šablony'], ['archiv', 'Archiv PDF'], ['vizual', 'Vizuál PDF']] as const).map(([id, label]) => (
           <button
             key={id}
@@ -210,7 +210,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
       {tab === 'sablony' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {templates.map(tpl => (
-            <div key={tpl.id} className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 flex flex-col gap-3">
+            <div key={tpl.id} className="bg-white border border-[rgba(13,33,79,0.14)] p-5 flex flex-col gap-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="w-10 h-10 bg-violet/10 flex items-center justify-center flex-shrink-0">
                   <FileText className="w-5 h-5 text-violet" />
@@ -264,16 +264,16 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
           </div>
 
           {/* Table */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100">
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Zaměstnanec</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Šablona</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Stav</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Datum</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Akce</th>
+                  <tr className="bg-navy">
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Zaměstnanec</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Šablona</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Stav</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Datum</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Akce</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
@@ -380,7 +380,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
               <button
                 key={tpl.id}
                 onClick={() => { setCreateTemplate(tpl); setCreateValues({}); setCreateStep('fill-form') }}
-                className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 flex flex-col gap-3 text-left hover:border-violet/40 hover:shadow-md transition-all group"
+                className="bg-white border border-[rgba(13,33,79,0.14)] p-5 flex flex-col gap-3 text-left hover:border-violet/40 hover:shadow-md transition-all group"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="w-10 h-10 bg-violet/10 flex items-center justify-center flex-shrink-0 group-hover:bg-violet/20 transition-colors">
@@ -411,7 +411,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
             </div>
           </div>
 
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 space-y-5">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6 space-y-5">
             {/* Employee */}
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1">Zaměstnanec *</label>
@@ -523,15 +523,15 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
           )}
 
           {archived.length > 0 && (
-            <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+            <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100">
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Dokument</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Zaměstnanec</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Typ</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Nahráno</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Akce</th>
+                  <tr className="bg-navy">
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Dokument</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Zaměstnanec</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Typ</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Nahráno</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Akce</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">

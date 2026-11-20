@@ -45,44 +45,44 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-4">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-4">
           <p className="text-2xl font-semibold text-navy">{assets.length}</p>
           <p className="text-xs text-slate-400 mt-0.5">Celkem položek</p>
         </div>
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-4">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-4">
           <p className="text-2xl font-semibold text-navy">{assigned.length}</p>
           <p className="text-xs text-slate-400 mt-0.5">Přiřazeno</p>
         </div>
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-4">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-4">
           <p className="text-2xl font-semibold text-navy">{unassigned.length}</p>
           <p className="text-xs text-slate-400 mt-0.5">Skladem</p>
         </div>
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-4">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-4">
           <p className="text-2xl font-semibold text-navy">{employees.length}</p>
           <p className="text-xs text-slate-400 mt-0.5">Zaměstnanců</p>
         </div>
       </div>
 
       {/* Add asset form */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <h3 className="font-headline font-semibold text-navy mb-4">Přidat položku majetku</h3>
         <AddAssetForm employees={employees.map(e => ({ id: e.id, name: e.name }))} />
       </div>
 
       {/* Assets table */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy">Všechen majetek ({assets.length} položek)</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Položka</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Typ</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Stav</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Přiřazeno</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Od</th>
+              <tr className="bg-navy">
+                <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Položka</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Typ</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Stav</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Přiřazeno</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-white/70 uppercase tracking-wider">Od</th>
                 <th className="px-6 py-3" />
               </tr>
             </thead>
@@ -141,7 +141,7 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
       </div>
 
       {/* Per-employee view */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy">Majetek podle zaměstnanců</h3>
         </div>
@@ -207,36 +207,36 @@ function EditAssetModal({ asset, employees, onClose, onSave }: {
 
   return (
     <div className="fixed inset-0 bg-navy/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white shadow-[inset_0_0_0_1px_#0D214F] p-6 w-full max-w-md">
+      <div className="bg-white border border-[#0D214F] p-6 w-full max-w-md">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-headline font-semibold text-navy">Upravit položku</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-navy"><X className="w-5 h-5" /></button>
         </div>
         <div className="space-y-3">
           <input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Název"
-            className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]" />
+            className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:border-[#0D214F]" />
           <div className="grid grid-cols-2 gap-3">
             <input value={form.brand} onChange={e => update('brand', e.target.value)} placeholder="Výrobce"
-              className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]" />
+              className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:border-[#0D214F]" />
             <input value={form.model} onChange={e => update('model', e.target.value)} placeholder="Model"
-              className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]" />
+              className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:border-[#0D214F]" />
           </div>
           <input value={form.serialNumber} onChange={e => update('serialNumber', e.target.value)} placeholder="Sériové číslo"
-            className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]" />
+            className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:border-[#0D214F]" />
           <select value={form.condition} onChange={e => update('condition', e.target.value)}
-            className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy bg-white focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]">
+            className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy bg-white focus:outline-none focus:border-[#0D214F]">
             {ASSET_CONDITIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
           </select>
           <select value={form.assignedTo} onChange={e => update('assignedTo', e.target.value)}
-            className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy bg-white focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]">
+            className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy bg-white focus:outline-none focus:border-[#0D214F]">
             <option value="">— Skladem (nepřiřazeno) —</option>
             {employees.map(emp => <option key={emp.id} value={emp.id}>{emp.name}</option>)}
           </select>
           <input value={form.notes} onChange={e => update('notes', e.target.value)} placeholder="Poznámka"
-            className="w-full px-3 py-2 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F]" />
+            className="w-full px-3 py-2 border border-[rgba(13,33,79,0.14)] text-sm text-navy focus:outline-none focus:border-[#0D214F]" />
         </div>
         <div className="flex gap-3 mt-5">
-          <button onClick={onClose} className="flex-1 py-2.5 shadow-[inset_0_0_0_1px_#0D214F] text-navy text-sm font-medium hover:bg-navy/5 transition-colors">Zrušit</button>
+          <button onClick={onClose} className="flex-1 py-2.5 border border-[#0D214F] text-navy text-sm font-medium hover:bg-navy/5 transition-colors">Zrušit</button>
           <button
             onClick={() => onSave({
               name: form.name, brand: form.brand, model: form.model,

@@ -198,7 +198,7 @@ export default async function DashboardPage() {
 
         {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
         {(isAdmin || isTL) && scopeNames.size > 0 && (
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
             <h3 className="font-headline text-navy mb-4">{isAdmin ? 'Jak to vypadá dnes ve firmě?' : 'Jak to vypadá dnes ve tvém týmu?'}</h3>
             <div className="grid grid-cols-3 gap-3 pb-5 mb-5 border-b border-slate-100">
               <div className="text-center">
@@ -243,7 +243,7 @@ export default async function DashboardPage() {
         )}
 
         {/* Moje čísla za tenhle měsíc — vidí úplně každý */}
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
           <h3 className="font-headline text-navy mb-4">Jak to vypadá tenhle měsíc u tebe?</h3>
           <div className="grid grid-cols-3 gap-3">
             <div className="text-center">
@@ -268,7 +268,7 @@ export default async function DashboardPage() {
         {(isAdmin || isTL) && (
           <Link
             href="/admin/odmeny?sub=doklady"
-            className="block bg-white border-l-4 border-l-violet shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:shadow-[inset_0_0_0_1px_#834DFB] transition-colors group"
+            className="block bg-white border-l-4 border-l-violet border border-[rgba(13,33,79,0.14)] p-6 hover:border-[#834DFB] transition-colors group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -293,7 +293,7 @@ export default async function DashboardPage() {
         {isAdmin && expiringContracts.length > 0 && (
           <Link
             href="/admin/smlouvy"
-            className="block bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:border-navy/20 transition-colors group"
+            className="block bg-white border border-[rgba(13,33,79,0.14)] p-6 hover:border-navy/20 transition-colors group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

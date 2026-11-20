@@ -26,10 +26,21 @@
     --radius: 0px;
   }
 
-  /* Brand Book 2026 — 100% flat, ostré hrany. (box-shadow zůstává — u nás simuluje
-     1px ohraničení přes inset shadow, což je přesně ten "border místo dropshadow" vzor.) */
+  /* Brand Book 2026 — 100% flat, ostré hrany, žádné dropshadow. Ohraničení karet
+     jde výhradně přes skutečný `border`, nikdy přes box-shadow. */
   *, *::before, *::after {
     border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-headline;
+  }
+
+  /* box-shadow:none výše ruší i Tailwindí `ring` (focus) utility — nahrazeno outline. */
+  :focus-visible {
+    outline: 2px solid #834DFB;
+    outline-offset: 1px;
   }
 
   * {

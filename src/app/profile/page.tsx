@@ -46,7 +46,7 @@ export default async function ProfilePage() {
     >
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Profile header */}
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
+        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
           <div className="flex items-center gap-5">
             <AvatarUpload initial={user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()} teamMemberId={teamMemberId} />
             <div>

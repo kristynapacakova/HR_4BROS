@@ -1,10 +1,11 @@
 'use client'
 
-import { Menu, BookOpen } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import { HeaderAvatar } from '@/components/AvatarUpload'
 import { RoleSwitcher } from './RoleSwitcher'
 import { NotificationBell } from './NotificationBell'
+import { IconBook } from '@/components/BrandIcons'
 
 interface HeaderProps {
   title: string
@@ -16,10 +17,10 @@ interface HeaderProps {
 
 export function Header({ title, onMenuClick, userName, userEmail, teamMemberId }: HeaderProps) {
   return (
-    <header className="relative sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-slate-200/50 px-6 py-3.5 flex items-center gap-4">
+    <header className="relative sticky top-0 z-30 bg-white border-b border-[rgba(13,33,79,0.14)] px-6 py-3.5 flex items-center gap-4">
       <button
         onClick={onMenuClick}
-        className="lg:hidden text-navy p-2 rounded-full hover:bg-slate-100 transition-colors"
+        className="lg:hidden text-navy p-2 hover:bg-slate-100 transition-colors"
       >
         <Menu className="w-5 h-5" />
       </button>
@@ -30,9 +31,9 @@ export function Header({ title, onMenuClick, userName, userEmail, teamMemberId }
         <RoleSwitcher currentEmail={userEmail} />
         <Link
           href="/pravidla"
-          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-all duration-150"
+          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-all duration-150"
         >
-          <BookOpen className="w-4 h-4" />
+          <IconBook className="w-4 h-4" />
           Pravidla
         </Link>
         <NotificationBell userEmail={userEmail} />

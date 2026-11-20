@@ -201,7 +201,7 @@ export function PravidlaAccordion() {
       </div>
 
       {/* Accordion */}
-      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden divide-y divide-slate-100">
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden divide-y divide-slate-100">
         {SECTIONS.map((section, i) => {
           const open = openId === section.id
           return (
