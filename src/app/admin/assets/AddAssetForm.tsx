@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { ASSET_TYPES, ASSET_CONDITIONS } from '@/lib/mock-data'
+import { addAsset } from '@/lib/asset-client'
 
 interface Employee {
   id: string
@@ -27,7 +28,16 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 500))
+    addAsset({
+      name: form.name,
+      type: form.type,
+      brand: form.brand,
+      model: form.model,
+      serialNumber: form.serialNumber || null,
+      condition: form.condition,
+      assignedTo: form.assignedTo || null,
+      notes: form.notes || null,
+    })
     setLoading(false)
     setSuccess(true)
     setForm({ name: '', type: '', brand: '', model: '', serialNumber: '', condition: 'NOVY', assignedTo: '', notes: '' })
@@ -131,7 +141,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
         >
           {loading ? 'Přidávám...' : 'Přidat položku'}
         </button>
-        {success && <p className="text-amber-600 text-sm">Demo verze — změny se neukládají.</p>}
+        {success && <p className="text-mint-dark text-sm">Položka přidána.</p>}
       </div>
     </form>
   )

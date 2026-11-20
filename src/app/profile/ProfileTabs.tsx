@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
 import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Banknote, FileText, ClipboardList } from 'lucide-react'
+import { loadAssets, ASSET_CHANGED_EVENT } from '@/lib/asset-client'
 
 const TYPE_ICONS: Record<string, React.ElementType> = {
   NOTEBOOK: Laptop, TELEFON: Smartphone, MYS: Mouse,
@@ -80,6 +81,22 @@ export function ProfileTabs({
   const requestedTab = searchParams.get('tab')
   const initialTab = tabs.some(t => t.id === requestedTab) ? (requestedTab as TabId) : 'udaje'
   const [tab, setTab] = useState<TabId>(initialTab)
+
+  // Majetek přiřazený adminem (localStorage client) má přednost před statickým SSR seznamem.
+  const [liveAssets, setLiveAssets] = useState<Asset[] | null>(null)
+  useEffect(() => {
+    const refresh = () => setLiveAssets(
+      loadAssets().filter(a => a.assignedTo === user.id) as unknown as Asset[]
+    )
+    refresh()
+    window.addEventListener(ASSET_CHANGED_EVENT, refresh)
+    window.addEventListener('storage', refresh)
+    return () => {
+      window.removeEventListener(ASSET_CHANGED_EVENT, refresh)
+      window.removeEventListener('storage', refresh)
+    }
+  }, [user.id])
+  const resolvedAssets = liveAssets ?? assets
 
   const efficiency = hrData?.monthlyHours && hrData.clientHours
     ? Math.round((hrData.clientHours / hrData.monthlyHours) * 100)
@@ -206,16 +223,16 @@ export function ProfileTabs({
       {tab === 'majetek' && (
         <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
-            <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({assets.length} položek)</h3>
+            <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({resolvedAssets.length} položek)</h3>
           </div>
-          {assets.length === 0 ? (
+          {resolvedAssets.length === 0 ? (
             <div className="px-6 py-12 text-center">
               <Package className="w-10 h-10 text-slate-200 mx-auto mb-3" />
               <p className="text-slate-400">Zatím nemáte přiřazený žádný majetek.</p>
             </div>
           ) : (
             <div className="divide-y divide-slate-50">
-              {assets.map(asset => {
+              {resolvedAssets.map(asset => {
                 const Icon = TYPE_ICONS[asset.type] || Package
                 const typeLabel = assetTypes.find(t => t.value === asset.type)?.label || asset.type
                 const conditionLabel = assetConditions.find(c => c.value === asset.condition)?.label || asset.condition
