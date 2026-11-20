@@ -9,7 +9,7 @@ import {
   DEMO_TEAM_LEAVES,
   DEMO_TEAM,
   DEMO_EMPLOYEES,
-  DEMO_ALL_LEAVE_REQUESTS,
+  DEMO_EXPENSE_REQUESTS,
   DEMO_ADMIN,
   DEMO_USER,
   DEMO_TL,
@@ -63,17 +63,6 @@ export default async function DashboardPage() {
   today.setHours(0, 0, 0, 0)
 
   // Tento týden (pondělí–neděle) — širší okno než jen dnešek, ať karta není prázdná ve dnech, kdy nikdo nechybí.
-  const weekStart = new Date(today)
-  weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7))
-  const weekEnd = new Date(weekStart)
-  weekEnd.setDate(weekStart.getDate() + 6)
-
-  const weekAbsences = DEMO_TEAM_LEAVES.filter((l) => {
-    const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
-    const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
-    return start <= weekEnd && end >= weekStart && (l.status === 'APPROVED' || l.status === 'PENDING')
-  }).sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-
   // Kdo je z týmu daného uživatele dnes v kanceláři vs. na home office — TL vidí svůj tým, HR všechny týmy dohromady.
   const scopeIds = isAdmin
     ? DEMO_TEAM.map(m => m.id)
@@ -174,9 +163,10 @@ export default async function DashboardPage() {
   }
   const eduBudgetUsedPct = eduBudgetTotal > 0 ? Math.round((eduBudgetUsed / eduBudgetTotal) * 100) : null
 
-  const pendingLeaveRequests = DEMO_ALL_LEAVE_REQUESTS.filter(l =>
-    l.status === 'PENDING' && l.type === 'ANNUAL' && (isAdmin || (isTL &&
-      DEMO_TEAM.find(m => m.email.toLowerCase() === l.user.email.toLowerCase())?.teamLeadId === myTeamId
+  // Dovolená/docházka se teď schvaluje v TrackDecku — tady čekají jen doklady k proplacení a podpisy.
+  const pendingExpenseClaims = DEMO_EXPENSE_REQUESTS.filter(r =>
+    r.status === 'PENDING' && (isAdmin || (isTL &&
+      DEMO_TEAM.find(m => m.id === r.employeeId)?.teamLeadId === myTeamId
     ))
   )
 
@@ -186,14 +176,6 @@ export default async function DashboardPage() {
     .map((e) => ({ ...e, daysLeft: Math.round((e.contractEndDate!.getTime() - today.getTime()) / 86400000) }))
     .filter((e) => e.daysLeft >= 0 && e.daysLeft <= 90)
     .sort((a, b) => a.daysLeft - b.daysLeft)
-
-  const LEAVE_TYPE_CZ: Record<string, string> = {
-    ANNUAL: 'Dovolená',
-    SICK: 'Nemoc',
-    PERSONAL: 'Osobní volno',
-    HOMEOFFICE: 'Home office',
-    LEKAR: 'Lékař',
-  }
 
   // Narozeniny tento týden — základní data z DEMO_TEAM, EventsCard si k tomu domíchá případné úpravy z profilu
   const teamBirthdays = DEMO_TEAM.map(m => ({ id: m.id, name: m.name, birthday: m.birthday }))
@@ -278,53 +260,26 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Tento týden — kdo má kdy volno */}
-        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
-          <h3 className="font-headline text-navy mb-4">Docházka tento týden</h3>
-
-          {weekAbsences.length === 0 ? (
-            <p className="text-sm text-slate-500">Tento týden nikdo nechybí 🎉</p>
-          ) : (
-            <div className="flex flex-wrap gap-x-6 gap-y-3">
-              {weekAbsences.map((absence) => (
-                <div key={absence.id} className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-slate-500 text-xs font-semibold">{absence.userName[0]}</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-navy leading-tight">{absence.userName}</p>
-                    <p className="text-xs text-slate-400">
-                      {LEAVE_TYPE_CZ[absence.type] || absence.type} · {absence.startDate.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })}
-                      {absence.startDate.getTime() !== absence.endDate.getTime() && ` – ${absence.endDate.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })}`}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-        </div>
-
         {/* Kalendář akcí — Google Kalendář + narozeniny tento týden */}
         <EventsCard teamBirthdays={teamBirthdays} isAdmin={isAdmin} />
 
         {/* Čeká na tebe — admin vidí vše, TL jen svůj tým */}
         {(isAdmin || isTL) && (
           <Link
-            href="/admin/leave-requests"
-            className="block bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:border-violet/30 transition-colors group"
+            href="/admin/vydaje"
+            className="block bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:shadow-[inset_0_0_0_1px_#834DFB] transition-colors group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-violet/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-9 h-9 bg-violet/10 flex items-center justify-center flex-shrink-0">
                   <CheckSquare className="w-4 h-4 text-violet" />
                 </div>
                 <div>
                   <p className="font-headline text-navy leading-tight">Čeká na tebe</p>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    {pendingLeaveRequests.length === 0
-                      ? isTL ? 'Žádné žádosti od tvého týmu' : 'Žádné žádosti ke schválení'
-                      : `${pendingLeaveRequests.length} ${pendingLeaveRequests.length === 1 ? 'žádost o dovolenou čeká' : 'žádosti o dovolenou čekají'} na schválení${isTL ? ' od tvého týmu' : ''}`}
+                    {pendingExpenseClaims.length === 0
+                      ? isTL ? 'Žádné doklady od tvého týmu' : 'Žádné doklady ke schválení'
+                      : `${pendingExpenseClaims.length} ${pendingExpenseClaims.length === 1 ? 'doklad čeká' : 'doklady čekají'} na schválení${isTL ? ' od tvého týmu' : ''}`}
                   </p>
                 </div>
               </div>
