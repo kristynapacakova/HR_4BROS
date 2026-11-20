@@ -1,12 +1,5 @@
 import type { Metadata } from 'next'
-import { Roboto } from 'next/font/google'
 import './globals.css'
-
-const roboto = Roboto({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  weight: ['300', '400', '500', '700'],
-})
 
 export const metadata: Metadata = {
   title: 'Four Bros HR Portal',
@@ -20,7 +13,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="cs">
-      <body className={`${roboto.variable} font-sans antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;700&family=Funnel+Sans:wght@300;400;500;600;700&display=swap"
+        />
+      </head>
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>

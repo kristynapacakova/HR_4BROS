@@ -25,6 +25,7 @@ import {
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { FourBrosMark } from '@/components/FourBrosMark'
 
 const staticNavItemsBefore = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -95,8 +96,8 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
       {/* Logo header */}
       <div className="relative flex items-center justify-between border-b border-slate-100 px-5 py-5">
         <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.png" alt="Four Bros" className="h-7 w-auto flex-shrink-0" />
+          <FourBrosMark size={26} className="flex-shrink-0" />
+          <p className="font-headline font-bold text-navy text-sm tracking-tight">4BROS</p>
           <p className="text-slate-400 text-[11px] tracking-wide border-l border-slate-200 pl-3">HR Portál</p>
         </div>
         {onClose && (
