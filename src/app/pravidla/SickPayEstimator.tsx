@@ -32,7 +32,7 @@ export function SickPayEstimator() {
   const r = computeSickPayGeneric(avgHourly, hoursPerDay, sickDays)
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+    <div className="bg-white border border-slate-100 shadow-sm p-6">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center">
           <Stethoscope className="w-4 h-4 text-red-400" />
@@ -69,7 +69,7 @@ export function SickPayEstimator() {
             type="number" min={1}
             value={monthlyHours}
             onChange={e => setMonthlyHours(Math.max(1, Number(e.target.value) || 0))}
-            className="w-full px-2.5 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet"
+            className="w-full px-2.5 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet"
           />
         </div>
         {mode === 'monthly' ? (
@@ -79,7 +79,7 @@ export function SickPayEstimator() {
               type="number" min={0}
               value={monthlySalary}
               onChange={e => setMonthlySalary(Math.max(0, Number(e.target.value) || 0))}
-              className="w-full px-2.5 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet"
+              className="w-full px-2.5 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet"
             />
           </div>
         ) : (
@@ -89,7 +89,7 @@ export function SickPayEstimator() {
               type="number" min={0}
               value={hourlyRate}
               onChange={e => setHourlyRate(Math.max(0, Number(e.target.value) || 0))}
-              className="w-full px-2.5 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet"
+              className="w-full px-2.5 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet"
             />
           </div>
         )}
@@ -99,7 +99,7 @@ export function SickPayEstimator() {
             type="number" min={1} max={60}
             value={sickDays}
             onChange={e => setSickDays(Math.max(1, Number(e.target.value) || 1))}
-            className="w-full px-2.5 py-2 border border-slate-200 rounded-lg text-sm text-navy text-center focus:outline-none focus:ring-2 focus:ring-violet"
+            className="w-full px-2.5 py-2 border border-slate-200 text-sm text-navy text-center focus:outline-none focus:ring-2 focus:ring-violet"
           />
         </div>
       </div>
@@ -131,7 +131,7 @@ export function SickPayEstimator() {
       </button>
 
       {open && (
-        <div className="mt-3 rounded-2xl bg-[#f3f0fd] p-4 space-y-1.5 text-sm">
+        <div className="mt-3 bg-[#f3f0fd] p-4 space-y-1.5 text-sm">
           {[
             ['Průměrný hodinový výdělek', fmt(r.avgHourly) + '/h'],
             [`Po redukci (90/60/30 % dle hranic ${YEAR})`, fmt(r.reduced) + '/h'],

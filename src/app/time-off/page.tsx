@@ -73,7 +73,7 @@ export default async function TimeOffPage() {
         {/* Balance cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <BalanceCard title="Řádná dovolená" used={leaveBalance.annualUsed} total={leaveBalance.annualTotal} remaining={annualRemaining} color="violet" />
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
+          <div className="bg-white border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
             <p className="text-xs font-medium text-slate-500 mb-1">Nemoc / absence</p>
             <p className="text-2xl font-headline font-bold text-navy">{leaveBalance.sickUsed} dní</p>
             <p className="text-xs text-slate-400 mt-1">čerpáno letos</p>
@@ -81,7 +81,7 @@ export default async function TimeOffPage() {
         </div>
 
         {/* New request — holidays auto-calculated inside form */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <h3 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
             <Plus className="w-5 h-5 text-violet" />
             Nová žádost
@@ -93,7 +93,7 @@ export default async function TimeOffPage() {
         <HolidayTable year={currentYear} holidays={thisYearHolidays} today={today} />
 
         {/* History */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Historie žádostí</h3>
           </div>
@@ -135,7 +135,7 @@ function HolidayTable({ year, holidays, today }: {
   today: Date
 }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+    <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 className="font-headline font-semibold text-navy">Státní svátky {year}</h3>
         <span className="text-xs text-slate-400">{holidays.length} svátků</span>
@@ -148,7 +148,7 @@ function HolidayTable({ year, holidays, today }: {
           const isFriOrMon = h.date.getDay() === 5 || h.date.getDay() === 1
           return (
             <div key={h.date.toISOString()} className={`px-6 py-3 flex items-center gap-4 ${isToday ? 'bg-violet/5' : isPast ? 'opacity-40' : ''}`}>
-              <div className={`w-14 text-center flex-shrink-0 rounded-lg py-1 ${isToday ? 'bg-violet text-white' : 'bg-slate-50 text-navy'}`}>
+              <div className={`w-14 text-center flex-shrink-0  py-1 ${isToday ? 'bg-violet text-white' : 'bg-slate-50 text-navy'}`}>
                 <p className="text-[10px] font-medium uppercase tracking-wide opacity-70">{h.date.toLocaleDateString('cs-CZ', { month: 'short' })}</p>
                 <p className="text-xl font-headline font-bold leading-tight">{h.date.getDate()}</p>
               </div>
@@ -176,7 +176,7 @@ function BalanceCard({ title, used, total, remaining, color }: {
   const pct = total > 0 ? (used / total) * 100 : 0
   const barColor = color === 'violet' ? 'bg-violet' : 'bg-blue-500'
   return (
-    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+    <div className="bg-white border border-slate-100 shadow-sm p-5">
       <p className="text-xs font-medium text-slate-500 mb-1">{title}</p>
       <p className="text-3xl font-headline font-bold text-navy">{remaining}</p>
       <p className="text-xs text-slate-400 mb-3">zbývajících dní z {total}</p>

@@ -46,7 +46,7 @@ export function RoleSwitcher({ currentEmail }: { currentEmail?: string | null })
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl border border-slate-100 shadow-lg py-1.5 z-40">
+        <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-slate-100 shadow-lg py-1.5 z-40">
           <p className="px-3 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Demo — přepnout roli</p>
           {DEMO_ROLES.map((r) => {
             const active = r.email.toLowerCase() === currentEmail?.toLowerCase()

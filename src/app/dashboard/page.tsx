@@ -215,7 +215,7 @@ export default async function DashboardPage() {
 
         {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
         {(isAdmin || isTL) && scopeNames.size > 0 && (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <div className="bg-white border border-slate-100 shadow-sm p-6">
             <h3 className="font-headline text-navy mb-4">{isAdmin ? 'Jak to vypadá dnes ve firmě?' : 'Jak to vypadá dnes ve tvém týmu?'}</h3>
             <div className="grid grid-cols-3 gap-3 pb-5 mb-5 border-b border-slate-100">
               <div className="text-center">
@@ -260,7 +260,7 @@ export default async function DashboardPage() {
         )}
 
         {/* Moje čísla za tenhle měsíc — vidí úplně každý */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <h3 className="font-headline text-navy mb-4">Jak to vypadá tenhle měsíc u tebe?</h3>
           <div className="grid grid-cols-3 gap-3">
             <div className="text-center">
@@ -279,7 +279,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Tento týden — kdo má kdy volno */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <h3 className="font-headline text-navy mb-4">Docházka tento týden</h3>
 
           {weekAbsences.length === 0 ? (
@@ -312,7 +312,7 @@ export default async function DashboardPage() {
         {(isAdmin || isTL) && (
           <Link
             href="/admin/leave-requests"
-            className="block bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:border-violet/30 transition-colors group"
+            className="block bg-white border border-slate-100 shadow-sm p-6 hover:border-violet/30 transition-colors group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -337,7 +337,7 @@ export default async function DashboardPage() {
         {isAdmin && expiringContracts.length > 0 && (
           <Link
             href="/admin/smlouvy"
-            className="block bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:border-navy/20 transition-colors group"
+            className="block bg-white border border-slate-100 shadow-sm p-6 hover:border-navy/20 transition-colors group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

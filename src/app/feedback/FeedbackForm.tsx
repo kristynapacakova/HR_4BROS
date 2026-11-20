@@ -30,8 +30,8 @@ export function FeedbackForm({ userName }: { userName: string }) {
 
   if (sent) {
     return (
-      <div className="bg-white rounded-2xl border border-green-100 shadow-sm p-10 text-center">
-        <div className="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+      <div className="bg-white border border-green-100 shadow-sm p-10 text-center">
+        <div className="w-16 h-16 bg-green-50 flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-8 h-8 text-green-500" />
         </div>
         <h3 className="text-xl font-headline text-navy mb-2">Zpráva odeslána!</h3>
@@ -53,7 +53,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
+    <form onSubmit={handleSubmit} className="bg-white border border-slate-100 shadow-sm p-6 space-y-5">
 
       {/* Anonymity toggle */}
       <div>
@@ -62,7 +62,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
           <button
             type="button"
             onClick={() => setAnonymous(true)}
-            className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border-2 transition-all text-left ${
+            className={`flex items-center gap-2.5 px-4 py-3  border-2 transition-all text-left ${
               anonymous ? 'border-navy bg-navy text-white' : 'border-slate-200 text-slate-600 hover:border-slate-300'
             }`}
           >
@@ -75,7 +75,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
           <button
             type="button"
             onClick={() => setAnonymous(false)}
-            className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border-2 transition-all text-left ${
+            className={`flex items-center gap-2.5 px-4 py-3  border-2 transition-all text-left ${
               !anonymous ? 'border-navy bg-navy text-white' : 'border-slate-200 text-slate-600 hover:border-slate-300'
             }`}
           >
@@ -94,7 +94,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
         <select
           value={category}
           onChange={e => setCategory(e.target.value)}
-          className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+          className="w-full px-4 py-3 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
         >
           <option value="">— Vyberte téma (volitelné) —</option>
           {FEEDBACK_CATEGORIES.map(c => (
@@ -112,7 +112,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
           required
           rows={5}
           placeholder="Napiš cokoliv, co ti leží na srdci..."
-          className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none leading-relaxed"
+          className="w-full px-4 py-3 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none leading-relaxed"
         />
       </div>
 
@@ -134,7 +134,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
           onChange={(e) => setAttachment(e.target.files?.[0] ?? null)}
         />
         {attachment ? (
-          <div className="flex items-center gap-2.5 px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+          <div className="flex items-center gap-2.5 px-4 py-2.5 border border-slate-200 text-sm">
             <Paperclip className="w-4 h-4 text-slate-400 flex-shrink-0" />
             <span className="flex-1 min-w-0 truncate text-navy">{attachment.name}</span>
             <span className="text-xs text-slate-400 flex-shrink-0">{fmtSize(attachment.size)}</span>
@@ -150,7 +150,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
+            className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
           >
             <Paperclip className="w-4 h-4 flex-shrink-0" />
             Přidat přílohu — PDF, foto nebo jiný soubor
@@ -161,7 +161,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
       <button
         type="submit"
         disabled={loading || !message.trim()}
-        className="w-full flex items-center justify-center gap-2 bg-navy hover:bg-navy-800 text-white font-medium py-3 px-6 rounded-xl transition-colors disabled:opacity-50 shadow-sm"
+        className="w-full flex items-center justify-center gap-2 bg-navy hover:bg-navy-800 text-white font-medium py-3 px-6 transition-colors disabled:opacity-50 shadow-sm"
       >
         {loading ? (
           <span className="text-sm">Odesílám...</span>

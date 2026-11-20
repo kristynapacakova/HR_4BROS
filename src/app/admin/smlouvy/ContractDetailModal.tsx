@@ -69,7 +69,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div className="bg-white shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden">
 
         {/* ── Modal chrome header ── */}
         <div className="flex items-center justify-between px-6 py-3.5 border-b border-slate-100 bg-white flex-shrink-0">
@@ -83,7 +83,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
             <span className="text-slate-200">|</span>
             <span className="text-xs text-slate-400">{contract.templateName}</span>
           </div>
-          <button onClick={onClose} className="p-1.5 text-slate-300 hover:text-slate-600 rounded-lg transition-colors">
+          <button onClick={onClose} className="p-1.5 text-slate-300 hover:text-slate-600 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -159,7 +159,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
           {/* Document sheet */}
           <div className="p-6">
-            <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_32px_rgba(13,33,79,0.10)] flex flex-col" style={page === 0 ? { minHeight: 720 } : undefined}>
+            <div className="bg-white overflow-hidden shadow-[0_4px_32px_rgba(13,33,79,0.10)] flex flex-col" style={page === 0 ? { minHeight: 720 } : undefined}>
 
               {/* ═══ PAGE 1 — Cover (mirrors PDF) ═══ */}
               {page === 0 && (
@@ -229,7 +229,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                     </p>
 
                     {/* Party: employee */}
-                    <div className="rounded-lg px-5 py-4 mb-2.5" style={{ background: '#f3f0fd' }}>
+                    <div className="px-5 py-4 mb-2.5" style={{ background: '#f3f0fd' }}>
                       <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] mb-2.5" style={{ color: pc }}>Zaměstnanec</p>
                       <table className="w-full" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>
                         <tbody>
@@ -248,7 +248,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                     <p className="text-center font-bold py-1" style={{ color: pc, fontSize: 13 }}>a</p>
 
                     {/* Party: employer */}
-                    <div className="rounded-lg px-5 py-4 mb-5" style={{ background: '#f3f0fd' }}>
+                    <div className="px-5 py-4 mb-5" style={{ background: '#f3f0fd' }}>
                       <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] mb-2.5" style={{ color: pc }}>Zaměstnavatel</p>
                       <table className="w-full" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>
                         <tbody>
@@ -273,7 +273,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
                   {/* Signature section */}
                   <div className="px-10 pb-8 pt-2">
-                    <div className="rounded-xl p-5" style={{ background: '#f3f0fd' }}>
+                    <div className="p-5" style={{ background: '#f3f0fd' }}>
                       <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: pc }}>
                         NA DŮKAZ ČEHOŽ SMLUVNÍ STRANY PŘIPOJUJÍ SVÉ PODPISY
                       </p>
@@ -285,7 +285,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                           <div key={role}>
                             <p className="text-[9px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: pc }}>{role}</p>
                             {signed ? (
-                              <div className="rounded-xl px-4 py-3 border" style={{ borderColor: '#bbf7d0', background: '#f0fdf4' }}>
+                              <div className="px-4 py-3 border" style={{ borderColor: '#bbf7d0', background: '#f0fdf4' }}>
                                 <div className="flex items-center gap-2 mb-1">
                                   <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
                                     <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8 3-3.3" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -340,7 +340,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
             {contract.status === 'PENDING_MANAGEMENT' && (
               <button
                 onClick={() => { onSign(contract.id); onClose() }}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-colors text-white"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-colors text-white"
                 style={{ background: ac }}
               >
                 <Pen className="w-3.5 h-3.5" />
@@ -350,7 +350,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
             {(contract.status === 'PENDING_EMPLOYEE' || contract.status === 'DRAFT') && (
               <button
                 onClick={() => setShowSigni(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold border transition-colors"
                 style={{ borderColor: '#0EA5A4', color: '#0EA5A4', background: '#0EA5A410' }}
               >
                 <Send className="w-3.5 h-3.5" />
@@ -359,7 +359,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
             )}
             <button
               onClick={() => printContract(contract, template)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
               style={{ background: pc }}
             >
               <Download className="w-3.5 h-3.5" />
@@ -367,7 +367,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors"
+              className="px-4 py-2 bg-slate-100 text-slate-500 text-sm font-medium hover:bg-slate-200 transition-colors"
             >
               Zavřít
             </button>

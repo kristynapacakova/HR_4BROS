@@ -254,7 +254,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
 
       {/* HR — čekající návrhy od team leadů */}
       {isHrReviewer && (pendingAdjustments.length > 0 || pendingRateChanges.length > 0) && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
             <h3 className="font-headline font-semibold text-navy">Návrhy od team leadů</h3>
             <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full">
@@ -276,13 +276,13 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     onClick={() => decideRateChange(c.id, 'APPROVED')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
                   >
                     <Check className="w-3.5 h-3.5" /> Schválit
                   </button>
                   <button
                     onClick={() => decideRateChange(c.id, 'REJECTED')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium transition-colors"
                   >
                     <XCircle className="w-3.5 h-3.5" /> Zamítnout
                   </button>
@@ -303,13 +303,13 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     onClick={() => decideAdjustment(a.id, 'APPROVED')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
                   >
                     <Check className="w-3.5 h-3.5" /> Schválit
                   </button>
                   <button
                     onClick={() => decideAdjustment(a.id, 'REJECTED')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium transition-colors"
                   >
                     <XCircle className="w-3.5 h-3.5" /> Zamítnout
                   </button>
@@ -320,7 +320,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
         {/* Month nav */}
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <button
@@ -428,7 +428,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                     <td className="px-6 py-3 text-right">
                       <button
                         onClick={() => setDetailId(emp.id)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-violet text-white text-xs font-medium rounded-lg hover:bg-violet-dark transition-colors ml-auto"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-violet text-white text-xs font-medium hover:bg-violet-dark transition-colors ml-auto"
                       >
                         <FileText className="w-3.5 h-3.5" /> Detail
                       </button>
@@ -451,12 +451,12 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setAdjustForm(null)}>
           <form
             onSubmit={submitAdjustment}
-            className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-3"
+            className="bg-white shadow-xl w-full max-w-sm p-6 space-y-3"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-1">
               <h3 className="font-headline font-semibold text-navy">Prémie / úprava — {adjustForm.employeeName}</h3>
-              <button type="button" onClick={() => setAdjustForm(null)} className="p-1 text-slate-400 hover:text-navy rounded-lg transition-colors">
+              <button type="button" onClick={() => setAdjustForm(null)} className="p-1 text-slate-400 hover:text-navy transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -468,7 +468,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 required
                 value={adjustForm.title}
                 onChange={(e) => setAdjustForm({ ...adjustForm, title: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               />
             </div>
             <div className="flex gap-3">
@@ -480,7 +480,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                   required
                   value={adjustForm.amount}
                   onChange={(e) => setAdjustForm({ ...adjustForm, amount: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                 />
               </div>
               <div>
@@ -488,7 +488,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 <select
                   value={adjustForm.sign}
                   onChange={(e) => setAdjustForm({ ...adjustForm, sign: e.target.value as 'PLUS' | 'MINUS' })}
-                  className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                  className="px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                 >
                   <option value="PLUS">Přičíst (+)</option>
                   <option value="MINUS">Odečíst (−)</option>
@@ -507,12 +507,12 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setRateForm(null)}>
           <form
             onSubmit={submitRateChange}
-            className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-3"
+            className="bg-white shadow-xl w-full max-w-sm p-6 space-y-3"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-1">
               <h3 className="font-headline font-semibold text-navy">Změna odměny — {rateForm.employeeName}</h3>
-              <button type="button" onClick={() => setRateForm(null)} className="p-1 text-slate-400 hover:text-navy rounded-lg transition-colors">
+              <button type="button" onClick={() => setRateForm(null)} className="p-1 text-slate-400 hover:text-navy transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -525,7 +525,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 required
                 value={rateForm.newAmount}
                 onChange={(e) => setRateForm({ ...rateForm, newAmount: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               />
             </div>
             <div className="flex gap-3">
@@ -534,7 +534,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 <select
                   value={rateForm.effectiveMonth}
                   onChange={(e) => setRateForm({ ...rateForm, effectiveMonth: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                 >
                   {MONTH_NAMES_CZ.map((name, i) => <option key={name} value={i + 1}>{name}</option>)}
                 </select>
@@ -546,7 +546,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                   required
                   value={rateForm.effectiveYear}
                   onChange={(e) => setRateForm({ ...rateForm, effectiveYear: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                 />
               </div>
             </div>
@@ -558,7 +558,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 placeholder="např. navýšení po roční revizi"
                 value={rateForm.reason}
                 onChange={(e) => setRateForm({ ...rateForm, reason: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               />
             </div>
             <button type="submit" className="w-full px-4 py-2.5 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
@@ -572,12 +572,12 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
       {detailEmp && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setDetailId(null)}>
           <div
-            className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[85vh] overflow-y-auto"
+            className="bg-white shadow-xl w-full max-w-3xl max-h-[85vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 sticky top-0 bg-white">
               <h3 className="font-headline font-semibold text-navy">{detailEmp.name} — historie faktur</h3>
-              <button onClick={() => setDetailId(null)} className="p-1.5 text-slate-400 hover:text-navy rounded-lg transition-colors">
+              <button onClick={() => setDetailId(null)} className="p-1.5 text-slate-400 hover:text-navy transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>

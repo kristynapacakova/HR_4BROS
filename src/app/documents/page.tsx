@@ -23,7 +23,7 @@ function ContractRow({ doc }: { doc: Doc }) {
   const { Icon } = cfg
   return (
     <div className="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
-      <div className={`p-2.5 rounded-lg flex-shrink-0 ${cfg.color}`}>
+      <div className={`p-2.5  flex-shrink-0 ${cfg.color}`}>
         <Icon className="w-5 h-5" />
       </div>
       <div className="flex-1 min-w-0">
@@ -36,7 +36,7 @@ function ContractRow({ doc }: { doc: Doc }) {
           }
         </div>
       </div>
-      <button className="flex-shrink-0 p-2 text-slate-300 hover:text-navy rounded-lg transition-colors" title="Stáhnout (demo)">
+      <button className="flex-shrink-0 p-2 text-slate-300 hover:text-navy transition-colors" title="Stáhnout (demo)">
         <Download className="w-4 h-4" />
       </button>
     </div>
@@ -94,7 +94,7 @@ export default async function DocumentsPage() {
         />
 
         {/* Smlouvy */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
             <div>
               <h3 className="font-headline font-semibold text-navy">Smlouvy</h3>
@@ -120,7 +120,7 @@ export default async function DocumentsPage() {
 
         {/* Výplatní pásky — only HPP */}
         {isHPP && (
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100">
               <h3 className="font-headline font-semibold text-navy">Výplatní pásky</h3>
               <p className="text-xs text-slate-400 mt-0.5">{payslips.length} dokumentů</p>

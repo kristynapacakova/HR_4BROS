@@ -54,12 +54,12 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+      <div className="bg-white shadow-2xl w-full max-w-lg overflow-hidden">
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm" style={{ background: SIGNI_TEAL }}>
+            <div className="w-8 h-8 flex items-center justify-center text-white font-bold text-sm" style={{ background: SIGNI_TEAL }}>
               S
             </div>
             <div>
@@ -67,13 +67,13 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
               <p className="text-[10px] text-slate-400 leading-tight">Simulace integrace · Signi-style e-signing</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 text-slate-300 hover:text-slate-600 rounded-lg transition-colors">
+          <button onClick={onClose} className="p-1.5 text-slate-300 hover:text-slate-600 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Demo notice */}
-        <div className="mx-6 mt-4 px-3 py-2 rounded-lg bg-amber-50 border border-amber-100 flex items-center gap-2">
+        <div className="mx-6 mt-4 px-3 py-2 bg-amber-50 border border-amber-100 flex items-center gap-2">
           <span className="text-[10px] font-semibold text-amber-700 uppercase tracking-wider">Náhled</span>
           <span className="text-[11px] text-amber-700/80">Toto je vizuální simulace — žádný e-mail se neodesílá ani podpis se neukládá.</span>
         </div>
@@ -83,8 +83,8 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
           {/* ── Step 1: Compose ── */}
           {step === 'compose' && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-slate-200 p-4 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+              <div className="border border-slate-200 p-4 flex items-center gap-3">
+                <div className="w-10 h-10 bg-slate-100 flex items-center justify-center flex-shrink-0">
                   <Mail className="w-4 h-4 text-slate-400" />
                 </div>
                 <div className="min-w-0">
@@ -109,7 +109,7 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
               </div>
 
               <button onClick={handleSend}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 style={{ background: SIGNI_TEAL }}>
                 <Send className="w-4 h-4" />
                 Odeslat k elektronickému podpisu
@@ -129,8 +129,8 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
           {/* ── Step 3 & 4: Tracking ── */}
           {(step === 'tracking' || step === 'done') && (
             <div className="space-y-5">
-              <div className="rounded-xl border border-slate-200 p-4 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+              <div className="border border-slate-200 p-4 flex items-center gap-3">
+                <div className="w-10 h-10 bg-slate-100 flex items-center justify-center flex-shrink-0">
                   <Mail className="w-4 h-4 text-slate-400" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -171,7 +171,7 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
 
               {/* Signed certificate card */}
               {step === 'done' && (
-                <div className="rounded-xl p-4 space-y-2" style={{ background: '#f3f0fd' }}>
+                <div className="p-4 space-y-2" style={{ background: '#f3f0fd' }}>
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4" style={{ color: SIGNI_TEAL }} />
                     <p className="text-xs font-semibold text-navy">Dokument elektronicky podepsán a zapečetěn</p>
@@ -191,11 +191,11 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
         {/* Footer */}
         <div className="px-6 py-3.5 border-t border-slate-100 flex justify-end gap-2 bg-slate-50/60">
           {step === 'done' ? (
-            <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90" style={{ background: SIGNI_TEAL }}>
+            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90" style={{ background: SIGNI_TEAL }}>
               Hotovo
             </button>
           ) : (
-            <button onClick={onClose} className="px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors">
+            <button onClick={onClose} className="px-4 py-2 bg-slate-100 text-slate-500 text-sm font-medium hover:bg-slate-200 transition-colors">
               Zavřít náhled
             </button>
           )}

@@ -62,9 +62,9 @@ export default async function AnalyticsPage() {
 
         {/* KPI cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white border border-slate-100 shadow-sm p-5">
             <div className="flex items-start justify-between mb-3">
-              <div className="w-9 h-9 bg-alice rounded-lg flex items-center justify-center">
+              <div className="w-9 h-9 bg-alice flex items-center justify-center">
                 <Users className="w-4 h-4 text-navy" />
               </div>
               <span className="text-xs text-green-600 font-medium flex items-center gap-0.5">
@@ -75,9 +75,9 @@ export default async function AnalyticsPage() {
             <p className="text-xs text-slate-400 mt-0.5">Celkem zaměstnanců</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white border border-slate-100 shadow-sm p-5">
             <div className="flex items-start justify-between mb-3">
-              <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center">
+              <div className="w-9 h-9 bg-red-50 flex items-center justify-center">
                 <TrendingDown className="w-4 h-4 text-red-500" />
               </div>
               <span className="text-xs text-slate-400">2024</span>
@@ -86,9 +86,9 @@ export default async function AnalyticsPage() {
             <p className="text-xs text-slate-400 mt-0.5">Míra fluktuace</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white border border-slate-100 shadow-sm p-5">
             <div className="flex items-start justify-between mb-3">
-              <div className="w-9 h-9 bg-alice rounded-lg flex items-center justify-center">
+              <div className="w-9 h-9 bg-alice flex items-center justify-center">
                 <Clock className="w-4 h-4 text-navy" />
               </div>
             </div>
@@ -96,9 +96,9 @@ export default async function AnalyticsPage() {
             <p className="text-xs text-slate-400 mt-0.5">Průměrná délka (měs.)</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white border border-slate-100 shadow-sm p-5">
             <div className="flex items-start justify-between mb-3">
-              <div className="w-9 h-9 bg-violet/10 rounded-lg flex items-center justify-center">
+              <div className="w-9 h-9 bg-violet/10 flex items-center justify-center">
                 <Star className="w-4 h-4 text-violet" />
               </div>
             </div>
@@ -117,7 +117,7 @@ export default async function AnalyticsPage() {
         />
 
         {/* Employee performance table */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Efektivita zaměstnanců</h3>
             <p className="text-xs text-slate-400 mt-0.5">Docházka, plnění úkolů, hodnocení</p>
@@ -173,7 +173,7 @@ export default async function AnalyticsPage() {
                         <ScoreBar value={emp.onboardingProgress} color={emp.onboardingProgress === 100 ? 'bg-green-400' : 'bg-amber-400'} />
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-semibold ${scoreBg(emp.performanceScore)}`}>
+                        <span className={`inline-flex items-center px-2.5 py-1  text-sm font-semibold ${scoreBg(emp.performanceScore)}`}>
                           {emp.performanceScore}
                         </span>
                       </td>
@@ -187,7 +187,7 @@ export default async function AnalyticsPage() {
 
         {/* Tenure & employment type breakdown */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+          <div className="bg-white border border-slate-100 shadow-sm p-6">
             <h3 className="font-headline font-semibold text-navy mb-4">Délka spolupráce</h3>
             <div className="space-y-3">
               {DEMO_EMPLOYEE_PERFORMANCE.sort((a, b) => b.tenure - a.tenure).map((emp) => (
@@ -212,7 +212,7 @@ export default async function AnalyticsPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+          <div className="bg-white border border-slate-100 shadow-sm p-6">
             <h3 className="font-headline font-semibold text-navy mb-4">Typy spolupráce</h3>
             <div className="space-y-3">
               {EMPLOYMENT_TYPES.map((et) => {

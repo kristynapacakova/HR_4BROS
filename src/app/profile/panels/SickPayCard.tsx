@@ -56,7 +56,7 @@ export function SickPayCard({ monthlySalary, initialDays = 0 }: { monthlySalary:
   const r = computeSickPay(monthlySalary, days)
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+    <div className="bg-white border border-slate-100 shadow-sm p-6">
       <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center">
@@ -71,7 +71,7 @@ export function SickPayCard({ monthlySalary, initialDays = 0 }: { monthlySalary:
             type="number" min={1} max={60}
             value={days}
             onChange={e => setDays(Math.max(1, Number(e.target.value) || 1))}
-            className="w-16 px-2 py-1.5 border border-slate-200 rounded-lg text-sm text-navy text-center focus:outline-none focus:ring-2 focus:ring-violet"
+            className="w-16 px-2 py-1.5 border border-slate-200 text-sm text-navy text-center focus:outline-none focus:ring-2 focus:ring-violet"
           />
         </div>
       </div>
@@ -103,7 +103,7 @@ export function SickPayCard({ monthlySalary, initialDays = 0 }: { monthlySalary:
       </button>
 
       {open && (
-        <div className="mt-3 rounded-2xl bg-[#f3f0fd] p-4 space-y-1.5 text-sm">
+        <div className="mt-3 bg-[#f3f0fd] p-4 space-y-1.5 text-sm">
           {[
             ['Průměrný hodinový výdělek', fmt(r.avgHourly) + '/h'],
             [`Po redukci (90/60/30 % dle hranic ${YEAR})`, fmt(r.reduced) + '/h'],

@@ -34,7 +34,7 @@ export function SickNoteUpload({ requestId }: { requestId: string }) {
 
   if (attachment) {
     return (
-      <div className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-green-50 border border-green-100 w-fit">
+      <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-green-50 border border-green-100 w-fit">
         <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
         <span className="text-xs text-green-700 truncate max-w-[160px]">{attachment.name}</span>
         <button

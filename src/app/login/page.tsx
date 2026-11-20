@@ -29,20 +29,20 @@ function LoginForm() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-8">
+        <div className="bg-white shadow-md border border-slate-100 p-8">
           <h2 className="text-xl font-headline font-semibold text-navy mb-1">Přihlásit se</h2>
           <p className="text-slate-500 text-sm mb-6">
             Zadejte svůj firemní e-mail pro přihlášení.
           </p>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-4 p-3 bg-red-50 border border-red-200">
               <p className="text-red-700 text-sm">Nastala chyba při přihlášení. Zkuste to prosím znovu.</p>
             </div>
           )}
 
           {/* Demo notice */}
-          <div className="mb-5 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="mb-5 p-3 bg-amber-50 border border-amber-200">
             <p className="text-amber-800 text-xs font-medium mb-1">Demo verze</p>
             <p className="text-amber-700 text-xs leading-relaxed">
               <strong>admin@fourbros.cz</strong> — Admin &amp; HR,{' '}
@@ -65,13 +65,13 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="vas@fourbros.cz"
                 required
-                className="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent transition-all"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-violet hover:bg-violet-dark text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              className="w-full bg-violet hover:bg-violet-dark text-white font-medium py-3 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             >
               {loading ? 'Přihlašování...' : 'Přihlásit se'}
             </button>

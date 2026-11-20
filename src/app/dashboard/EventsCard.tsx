@@ -160,7 +160,7 @@ export function EventsCard({ teamBirthdays, isAdmin }: { teamBirthdays: TeamBirt
   const empty = upcoming.length === 0 && weekBirthdays.length === 0
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+    <div className="bg-white border border-slate-100 shadow-sm p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h3 className="font-headline text-navy">Kalendář akcí</h3>
@@ -196,7 +196,7 @@ export function EventsCard({ teamBirthdays, isAdmin }: { teamBirthdays: TeamBirt
 
       {/* Google Calendar settings (admin) */}
       {isAdmin && showSettings && (
-        <div className="mb-4 p-4 rounded-2xl bg-[#F7F4FE] space-y-2">
+        <div className="mb-4 p-4 bg-[#F7F4FE] space-y-2">
           <p className="text-xs font-semibold text-navy">Napojení na Google Kalendář</p>
           <p className="text-[11px] text-slate-500 leading-relaxed">
             V Google Kalendáři otevři <strong>Nastavení kalendáře → Integrovat kalendář</strong> a zkopíruj
@@ -220,7 +220,7 @@ export function EventsCard({ teamBirthdays, isAdmin }: { teamBirthdays: TeamBirt
 
       {/* Add form (admin) */}
       {isAdmin && adding && (
-        <div className="flex flex-wrap items-center gap-2 mb-4 p-3 rounded-2xl bg-[#F7F4FE]">
+        <div className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-[#F7F4FE]">
           <input
             className="input !w-52 !bg-white"
             placeholder="Název akce (grilovačka…)"

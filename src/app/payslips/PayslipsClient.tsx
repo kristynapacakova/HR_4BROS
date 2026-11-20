@@ -118,7 +118,7 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
                 i
               </span>
               {showOtherDetail && (
-                <span className="absolute left-0 top-full mt-1.5 z-10 w-56 bg-navy text-white text-[11px] leading-snug rounded-lg px-3 py-2 shadow-lg text-left normal-case">
+                <span className="absolute left-0 top-full mt-1.5 z-10 w-56 bg-navy text-white text-[11px] leading-snug px-3 py-2 shadow-lg text-left normal-case">
                   {otherItems.map((it) => (
                     <span key={it.label} className="flex items-center justify-between gap-3">
                       <span>{it.label}</span>
@@ -138,7 +138,7 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
       {open && (
         <tr>
           <td colSpan={7} className="px-6 pb-4">
-            <div className="rounded-xl bg-[#f3f0fd] p-3.5 space-y-2.5 text-sm">
+            <div className="bg-[#f3f0fd] p-3.5 space-y-2.5 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <span className="text-slate-500 flex items-center gap-1.5">
                   Faktura za odměnu
@@ -271,7 +271,7 @@ function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeN
                 i
               </span>
               {showOtherDetail && (
-                <span className="absolute left-0 top-full mt-1.5 z-10 w-56 bg-navy text-white text-[11px] leading-snug rounded-lg px-3 py-2 shadow-lg text-left normal-case">
+                <span className="absolute left-0 top-full mt-1.5 z-10 w-56 bg-navy text-white text-[11px] leading-snug px-3 py-2 shadow-lg text-left normal-case">
                   {otherItems.map((it) => (
                     <span key={it.label} className="flex items-center justify-between gap-3">
                       <span>{it.label}</span>
@@ -291,7 +291,7 @@ function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeN
       {open && (
         <tr>
           <td colSpan={7} className="px-6 pb-4">
-            <div className="rounded-xl bg-[#f3f0fd] p-3.5 space-y-2.5 text-sm">
+            <div className="bg-[#f3f0fd] p-3.5 space-y-2.5 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <span className="text-slate-500 flex items-center gap-1.5">
                   Výplatní páska
@@ -577,7 +577,7 @@ export function PayslipsClient({
 
       {/* Hero — current salary */}
       {latestReal && (
-        <div className="relative bg-navy rounded-2xl overflow-hidden">
+        <div className="relative bg-navy overflow-hidden">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-violet opacity-20" />
             <div className="absolute -left-6 -bottom-6 w-32 h-32 rounded-full bg-white opacity-[0.03]" />
@@ -600,7 +600,7 @@ export function PayslipsClient({
             </div>
 
             {/* Next raise info */}
-            <div className="mt-4 flex items-center gap-2 bg-white/10 rounded-xl px-4 py-2.5 w-fit">
+            <div className="mt-4 flex items-center gap-2 bg-white/10 px-4 py-2.5 w-fit">
               <TrendingUp className="w-4 h-4 text-violet-light flex-shrink-0" />
               <p className="text-sm text-white/80">
                 Další navýšení:{' '}
@@ -617,7 +617,7 @@ export function PayslipsClient({
 
       {/* Doklady k proplacení — sbalitelné, samo se rozbalí když je letos co řešit */}
       {employeeId && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <button
             type="button"
             onClick={() => setExpSectionOpen((o) => !o)}
@@ -704,7 +704,7 @@ export function PayslipsClient({
               {!addingExpense ? (
                 <button
                   onClick={() => setAddingExpense(true)}
-                  className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
+                  className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
                 >
                   <Upload className="w-4 h-4 flex-shrink-0" />
                   Nahrát doklad k proplacení
@@ -718,7 +718,7 @@ export function PayslipsClient({
                         <button
                           type="button"
                           onClick={() => setExpSign('PLUS')}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+                          className={`px-3 py-2  text-sm font-medium border-2 transition-colors ${
                             expSign === 'PLUS' ? 'border-green-500 bg-green-50 text-green-700' : 'border-slate-200 text-slate-500'
                           }`}
                         >
@@ -727,7 +727,7 @@ export function PayslipsClient({
                         <button
                           type="button"
                           onClick={() => setExpSign('MINUS')}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+                          className={`px-3 py-2  text-sm font-medium border-2 transition-colors ${
                             expSign === 'MINUS' ? 'border-red-400 bg-red-50 text-red-600' : 'border-slate-200 text-slate-500'
                           }`}
                         >
@@ -744,7 +744,7 @@ export function PayslipsClient({
                       onChange={(e) => setExpTitle(e.target.value)}
                       placeholder="např. Oběd s klientem"
                       required
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -756,7 +756,7 @@ export function PayslipsClient({
                         value={expAmount}
                         onChange={(e) => setExpAmount(e.target.value)}
                         required
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -764,7 +764,7 @@ export function PayslipsClient({
                       <select
                         value={expCategory}
                         onChange={(e) => setExpCategory(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                       >
                         {EXPENSE_CATEGORIES.filter((c) => !editingExpenseId || c.value !== 'SPORT').map((c) => (
                           <option key={c.value} value={c.value}>{c.label}</option>
@@ -778,7 +778,7 @@ export function PayslipsClient({
                       <select
                         value={expMonth}
                         onChange={(e) => setExpMonth(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                       >
                         {MONTH_NAMES.map((name, i) => (
                           <option key={name} value={i + 1}>{name}</option>
@@ -787,7 +787,7 @@ export function PayslipsClient({
                       <select
                         value={expYear}
                         onChange={(e) => setExpYear(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                       >
                         {[expYear - 1, expYear, expYear + 1].filter((y, i, arr) => arr.indexOf(y) === i).map((y) => (
                           <option key={y} value={y}>{y}</option>
@@ -828,7 +828,7 @@ export function PayslipsClient({
         const adjustedNet = latestReal.netAmount + benefitAmount + icoExpensesTotal + approvedExpensesTotal - (sick?.deduction ?? 0)
 
         return (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white border border-slate-100 shadow-sm p-5">
             <p className="text-sm font-semibold text-navy mb-3">Rozpis odměny — {MONTH_NAMES[latestReal.month - 1]} {latestReal.year}</p>
             <div className="space-y-2 text-sm">
               {isICO ? (() => {
@@ -925,7 +925,7 @@ export function PayslipsClient({
                     <span className="font-medium text-red-500">−{fmt(sick.deduction, 'CZK')}</span>
                   </button>
                   {showSickDetail && (
-                    <div className="mt-3 rounded-2xl bg-[#f3f0fd] p-4 space-y-1.5">
+                    <div className="mt-3 bg-[#f3f0fd] p-4 space-y-1.5">
                       {[
                         ['Průměrný hodinový výdělek', `${fmt(sick.avgHourly, 'CZK')}/h`],
                         ['Po redukci (90/60/30 %)', `${fmt(sick.reduced, 'CZK')}/h`],
@@ -954,7 +954,7 @@ export function PayslipsClient({
       })()}
 
       {/* Přehled výplat — klikatelné roky nahoře, výchozí je aktuální rok */}
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy mb-3">
             {isICO ? 'Přehled faktur' : 'Přehled výplat'}
@@ -964,7 +964,7 @@ export function PayslipsClient({
               <button
                 key={y}
                 onClick={() => setSelectedYear(y)}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
+                className={`px-3 py-1  text-sm font-medium transition-all ${
                   y === selectedYear ? 'bg-violet text-white' : 'text-slate-500 hover:text-navy hover:bg-slate-50'
                 }`}
               >

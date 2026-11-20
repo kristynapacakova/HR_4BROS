@@ -34,7 +34,7 @@ function EditForm({ req, onSave, onCancel }: {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
         <div>
@@ -42,7 +42,7 @@ function EditForm({ req, onSave, onCancel }: {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           >
             {EXPENSE_CATEGORIES.filter((c) => c.value !== 'SPORT').map((c) => (
               <option key={c.value} value={c.value}>{c.label}</option>
@@ -58,7 +58,7 @@ function EditForm({ req, onSave, onCancel }: {
             min={1}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
         <div>
@@ -66,7 +66,7 @@ function EditForm({ req, onSave, onCancel }: {
           <select
             value={month}
             onChange={(e) => setMonth(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           >
             {MONTH_NAMES_CZ.map((name, i) => (
               <option key={name} value={i + 1}>{name}</option>
@@ -79,7 +79,7 @@ function EditForm({ req, onSave, onCancel }: {
             type="number"
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
       </div>
@@ -89,7 +89,7 @@ function EditForm({ req, onSave, onCancel }: {
           <button
             type="button"
             onClick={() => setSign('PLUS')}
-            className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+            className={`px-3 py-2  text-sm font-medium border-2 transition-colors ${
               sign === 'PLUS' ? 'border-green-500 bg-green-50 text-green-700' : 'border-slate-200 text-slate-500'
             }`}
           >
@@ -98,7 +98,7 @@ function EditForm({ req, onSave, onCancel }: {
           <button
             type="button"
             onClick={() => setSign('MINUS')}
-            className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+            className={`px-3 py-2  text-sm font-medium border-2 transition-colors ${
               sign === 'MINUS' ? 'border-red-400 bg-red-50 text-red-600' : 'border-slate-200 text-slate-500'
             }`}
           >
@@ -167,7 +167,7 @@ export function ExpenseAdmin({ seedRequests }: { seedRequests: ExpenseRequest[] 
   return (
     <div className="space-y-6">
       {/* Čekající */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <h3 className="font-headline font-semibold text-navy">Čekající doklady</h3>
           {pending.length > 0 && (
@@ -234,7 +234,7 @@ export function ExpenseAdmin({ seedRequests }: { seedRequests: ExpenseRequest[] 
 
       {/* Historie */}
       {processed.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Vyřízené doklady</h3>
           </div>

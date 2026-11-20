@@ -28,7 +28,7 @@ export function TeamLeadCell({ teamMemberId, baseTeamLeadId }: { teamMemberId: s
     <select
       value={current ?? ''}
       onChange={(e) => saveTeamLeadOverride(teamMemberId, e.target.value || null)}
-      className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+      className="text-xs border border-slate-200 px-2 py-1.5 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
     >
       <option value="">Nepřiřazeno</option>
       {candidates.map((c) => (

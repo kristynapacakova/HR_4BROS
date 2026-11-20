@@ -169,7 +169,7 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
           <Trash2 className="w-3.5 h-3.5" /> Klikni na absenci v tabulce a smaž ji, když se nakonec nečerpala.
         </p>
       )}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="border-collapse">
             <thead>
@@ -210,7 +210,7 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
                               ? `${colors!.label}${pending ? ' · čeká na schválení' : ''}${canEdit ? ' · klikni pro smazání' : ''}`
                               : holiday ? 'Státní svátek' : undefined
                           }
-                          className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-[11px] font-medium transition-colors ${
+                          className={`inline-flex items-center justify-center w-6 h-6  text-[11px] font-medium transition-colors ${
                             colors
                               ? `${colors.cell} ${pending ? 'opacity-50 border border-dashed border-current' : ''} ${canEdit ? 'cursor-pointer hover:ring-2 hover:ring-red-300' : ''}`
                               : holiday
@@ -236,7 +236,7 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
           const Icon = TYPE_COLORS[key].icon
           return (
             <span key={key} className="flex items-center gap-1.5 text-xs text-slate-500">
-              <span className={`w-5 h-5 rounded-md flex items-center justify-center ${TYPE_COLORS[key].cell}`}>
+              <span className={`w-5 h-5  flex items-center justify-center ${TYPE_COLORS[key].cell}`}>
                 <Icon className="w-3 h-3" />
               </span>
               {TYPE_COLORS[key].label}
@@ -252,7 +252,7 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
 
       {/* Nová absence */}
       {canEdit && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <button
             onClick={() => setAddOpen(o => !o)}
             className="w-full flex items-center gap-2 px-5 py-4 text-left text-sm font-medium text-navy hover:bg-slate-50 transition-colors"
@@ -299,11 +299,11 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
             <p className="text-xs text-slate-400">Dovolená čerpaná v roce {viewYear}: {myDaysUsed} {myDaysUsed === 1 ? 'den' : myDaysUsed < 5 ? 'dny' : 'dnů'}</p>
           </div>
           {myLeavesThisYear.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-dashed border-slate-200 py-10 text-center">
+            <div className="bg-white border border-dashed border-slate-200 py-10 text-center">
               <p className="text-sm text-slate-400">Zatím nemáš žádnou absenci.</p>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-50">
+            <div className="bg-white border border-slate-100 shadow-sm divide-y divide-slate-50">
               {myLeavesThisYear.map(l => {
                 const colors = TYPE_COLORS[l.type] ?? TYPE_COLORS.ANNUAL
                 return (

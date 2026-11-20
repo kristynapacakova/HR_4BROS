@@ -183,7 +183,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
         <select
           value={form.type}
           onChange={(e) => update('type', e.target.value)}
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+          className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
         >
           {LEAVE_TYPES.map(t => (
             <option key={t.value} value={t.value}>{t.label}</option>
@@ -193,7 +193,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
 
       {/* Sick note */}
       {isSick && (
-        <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+        <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 px-4 py-3">
           <AlertCircle className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-blue-800 leading-relaxed">
             Nevíš, jak postupovat při nemoci?{' '}
@@ -212,8 +212,8 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
             Neschopenka <span className="text-slate-300 font-normal">(nepovinné — pokud ji ještě nemáš, klidně doplň po skončení nemoci v historii žádostí)</span>
           </label>
           {attachment ? (
-            <div className="flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-xl bg-slate-50">
-              <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
+            <div className="flex items-center gap-3 px-4 py-3 border border-slate-200 bg-slate-50">
+              <div className="w-8 h-8 bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
                 {attachment.kind === 'pdf'
                   ? <FileText className="w-4 h-4 text-red-400" />
                   : <ImageIcon className="w-4 h-4 text-blue-400" />}
@@ -234,7 +234,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-slate-200 rounded-xl text-sm text-slate-500 hover:border-violet hover:text-violet hover:bg-violet/5 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-slate-200 text-sm text-slate-500 hover:border-violet hover:text-violet hover:bg-violet/5 transition-colors"
             >
               <Paperclip className="w-4 h-4" />
               Nahrát neschopenku
@@ -253,7 +253,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
 
       {/* Funeral note */}
       {isFuneral && (
-        <div className="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+        <div className="flex items-start gap-3 bg-slate-50 border border-slate-200 px-4 py-3">
           <Info className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-slate-600 leading-relaxed">
             Do důvodu zadej <strong>pohřeb</strong>.{' '}
@@ -273,7 +273,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
             value={form.startDate}
             onChange={(e) => update('startDate', e.target.value)}
             required
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
         {!form.halfDay && (
@@ -285,7 +285,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
               onChange={(e) => update('endDate', e.target.value)}
               required
               min={form.startDate}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
             />
           </div>
         )}
@@ -318,13 +318,13 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
             isHomeoffice ? 'Např. práce z domova' :
             'Např. letní dovolená'
           }
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+          className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
         />
       </div>
 
       {/* Live calculation */}
       {calc && (
-        <div className="rounded-xl border border-slate-100 bg-slate-50 px-5 py-4 space-y-2">
+        <div className="border border-slate-100 bg-slate-50 px-5 py-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-600">
               {selectedType.deductsBalance ? 'Pracovní dny k čerpání dovolené' : 'Délka absence'}
@@ -395,7 +395,7 @@ export function LeaveRequestForm({ monthlySalary = null }: { monthlySalary?: num
       <button
         type="submit"
         disabled={loading}
-        className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+        className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 transition-colors disabled:opacity-50 shadow-sm"
       >
         {loading ? 'Odesílám...' : selectedType.needsApproval ? 'Odeslat žádost' : 'Zapsat do docházky'}
       </button>

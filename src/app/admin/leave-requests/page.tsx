@@ -37,7 +37,7 @@ export default async function AdminLeaveRequestsPage() {
     >
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Pending */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
             <h3 className="font-headline font-semibold text-navy">Čekající žádosti</h3>
             {pending.length > 0 && (
@@ -71,7 +71,7 @@ export default async function AdminLeaveRequestsPage() {
 
         {/* Processed */}
         {processed.length > 0 && (
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100">
               <h3 className="font-headline font-semibold text-navy">Vyřízené žádosti</h3>
             </div>

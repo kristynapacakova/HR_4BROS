@@ -92,7 +92,7 @@ export default function TeamOverviewConcept() {
           {/* Top nav */}
           <div className="flex items-center justify-between mb-20">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm text-white" style={{ background: VIOLET }}>4B</div>
+              <div className="w-8 h-8 flex items-center justify-center font-bold text-sm text-white" style={{ background: VIOLET }}>4B</div>
               <span className="font-semibold tracking-tight" style={{ color: NAVY }}>Four Bros</span>
             </div>
             <nav className="hidden md:flex items-center gap-8 text-sm">
@@ -134,7 +134,7 @@ export default function TeamOverviewConcept() {
           {/* Stat strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
             {STATS.map(s => (
-              <div key={s.label} className="bg-white rounded-2xl px-6 py-5 shadow-[0_2px_16px_rgba(13,33,79,0.06)]">
+              <div key={s.label} className="bg-white px-6 py-5 shadow-[0_2px_16px_rgba(13,33,79,0.06)]">
                 <p className="font-bold text-2xl tracking-tight mb-1" style={{ color: NAVY }}>{s.value}</p>
                 <p className="text-slate-400 text-xs leading-snug">{s.label}</p>
               </div>
@@ -175,7 +175,7 @@ export default function TeamOverviewConcept() {
             {TEAM.map((m, i) => (
               <div
                 key={m.name}
-                className="group rounded-2xl border border-slate-100 p-5 flex flex-col gap-4 transition-all hover:shadow-[0_12px_40px_rgba(13,33,79,0.08)] hover:-translate-y-0.5"
+                className="group border border-slate-100 p-5 flex flex-col gap-4 transition-all hover:shadow-[0_12px_40px_rgba(13,33,79,0.08)] hover:-translate-y-0.5"
                 style={{ background: ALICE }}
               >
                 <div className="flex items-center justify-between">

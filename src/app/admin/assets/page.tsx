@@ -51,26 +51,26 @@ export default async function AdminAssetsPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+          <div className="bg-white border border-slate-100 shadow-sm p-4">
             <p className="text-2xl font-semibold text-navy">{allAssets.length}</p>
             <p className="text-xs text-slate-400 mt-0.5">Celkem položek</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+          <div className="bg-white border border-slate-100 shadow-sm p-4">
             <p className="text-2xl font-semibold text-navy">{assigned.length}</p>
             <p className="text-xs text-slate-400 mt-0.5">Přiřazeno</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+          <div className="bg-white border border-slate-100 shadow-sm p-4">
             <p className="text-2xl font-semibold text-navy">{unassigned.length}</p>
             <p className="text-xs text-slate-400 mt-0.5">Skladem</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+          <div className="bg-white border border-slate-100 shadow-sm p-4">
             <p className="text-2xl font-semibold text-navy">{allEmployees.length}</p>
             <p className="text-xs text-slate-400 mt-0.5">Zaměstnanců s majetkem</p>
           </div>
         </div>
 
         {/* Add asset form */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <h3 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
             <PlusCircle className="w-4 h-4 text-violet" />
             Přidat položku majetku
@@ -79,7 +79,7 @@ export default async function AdminAssetsPage() {
         </div>
 
         {/* Assets table */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Všechen majetek ({allAssets.length} položek)</h3>
           </div>
@@ -104,7 +104,7 @@ export default async function AdminAssetsPage() {
                     <tr key={asset.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-alice rounded-lg flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 bg-alice flex items-center justify-center flex-shrink-0">
                             <Icon className="w-4 h-4 text-navy" />
                           </div>
                           <div>
@@ -141,7 +141,7 @@ export default async function AdminAssetsPage() {
         </div>
 
         {/* Per-employee view */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Majetek podle zaměstnanců</h3>
           </div>
@@ -164,7 +164,7 @@ export default async function AdminAssetsPage() {
                       {empAssets.map((a) => {
                         const Icon = TYPE_ICONS[a.type] || Package
                         return (
-                          <div key={a.id} className="flex items-center gap-1.5 bg-alice px-3 py-1.5 rounded-lg text-xs text-navy">
+                          <div key={a.id} className="flex items-center gap-1.5 bg-alice px-3 py-1.5 text-xs text-navy">
                             <Icon className="w-3.5 h-3.5 text-violet" />
                             <span>{a.name}</span>
                           </div>

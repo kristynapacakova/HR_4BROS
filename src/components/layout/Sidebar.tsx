@@ -96,11 +96,11 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
       <div className="relative flex items-center justify-between border-b border-slate-100 px-5 py-5">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.svg" alt="4BROS" className="h-7 w-auto flex-shrink-0" />
+          <img src="/brand/symbol.svg" alt="4B" className="h-6 w-auto flex-shrink-0" />
           <p className="text-slate-400 text-[11px] tracking-wide border-l border-slate-200 pl-3">HR Portál</p>
         </div>
         {onClose && (
-          <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-navy p-1.5 rounded-lg transition-colors flex-shrink-0">
+          <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-navy p-1.5 transition-colors flex-shrink-0">
             <X className="w-4 h-4" />
           </button>
         )}
@@ -135,7 +135,7 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
 
       {/* User footer */}
       <div className="py-3 border-t border-slate-100 px-3">
-        <div className="flex items-center mb-0.5 gap-3 px-3 py-2.5 rounded-xl">
+        <div className="flex items-center mb-0.5 gap-3 px-3 py-2.5">
           <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-violet/15">
             <span className="text-white text-xs font-semibold">
               {userName?.[0]?.toUpperCase() || userEmail?.[0]?.toUpperCase() || '?'}

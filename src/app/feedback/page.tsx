@@ -18,13 +18,13 @@ export default async function FeedbackPage() {
       <div className="max-w-2xl mx-auto space-y-6">
 
         {/* Hero */}
-        <div className="relative bg-navy rounded-2xl overflow-hidden">
+        <div className="relative bg-navy overflow-hidden">
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white opacity-[0.06]" />
             <div className="absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-white opacity-[0.03]" />
           </div>
           <div className="relative z-10 px-7 py-6 flex items-start gap-4">
-            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="w-12 h-12 bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
               <MessageSquareHeart className="w-6 h-6 text-white" />
             </div>
             <div>

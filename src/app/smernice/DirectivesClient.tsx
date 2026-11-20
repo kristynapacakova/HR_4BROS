@@ -95,7 +95,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="bg-white shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Modal Header */}
         <div className={`${config.headerBg} text-white px-6 py-5 flex items-start justify-between`}>
           <div className="flex-1 min-w-0 pr-4">
@@ -120,12 +120,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto px-6 py-6">
           <div
-            className="prose prose-slate max-w-none
-              prose-h2:text-xl prose-h2:font-bold prose-h2:text-[#1e3a5f] prose-h2:mt-0
-              prose-h3:text-base prose-h3:font-semibold prose-h3:text-slate-800
-              prose-p:text-slate-700 prose-p:leading-relaxed
-              prose-ul:text-slate-700 prose-ol:text-slate-700
-              prose-li:leading-relaxed prose-strong:text-slate-800"
+            className="prose prose-slate max-w-none prose-h2:text-xl prose-h2:font-bold prose-h2:text-[#1e3a5f] prose-h2:mt-0 prose-h3:text-base prose-h3:font-semibold prose-h3:text-slate-800 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:text-slate-700 prose-ol:text-slate-700 prose-li:leading-relaxed prose-strong:text-slate-800"
             dangerouslySetInnerHTML={{ __html: directive.body }}
           />
         </div>
@@ -156,7 +151,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 border border-slate-300 hover:border-slate-400 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 border border-slate-300 hover:border-slate-400 transition-colors"
             >
               Zavřít
             </button>
@@ -167,7 +162,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
                   onAcknowledge(directive.id)
                   onClose()
                 }}
-                className="px-5 py-2 text-sm font-semibold text-white bg-violet-600 rounded-lg hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="px-5 py-2 text-sm font-semibold text-white bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Potvrdit souhlas
               </button>
@@ -209,7 +204,7 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       {/* Summary Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+      <div className="bg-white shadow-sm border border-slate-200 p-5">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="text-base font-semibold text-slate-800">Přehled souhlasů</h2>
@@ -238,7 +233,7 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
             <button
               key={directive.id}
               onClick={() => setSelectedDirective(directive)}
-              className={`w-full text-left bg-white rounded-xl shadow-sm border border-slate-200 border-l-4 ${config.borderColor} px-5 py-4 hover:shadow-md transition-shadow`}
+              className={`w-full text-left bg-white  shadow-sm border border-slate-200 border-l-4 ${config.borderColor} px-5 py-4 hover:shadow-md transition-shadow`}
             >
               <div className="flex items-start gap-4">
                 <div className={`mt-0.5 ${config.iconColor} flex-shrink-0`}>
