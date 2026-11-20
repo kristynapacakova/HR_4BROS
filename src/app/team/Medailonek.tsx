@@ -28,7 +28,7 @@ export function Medailonek({
     <div className="relative flex items-center justify-center" style={{ width: size * 2.2, height: size * 1.5 }}>
       <WatercolorBackdrop className="w-full h-full object-contain" />
       <div
-        className="relative rounded-full overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#f3f0fd] flex-shrink-0"
+        className="relative overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#f3f0fd] flex-shrink-0"
         style={{ width: size, height: size }}
       >
         {photo ? (

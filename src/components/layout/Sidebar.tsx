@@ -18,8 +18,6 @@ import {
   BookOpen,
   Coins,
   FilePen,
-  GraduationCap,
-  Dumbbell,
   Receipt,
   FileText,
   X,
@@ -43,8 +41,6 @@ const adminItems = [
   { label: 'Přehled docházky', href: '/admin/leave-calendar', icon: CalendarRange },
   { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
   { label: 'Přehled odměn', href: '/admin/odmeny', icon: Coins },
-  { label: 'Vzdělávací budget', href: '/admin/vzdelavani', icon: GraduationCap },
-  { label: 'Sportovní benefit', href: '/admin/benefity', icon: Dumbbell },
   { label: 'Doklady k proplacení', href: '/admin/vydaje', icon: Receipt },
   { label: 'Přehled faktur OSVČ', href: '/admin/faktury', icon: FileText },
   { label: 'Smlouvy', href: '/admin/smlouvy', icon: FilePen },
@@ -94,11 +90,11 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
     <div className="relative flex flex-col h-full bg-white border-r border-slate-100">
       {/* Logo header */}
       <div className="relative flex items-center justify-between border-b border-slate-100 px-5 py-5">
-        <div className="flex items-center gap-3">
+        <Link href="/dashboard" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/symbol.svg" alt="4B" className="h-6 w-auto flex-shrink-0" />
           <p className="text-slate-400 text-[11px] tracking-wide border-l border-slate-200 pl-3">HR Portál</p>
-        </div>
+        </Link>
         {onClose && (
           <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-navy p-1.5 transition-colors flex-shrink-0">
             <X className="w-4 h-4" />

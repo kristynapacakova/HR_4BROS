@@ -61,7 +61,7 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
       <div className="relative z-10 px-7 py-7">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full overflow-hidden bg-alice flex items-center justify-center flex-shrink-0 ring-2 ring-white shadow-sm">
+            <div className="w-14 h-14 overflow-hidden bg-alice flex items-center justify-center flex-shrink-0 ring-2 ring-white shadow-sm">
               {photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={photo} alt="" className="w-full h-full object-cover" />

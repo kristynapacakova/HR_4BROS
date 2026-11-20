@@ -116,7 +116,7 @@ export function TeamClient({ members, departments }: {
               href={`/team/${member.id}`}
               className="group bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-4 flex flex-col items-center text-center hover:shadow-[0_8px_32px_rgba(13,33,79,0.08)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              <div className="relative w-16 h-16 rounded-full overflow-hidden bg-[#f3f0fd] flex items-center justify-center flex-shrink-0">
+              <div className="relative w-16 h-16 overflow-hidden bg-[#f3f0fd] flex items-center justify-center flex-shrink-0">
                 {override?.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
