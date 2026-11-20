@@ -1,13 +1,10 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_EMPLOYEES, DEMO_PAYSLIPS, DEMO_USER_ICO, DEMO_ICO_INVOICES, DEMO_EXPENSE_REQUESTS, DEMO_HR_STATS } from '@/lib/mock-data'
+import { DEMO_EMPLOYEES, DEMO_HR_STATS } from '@/lib/mock-data'
 import { EmployeesPanel } from './employees/EmployeesPanel'
 import { AnalyticsPanel } from './analytics/AnalyticsPanel'
 import { AssetsClient } from './assets/AssetsClient'
-import { SmlouvySection } from './smlouvy/SmlouvySection'
-import { FeedbackPanel } from './feedback/FeedbackPanel'
-import { OdmenySection } from './odmeny/OdmenySection'
 import { AdminTabs } from './AdminTabs'
 
 function fmt(n: number) {
@@ -20,24 +17,6 @@ export default async function AdminPage() {
   if (session.user.role !== 'ADMIN') redirect('/dashboard')
 
   const s = DEMO_HR_STATS
-
-  // Přehled odměn — HPP/DPP/DPČ výplaty
-  const hppEmployees = DEMO_EMPLOYEES.filter(e => e.employmentType && ['HPP', 'DPP', 'DPC'].includes(e.employmentType))
-  const payslipRows = DEMO_PAYSLIPS.map(p => {
-    const emp = hppEmployees[0]
-    return {
-      id: p.id, name: emp?.name || '—', email: emp?.email || '—',
-      employmentType: emp?.employmentType || 'HPP',
-      grossAmount: p.grossAmount, netAmount: p.netAmount,
-      month: p.month, year: p.year, currency: p.currency,
-    }
-  })
-
-  // Přehled odměn — faktury OSVČ
-  const icoEmployees = DEMO_EMPLOYEES.filter(e => e.employmentType === 'ICO').map(e => ({
-    id: e.email.toLowerCase() === DEMO_USER_ICO.email.toLowerCase() ? DEMO_USER_ICO.id : e.id,
-    name: e.name, email: e.email,
-  }))
 
   return (
     <AppShell title="Admin panel" isAdmin={true} userName={session.user.name} userEmail={session.user.email}>
@@ -71,9 +50,6 @@ export default async function AdminPage() {
           uzivatele: <EmployeesPanel employees={DEMO_EMPLOYEES} />,
           analytika: <AnalyticsPanel />,
           majetek: <AssetsClient employees={DEMO_EMPLOYEES.map(e => ({ id: e.id, name: e.name, email: e.email }))} />,
-          smlouvy: <SmlouvySection />,
-          duvera: <FeedbackPanel />,
-          odmeny: <OdmenySection payslipRows={payslipRows} icoEmployees={icoEmployees} invoices={DEMO_ICO_INVOICES} expenseRequests={DEMO_EXPENSE_REQUESTS} />,
         }} />
 
       </div>
