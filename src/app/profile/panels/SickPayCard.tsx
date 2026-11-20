@@ -56,7 +56,7 @@ export function SickPayCard({ monthlySalary, initialDays = 0 }: { monthlySalary:
   const r = computeSickPay(monthlySalary, days)
 
   return (
-    <div className="bg-white border border-slate-100 shadow-sm p-6">
+    <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
       <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center">

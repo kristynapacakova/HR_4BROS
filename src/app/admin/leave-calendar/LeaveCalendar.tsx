@@ -169,7 +169,7 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
           <Trash2 className="w-3.5 h-3.5" /> Klikni na absenci v tabulce a smaž ji, když se nakonec nečerpala.
         </p>
       )}
-      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="border-collapse">
             <thead>
@@ -252,7 +252,7 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
 
       {/* Nová absence */}
       {canEdit && (
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <button
             onClick={() => setAddOpen(o => !o)}
             className="w-full flex items-center gap-2 px-5 py-4 text-left text-sm font-medium text-navy hover:bg-slate-50 transition-colors"
@@ -303,7 +303,7 @@ export function LeaveCalendar({ leaves: initialLeaves, canEdit = true }: { leave
               <p className="text-sm text-slate-400">Zatím nemáš žádnou absenci.</p>
             </div>
           ) : (
-            <div className="bg-white border border-slate-100 shadow-sm divide-y divide-slate-50">
+            <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] divide-y divide-slate-50">
               {myLeavesThisYear.map(l => {
                 const colors = TYPE_COLORS[l.type] ?? TYPE_COLORS.ANNUAL
                 return (

@@ -63,12 +63,12 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
       {/* Balance cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <BalanceCard title="Dovolená" used={leaveBalance.annualUsed} total={leaveBalance.annualTotal} remaining={annualRemaining} color="violet" />
-        <div className="bg-white border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 flex flex-col justify-between">
           <p className="text-xs font-medium text-slate-500 mb-1">Nemoc</p>
           <p className="text-2xl font-headline font-bold text-navy">{leaveBalance.sickUsed} dní</p>
           <p className="text-xs text-slate-400 mt-1">čerpáno letos</p>
         </div>
-        <div className="bg-white border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 flex flex-col justify-between">
           <div className="flex items-center gap-1.5 mb-1">
             <Home className="w-3.5 h-3.5 text-blue-400" />
             <p className="text-xs font-medium text-slate-500">Homeoffice</p>
@@ -79,7 +79,7 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
       </div>
 
       {/* New request — holidays auto-calculated inside form; sick-pay estimate appears inline when „Nemoc" is selected */}
-      <div className="bg-white border border-slate-100 shadow-sm p-6">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
         <h3 className="font-headline font-semibold text-navy mb-4 flex items-center gap-2">
           <Plus className="w-5 h-5 text-violet" />
           Nová žádost
@@ -91,7 +91,7 @@ export function TimeOffPanel({ isEmployee = false, monthlySalary = null }: { isE
       <HolidayTable year={currentYear} holidays={thisYearHolidays} today={today} />
 
       {/* History */}
-      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="font-headline font-semibold text-navy">Historie žádostí</h3>
         </div>
@@ -143,7 +143,7 @@ function HolidayTable({ year, holidays, today }: {
   }
 
   return (
-    <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+    <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 className="font-headline font-semibold text-navy">Státní svátky {year}</h3>
         <span className="text-xs text-slate-400">{holidays.length} svátků</span>
@@ -208,7 +208,7 @@ function BalanceCard({ title, used, total, remaining, color }: {
   const pct = total > 0 ? (used / total) * 100 : 0
   const barColor = color === 'violet' ? 'bg-violet' : 'bg-blue-500'
   return (
-    <div className="bg-white border border-slate-100 shadow-sm p-5">
+    <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
       <p className="text-xs font-medium text-slate-500 mb-1">{title}</p>
       <p className="text-3xl font-headline font-bold text-navy">{remaining}</p>
       <p className="text-xs text-slate-400 mb-3">zbývajících dní z {total}</p>

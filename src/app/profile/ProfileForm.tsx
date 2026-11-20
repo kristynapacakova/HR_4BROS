@@ -326,7 +326,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white border border-slate-100 shadow-sm p-6">
+    <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
       <h3 className="font-headline font-semibold text-navy mb-4 pb-3 border-b border-slate-100">{title}</h3>
       {children}
     </div>

@@ -167,7 +167,7 @@ export function ExpenseAdmin({ seedRequests }: { seedRequests: ExpenseRequest[] 
   return (
     <div className="space-y-6">
       {/* Čekající */}
-      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <h3 className="font-headline font-semibold text-navy">Čekající doklady</h3>
           {pending.length > 0 && (
@@ -234,7 +234,7 @@ export function ExpenseAdmin({ seedRequests }: { seedRequests: ExpenseRequest[] 
 
       {/* Historie */}
       {processed.length > 0 && (
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Vyřízené doklady</h3>
           </div>

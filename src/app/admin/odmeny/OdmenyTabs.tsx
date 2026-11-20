@@ -55,7 +55,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
   return (
     <div>
       {/* Tab switcher */}
-      <div className="flex gap-1 bg-white border border-slate-100 shadow-sm p-1 mb-5">
+      <div className="flex gap-1 bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-1 mb-5">
         {([
           { id: 'hpp', label: 'Výplaty (HPP/DPP/DPČ)' },
           { id: 'ico', label: 'Fakturace (IČO)' },
@@ -75,7 +75,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
       </div>
 
       {tab === 'hpp' && (
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Přehled výplat ({payslips.length})</h3>
           </div>
@@ -118,7 +118,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
       )}
 
       {tab === 'ico' && (
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Přehled faktur ({invoices.length})</h3>
           </div>

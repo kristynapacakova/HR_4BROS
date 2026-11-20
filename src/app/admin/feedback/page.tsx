@@ -29,7 +29,7 @@ export default async function AdminFeedbackPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white border border-slate-100 shadow-sm p-5">
+          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
             <p className="text-2xl font-headline text-navy">{feedback.length}</p>
             <p className="text-xs text-slate-400 mt-0.5">Celkem zpráv</p>
           </div>
@@ -37,7 +37,7 @@ export default async function AdminFeedbackPage() {
             <p className={`text-2xl font-headline ${newCount > 0 ? 'text-violet' : 'text-navy'}`}>{newCount}</p>
             <p className="text-xs text-slate-400 mt-0.5">Nových zpráv</p>
           </div>
-          <div className="bg-white border border-slate-100 shadow-sm p-5">
+          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
             <p className="text-2xl font-headline text-navy">{anonymousCount}</p>
             <p className="text-xs text-slate-400 mt-0.5">Anonymních</p>
           </div>
@@ -46,7 +46,7 @@ export default async function AdminFeedbackPage() {
         {/* Messages */}
         <div className="space-y-4">
           {feedback.length === 0 ? (
-            <div className="bg-white border border-slate-100 shadow-sm p-12 text-center">
+            <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-12 text-center">
               <MessageSquareHeart className="w-10 h-10 text-slate-200 mx-auto mb-3" />
               <p className="text-slate-400">Zatím žádné zprávy.</p>
             </div>

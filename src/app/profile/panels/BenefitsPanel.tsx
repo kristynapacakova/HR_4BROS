@@ -89,7 +89,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
 
       {/* Sportovní benefit — Multisport karta, nebo příspěvek na sport */}
       {benefitType === null && (
-        <div className="bg-white border border-slate-100 shadow-sm p-6">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
               <Dumbbell className="w-5 h-5 text-slate-400" />
@@ -103,7 +103,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
       )}
 
       {benefitType === 'MULTISPORT' && (
-        <div className="bg-white border border-slate-100 shadow-sm p-6">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
@@ -132,7 +132,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
       )}
 
       {benefitType === 'SPORT_CONTRIBUTION' && (
-        <div className="bg-white border border-slate-100 shadow-sm p-6">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
               <HeartPulse className="w-5 h-5 text-green-600" />

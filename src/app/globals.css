@@ -60,31 +60,56 @@
 
 @layer components {
   .card {
-    @apply bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-6;
+    @apply bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6;
   }
 
   .input {
-    @apply w-full px-4 py-2.5 bg-slate-100 rounded-xl text-sm text-navy placeholder:text-slate-400
-           focus:outline-none focus:ring-2 focus:ring-violet/40 focus:bg-white transition-all duration-150;
+    @apply w-full px-4 py-2.5 bg-white text-sm text-navy placeholder:text-slate-400 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)]
+           focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F] transition-all duration-150;
+  }
+
+  /* Kicker / eyebrow label — brand manual's `.k` style */
+  .kicker {
+    @apply text-[12px] font-semibold uppercase tracking-[0.14em] text-navy/60;
+  }
+
+  /* Sharp-edged tag with inset border, per brand manual */
+  .tag {
+    @apply inline-flex items-center gap-1 px-2 py-1 text-xs font-bold shadow-[inset_0_0_0_1px_#0D214F] bg-white text-navy;
   }
 
   .badge-pending {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800;
+    @apply inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase tracking-[0.08em] bg-white text-navy shadow-[inset_0_0_0_1px_#F0E100];
   }
 
   .badge-approved {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+    @apply inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase tracking-[0.08em] bg-mint text-navy;
   }
 
   .badge-rejected {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800;
+    @apply inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase tracking-[0.08em] bg-white text-navy/40 line-through shadow-[inset_0_0_0_1px_rgba(13,33,79,0.3)];
   }
 
   .nav-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-navy-200 hover:bg-white/10 hover:text-white transition-all duration-150 text-sm font-medium;
+    @apply flex items-center gap-3 px-3 py-2.5 text-navy-200 hover:bg-white/10 hover:text-white transition-all duration-150 text-sm font-medium;
   }
 
   .nav-item.active {
     @apply bg-white/15 text-white;
+  }
+
+  /* Stair-step corner accent — reserved for hero/statement moments only */
+  .stair-corner {
+    position: relative;
+  }
+  .stair-corner::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: clamp(48px, 8vw, 96px);
+    aspect-ratio: 1;
+    background: var(--stair-color, #F0E100);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 50%, 50% 50%, 50% 0);
   }
 }
