@@ -27,7 +27,7 @@ export function RoleCell({ person }: { person: PersonRecord }) {
     <select
       value={current}
       onChange={(e) => savePersonOverride(person.id, { role: e.target.value as PersonRecord['role'] })}
-      className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+      className="text-xs border border-slate-200 px-2 py-1.5 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
     >
       {Object.entries(PERSON_ROLE_LABELS).map(([value, label]) => (
         <option key={value} value={value}>{label}</option>
@@ -51,7 +51,7 @@ export function LeaveDaysCell({ person }: { person: PersonRecord }) {
       placeholder="—"
       onChange={(e) => setValue(e.target.value === '' ? '' : Number(e.target.value))}
       onBlur={() => savePersonOverride(person.id, { annualLeaveDays: value === '' ? null : Number(value) })}
-      className="w-16 text-xs border border-slate-200 rounded-lg px-2 py-1.5 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+      className="w-16 text-xs border border-slate-200 px-2 py-1.5 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
     />
   )
 }
@@ -80,7 +80,7 @@ export function IcoFieldsCell({ person }: { person: PersonRecord }) {
         placeholder="IČO"
         onChange={(e) => setIco(e.target.value)}
         onBlur={() => savePersonOverride(person.id, { icoNumber: ico || null })}
-        className="w-28 text-xs border border-slate-200 rounded-lg px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+        className="w-28 text-xs border border-slate-200 px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
       />
       <div className="flex items-center gap-1">
         <input
@@ -91,7 +91,7 @@ export function IcoFieldsCell({ person }: { person: PersonRecord }) {
           title="Nájem kancelářského místa (Kč/měsíc)"
           onChange={(e) => setOffice(e.target.value === '' ? '' : Number(e.target.value))}
           onBlur={() => savePersonOverride(person.id, { officeAmount: office === '' ? null : Number(office) })}
-          className="w-20 text-xs border border-slate-200 rounded-lg px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+          className="w-20 text-xs border border-slate-200 px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
         />
         <input
           type="number"
@@ -101,7 +101,7 @@ export function IcoFieldsCell({ person }: { person: PersonRecord }) {
           title="Občerstvení (Kč/měsíc)"
           onChange={(e) => setRefresh(e.target.value === '' ? '' : Number(e.target.value))}
           onBlur={() => savePersonOverride(person.id, { refreshAmount: refresh === '' ? null : Number(refresh) })}
-          className="w-16 text-xs border border-slate-200 rounded-lg px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+          className="w-16 text-xs border border-slate-200 px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
         />
       </div>
     </div>

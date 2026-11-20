@@ -26,7 +26,7 @@ export function PhotoPositionEditor({
   if (!natural) {
     return (
       <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 text-sm text-slate-400">Načítám fotku…</div>
+        <div className="bg-white shadow-xl p-8 text-sm text-slate-400">Načítám fotku…</div>
       </div>
     )
   }
@@ -58,7 +58,7 @@ export function PhotoPositionEditor({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4" onClick={onCancel}>
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white shadow-xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
         <h3 className="font-headline font-semibold text-navy mb-1">Upravit fotku</h3>
         <p className="text-xs text-slate-400 mb-4">Foto přetáhni myší nebo prstem, ať je vidět obličej.</p>
 

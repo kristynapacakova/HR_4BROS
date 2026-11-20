@@ -221,7 +221,7 @@ export function MemberProfileClient({
 
       <div className="flex items-start gap-3 lg:gap-5">
         {/* One cohesive profile card */}
-        <div className="flex-1 min-w-0 bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="flex-1 min-w-0 bg-white shadow-sm overflow-hidden">
           {/* Photo + name + badges */}
           <div className="pt-8 pb-5 px-6 flex flex-col items-center text-center">
             <div className="relative">
@@ -291,7 +291,7 @@ export function MemberProfileClient({
                 >
                   <Sparkles className="w-3 h-3" />
                   {override.personality} · {PERSONALITY_TYPES[override.personality].name}
-                  <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-64 bg-navy text-white text-[11px] leading-snug rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 text-left">
+                  <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-64 bg-navy text-white text-[11px] leading-snug px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 text-left">
                     <strong className="block mb-0.5">{override.personality} — {PERSONALITY_TYPES[override.personality].name}</strong>
                     {PERSONALITY_TYPES[override.personality].desc}
                   </span>
@@ -316,7 +316,7 @@ export function MemberProfileClient({
                   value={bioDraft}
                   onChange={(e) => setBioDraft(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none"
                   placeholder="Pár vět o tobě…"
                 />
                 <div className="flex gap-2">
@@ -386,7 +386,7 @@ export function MemberProfileClient({
                     onChange={(e) => setInterestDraft(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addInterest(interestDraft) } }}
                     placeholder="Vlastní…"
-                    className="flex-1 px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                    className="flex-1 px-3 py-1.5 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                   />
                   <button onClick={() => addInterest(interestDraft)} className="px-3 py-1.5 bg-violet hover:bg-violet-dark text-white text-xs font-medium rounded-full transition-colors">
                     Přidat
@@ -417,7 +417,7 @@ export function MemberProfileClient({
                   value={helpDraft}
                   onChange={(e) => setHelpDraft(e.target.value)}
                   rows={2}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent resize-none"
                   placeholder="Např. React otázky, plánování akcí, marketingová strategie…"
                 />
                 <div className="flex gap-2">
@@ -445,7 +445,7 @@ export function MemberProfileClient({
                 <button
                   key={i}
                   onClick={() => setLightbox(src)}
-                  className="relative aspect-square rounded-lg overflow-hidden group bg-[#f3f0fd]"
+                  className="relative aspect-square overflow-hidden group bg-[#f3f0fd]"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={src} alt="" className="w-full h-full object-contain" />
@@ -460,7 +460,7 @@ export function MemberProfileClient({
                 </button>
               ))}
               {isMe && (
-                <label className="aspect-square rounded-lg border border-dashed border-slate-200 flex items-center justify-center cursor-pointer hover:border-slate-300 transition-colors text-slate-300 hover:text-violet">
+                <label className="aspect-square border border-dashed border-slate-200 flex items-center justify-center cursor-pointer hover:border-slate-300 transition-colors text-slate-300 hover:text-violet">
                   <Plus className="w-5 h-5" />
                   <input ref={galleryInputRef} type="file" accept="image/*" className="hidden" onChange={onGalleryPick} />
                 </label>
@@ -494,7 +494,7 @@ export function MemberProfileClient({
             <X className="w-5 h-5" />
           </button>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={lightbox} alt="" className="max-w-full max-h-full rounded-lg object-contain" onClick={(e) => e.stopPropagation()} />
+          <img src={lightbox} alt="" className="max-w-full max-h-full object-contain" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
     </div>

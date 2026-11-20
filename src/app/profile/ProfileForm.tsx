@@ -138,7 +138,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Demo notice */}
-      <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+      <div className="p-3 bg-amber-50 border border-amber-200">
         <p className="text-amber-800 text-xs">Demo verze — změny se neukládají</p>
       </div>
 
@@ -153,7 +153,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="např. Peťa, Kiki…"
-              className="w-full px-3 py-2 border rounded-lg text-sm transition-all bg-white border-violet/30 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              className="w-full px-3 py-2 border text-sm transition-all bg-white border-violet/30 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
             />
             <p className="text-[10px] text-slate-400 mt-1">Portál tě bude vítat touto přezdívkou. Tahle volba se ukládá.</p>
           </div>
@@ -187,7 +187,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
               type="date"
               value={birthDate}
               onChange={(e) => updateBirthDate(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
             />
             <p className="text-[10px] text-slate-400 mt-1">
               Propíše se do narozeninových připomínek v appce (Tým, dashboard). Automatický zápis do Google kalendáře
@@ -200,7 +200,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
               <select
                 value={personality}
                 onChange={(e) => updatePersonality(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm transition-all bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                className="w-full px-3 py-2 border text-sm transition-all bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               >
                 <option value="">— nevyplněno —</option>
                 {Object.entries(PERSONALITY_TYPES).map(([code, t]) => (
@@ -225,7 +225,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
               <select
                 value={insurance}
                 onChange={(e) => setInsurance(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               >
                 {INSURANCE_COMPANIES.map(i => <option key={i.code} value={i.code}>{i.code} · {i.name}</option>)}
               </select>
@@ -237,7 +237,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
                 value={startingSalary}
                 onChange={(e) => setStartingSalary(e.target.value)}
                 placeholder="např. 45 000"
-                className="w-full px-3 py-2 border rounded-lg text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               />
             </div>
             <div className="sm:col-span-2">
@@ -254,7 +254,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
           </div>
 
           {/* Školení BOZP */}
-          <div className={`mt-5 rounded-2xl p-4 border ${bozpOverdue ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200'}`}>
+          <div className={`mt-5  p-4 border ${bozpOverdue ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200'}`}>
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div>
                 <p className="text-sm font-semibold text-navy">Školení BOZP</p>
@@ -326,7 +326,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+    <div className="bg-white border border-slate-100 shadow-sm p-6">
       <h3 className="font-headline font-semibold text-navy mb-4 pb-3 border-b border-slate-100">{title}</h3>
       {children}
     </div>
@@ -357,7 +357,7 @@ function Field({
         onChange={onChange ? (e) => onChange(e.target.value) : undefined}
         readOnly={readOnly}
         placeholder={placeholder}
-        className={`w-full px-3 py-2 border rounded-lg text-sm transition-all ${
+        className={`w-full px-3 py-2 border  text-sm transition-all ${
           readOnly
             ? 'bg-slate-50 border-slate-100 text-slate-400 cursor-default'
             : 'bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent'

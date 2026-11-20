@@ -86,7 +86,7 @@ export function EduBudgetAdmin({
     <div className="space-y-6">
 
       {/* Rozpočty */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <div className="w-9 h-9 bg-alice rounded-full flex items-center justify-center flex-shrink-0">
             <GraduationCap className="w-4 h-4 text-navy" />
@@ -112,7 +112,7 @@ export function EduBudgetAdmin({
                     placeholder={String(budget)}
                     value={budgetInputs[emp.id] ?? ''}
                     onChange={(e) => setBudgetInputs((s) => ({ ...s, [emp.id]: e.target.value }))}
-                    className="w-28 px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                    className="w-28 px-3 py-1.5 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                   />
                   <button
                     onClick={() => saveBudget(emp.id)}
@@ -128,7 +128,7 @@ export function EduBudgetAdmin({
       </div>
 
       {/* Čekající žádosti */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <h3 className="font-headline font-semibold text-navy">Čekající žádosti</h3>
           {pending.length > 0 && (
@@ -178,7 +178,7 @@ export function EduBudgetAdmin({
 
       {/* Historie */}
       {processed.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Vyřízené žádosti</h3>
           </div>

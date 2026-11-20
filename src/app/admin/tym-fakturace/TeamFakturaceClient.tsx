@@ -42,7 +42,7 @@ export function TeamFakturaceClient({ team, teamLeadId, teamLeadName, teamLeadEm
 
   if (myIcoTeam.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-dashed border-slate-200 py-12 text-center">
+      <div className="bg-white border border-dashed border-slate-200 py-12 text-center">
         <p className="text-sm text-slate-400">Zatím ti HR nepřiřadilo žádného OSVČ spolupracovníka do týmu.</p>
       </div>
     )

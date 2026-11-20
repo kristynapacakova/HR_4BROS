@@ -93,7 +93,7 @@ export function ProfileTabs({
   return (
     <div>
       {/* Tab bar — horizontal pill row under the profile header, clearly separate from the main nav */}
-      <div className="flex flex-wrap gap-1.5 bg-slate-50 rounded-2xl p-1.5 mb-6">
+      <div className="flex flex-wrap gap-1.5 bg-slate-50 p-1.5 mb-6">
         {tabs.map(t => {
           const Icon = t.icon
           const active = tab === t.id
@@ -101,7 +101,7 @@ export function ProfileTabs({
             <button
               key={t.id}
               onClick={() => setTab(t.id as TabId)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-3.5 py-2  text-sm font-medium transition-all whitespace-nowrap ${
                 active ? 'bg-white text-violet shadow-sm' : 'text-slate-500 hover:text-navy'
               }`}
             >
@@ -136,7 +136,7 @@ export function ProfileTabs({
                   { label: 'Úvazek', value: hrData?.monthlyHours ? `${hrData.monthlyHours} h/měs` : '—' },
                   { label: 'Efektivita', value: efficiency ? `${efficiency} %` : '—', highlight: true },
                 ].map(c => (
-                  <div key={c.label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                  <div key={c.label} className="bg-white border border-slate-100 shadow-sm p-4">
                     <p className="text-xs text-slate-400 mb-1">{c.label}</p>
                     <p className={`text-xl font-headline font-bold ${c.highlight ? 'text-violet' : 'text-navy'}`}>{c.value}</p>
                   </div>
@@ -144,7 +144,7 @@ export function ProfileTabs({
               </div>
 
               {/* Detail form */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+              <div className="bg-white border border-slate-100 shadow-sm p-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-headline font-semibold text-navy">HR údaje</h3>
                   <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">Demo — nelze uložit</span>
@@ -207,7 +207,7 @@ export function ProfileTabs({
 
       {/* Zapůjčený majetek */}
       {tab === 'majetek' && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({assets.length} položek)</h3>
           </div>

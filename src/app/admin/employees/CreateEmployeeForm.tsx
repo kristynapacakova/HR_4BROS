@@ -44,7 +44,7 @@ export function CreateEmployeeForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+        <div className="p-3 bg-red-50 border border-red-200">
           <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
@@ -64,7 +64,7 @@ export function CreateEmployeeForm() {
               onChange={(e) => update(key, e.target.value)}
               placeholder={placeholder}
               required={required}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
             />
           </div>
         ))}
@@ -73,7 +73,7 @@ export function CreateEmployeeForm() {
           <select
             value={form.employmentType}
             onChange={(e) => update('employmentType', e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
           >
             <option value="">— Vyberte typ —</option>
             {EMPLOYMENT_TYPES.map((t) => (
@@ -85,7 +85,7 @@ export function CreateEmployeeForm() {
       <button
         type="submit"
         disabled={loading}
-        className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+        className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 transition-colors disabled:opacity-50 shadow-sm"
       >
         {loading ? 'Vytváří se...' : 'Vytvořit zaměstnance'}
       </button>

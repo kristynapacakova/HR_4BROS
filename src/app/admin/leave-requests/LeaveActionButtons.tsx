@@ -42,7 +42,7 @@ export function LeaveActionButtons({ requestId, recipientEmail, leaveType, start
       <button
         onClick={() => handle('approve')}
         disabled={!!loading}
-        className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+        className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 transition-colors disabled:opacity-50 shadow-sm"
       >
         <Check className="w-4 h-4" />
         {loading === 'approve' ? '...' : 'Schválit'}
@@ -50,7 +50,7 @@ export function LeaveActionButtons({ requestId, recipientEmail, leaveType, start
       <button
         onClick={() => handle('reject')}
         disabled={!!loading}
-        className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+        className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 transition-colors disabled:opacity-50 shadow-sm"
       >
         <X className="w-4 h-4" />
         {loading === 'reject' ? '...' : 'Zamítnout'}

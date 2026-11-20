@@ -113,19 +113,19 @@ function UploadZone({
     <div>
       <label className="block text-xs font-medium text-slate-500 mb-1.5">{label}</label>
       {value ? (
-        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
-          <img src={value} alt="" className="h-12 object-contain rounded-lg bg-white p-1 border border-slate-100" />
+        <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200">
+          <img src={value} alt="" className="h-12 object-contain bg-white p-1 border border-slate-100" />
           <div className="flex-1 min-w-0">
             <p className="text-xs text-slate-500">Nahráno</p>
             <button onClick={() => ref.current?.click()} className="text-xs text-violet hover:underline">Změnit</button>
           </div>
-          <button onClick={onClear} className="p-1.5 text-slate-300 hover:text-red-500 rounded-lg transition-colors">
+          <button onClick={onClear} className="p-1.5 text-slate-300 hover:text-red-500 transition-colors">
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
       ) : (
         <div
-          className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-colors ${drag ? 'border-violet bg-violet/5' : 'border-slate-200 hover:border-violet/40'}`}
+          className={`border-2 border-dashed  p-5 text-center cursor-pointer transition-colors ${drag ? 'border-violet bg-violet/5' : 'border-slate-200 hover:border-violet/40'}`}
           onDragOver={e => { e.preventDefault(); setDrag(true) }}
           onDragLeave={() => setDrag(false)}
           onDrop={e => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f) }}
@@ -149,7 +149,7 @@ function ColorInput({ label, value, onChange }: { label: string; value: string; 
       <div className="flex items-center gap-2">
         <div className="relative">
           <input type="color" value={value} onChange={e => onChange(e.target.value)}
-            className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer p-1 bg-white" />
+            className="w-10 h-10 border border-slate-200 cursor-pointer p-1 bg-white" />
         </div>
         <input
           type="text" value={value} onChange={e => onChange(e.target.value)}
@@ -174,7 +174,7 @@ function TypographyEditor({
   const preview = `${value.fontFamily} · ${value.fontSize}px · ${value.fontWeight}${value.italic ? ' · kurzíva' : ''}`
 
   return (
-    <div className="border border-slate-200 rounded-xl overflow-hidden">
+    <div className="border border-slate-200 overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
@@ -203,7 +203,7 @@ function TypographyEditor({
                   key={opt.value}
                   type="button"
                   onClick={() => onChange({ ...value, fontFamily: opt.value })}
-                  className={`px-3 py-1.5 rounded-lg text-xs border transition-all ${value.fontFamily === opt.value ? 'border-violet bg-violet/10 text-violet font-semibold' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
+                  className={`px-3 py-1.5  text-xs border transition-all ${value.fontFamily === opt.value ? 'border-violet bg-violet/10 text-violet font-semibold' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
                   style={{ fontFamily: fontStack(opt.value) }}
                 >
                   {opt.label}
@@ -237,7 +237,7 @@ function TypographyEditor({
                   key={opt.value}
                   type="button"
                   onClick={() => onChange({ ...value, fontWeight: opt.value })}
-                  className={`px-2 py-1.5 rounded-lg text-[10px] border transition-all ${value.fontWeight === opt.value ? 'border-violet bg-violet/10 text-violet' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
+                  className={`px-2 py-1.5  text-[10px] border transition-all ${value.fontWeight === opt.value ? 'border-violet bg-violet/10 text-violet' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
                   style={{ fontWeight: opt.value }}
                 >
                   {opt.label}
@@ -251,7 +251,7 @@ function TypographyEditor({
             <button
               type="button"
               onClick={() => onChange({ ...value, italic: !value.italic })}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs border transition-all ${value.italic ? 'border-violet bg-violet/10 text-violet font-semibold' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
+              className={`flex items-center gap-2 px-3 py-1.5  text-xs border transition-all ${value.italic ? 'border-violet bg-violet/10 text-violet font-semibold' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}
             >
               <span style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>I</span>
               Kurzíva
@@ -276,7 +276,7 @@ function HeaderPreview({ design }: { design: ContractDesign }) {
   const bStyle = design.typo.body
 
   return (
-    <div className="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-white">
+    <div className="overflow-hidden border border-slate-200 shadow-sm bg-white">
       {/* Header area */}
       <div className="relative p-6 border-b border-slate-100 overflow-hidden" style={{ minHeight: 120 }}>
         <img
@@ -373,7 +373,7 @@ export function ContractDesignerClient() {
         <div className="space-y-5">
 
           {/* Images */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 space-y-4">
+          <div className="bg-white border border-slate-100 shadow-sm p-5 space-y-4">
             <div className="flex items-center gap-2 mb-1">
               <ImageIcon className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Obrázky</h3>
@@ -395,7 +395,7 @@ export function ContractDesignerClient() {
           </div>
 
           {/* Colors */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 space-y-4">
+          <div className="bg-white border border-slate-100 shadow-sm p-5 space-y-4">
             <div className="flex items-center gap-2 mb-1">
               <Palette className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Barvy</h3>
@@ -405,7 +405,7 @@ export function ContractDesignerClient() {
           </div>
 
           {/* Typography */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 space-y-3">
+          <div className="bg-white border border-slate-100 shadow-sm p-5 space-y-3">
             <div className="flex items-center gap-2 mb-2">
               <Type className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Typografie</h3>
@@ -428,7 +428,7 @@ export function ContractDesignerClient() {
           </div>
 
           {/* Company info */}
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 space-y-3">
+          <div className="bg-white border border-slate-100 shadow-sm p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
               <Building2 className="w-4 h-4 text-violet" />
               <h3 className="font-headline font-semibold text-navy text-sm">Údaje firmy v zápatí</h3>
@@ -448,11 +448,11 @@ export function ContractDesignerClient() {
 
           {/* Actions */}
           <div className="flex gap-3">
-            <button onClick={handleReset} className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors">
+            <button onClick={handleReset} className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium hover:bg-slate-200 transition-colors">
               <RotateCcw className="w-3.5 h-3.5" />
               Obnovit výchozí
             </button>
-            <button onClick={handleSave} className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-medium transition-all ${saved ? 'bg-green-500 text-white' : 'bg-violet text-white hover:bg-violet/90'}`}>
+            <button onClick={handleSave} className={`flex items-center gap-2 px-5 py-2  text-sm font-medium transition-all ${saved ? 'bg-green-500 text-white' : 'bg-violet text-white hover:bg-violet/90'}`}>
               <Save className="w-3.5 h-3.5" />
               {saved ? 'Uloženo ✓' : 'Uložit nastavení'}
             </button>

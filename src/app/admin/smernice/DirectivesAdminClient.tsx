@@ -125,7 +125,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm px-6 py-4 flex items-center justify-between">
+      <div className="bg-white border border-slate-100 shadow-sm px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-violet-600" />
           <h2 className="font-headline font-bold text-[#1e3a5f] text-lg">Interní směrnice</h2>
@@ -135,7 +135,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2  text-sm font-medium transition-colors ${
                 tab === t ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
@@ -154,12 +154,12 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
             const Icon = cfg.icon
             const isOpen = expandedId === d.id
             return (
-              <div key={d.id} className={`bg-white rounded-xl border border-slate-100 shadow-sm border-l-4 ${cfg.borderColor} overflow-hidden`}>
+              <div key={d.id} className={`bg-white  border border-slate-100 shadow-sm border-l-4 ${cfg.borderColor} overflow-hidden`}>
                 <button
                   onClick={() => setExpandedId(isOpen ? null : d.id)}
                   className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-slate-50 transition-colors"
                 >
-                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${cfg.badgeBg}`}>
+                  <div className={`w-9 h-9  flex items-center justify-center flex-shrink-0 ${cfg.badgeBg}`}>
                     <Icon className={`w-4 h-4 ${cfg.badgeText}`} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -213,7 +213,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
           {/* Left: form */}
           <div className="space-y-5">
             {/* Step 1: Pick template */}
-            <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+            <div className="bg-white border border-slate-100 shadow-sm p-5">
               <h3 className="text-sm font-semibold text-[#1e3a5f] mb-3">1. Vyberte šablonu</h3>
               <div className="grid grid-cols-1 gap-3">
                 {templates.map(tpl => {
@@ -224,7 +224,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                     <button
                       key={tpl.id}
                       onClick={() => selectTemplate(tpl)}
-                      className={`text-left rounded-xl border-2 overflow-hidden transition-all ${
+                      className={`text-left  border-2 overflow-hidden transition-all ${
                         isSel ? 'border-violet-600 ring-2 ring-violet-200' : 'border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -243,13 +243,13 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
 
             {/* Step 2: Fill in */}
             {selectedTemplate && (
-              <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5 space-y-4">
+              <div className="bg-white border border-slate-100 shadow-sm p-5 space-y-4">
                 <h3 className="text-sm font-semibold text-[#1e3a5f]">2. Vyplňte obsah</h3>
 
                 <div className="space-y-1">
                   <label className="text-xs font-medium text-slate-600">Název směrnice</label>
                   <input
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
+                    className="w-full border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     placeholder="Název..."
@@ -260,7 +260,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                   <label className="text-xs font-medium text-slate-600">Platnost od</label>
                   <input
                     type="date"
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
+                    className="w-full border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
                     value={validFrom}
                     onChange={e => setValidFrom(e.target.value)}
                   />
@@ -271,7 +271,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                     <label className="text-xs font-medium text-slate-600">{ph.replace(/_/g, ' ')}</label>
                     <textarea
                       rows={ph === 'OBSAH' || ph.includes('OBSAH') || ph === 'POPIS_RIZIK' || ph === 'OCHRANA_OPATRENI' || ph === 'BENEFITY' || ph === 'PODMINKY' ? 3 : 1}
-                      className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none"
+                      className="w-full border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none"
                       placeholder={`{{${ph}}}`}
                       value={values[ph] || ''}
                       onChange={e => setValues(v => ({ ...v, [ph]: e.target.value }))}
@@ -292,7 +292,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                 <button
                   onClick={publish}
                   disabled={published}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-violet-600 text-white rounded-xl text-sm font-semibold hover:bg-violet-700 disabled:opacity-60 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-60 transition-colors"
                 >
                   {published ? (
                     <><CheckCircle2 className="w-4 h-4" />Publikováno!</>
@@ -308,7 +308,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
           <div className="space-y-3">
             <p className="text-xs font-medium text-slate-500 uppercase tracking-wider px-1">Živý náhled</p>
             {selectedTemplate ? (
-              <div className="rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+              <div className="border border-slate-200 overflow-hidden shadow-sm">
                 <div className={THEME_CFG[selectedTemplate.theme].previewHeaderClass}>
                   <div className="flex items-center gap-2 mb-0.5">
                     {(() => { const Icon = THEME_CFG[selectedTemplate.theme].icon; return <Icon className="w-4 h-4 opacity-80" /> })()}
@@ -325,7 +325,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                 </div>
               </div>
             ) : (
-              <div className="rounded-xl border-2 border-dashed border-slate-200 h-64 flex items-center justify-center">
+              <div className="border-2 border-dashed border-slate-200 h-64 flex items-center justify-center">
                 <p className="text-sm text-slate-400">Vyberte šablonu vlevo pro živý náhled</p>
               </div>
             )}

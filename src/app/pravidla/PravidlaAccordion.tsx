@@ -46,7 +46,7 @@ const SECTIONS: Section[] = [
           Počet dní dovolené na každého je 25 dní za rok. Dovolenou počítáme však na základě typu úvazku:
         </p>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
+          <table className="w-full text-sm border border-slate-200 overflow-hidden">
             <thead>
               <tr className="bg-slate-50">
                 <th className="text-left px-4 py-2.5 font-semibold text-navy border-b border-slate-200">Počet dní dovolené za rok</th>
@@ -191,7 +191,7 @@ export function PravidlaAccordion() {
     <div className="space-y-6">
 
       {/* Header — editorial-size headline */}
-      <div className="relative overflow-hidden rounded-2xl bg-navy px-7 py-10 sm:px-10 sm:py-12">
+      <div className="relative overflow-hidden bg-navy px-7 py-10 sm:px-10 sm:py-12">
         <div className="relative max-w-lg">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-violet-light" style={{ fontSize: 10, letterSpacing: '0.2em' }}>∿∿∿</span>
@@ -204,7 +204,7 @@ export function PravidlaAccordion() {
       </div>
 
       {/* Accordion */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
+      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
         {SECTIONS.map((section, i) => {
           const open = openId === section.id
           return (

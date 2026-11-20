@@ -38,13 +38,13 @@ export default async function AdminEmployeesPage() {
       <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Create employee */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <h3 className="font-headline font-semibold text-navy mb-4">Přidat uživatele</h3>
           <CreateEmployeeForm />
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Přehled uživatelů ({employees.length})</h3>
           </div>
@@ -77,7 +77,7 @@ export default async function AdminEmployeesPage() {
                       {/* Jméno */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 bg-violet rounded-xl flex items-center justify-center flex-shrink-0">
+                          <div className="w-9 h-9 bg-violet flex items-center justify-center flex-shrink-0">
                             <span className="text-white text-xs font-bold">
                               {emp.name?.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() || '??'}
                             </span>

@@ -55,7 +55,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
   return (
     <div>
       {/* Tab switcher */}
-      <div className="flex gap-1 bg-white rounded-xl border border-slate-100 shadow-sm p-1 mb-5">
+      <div className="flex gap-1 bg-white border border-slate-100 shadow-sm p-1 mb-5">
         {([
           { id: 'hpp', label: 'Výplaty (HPP/DPP/DPČ)' },
           { id: 'ico', label: 'Fakturace (IČO)' },
@@ -63,7 +63,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
+            className={`flex-1 py-2 text-sm font-medium  transition-all ${
               tab === t.id
                 ? 'bg-violet text-white shadow-sm'
                 : 'text-slate-500 hover:text-navy'
@@ -75,7 +75,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
       </div>
 
       {tab === 'hpp' && (
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Přehled výplat ({payslips.length})</h3>
           </div>
@@ -118,7 +118,7 @@ export function OdmenyTabs({ payslips, invoices }: OdmenyTabsProps) {
       )}
 
       {tab === 'ico' && (
-        <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Přehled faktur ({invoices.length})</h3>
           </div>

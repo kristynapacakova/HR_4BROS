@@ -57,7 +57,7 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
   }, [startDate])
 
   return (
-    <div className="relative rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-white">
+    <div className="relative overflow-hidden border border-slate-100 shadow-sm bg-white">
       <div className="relative z-10 px-7 py-7">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
@@ -77,7 +77,7 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
               )}
             </div>
           </div>
-          <div className={`rounded-2xl px-5 py-3 border ${isAnniversary ? 'bg-violet/5 border-violet/20' : 'bg-alice border-slate-100'}`}>
+          <div className={` px-5 py-3 border ${isAnniversary ? 'bg-violet/5 border-violet/20' : 'bg-alice border-slate-100'}`}>
             <p className={`text-[10px] uppercase tracking-widest mb-0.5 ${isAnniversary ? 'text-violet' : 'text-navy/60'}`}>
               {isAnniversary ? 'Pracovní výročí 🎉' : 'Jsi s námi už'}
             </p>

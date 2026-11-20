@@ -44,7 +44,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
             onChange={(e) => update('name', e.target.value)}
             required
             placeholder='např. MacBook Pro 14"'
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
         <div>
@@ -53,7 +53,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
             value={form.type}
             onChange={(e) => update('type', e.target.value)}
             required
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
           >
             <option value="">— Vyberte typ —</option>
             {ASSET_TYPES.map((t) => (
@@ -67,7 +67,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
             value={form.brand}
             onChange={(e) => update('brand', e.target.value)}
             placeholder="Apple, Dell, Lenovo..."
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
         <div>
@@ -76,7 +76,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
             value={form.model}
             onChange={(e) => update('model', e.target.value)}
             placeholder="MacBook Pro M3..."
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
         <div>
@@ -85,7 +85,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
             value={form.serialNumber}
             onChange={(e) => update('serialNumber', e.target.value)}
             placeholder="C02X1234..."
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
         <div>
@@ -93,7 +93,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
           <select
             value={form.condition}
             onChange={(e) => update('condition', e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
           >
             {ASSET_CONDITIONS.map((c) => (
               <option key={c.value} value={c.value}>{c.label}</option>
@@ -105,7 +105,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
           <select
             value={form.assignedTo}
             onChange={(e) => update('assignedTo', e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
           >
             <option value="">— Skladem (nepřiřazeno) —</option>
             {employees.map((emp) => (
@@ -119,7 +119,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
             value={form.notes}
             onChange={(e) => update('notes', e.target.value)}
             placeholder="Volitelná poznámka..."
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+            className="w-full px-3 py-2 border border-slate-200 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
           />
         </div>
       </div>
@@ -127,7 +127,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
         <button
           type="submit"
           disabled={loading}
-          className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 shadow-sm text-sm"
+          className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 transition-colors disabled:opacity-50 shadow-sm text-sm"
         >
           {loading ? 'Přidávám...' : 'Přidat položku'}
         </button>

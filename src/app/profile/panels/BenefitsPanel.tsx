@@ -89,7 +89,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
 
       {/* Sportovní benefit — Multisport karta, nebo příspěvek na sport */}
       {benefitType === null && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
               <Dumbbell className="w-5 h-5 text-slate-400" />
@@ -103,7 +103,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
       )}
 
       {benefitType === 'MULTISPORT' && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
@@ -132,7 +132,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
       )}
 
       {benefitType === 'SPORT_CONTRIBUTION' && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white border border-slate-100 shadow-sm p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
               <HeartPulse className="w-5 h-5 text-green-600" />
@@ -148,7 +148,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
           </p>
 
           {currentMonthRequest ? (
-            <div className="flex items-center justify-between gap-3 bg-slate-50 rounded-xl px-4 py-3">
+            <div className="flex items-center justify-between gap-3 bg-slate-50 px-4 py-3">
               <div className="min-w-0">
                 <p className="text-sm text-navy truncate">{currentMonthRequest.receiptName}</p>
                 <p className="text-xs text-slate-400">{new Date(currentMonthRequest.requestedAt).toLocaleDateString('cs-CZ')}</p>
@@ -160,7 +160,7 @@ export function BenefitsPanel({ employeeId, employeeName, employmentType }: { em
               <input ref={fileRef} type="file" accept="image/*,.pdf" className="hidden" onChange={submitSportRequest} />
               <button
                 onClick={() => fileRef.current?.click()}
-                className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 rounded-xl text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
+                className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-slate-200 text-sm text-slate-400 hover:text-navy hover:border-slate-300 transition-colors w-full"
               >
                 <Upload className="w-4 h-4 flex-shrink-0" />
                 Nahrát doklad za tento měsíc
