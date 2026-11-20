@@ -268,7 +268,7 @@ export default async function DashboardPage() {
         {(isAdmin || isTL) && (
           <Link
             href="/admin/odmeny?sub=doklady"
-            className="block bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:shadow-[inset_0_0_0_1px_#834DFB] transition-colors group"
+            className="block bg-white border-l-4 border-l-violet shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:shadow-[inset_0_0_0_1px_#834DFB] transition-colors group"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

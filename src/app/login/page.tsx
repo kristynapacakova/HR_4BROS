@@ -19,75 +19,104 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo area */}
-        <div className="text-center mb-8">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+
+      {/* Levá polovina — navy, 4x4 mřížka, claim */}
+      <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
+        <div className="absolute inset-0 grid-4x4" />
+        <div className="relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.svg" alt="4BROS" className="h-10 mx-auto mb-4" />
-          <p className="text-slate-500 mt-1 text-sm">Interní HR portál</p>
+          <img src="/brand/logo.svg" alt="Four Bros" className="h-7 w-auto brightness-0 invert mb-2" />
+          <p className="kicker text-violet-light">HR Portál</p>
         </div>
-
-        {/* Card */}
-        <div className="stair-corner bg-white shadow-[inset_0_0_0_1px_#0D214F] p-8" style={{ '--stair-color': '#834DFB' } as React.CSSProperties}>
-          <p className="kicker mb-2">Interní portál</p>
-          <h2 className="text-xl font-headline font-semibold text-navy mb-1">Přihlásit se</h2>
-          <p className="text-slate-500 text-sm mb-6">
-            Zadejte svůj firemní e-mail pro přihlášení.
+        <div className="relative max-w-md">
+          <h1 className="font-headline text-4xl font-semibold leading-tight mb-4">
+            Pravda bez výmluv. I v docházce.
+          </h1>
+          <p className="text-white/60 text-sm leading-relaxed">
+            Všechno kolem týmu, dovolených, smluv a odměn na jednom místě. Přehledně a bez zbytečné administrativy.
           </p>
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200">
-              <p className="text-red-700 text-sm">Nastala chyba při přihlášení. Zkuste to prosím znovu.</p>
-            </div>
-          )}
-
-          {/* Demo notice */}
-          <div className="mb-5 p-3 bg-amber-50 border border-amber-200">
-            <p className="text-amber-800 text-xs font-medium mb-1">Demo verze</p>
-            <p className="text-amber-700 text-xs leading-relaxed">
-              <strong>admin@fourbros.cz</strong> — Admin &amp; HR,{' '}
-              <strong>eva.horakova@fourbros.cz</strong> — Team Lead,{' '}
-              <strong>tomas.dvorak@fourbros.cz</strong> — OSVČ,{' '}
-              <strong>jan.novak@fourbros.cz</strong> — zaměstnanec.
-              Libovolný jiný e-mail se přihlásí jako zaměstnanec.
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-navy mb-1.5">
-                Firemní e-mail
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="vas@fourbros.cz"
-                required
-                className="w-full px-4 py-3 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F] transition-all"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-violet hover:bg-violet-dark text-white font-medium py-3 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-            >
-              {loading ? 'Přihlašování...' : 'Přihlásit se'}
-            </button>
-          </form>
-
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <p className="text-xs text-slate-400 text-center leading-relaxed">
-              Přístup mají pouze zaměstnanci společnosti Four Bros.
-            </p>
-          </div>
         </div>
+        <div className="relative flex items-center justify-between">
+          <div className="stairs">
+            <i /><i /><i /><i />
+          </div>
+          <div className="rozky w-5 h-5" />
+        </div>
+      </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6">
-          © 2025 Four Bros s.r.o. — Všechna práva vyhrazena
-        </p>
+      {/* Pravá polovina — off-white, karta s přihlášením */}
+      <div className="flex items-center justify-center bg-alice p-6">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8 lg:hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/logo.svg" alt="4BROS" className="h-9 mx-auto" />
+          </div>
+
+          <div className="rozky bg-white shadow-[inset_0_0_0_1px_#0D214F] p-8">
+            <div className="flex items-center gap-2 mb-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/symbol.svg" alt="4B" className="h-5 w-auto" />
+              <p className="kicker mb-0">Interní HR portál</p>
+            </div>
+            <h2 className="text-xl font-headline font-semibold text-navy mb-1">Přihlášení do HR Portálu</h2>
+            <p className="text-navy/60 text-sm mb-6">
+              Přístup pouze pro tým Four Bros přes firemní e-mail (@fourbros.cz).
+            </p>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 shadow-[inset_0_0_0_1px_rgba(220,38,38,0.3)]">
+                <p className="text-red-700 text-sm">Nastala chyba při přihlášení. Zkuste to prosím znovu.</p>
+              </div>
+            )}
+
+            <div className="mb-5 p-3 bg-gold-tint shadow-[inset_0_0_0_1px_rgba(240,225,0,0.4)]">
+              <p className="text-navy text-xs font-bold mb-1">Demo verze</p>
+              <p className="text-navy/70 text-xs leading-relaxed">
+                <strong>admin@fourbros.cz</strong> — Admin &amp; HR,{' '}
+                <strong>eva.horakova@fourbros.cz</strong> — Team Lead,{' '}
+                <strong>tomas.dvorak@fourbros.cz</strong> — OSVČ,{' '}
+                <strong>jan.novak@fourbros.cz</strong> — zaměstnanec.
+                Libovolný jiný e-mail se přihlásí jako zaměstnanec. (Skutečné přihlášení přes Google účet vyžaduje
+                napojení na Google Workspace, které v tomto demu není zapojené.)
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-navy mb-1.5">
+                  Firemní e-mail
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="vas@fourbros.cz"
+                  required
+                  className="w-full px-4 py-3 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F] transition-all"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide py-3 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Přihlašování...' : 'Přihlásit se'}
+              </button>
+            </form>
+
+            <div className="mt-6 pt-6 shadow-[inset_0_1px_0_rgba(13,33,79,0.14)]">
+              <p className="text-xs text-navy/40 text-center leading-relaxed">
+                Přístup mají pouze zaměstnanci společnosti Four Bros.
+              </p>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-navy/40 mt-6">
+            © 2026 Four Bros — Všechna práva vyhrazena
+          </p>
+        </div>
       </div>
     </div>
   )

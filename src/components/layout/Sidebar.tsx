@@ -59,16 +59,15 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
         href={href}
         onClick={onClose}
         className={cn(
-          'flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all duration-150',
+          'flex items-center gap-3 pl-3 pr-3.5 py-2.5 text-sm font-medium transition-all duration-150 border-l-4',
           isActive
-            ? 'bg-violet/10 text-violet'
-            : 'text-slate-500 hover:bg-slate-50 hover:text-navy'
+            ? 'bg-violet/10 text-violet border-l-violet'
+            : 'text-slate-500 border-l-transparent hover:bg-slate-50 hover:text-navy'
         )}
       >
         <Icon className={cn('w-4 h-4 flex-shrink-0 transition-colors', isActive ? 'text-violet' : 'text-slate-400')} />
         <span className="flex-1">{label}</span>
         {extra}
-        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-violet flex-shrink-0" />}
       </Link>
     )
   }
@@ -118,7 +117,7 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
       {/* User footer */}
       <div className="py-3 border-t border-slate-100 px-3">
         <div className="flex items-center mb-0.5 gap-3 px-3 py-2.5">
-          <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-violet/15">
+          <div className="w-8 h-8 bg-violet flex items-center justify-center flex-shrink-0">
             <span className="text-white text-xs font-semibold">
               {userName?.[0]?.toUpperCase() || userEmail?.[0]?.toUpperCase() || '?'}
             </span>
@@ -130,7 +129,7 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
         </div>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="flex items-center w-full gap-3 px-3 py-2.5 rounded-full text-sm font-medium text-slate-400 hover:bg-slate-50 hover:text-navy transition-all duration-150"
+          className="flex items-center w-full gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-50 hover:text-navy transition-all duration-150"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
           <span>Odhlásit se</span>
