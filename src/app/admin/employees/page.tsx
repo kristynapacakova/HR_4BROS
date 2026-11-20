@@ -19,11 +19,11 @@ function tenure(start: Date): string {
 }
 
 const CONTRACT_BADGE: Record<string, string> = {
-  HPP: 'bg-green-50 text-green-700',
-  DPP: 'bg-blue-50 text-blue-700',
-  DPC: 'bg-sky-50 text-sky-700',
-  ICO: 'bg-amber-50 text-amber-700',
-  STAZ: 'bg-purple-50 text-purple-700',
+  HPP: 'bg-navy/10 text-navy',
+  DPP: 'bg-mint-tint text-mint-dark',
+  DPC: 'bg-violet/10 text-violet',
+  ICO: 'bg-gold-tint text-gold-dark',
+  STAZ: 'bg-violet/20 text-violet-dark',
 }
 
 export default async function AdminEmployeesPage() {

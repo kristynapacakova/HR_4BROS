@@ -96,7 +96,7 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
       <div className="relative flex items-center justify-between border-b border-slate-100 px-5 py-5">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.png" alt="4BROS" className="h-7 w-auto flex-shrink-0" />
+          <img src="/brand/logo.svg" alt="4BROS" className="h-7 w-auto flex-shrink-0" />
           <p className="text-slate-400 text-[11px] tracking-wide border-l border-slate-200 pl-3">HR Portál</p>
         </div>
         {onClose && (

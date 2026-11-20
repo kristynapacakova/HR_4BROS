@@ -288,7 +288,7 @@ function HeaderPreview({ design }: { design: ContractDesign }) {
           {design.logoDataUrl ? (
             <img src={design.logoDataUrl} alt="Logo" className="h-10 object-contain" />
           ) : (
-            <img src="/brand/logo.png" alt="4BROS" style={{ height: 40, objectFit: 'contain' }} />
+            <img src="/brand/logo.svg" alt="4BROS" style={{ height: 40, objectFit: 'contain' }} />
           )}
           <div style={{ fontSize: 9, color: '#94a3b8', textAlign: 'right', letterSpacing: '0.04em' }}>
             Interní dokument — Důvěrné<br />1. 1. 2026
@@ -329,7 +329,7 @@ function HeaderPreview({ design }: { design: ContractDesign }) {
           &nbsp;·&nbsp; IČO: {design.companyIco} &nbsp;·&nbsp; {design.companyAddress}
         </div>
         <img
-          src={design.logoDataUrl ?? '/brand/logo.png'}
+          src={design.logoDataUrl ?? '/brand/logo.svg'}
           alt=""
           style={{ height: 20, objectFit: 'contain', opacity: 0.45, filter: 'brightness(10)' }}
         />
