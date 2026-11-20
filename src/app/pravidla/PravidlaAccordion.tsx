@@ -193,10 +193,7 @@ export function PravidlaAccordion() {
       {/* Header — editorial-size headline */}
       <div className="relative overflow-hidden bg-navy px-7 py-10 sm:px-10 sm:py-12">
         <div className="relative max-w-lg">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-violet-light" style={{ fontSize: 10, letterSpacing: '0.2em' }}>∿∿∿</span>
-            <p className="text-violet-light text-xs font-semibold uppercase tracking-[0.2em]">Na jedné lodi</p>
-          </div>
+          <p className="kicker text-violet-light mb-4">Interní pravidla</p>
           <h1 className="font-headline text-3xl sm:text-4xl font-semibold text-white leading-tight">
             Jak to u nás chodí
           </h1>
