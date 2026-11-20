@@ -9,16 +9,27 @@ function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
 }
 
-const CONTRACT_COLORS: Record<string, string> = {
-  HPP: 'bg-violet',
-  IČO: 'bg-amber-400',
-  DPP: 'bg-violet',
-  DPČ: 'bg-sky-400',
+// Typ smlouvy — nesouvisející kategorie, každá dostane jinou brandovou barvu.
+const CONTRACT_COLORS: Record<string, { bar: string; text: string }> = {
+  HPP: { bar: 'bg-navy', text: 'text-white' },
+  IČO: { bar: 'bg-violet', text: 'text-white' },
+  DPP: { bar: 'bg-mint', text: 'text-navy' },
+  DPČ: { bar: 'bg-gold', text: 'text-navy' },
 }
 
-const SENIORITY_COLORS = ['bg-green-400', 'bg-violet', 'bg-violet/60', 'bg-slate-300']
+// Seniorita je pořadová škála (Junior → Lead) — jedna barva v rostoucí intenzitě, ne čtyři nesouvisející odstíny.
+const SENIORITY_COLORS = ['bg-violet/25', 'bg-violet/50', 'bg-violet/75', 'bg-violet']
+const SENIORITY_TEXT = ['text-navy', 'text-navy', 'text-navy', 'text-white']
 
-const DEPT_COLORS = ['bg-violet', 'bg-green-400', 'bg-amber-400', 'bg-red-400', 'bg-violet/50', 'bg-violet/30']
+// Oddělení — nominální kategorie, cyklus brandových barev (plná + poloviční síla, když jich je víc než barev).
+const DEPT_COLORS = [
+  { bar: 'bg-violet', text: 'text-white' },
+  { bar: 'bg-mint', text: 'text-navy' },
+  { bar: 'bg-gold', text: 'text-navy' },
+  { bar: 'bg-navy', text: 'text-white' },
+  { bar: 'bg-violet/50', text: 'text-navy' },
+  { bar: 'bg-mint/60', text: 'text-navy' },
+]
 
 export default async function AdminPage() {
   const session = await auth()
@@ -63,21 +74,23 @@ export default async function AdminPage() {
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Typ smlouvy</p>
             <div className="space-y-3">
-              {s.contractTypes.map((c) => (
+              {s.contractTypes.map((c) => {
+                const color = CONTRACT_COLORS[c.label] ?? { bar: 'bg-violet', text: 'text-white' }
+                return (
                 <div key={c.label} className="flex items-center gap-3">
                   <span className="w-10 text-sm text-slate-600 text-right flex-shrink-0">{c.label}</span>
                   <div className="flex-1 bg-slate-100 rounded-full h-7 relative overflow-hidden">
                     <div
-                      className={`h-full rounded-full flex items-center px-3 ${CONTRACT_COLORS[c.label] ?? 'bg-violet'}`}
+                      className={`h-full rounded-full flex items-center px-3 ${color.bar}`}
                       style={{ width: `${Math.max(c.percent, 8)}%` }}
                     >
-                      <span className="text-white text-xs font-semibold whitespace-nowrap">
+                      <span className={`${color.text} text-xs font-semibold whitespace-nowrap`}>
                         {c.count} ({c.percent}%)
                       </span>
                     </div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
 
@@ -94,7 +107,7 @@ export default async function AdminPage() {
                         className={`h-full rounded-full flex items-center px-3 ${SENIORITY_COLORS[i] ?? 'bg-violet'}`}
                         style={{ width: `${sr.percent}%` }}
                       >
-                        <span className="text-white text-xs font-semibold whitespace-nowrap">
+                        <span className={`${SENIORITY_TEXT[i] ?? 'text-white'} text-xs font-semibold whitespace-nowrap`}>
                           {sr.count} ({sr.percent}%)
                         </span>
                       </div>
@@ -113,21 +126,23 @@ export default async function AdminPage() {
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Oddělení</p>
             <div className="space-y-3">
-              {s.departments.map((d, i) => (
+              {s.departments.map((d, i) => {
+                const color = DEPT_COLORS[i] ?? { bar: 'bg-violet', text: 'text-white' }
+                return (
                 <div key={d.label} className="flex items-center gap-3">
                   <span className="w-24 text-sm text-slate-600 text-right flex-shrink-0">{d.label}</span>
                   <div className="flex-1 bg-slate-100 rounded-full h-7 relative overflow-hidden">
                     <div
-                      className={`h-full rounded-full flex items-center px-3 ${DEPT_COLORS[i] ?? 'bg-violet'}`}
+                      className={`h-full rounded-full flex items-center px-3 ${color.bar}`}
                       style={{ width: `${Math.max(d.percent, 6)}%` }}
                     >
-                      <span className="text-white text-xs font-semibold whitespace-nowrap">
+                      <span className={`${color.text} text-xs font-semibold whitespace-nowrap`}>
                         {d.count} ({d.percent}%)
                       </span>
                     </div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
 

@@ -24,7 +24,7 @@ function LoginForm() {
         {/* Logo area */}
         <div className="text-center mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.png" alt="4BROS" className="h-10 mx-auto mb-4" />
+          <img src="/brand/logo.svg" alt="4BROS" className="h-10 mx-auto mb-4" />
           <p className="text-slate-500 mt-1 text-sm">Interní HR portál</p>
         </div>
 

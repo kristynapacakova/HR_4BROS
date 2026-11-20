@@ -33,7 +33,7 @@ interface Props {
   onSign: (id: string) => void
 }
 
-const BrandLogo = () => <img src="/brand/logo.png" alt="4BROS" className="h-9 object-contain" />
+const BrandLogo = () => <img src="/brand/logo.svg" alt="4BROS" className="h-9 object-contain" />
 const BrandWatercolor = ({ className }: { className?: string }) => (
   <img src="/brand/watercolor.png" alt="" className={className ?? 'absolute top-0 right-0 h-36 object-contain pointer-events-none select-none'} />
 )
@@ -199,7 +199,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                     </div>
                     {d?.logoDataUrl
                       ? <img src={d.logoDataUrl} alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
-                      : <img src="/brand/logo.png" alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
+                      : <img src="/brand/logo.svg" alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
                     }
                   </div>
                 </>
@@ -217,7 +217,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                     <div className="relative z-10">
                       {d?.logoDataUrl
                         ? <img src={d.logoDataUrl} alt="Logo" className="h-8 object-contain" />
-                        : <img src="/brand/logo.png" alt="4BROS" className="h-8 object-contain" />
+                        : <img src="/brand/logo.svg" alt="4BROS" className="h-8 object-contain" />
                       }
                     </div>
                   </div>
@@ -318,7 +318,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                     </div>
                     {d?.logoDataUrl
                       ? <img src={d.logoDataUrl} alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
-                      : <img src="/brand/logo.png" alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
+                      : <img src="/brand/logo.svg" alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
                     }
                   </div>
                 </>

@@ -33,7 +33,7 @@ export function printContract(contract: Contract, template: ContractTemplate | u
   const mgmtAt   = contract.managementSignedAt ? new Date(contract.managementSignedAt).toLocaleDateString('cs-CZ') : null
   const origin   = typeof window !== 'undefined' ? window.location.origin : ''
 
-  const logoSrc  = design.logoDataUrl  ?? `${origin}/brand/logo.png`
+  const logoSrc  = design.logoDataUrl  ?? `${origin}/brand/logo.svg`
   const decorSrc = design.decorDataUrl ?? `${origin}/brand/watercolor.png`
 
   const pc = design.primaryColor
