@@ -177,7 +177,7 @@ export function EventsCard({ teamBirthdays, isAdmin }: { teamBirthdays: TeamBirt
             {!adding && (
               <button
                 onClick={() => setAdding(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-violet bg-violet/10 hover:bg-violet hover:text-white transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-navy bg-gold hover:bg-gold-dark hover:text-white transition-colors"
               >
                 <Plus className="w-3 h-3" />
                 Přidat akci
@@ -252,7 +252,7 @@ export function EventsCard({ teamBirthdays, isAdmin }: { teamBirthdays: TeamBirt
 
       {empty ? (
         <p className="text-sm text-slate-500">
-          {icsUrl ? 'V nejbližších 60 dnech nejsou žádné akce ani narozeniny. 🍃' : 'Zatím žádné akce. Napoj Google Kalendář přes ⚙️ vpravo nahoře.'}
+          {icsUrl ? 'V nejbližších 60 dnech nejsou žádné akce ani narozeniny.' : 'Zatím žádné akce. Napoj Google Kalendář přes nastavení vpravo nahoře.'}
         </p>
       ) : (
         <div className="space-y-2.5">
