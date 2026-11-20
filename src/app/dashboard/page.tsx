@@ -20,6 +20,7 @@ import {
   getDemoUserById,
   demoTeamIdFor,
 } from '@/lib/mock-data'
+import { CountUp } from '@/components/CountUp'
 import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
 import { RingStat } from './RingStat'
@@ -201,15 +202,15 @@ export default async function DashboardPage() {
             <h3 className="font-headline text-navy mb-4">{isAdmin ? 'Jak to vypadá dnes ve firmě?' : 'Jak to vypadá dnes ve tvém týmu?'}</h3>
             <div className="grid grid-cols-3 gap-3 pb-5 mb-5 border-b border-slate-100">
               <div className="text-center">
-                <p className="text-2xl font-headline font-semibold text-navy">{inOfficeCount}</p>
+                <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={inOfficeCount} /></p>
                 <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-headline font-semibold text-navy">{homeofficeCount}</p>
+                <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={homeofficeCount} /></p>
                 <p className="text-xs text-slate-400 mt-0.5">home office</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-headline font-semibold text-navy">{otherOutCount}</p>
+                <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={otherOutCount} /></p>
                 <p className="text-xs text-slate-400 mt-0.5">OFF</p>
               </div>
             </div>
@@ -246,15 +247,15 @@ export default async function DashboardPage() {
           <h3 className="font-headline text-navy mb-4">Jak to vypadá tenhle měsíc u tebe?</h3>
           <div className="grid grid-cols-3 gap-3">
             <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy">{myOfficeDays}</p>
+              <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={myOfficeDays} /></p>
               <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy">{myHomeofficeDays}</p>
+              <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={myHomeofficeDays} /></p>
               <p className="text-xs text-slate-400 mt-0.5">home office</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy">{myOffDays}</p>
+              <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={myOffDays} /></p>
               <p className="text-xs text-slate-400 mt-0.5">OFF</p>
             </div>
           </div>

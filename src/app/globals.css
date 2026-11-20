@@ -98,6 +98,10 @@
     @apply bg-white/15 text-white;
   }
 
+  .animate-rise {
+    animation: fb-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
   /* Stair-step corner accent — reserved for hero/statement moments only */
   .stair-corner {
     position: relative;
@@ -112,4 +116,9 @@
     background: var(--stair-color, #F0E100);
     clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 50%, 50% 50%, 50% 0);
   }
+}
+
+@keyframes fb-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

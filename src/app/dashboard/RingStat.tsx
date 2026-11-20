@@ -1,3 +1,7 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+
 const SIZE = 92
 const STROKE = 8
 const RADIUS = (SIZE - STROKE) / 2
@@ -10,10 +14,26 @@ export function RingStat({ pct, value, label, tone = 'strong' }: {
   tone?: 'strong' | 'soft'
 }) {
   const clamped = Math.max(0, Math.min(100, pct))
-  const offset = CIRCUMFERENCE * (1 - clamped / 100)
+  const [animatedPct, setAnimatedPct] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        requestAnimationFrame(() => setAnimatedPct(clamped))
+        observer.disconnect()
+      }
+    }, { threshold: 0.3 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [clamped])
+
+  const offset = CIRCUMFERENCE * (1 - animatedPct / 100)
 
   return (
-    <div className="flex flex-col items-center text-center">
+    <div ref={ref} className="flex flex-col items-center text-center">
       <div className="relative" style={{ width: SIZE, height: SIZE }}>
         <svg width={SIZE} height={SIZE} className="-rotate-90">
           <circle cx={SIZE / 2} cy={SIZE / 2} r={RADIUS} fill="none" stroke="#F1F0F7" strokeWidth={STROKE} />
@@ -28,6 +48,7 @@ export function RingStat({ pct, value, label, tone = 'strong' }: {
             strokeLinecap="round"
             strokeDasharray={CIRCUMFERENCE}
             strokeDashoffset={offset}
+            style={{ transition: 'stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1)' }}
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
