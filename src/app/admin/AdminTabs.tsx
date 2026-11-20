@@ -12,7 +12,7 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id']
 
-export function AdminTabs({ panels }: { panels: Record<TabId, React.ReactNode> }) {
+export function AdminTabs({ panels, header }: { panels: Record<TabId, React.ReactNode>; header?: React.ReactNode }) {
   const searchParams = useSearchParams()
   const requested = searchParams.get('tab')
   const initial = TABS.some(t => t.id === requested) ? (requested as TabId) : 'analytika'
@@ -38,6 +38,8 @@ export function AdminTabs({ panels }: { panels: Record<TabId, React.ReactNode> }
           )
         })}
       </div>
+
+      {header && <div className="mb-6">{header}</div>}
 
       {panels[tab]}
     </div>
