@@ -88,7 +88,7 @@ function TeamStrip({ members, profiles, currentId }: {
               className="group relative flex-shrink-0 flex flex-col items-center gap-1.5 w-16"
             >
               <div
-                className={`relative w-16 h-16 rounded-full overflow-hidden bg-[#f3f0fd] flex items-center justify-center transition-all ${
+                className={`relative w-16 h-16 overflow-hidden bg-[#f3f0fd] flex items-center justify-center transition-all ${
                   isCurrent ? 'ring-2 ring-violet ring-offset-2' : 'ring-2 ring-white group-hover:ring-violet/40'
                 }`}
               >
@@ -226,7 +226,7 @@ export function MemberProfileClient({
           <div className="pt-8 pb-5 px-6 flex flex-col items-center text-center">
             <div className="relative">
               <div
-                className="rounded-full overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#f3f0fd] flex-shrink-0"
+                className="overflow-hidden ring-4 ring-white shadow-md flex items-center justify-center bg-[#f3f0fd] flex-shrink-0"
                 style={{ width: 104, height: 104 }}
               >
                 {override.photo ? (

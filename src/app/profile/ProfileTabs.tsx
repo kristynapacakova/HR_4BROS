@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
-import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Banknote, CalendarDays, FileText, ClipboardList, Gift } from 'lucide-react'
-import { BenefitsPanel } from './panels/BenefitsPanel'
+import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Banknote, FileText, ClipboardList } from 'lucide-react'
 
 const TYPE_ICONS: Record<string, React.ElementType> = {
   NOTEBOOK: Laptop, TELEFON: Smartphone, MYS: Mouse,
@@ -74,8 +73,6 @@ export function ProfileTabs({
     { id: 'udaje', label: 'Osobní údaje', icon: UserIcon },
     { id: 'majetek', label: 'Majetek', icon: Laptop },
     { id: 'vyplata', label: payslipsLabel ?? 'Moje odměna', icon: Banknote },
-    { id: 'dochazka', label: 'Docházka', icon: CalendarDays },
-    { id: 'benefity', label: 'Benefity', icon: Gift },
     { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
   ] as const
   type TabId = typeof tabs[number]['id']
@@ -253,12 +250,6 @@ export function ProfileTabs({
 
       {/* Moje odměna */}
       {tab === 'vyplata' && payslipsPanel}
-
-      {/* Moje docházka */}
-      {tab === 'dochazka' && timeOffPanel}
-
-      {/* Benefity */}
-      {tab === 'benefity' && <BenefitsPanel employeeId={user.id} employeeName={user.name} employmentType={user.employmentType} />}
 
       {/* Dokumenty a smlouvy */}
       {tab === 'dokumenty' && documentsPanel}

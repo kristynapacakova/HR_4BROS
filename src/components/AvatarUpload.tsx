@@ -83,14 +83,14 @@ export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamM
           <img
             src={avatar.photo}
             alt="Profilová fotka"
-            className="relative w-16 h-16 rounded-full object-cover"
+            className="relative w-16 h-16  object-cover"
             style={avatar.pos ? {
               objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
               transform: `scale(${avatar.pos.zoom / 100})`,
             } : undefined}
           />
         ) : (
-          <div className="relative w-16 h-16 bg-navy rounded-full flex items-center justify-center">
+          <div className="relative w-16 h-16 bg-navy  flex items-center justify-center">
             <span className="text-white font-headline text-2xl font-bold">{initial}</span>
           </div>
         )}
@@ -153,14 +153,14 @@ export function HeaderAvatar({ initial, teamMemberId }: { initial: string; teamM
         <img
           src={avatar.photo}
           alt=""
-          className="relative w-8 h-8 rounded-full object-cover ring-2 ring-white"
+          className="relative w-8 h-8  object-cover ring-2 ring-white"
           style={avatar.pos ? {
             objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
             transform: `scale(${avatar.pos.zoom / 100})`,
           } : undefined}
         />
       ) : (
-        <div className="relative w-8 h-8 bg-violet rounded-full flex items-center justify-center ring-2 ring-white">
+        <div className="relative w-8 h-8 bg-violet  flex items-center justify-center ring-2 ring-white">
           <span className="text-white text-xs font-semibold">{initial}</span>
         </div>
       )}
