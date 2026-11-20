@@ -169,7 +169,7 @@ function MonthMini({ year, month, holidays, today }: {
     .concat(Array.from({ length: daysInMonth }, (_, i) => i + 1))
 
   return (
-    <div className="rounded-xl bg-[#F7F8FE] p-2.5">
+    <div className="rounded-xl bg-[#f3f0fd] p-2.5">
       <p className="text-xs font-semibold text-navy mb-1.5">{MONTH_NAMES_CZ[month]}</p>
       <div className="grid grid-cols-7 gap-y-0.5 text-center">
         {DOW_LABELS.map(d => (

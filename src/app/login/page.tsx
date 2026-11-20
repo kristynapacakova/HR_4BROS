@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { FourBrosMark } from '@/components/FourBrosMark'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -24,10 +23,8 @@ function LoginForm() {
       <div className="w-full max-w-md">
         {/* Logo area */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-4 shadow-lg">
-            <FourBrosMark size={36} />
-          </div>
-          <h1 className="text-3xl font-headline font-bold text-navy">Four Bros HR</h1>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logo.png" alt="4BROS" className="h-10 mx-auto mb-4" />
           <p className="text-slate-500 mt-1 text-sm">Interní HR portál</p>
         </div>
 

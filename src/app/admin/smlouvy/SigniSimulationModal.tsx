@@ -171,7 +171,7 @@ export function SigniSimulationModal({ contract, onClose }: Props) {
 
               {/* Signed certificate card */}
               {step === 'done' && (
-                <div className="rounded-xl p-4 space-y-2" style={{ background: '#F7F8FE' }}>
+                <div className="rounded-xl p-4 space-y-2" style={{ background: '#f3f0fd' }}>
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4" style={{ color: SIGNI_TEAL }} />
                     <p className="text-xs font-semibold text-navy">Dokument elektronicky podepsán a zapečetěn</p>

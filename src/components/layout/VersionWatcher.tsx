@@ -44,7 +44,7 @@ export function VersionWatcher() {
       <button
         onClick={() => window.location.reload()}
         className="flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-full text-sm font-semibold text-white shadow-xl transition-transform hover:scale-[1.03]"
-        style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)' }}
+        style={{ background: 'linear-gradient(135deg, #834dfb, #a97cfc)' }}
       >
         <RefreshCw className="w-4 h-4" />
         K dispozici je nová verze — načíst

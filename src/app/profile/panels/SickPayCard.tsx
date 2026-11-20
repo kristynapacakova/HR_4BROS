@@ -103,7 +103,7 @@ export function SickPayCard({ monthlySalary, initialDays = 0 }: { monthlySalary:
       </button>
 
       {open && (
-        <div className="mt-3 rounded-2xl bg-[#F7F8FE] p-4 space-y-1.5 text-sm">
+        <div className="mt-3 rounded-2xl bg-[#f3f0fd] p-4 space-y-1.5 text-sm">
           {[
             ['Průměrný hodinový výdělek', fmt(r.avgHourly) + '/h'],
             [`Po redukci (90/60/30 % dle hranic ${YEAR})`, fmt(r.reduced) + '/h'],

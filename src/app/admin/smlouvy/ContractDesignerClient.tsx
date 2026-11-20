@@ -36,8 +36,8 @@ const DEFAULT_BODY: TypographyStyle = { fontFamily: 'roboto', fontSize: 12, font
 export const DEFAULT_DESIGN: ContractDesign = {
   logoDataUrl: null,
   decorDataUrl: null,
-  primaryColor: '#194669',
-  accentColor: '#7e17e0',
+  primaryColor: '#0d214f',
+  accentColor: '#834dfb',
   fontFamily: 'serenity',
   companyName: 'Four Bros s.r.o.',
   companyAddress: 'Náměstí Míru 5, 120 00 Praha 2',

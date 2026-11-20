@@ -22,7 +22,7 @@ export function RingStat({ pct, value, label, tone = 'strong' }: {
             cy={SIZE / 2}
             r={RADIUS}
             fill="none"
-            stroke={tone === 'strong' ? '#7e17e0' : '#194669'}
+            stroke={tone === 'strong' ? '#834dfb' : '#0d214f'}
             strokeOpacity={tone === 'strong' ? 1 : 0.55}
             strokeWidth={STROKE}
             strokeLinecap="round"

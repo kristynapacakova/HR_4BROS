@@ -208,7 +208,7 @@ export function PravidlaAccordion() {
         {SECTIONS.map((section, i) => {
           const open = openId === section.id
           return (
-            <div key={section.id} className={open ? 'bg-[#F7F8FE]/60' : undefined}>
+            <div key={section.id} className={open ? 'bg-[#f3f0fd]/60' : undefined}>
               <button
                 onClick={() => setOpenId(open ? null : section.id)}
                 className="w-full flex items-center gap-4 px-6 py-5 text-left hover:bg-slate-50 transition-colors"

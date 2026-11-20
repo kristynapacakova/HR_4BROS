@@ -45,8 +45,8 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
   const [page, setPage] = useState(0)
   useEffect(() => { setDesign(loadDesign()) }, [])
   const d = design
-  const pc  = d?.primaryColor ?? '#194669'
-  const ac  = d?.accentColor  ?? '#7e17e0'
+  const pc  = d?.primaryColor ?? '#0d214f'
+  const ac  = d?.accentColor  ?? '#834dfb'
   const hStyle  = d?.typo?.heading    ?? { fontFamily: 'serenity' as const, fontSize: 13, fontWeight: 500,  italic: false }
   const shStyle = d?.typo?.subheading ?? { fontFamily: 'roboto'   as const, fontSize: 12, fontWeight: 700,  italic: false }
   const bStyle  = d?.typo?.body       ?? { fontFamily: 'roboto'   as const, fontSize: 12, fontWeight: 300,  italic: false }
@@ -159,7 +159,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
           {/* Document sheet */}
           <div className="p-6">
-            <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_32px_rgba(25,70,105,0.10)] flex flex-col" style={page === 0 ? { minHeight: 720 } : undefined}>
+            <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_32px_rgba(13,33,79,0.10)] flex flex-col" style={page === 0 ? { minHeight: 720 } : undefined}>
 
               {/* ═══ PAGE 1 — Cover (mirrors PDF) ═══ */}
               {page === 0 && (
@@ -229,7 +229,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                     </p>
 
                     {/* Party: employee */}
-                    <div className="rounded-lg px-5 py-4 mb-2.5" style={{ background: '#F7F8FE' }}>
+                    <div className="rounded-lg px-5 py-4 mb-2.5" style={{ background: '#f3f0fd' }}>
                       <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] mb-2.5" style={{ color: pc }}>Zaměstnanec</p>
                       <table className="w-full" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>
                         <tbody>
@@ -248,7 +248,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                     <p className="text-center font-bold py-1" style={{ color: pc, fontSize: 13 }}>a</p>
 
                     {/* Party: employer */}
-                    <div className="rounded-lg px-5 py-4 mb-5" style={{ background: '#F7F8FE' }}>
+                    <div className="rounded-lg px-5 py-4 mb-5" style={{ background: '#f3f0fd' }}>
                       <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] mb-2.5" style={{ color: pc }}>Zaměstnavatel</p>
                       <table className="w-full" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>
                         <tbody>
@@ -273,7 +273,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
                   {/* Signature section */}
                   <div className="px-10 pb-8 pt-2">
-                    <div className="rounded-xl p-5" style={{ background: '#F7F8FE' }}>
+                    <div className="rounded-xl p-5" style={{ background: '#f3f0fd' }}>
                       <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: pc }}>
                         NA DŮKAZ ČEHOŽ SMLUVNÍ STRANY PŘIPOJUJÍ SVÉ PODPISY
                       </p>

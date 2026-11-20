@@ -138,7 +138,7 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
       {open && (
         <tr>
           <td colSpan={7} className="px-6 pb-4">
-            <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-2.5 text-sm">
+            <div className="rounded-xl bg-[#f3f0fd] p-3.5 space-y-2.5 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <span className="text-slate-500 flex items-center gap-1.5">
                   Faktura za odměnu
@@ -291,7 +291,7 @@ function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeN
       {open && (
         <tr>
           <td colSpan={7} className="px-6 pb-4">
-            <div className="rounded-xl bg-[#F7F8FE] p-3.5 space-y-2.5 text-sm">
+            <div className="rounded-xl bg-[#f3f0fd] p-3.5 space-y-2.5 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <span className="text-slate-500 flex items-center gap-1.5">
                   Výplatní páska
@@ -925,7 +925,7 @@ export function PayslipsClient({
                     <span className="font-medium text-red-500">−{fmt(sick.deduction, 'CZK')}</span>
                   </button>
                   {showSickDetail && (
-                    <div className="mt-3 rounded-2xl bg-[#F7F8FE] p-4 space-y-1.5">
+                    <div className="mt-3 rounded-2xl bg-[#f3f0fd] p-4 space-y-1.5">
                       {[
                         ['Průměrný hodinový výdělek', `${fmt(sick.avgHourly, 'CZK')}/h`],
                         ['Po redukci (90/60/30 %)', `${fmt(sick.reduced, 'CZK')}/h`],

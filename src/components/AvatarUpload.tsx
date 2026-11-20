@@ -71,7 +71,7 @@ export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamM
 
   return (
     <div className="relative flex-shrink-0 group">
-      <div className="absolute -inset-1 rounded-full opacity-30 pointer-events-none" style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(6px)' }} />
+      <div className="absolute -inset-1 rounded-full opacity-30 pointer-events-none" style={{ background: 'linear-gradient(135deg, #834dfb, #a97cfc)', filter: 'blur(6px)' }} />
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
@@ -146,7 +146,7 @@ export function HeaderAvatar({ initial, teamMemberId }: { initial: string; teamM
     <div className="relative flex-shrink-0">
       <div
         className="absolute -inset-0.5 rounded-full opacity-40"
-        style={{ background: 'linear-gradient(135deg, #7e17e0, #9b45e8)', filter: 'blur(4px)' }}
+        style={{ background: 'linear-gradient(135deg, #834dfb, #a97cfc)', filter: 'blur(4px)' }}
       />
       {avatar.photo ? (
         // eslint-disable-next-line @next/next/no-img-element

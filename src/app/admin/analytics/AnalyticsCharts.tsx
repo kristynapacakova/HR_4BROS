@@ -20,14 +20,14 @@ interface HeadcountPoint { month: string; count: number }
 interface FluctuationPoint { month: string; nastupy: number; odchody: number }
 interface DeptPoint { department: string; count: number }
 
-const DEPT_COLORS = ['#0E2337', '#7e17e0', '#3D6687', '#9b45e8', '#5A7D9A', '#6010b8']
+const DEPT_COLORS = ['#091838', '#834dfb', '#3D6687', '#a97cfc', '#5A7D9A', '#5925d6']
 
 const tooltipStyle = {
   backgroundColor: '#fff',
   border: '1px solid #e2e8f0',
   borderRadius: '8px',
   fontSize: '12px',
-  color: '#0E2337',
+  color: '#091838',
 }
 
 export function AnalyticsCharts({
@@ -53,8 +53,8 @@ export function AnalyticsCharts({
           <AreaChart data={headcountTrend} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="navyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0E2337" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#0E2337" stopOpacity={0} />
+                <stop offset="5%" stopColor="#091838" stopOpacity={0.15} />
+                <stop offset="95%" stopColor="#091838" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -65,11 +65,11 @@ export function AnalyticsCharts({
               type="monotone"
               dataKey="count"
               name="Zaměstnanců"
-              stroke="#0E2337"
+              stroke="#091838"
               strokeWidth={2}
               fill="url(#navyGrad)"
-              dot={{ fill: '#0E2337', r: 3 }}
-              activeDot={{ r: 5, fill: '#7e17e0' }}
+              dot={{ fill: '#091838', r: 3 }}
+              activeDot={{ r: 5, fill: '#834dfb' }}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -135,8 +135,8 @@ export function AnalyticsCharts({
             <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} allowDecimals={false} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Bar dataKey="nastupy" name="Nástupy" fill="#0E2337" radius={[4, 4, 0, 0]} maxBarSize={28} />
-            <Bar dataKey="odchody" name="Odchody" fill="#7e17e0" radius={[4, 4, 0, 0]} maxBarSize={28} />
+            <Bar dataKey="nastupy" name="Nástupy" fill="#091838" radius={[4, 4, 0, 0]} maxBarSize={28} />
+            <Bar dataKey="odchody" name="Odchody" fill="#834dfb" radius={[4, 4, 0, 0]} maxBarSize={28} />
           </BarChart>
         </ResponsiveContainer>
       </div>

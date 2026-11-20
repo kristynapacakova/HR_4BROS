@@ -12,18 +12,18 @@ import type { CSSProperties } from 'react'
  * Standalone exploration page — not wired into the live navigation.
  */
 
-const NAVY = '#194669'
-const VIOLET = '#7e17e0'
-const ALICE = '#F7F8FE'
+const NAVY = '#0d214f'
+const VIOLET = '#834dfb'
+const ALICE = '#f3f0fd'
 const GREY = '#F4F4F4'
 
 const TEAM = [
-  { name: 'Tereza Holá',     role: 'Head of People',           dept: 'HR',      initials: 'TH', tone: ['#7e17e0', '#9b45e8'] },
-  { name: 'Marek Dvořák',    role: 'Senior Frontend Engineer', dept: 'Product', initials: 'MD', tone: ['#194669', '#3D6687'] },
-  { name: 'Eliška Nováková', role: 'Product Designer',         dept: 'Design',  initials: 'EN', tone: ['#9b45e8', '#7e17e0'] },
-  { name: 'Jakub Procházka', role: 'Backend Engineer',         dept: 'Product', initials: 'JP', tone: ['#3D6687', '#194669'] },
-  { name: 'Anna Svobodová',  role: 'Talent Partner',           dept: 'HR',      initials: 'AS', tone: ['#7e17e0', '#6010b8'] },
-  { name: 'Tomáš Beneš',     role: 'Engineering Lead',         dept: 'Product', initials: 'TB', tone: ['#194669', '#2E5070'] },
+  { name: 'Tereza Holá',     role: 'Head of People',           dept: 'HR',      initials: 'TH', tone: ['#834dfb', '#a97cfc'] },
+  { name: 'Marek Dvořák',    role: 'Senior Frontend Engineer', dept: 'Product', initials: 'MD', tone: ['#0d214f', '#3D6687'] },
+  { name: 'Eliška Nováková', role: 'Product Designer',         dept: 'Design',  initials: 'EN', tone: ['#a97cfc', '#834dfb'] },
+  { name: 'Jakub Procházka', role: 'Backend Engineer',         dept: 'Product', initials: 'JP', tone: ['#3D6687', '#0d214f'] },
+  { name: 'Anna Svobodová',  role: 'Talent Partner',           dept: 'HR',      initials: 'AS', tone: ['#834dfb', '#5925d6'] },
+  { name: 'Tomáš Beneš',     role: 'Engineering Lead',         dept: 'Product', initials: 'TB', tone: ['#0d214f', '#2E5070'] },
 ]
 
 const STATS = [
@@ -111,7 +111,7 @@ export default function TeamOverviewConcept() {
 
           {/* Headline block */}
           <div className="max-w-2xl">
-            <p className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.15em] mb-6" style={{ background: '#7e17e014', color: VIOLET }}>
+            <p className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.15em] mb-6" style={{ background: '#834dfb14', color: VIOLET }}>
               Přehled týmu · Q3 2026
             </p>
             <h1 className="font-bold tracking-tight leading-[1.08] mb-6" style={{ fontSize: 52, color: NAVY }}>
@@ -125,7 +125,7 @@ export default function TeamOverviewConcept() {
               <button className="px-5 py-3 rounded-full text-sm font-semibold text-white transition-opacity hover:opacity-90" style={{ background: VIOLET }}>
                 Zobrazit organizační strukturu
               </button>
-              <button className="px-5 py-3 rounded-full text-sm font-semibold border transition-colors hover:bg-white" style={{ color: NAVY, borderColor: '#19466922' }}>
+              <button className="px-5 py-3 rounded-full text-sm font-semibold border transition-colors hover:bg-white" style={{ color: NAVY, borderColor: '#0d214f22' }}>
                 Exportovat přehled
               </button>
             </div>
@@ -134,7 +134,7 @@ export default function TeamOverviewConcept() {
           {/* Stat strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
             {STATS.map(s => (
-              <div key={s.label} className="bg-white rounded-2xl px-6 py-5 shadow-[0_2px_16px_rgba(25,70,105,0.06)]">
+              <div key={s.label} className="bg-white rounded-2xl px-6 py-5 shadow-[0_2px_16px_rgba(13,33,79,0.06)]">
                 <p className="font-bold text-2xl tracking-tight mb-1" style={{ color: NAVY }}>{s.value}</p>
                 <p className="text-slate-400 text-xs leading-snug">{s.label}</p>
               </div>
@@ -175,7 +175,7 @@ export default function TeamOverviewConcept() {
             {TEAM.map((m, i) => (
               <div
                 key={m.name}
-                className="group rounded-2xl border border-slate-100 p-5 flex flex-col gap-4 transition-all hover:shadow-[0_12px_40px_rgba(25,70,105,0.08)] hover:-translate-y-0.5"
+                className="group rounded-2xl border border-slate-100 p-5 flex flex-col gap-4 transition-all hover:shadow-[0_12px_40px_rgba(13,33,79,0.08)] hover:-translate-y-0.5"
                 style={{ background: ALICE }}
               >
                 <div className="flex items-center justify-between">
@@ -211,7 +211,7 @@ export default function TeamOverviewConcept() {
         <Blob style={{ width: 360, height: 360, top: -140, right: -100, background: `radial-gradient(circle, ${VIOLET}33, transparent 70%)` }} />
         <div className="relative max-w-6xl mx-auto px-8 py-16 flex items-center justify-between flex-wrap gap-8">
           <div className="max-w-md">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#9b45e8' }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#a97cfc' }}>
               Chybí vám někdo v přehledu?
             </p>
             <p className="text-white font-bold tracking-tight leading-snug" style={{ fontSize: 26 }}>

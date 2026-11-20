@@ -181,7 +181,7 @@ export function printContract(contract: Contract, template: ContractTemplate | u
 
     /* Parties block */
     .party-block {
-      background: #F7F8FE;
+      background: #f3f0fd;
       border-radius: 8px;
       padding: 16px 20px;
       margin-bottom: 10px;
@@ -261,7 +261,7 @@ export function printContract(contract: Contract, template: ContractTemplate | u
 
     /* Signatures */
     .sig-section {
-      background: #F7F8FE;
+      background: #f3f0fd;
       border-radius: 8px;
       padding: 20px 24px;
       margin-top: 32px;
