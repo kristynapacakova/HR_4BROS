@@ -2,8 +2,8 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import Link from 'next/link'
-import { Users, CalendarDays, ArrowRight, TrendingUp, Clock, Banknote, BarChart2 } from 'lucide-react'
-import { DEMO_EMPLOYEES, DEMO_ALL_LEAVE_REQUESTS, DEMO_HR_STATS } from '@/lib/mock-data'
+import { Users, ArrowRight, Banknote, BarChart2, Receipt, FileText, FilePen, Laptop, MessageSquareHeart, BookOpen, CalendarRange } from 'lucide-react'
+import { DEMO_EMPLOYEES, DEMO_HR_STATS } from '@/lib/mock-data'
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
@@ -36,7 +36,6 @@ export default async function AdminPage() {
   if (!session?.user?.id) redirect('/login')
   if (session.user.role !== 'ADMIN') redirect('/dashboard')
 
-  const pendingLeaves = DEMO_ALL_LEAVE_REQUESTS.filter((r) => r.status === 'PENDING').length
   const s = DEMO_HR_STATS
 
   return (
@@ -165,49 +164,34 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        {/* Quick links */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link href="/admin/employees" className="group bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
-              <Users className="w-5 h-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-navy text-sm">Uživatelé</p>
-              <p className="text-xs text-slate-400">{DEMO_EMPLOYEES.length} aktivních</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
-          </Link>
-          <Link href="/admin/leave-requests" className="group bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
-              <CalendarDays className="w-5 h-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-navy text-sm">Žádosti o dovolenou</p>
-              <p className="text-xs text-slate-400">{pendingLeaves} čekajících</p>
-            </div>
-            {pendingLeaves > 0 && <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full">{pendingLeaves}</span>}
-            <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
-          </Link>
-          <Link href="/admin/odmeny" className="group bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
-              <Banknote className="w-5 h-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-navy text-sm">Přehled odměn</p>
-              <p className="text-xs text-slate-400">Výplaty a faktury</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
-          </Link>
-          <Link href="/admin/analytics" className="group bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 hover:border-violet transition-all flex items-center gap-4">
-            <div className="p-2.5 bg-alice rounded-full text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
-              <BarChart2 className="w-5 h-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-navy text-sm">Analytika</p>
-              <p className="text-xs text-slate-400">Headcount, fluktuace, výkon</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
-          </Link>
+        {/* Podsložky administrace */}
+        <div>
+          <p className="kicker mb-3">Administrace</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              { href: '/admin/employees', icon: Users, label: 'Uživatelé', sub: `${DEMO_EMPLOYEES.length} aktivních` },
+              { href: '/admin/odmeny', icon: Banknote, label: 'Přehled odměn', sub: 'Výplaty a doklady' },
+              { href: '/admin/faktury', icon: FileText, label: 'Přehled faktur OSVČ', sub: 'Párování a schvalování' },
+              { href: '/admin/vydaje', icon: Receipt, label: 'Doklady k proplacení', sub: 'Žádosti ke schválení' },
+              { href: '/admin/smlouvy', icon: FilePen, label: 'Smlouvy', sub: 'Šablony a podpisy' },
+              { href: '/admin/assets', icon: Laptop, label: 'Majetek', sub: 'Vybavení zaměstnanců' },
+              { href: '/admin/leave-calendar', icon: CalendarRange, label: 'Přehled docházky', sub: 'Z TrackDecku' },
+              { href: '/admin/analytics', icon: BarChart2, label: 'Analytika', sub: 'Headcount, výkon' },
+              { href: '/admin/feedback', icon: MessageSquareHeart, label: 'Schránka důvěry', sub: 'Jen pro HR' },
+              { href: '/admin/smernice', icon: BookOpen, label: 'Interní směrnice', sub: 'Pravidla firmy' },
+            ].map(({ href, icon: Icon, label, sub }) => (
+              <Link key={href} href={href} className="group bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 hover:shadow-[inset_0_0_0_1px_#834DFB] transition-all flex items-center gap-4">
+                <div className="p-2.5 bg-alice text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-navy text-sm">{label}</p>
+                  <p className="text-xs text-slate-400">{sub}</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
+              </Link>
+            ))}
+          </div>
         </div>
 
       </div>

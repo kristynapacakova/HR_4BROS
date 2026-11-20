@@ -8,17 +8,10 @@ import {
   User,
   ShieldCheck,
   LogOut,
-  Users,
   Users2,
-  CheckSquare,
-  Laptop,
-  BarChart2,
-  CalendarRange,
   MessageSquareHeart,
   BookOpen,
-  Coins,
-  FilePen,
-  Receipt,
+  CalendarRange,
   FileText,
   X,
 } from 'lucide-react'
@@ -35,19 +28,11 @@ const staticNavItemsAfter = [
   { label: 'Tým Four Bros', href: '/team', icon: Users2 },
 ]
 
+// Admin sekce je od teď jediná položka v menu — všechny podsložky (uživatelé, odměny,
+// faktury, smlouvy, majetek, analytika...) se otevírají jako karty uvnitř /admin dashboardu,
+// aby menu zůstalo krátké.
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: ShieldCheck },
-  { label: 'Uživatelé', href: '/admin/employees', icon: Users },
-  { label: 'Přehled docházky', href: '/admin/leave-calendar', icon: CalendarRange },
-  { label: 'Žádosti o dovolenou', href: '/admin/leave-requests', icon: CheckSquare },
-  { label: 'Přehled odměn', href: '/admin/odmeny', icon: Coins },
-  { label: 'Doklady k proplacení', href: '/admin/vydaje', icon: Receipt },
-  { label: 'Přehled faktur OSVČ', href: '/admin/faktury', icon: FileText },
-  { label: 'Smlouvy', href: '/admin/smlouvy', icon: FilePen },
-  { label: 'Majetek', href: '/admin/assets', icon: Laptop },
-  { label: 'Analytika', href: '/admin/analytics', icon: BarChart2 },
-  { label: 'Schránka důvěry', href: '/admin/feedback', icon: MessageSquareHeart },
-  { label: 'Interní směrnice', href: '/admin/smernice', icon: BookOpen },
 ]
 
 interface SidebarProps {
@@ -122,7 +107,6 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
             <div className="pt-5 pb-2">
               <p className="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Tým</p>
             </div>
-            {navLink('/admin/leave-requests', 'Žádosti o dovolenou', CheckSquare)}
             {navLink('/admin/leave-calendar', 'Docházka firmy', CalendarRange)}
             {navLink('/admin/tym-fakturace', 'Fakturace týmu', FileText)}
           </>
