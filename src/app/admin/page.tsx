@@ -1,35 +1,18 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import Link from 'next/link'
-import { Users, ArrowRight, Banknote, BarChart2, Receipt, FileText, FilePen, Laptop, MessageSquareHeart, BookOpen, CalendarRange } from 'lucide-react'
-import { DEMO_EMPLOYEES, DEMO_HR_STATS } from '@/lib/mock-data'
+import { DEMO_EMPLOYEES, DEMO_PAYSLIPS, DEMO_USER_ICO, DEMO_ICO_INVOICES, DEMO_EXPENSE_REQUESTS, DEMO_HR_STATS } from '@/lib/mock-data'
+import { EmployeesPanel } from './employees/EmployeesPanel'
+import { AnalyticsPanel } from './analytics/AnalyticsPanel'
+import { AssetsClient } from './assets/AssetsClient'
+import { SmlouvySection } from './smlouvy/SmlouvySection'
+import { FeedbackPanel } from './feedback/FeedbackPanel'
+import { OdmenySection } from './odmeny/OdmenySection'
+import { AdminTabs } from './AdminTabs'
 
 function fmt(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
 }
-
-// Typ smlouvy — nesouvisející kategorie, každá dostane jinou brandovou barvu.
-const CONTRACT_COLORS: Record<string, { bar: string; text: string }> = {
-  HPP: { bar: 'bg-navy', text: 'text-white' },
-  IČO: { bar: 'bg-violet', text: 'text-white' },
-  DPP: { bar: 'bg-mint', text: 'text-navy' },
-  DPČ: { bar: 'bg-gold', text: 'text-navy' },
-}
-
-// Seniorita je pořadová škála (Junior → Lead) — jedna barva v rostoucí intenzitě, ne čtyři nesouvisející odstíny.
-const SENIORITY_COLORS = ['bg-violet/25', 'bg-violet/50', 'bg-violet/75', 'bg-violet']
-const SENIORITY_TEXT = ['text-navy', 'text-navy', 'text-navy', 'text-white']
-
-// Oddělení — nominální kategorie, cyklus brandových barev (plná + poloviční síla, když jich je víc než barev).
-const DEPT_COLORS = [
-  { bar: 'bg-violet', text: 'text-white' },
-  { bar: 'bg-mint', text: 'text-navy' },
-  { bar: 'bg-gold', text: 'text-navy' },
-  { bar: 'bg-navy', text: 'text-white' },
-  { bar: 'bg-violet/50', text: 'text-navy' },
-  { bar: 'bg-mint/60', text: 'text-navy' },
-]
 
 export default async function AdminPage() {
   const session = await auth()
@@ -38,9 +21,27 @@ export default async function AdminPage() {
 
   const s = DEMO_HR_STATS
 
+  // Přehled odměn — HPP/DPP/DPČ výplaty
+  const hppEmployees = DEMO_EMPLOYEES.filter(e => e.employmentType && ['HPP', 'DPP', 'DPC'].includes(e.employmentType))
+  const payslipRows = DEMO_PAYSLIPS.map(p => {
+    const emp = hppEmployees[0]
+    return {
+      id: p.id, name: emp?.name || '—', email: emp?.email || '—',
+      employmentType: emp?.employmentType || 'HPP',
+      grossAmount: p.grossAmount, netAmount: p.netAmount,
+      month: p.month, year: p.year, currency: p.currency,
+    }
+  })
+
+  // Přehled odměn — faktury OSVČ
+  const icoEmployees = DEMO_EMPLOYEES.filter(e => e.employmentType === 'ICO').map(e => ({
+    id: e.email.toLowerCase() === DEMO_USER_ICO.email.toLowerCase() ? DEMO_USER_ICO.id : e.id,
+    name: e.name, email: e.email,
+  }))
+
   return (
     <AppShell title="Admin panel" isAdmin={true} userName={session.user.name} userEmail={session.user.email}>
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Top stat cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -66,133 +67,14 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        {/* Charts row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-          {/* Typ smlouvy */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
-            <p className="kicker mb-4">Typ smlouvy</p>
-            <div className="space-y-3">
-              {s.contractTypes.map((c) => {
-                const color = CONTRACT_COLORS[c.label] ?? { bar: 'bg-violet', text: 'text-white' }
-                return (
-                <div key={c.label} className="flex items-center gap-3">
-                  <span className="w-10 text-sm text-slate-600 text-right flex-shrink-0">{c.label}</span>
-                  <div className="flex-1 bg-slate-100 rounded-full h-7 relative overflow-hidden">
-                    <div
-                      className={`h-full rounded-full flex items-center px-3 ${color.bar}`}
-                      style={{ width: `${Math.max(c.percent, 8)}%` }}
-                    >
-                      <span className={`${color.text} text-xs font-semibold whitespace-nowrap`}>
-                        {c.count} ({c.percent}%)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )})}
-            </div>
-          </div>
-
-          {/* Seniorita */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
-            <p className="kicker mb-4">Seniorita</p>
-            <div className="space-y-3">
-              {s.seniority.map((sr, i) => (
-                <div key={sr.label} className="flex items-center gap-3">
-                  <span className="w-14 text-sm text-slate-600 text-right flex-shrink-0">{sr.label}</span>
-                  <div className="flex-1 bg-slate-100 rounded-full h-7 relative overflow-hidden">
-                    {sr.percent > 0 ? (
-                      <div
-                        className={`h-full rounded-full flex items-center px-3 ${SENIORITY_COLORS[i] ?? 'bg-violet'}`}
-                        style={{ width: `${sr.percent}%` }}
-                      >
-                        <span className={`${SENIORITY_TEXT[i] ?? 'text-white'} text-xs font-semibold whitespace-nowrap`}>
-                          {sr.count} ({sr.percent}%)
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="h-full flex items-center px-3">
-                        <span className="text-slate-400 text-xs">{sr.count} (0%)</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Oddělení */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
-            <p className="kicker mb-4">Oddělení</p>
-            <div className="space-y-3">
-              {s.departments.map((d, i) => {
-                const color = DEPT_COLORS[i] ?? { bar: 'bg-violet', text: 'text-white' }
-                return (
-                <div key={d.label} className="flex items-center gap-3">
-                  <span className="w-24 text-sm text-slate-600 text-right flex-shrink-0">{d.label}</span>
-                  <div className="flex-1 bg-slate-100 rounded-full h-7 relative overflow-hidden">
-                    <div
-                      className={`h-full rounded-full flex items-center px-3 ${color.bar}`}
-                      style={{ width: `${Math.max(d.percent, 6)}%` }}
-                    >
-                      <span className={`${color.text} text-xs font-semibold whitespace-nowrap`}>
-                        {d.count} ({d.percent}%)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )})}
-            </div>
-          </div>
-
-          {/* Kapacita */}
-          <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
-            <p className="kicker mb-4">Kapacita</p>
-            <div className="space-y-3">
-              {[
-                { label: 'Celkové hodiny / měsíc', value: `${s.totalHoursPerMonth.toLocaleString('cs-CZ')} h`, highlight: false },
-                { label: 'Klientské hodiny',        value: `${s.clientHoursPerMonth.toLocaleString('cs-CZ')} h`, highlight: false },
-                { label: 'Efektivita (klientské / celkové)', value: `${s.efficiency}%`, highlight: true },
-                { label: 'Náklad na klientskou hodinu',      value: fmt(s.costPerClientHour), highlight: true },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
-                  <span className="text-sm text-slate-500">{row.label}</span>
-                  <span className={`text-sm font-semibold ${row.highlight ? 'text-violet' : 'text-navy'}`}>{row.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Podsložky administrace */}
-        <div>
-          <p className="kicker mb-3">Administrace</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { href: '/admin/employees', icon: Users, label: 'Uživatelé', sub: `${DEMO_EMPLOYEES.length} aktivních` },
-              { href: '/admin/odmeny', icon: Banknote, label: 'Přehled odměn', sub: 'Výplaty a doklady' },
-              { href: '/admin/faktury', icon: FileText, label: 'Přehled faktur OSVČ', sub: 'Párování a schvalování' },
-              { href: '/admin/vydaje', icon: Receipt, label: 'Doklady k proplacení', sub: 'Žádosti ke schválení' },
-              { href: '/admin/smlouvy', icon: FilePen, label: 'Smlouvy', sub: 'Šablony a podpisy' },
-              { href: '/admin/assets', icon: Laptop, label: 'Majetek', sub: 'Vybavení zaměstnanců' },
-              { href: '/admin/leave-calendar', icon: CalendarRange, label: 'Přehled docházky', sub: 'Z TrackDecku' },
-              { href: '/admin/analytics', icon: BarChart2, label: 'Analytika', sub: 'Headcount, výkon' },
-              { href: '/admin/feedback', icon: MessageSquareHeart, label: 'Schránka důvěry', sub: 'Jen pro HR' },
-              { href: '/admin/smernice', icon: BookOpen, label: 'Interní směrnice', sub: 'Pravidla firmy' },
-            ].map(({ href, icon: Icon, label, sub }) => (
-              <Link key={href} href={href} className="group bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 hover:shadow-[inset_0_0_0_1px_#834DFB] transition-all flex items-center gap-4">
-                <div className="p-2.5 bg-alice text-navy group-hover:bg-violet group-hover:text-white transition-colors flex-shrink-0">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-navy text-sm">{label}</p>
-                  <p className="text-xs text-slate-400">{sub}</p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors" />
-              </Link>
-            ))}
-          </div>
-        </div>
+        <AdminTabs panels={{
+          uzivatele: <EmployeesPanel employees={DEMO_EMPLOYEES} />,
+          analytika: <AnalyticsPanel />,
+          majetek: <AssetsClient employees={DEMO_EMPLOYEES.map(e => ({ id: e.id, name: e.name, email: e.email }))} />,
+          smlouvy: <SmlouvySection />,
+          duvera: <FeedbackPanel />,
+          odmeny: <OdmenySection payslipRows={payslipRows} icoEmployees={icoEmployees} invoices={DEMO_ICO_INVOICES} expenseRequests={DEMO_EXPENSE_REQUESTS} />,
+        }} />
 
       </div>
     </AppShell>
