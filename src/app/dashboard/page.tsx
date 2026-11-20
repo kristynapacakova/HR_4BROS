@@ -266,7 +266,7 @@ export default async function DashboardPage() {
         {/* Čeká na tebe — admin vidí vše, TL jen svůj tým */}
         {(isAdmin || isTL) && (
           <Link
-            href="/admin?tab=odmeny&sub=doklady"
+            href="/admin/odmeny?sub=doklady"
             className="block bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:shadow-[inset_0_0_0_1px_#834DFB] transition-colors group"
           >
             <div className="flex items-center justify-between">
@@ -291,7 +291,7 @@ export default async function DashboardPage() {
         {/* Smlouvy na dobu určitou končící do 3 měsíců — jen admin */}
         {isAdmin && expiringContracts.length > 0 && (
           <Link
-            href="/admin?tab=smlouvy"
+            href="/admin/smlouvy"
             className="block bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 hover:border-navy/20 transition-colors group"
           >
             <div className="flex items-center justify-between">

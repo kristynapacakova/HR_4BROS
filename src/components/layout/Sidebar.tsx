@@ -13,6 +13,8 @@ import {
   BookOpen,
   CalendarRange,
   FileText,
+  FilePen,
+  Banknote,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -28,11 +30,11 @@ const staticNavItemsAfter = [
   { label: 'Tým Four Bros', href: '/team', icon: Users2 },
 ]
 
-// Admin sekce je od teď jediná položka v menu — všechny podsložky (uživatelé, odměny,
-// faktury, smlouvy, majetek, analytika...) se otevírají jako karty uvnitř /admin dashboardu,
-// aby menu zůstalo krátké.
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: ShieldCheck },
+  { label: 'Smlouvy', href: '/admin/smlouvy', icon: FilePen },
+  { label: 'Schránka důvěry', href: '/admin/feedback', icon: MessageSquareHeart },
+  { label: 'Přehled odměn', href: '/admin/odmeny', icon: Banknote },
 ]
 
 interface SidebarProps {

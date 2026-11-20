@@ -2,15 +2,12 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Users, BarChart2, Laptop, FilePen, MessageSquareHeart, Banknote } from 'lucide-react'
+import { Users, BarChart2, Laptop } from 'lucide-react'
 
 const TABS = [
-  { id: 'uzivatele', label: 'Uživatelé', icon: Users },
   { id: 'analytika', label: 'Analytika', icon: BarChart2 },
+  { id: 'uzivatele', label: 'Uživatelé', icon: Users },
   { id: 'majetek', label: 'Majetek', icon: Laptop },
-  { id: 'smlouvy', label: 'Smlouvy', icon: FilePen },
-  { id: 'duvera', label: 'Schránka důvěry', icon: MessageSquareHeart },
-  { id: 'odmeny', label: 'Přehled odměn', icon: Banknote },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -18,7 +15,7 @@ type TabId = typeof TABS[number]['id']
 export function AdminTabs({ panels }: { panels: Record<TabId, React.ReactNode> }) {
   const searchParams = useSearchParams()
   const requested = searchParams.get('tab')
-  const initial = TABS.some(t => t.id === requested) ? (requested as TabId) : 'uzivatele'
+  const initial = TABS.some(t => t.id === requested) ? (requested as TabId) : 'analytika'
   const [tab, setTab] = useState<TabId>(initial)
 
   return (
