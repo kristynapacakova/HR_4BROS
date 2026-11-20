@@ -1,0 +1,43 @@
+'use client'
+
+import { Menu, BookOpen } from 'lucide-react'
+import Link from 'next/link'
+import { HeaderAvatar } from '@/components/AvatarUpload'
+import { RoleSwitcher } from './RoleSwitcher'
+import { NotificationBell } from './NotificationBell'
+
+interface HeaderProps {
+  title: string
+  onMenuClick?: () => void
+  userName?: string | null
+  userEmail?: string | null
+  teamMemberId?: string
+}
+
+export function Header({ title, onMenuClick, userName, userEmail, teamMemberId }: HeaderProps) {
+  return (
+    <header className="relative sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-slate-200/50 px-6 py-3.5 flex items-center gap-4">
+      <button
+        onClick={onMenuClick}
+        className="lg:hidden text-navy p-2 rounded-full hover:bg-slate-100 transition-colors"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+      <div className="flex-1">
+        <h1 className="text-lg font-headline font-semibold text-navy tracking-tight">{title}</h1>
+      </div>
+      <div className="flex items-center gap-2">
+        <RoleSwitcher currentEmail={userEmail} />
+        <Link
+          href="/pravidla"
+          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-all duration-150"
+        >
+          <BookOpen className="w-4 h-4" />
+          Pravidla
+        </Link>
+        <NotificationBell userEmail={userEmail} />
+        <HeaderAvatar initial={userName?.[0]?.toUpperCase() || 'U'} teamMemberId={teamMemberId} />
+      </div>
+    </header>
+  )
+}
