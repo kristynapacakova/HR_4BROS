@@ -57,7 +57,7 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
   }, [startDate])
 
   return (
-    <div className="stair-corner shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] bg-white" style={{ '--stair-color': '#4DE791' } as React.CSSProperties}>
+    <div className="relative overflow-hidden shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] bg-white">
       <div className="relative z-10 px-7 py-7">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
