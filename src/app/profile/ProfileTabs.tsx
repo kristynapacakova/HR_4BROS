@@ -136,7 +136,7 @@ export function ProfileTabs({
                   { label: 'Úvazek', value: hrData?.monthlyHours ? `${hrData.monthlyHours} h/měs` : '—' },
                   { label: 'Efektivita', value: efficiency ? `${efficiency} %` : '—', highlight: true },
                 ].map(c => (
-                  <div key={c.label} className="bg-white border border-slate-100 shadow-sm p-4">
+                  <div key={c.label} className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-4">
                     <p className="text-xs text-slate-400 mb-1">{c.label}</p>
                     <p className={`text-xl font-headline font-bold ${c.highlight ? 'text-violet' : 'text-navy'}`}>{c.value}</p>
                   </div>
@@ -144,7 +144,7 @@ export function ProfileTabs({
               </div>
 
               {/* Detail form */}
-              <div className="bg-white border border-slate-100 shadow-sm p-6">
+              <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-headline font-semibold text-navy">HR údaje</h3>
                   <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">Demo — nelze uložit</span>
@@ -207,7 +207,7 @@ export function ProfileTabs({
 
       {/* Zapůjčený majetek */}
       {tab === 'majetek' && (
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({assets.length} položek)</h3>
           </div>

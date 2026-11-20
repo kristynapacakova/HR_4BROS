@@ -68,7 +68,7 @@ export function BenefitAdmin({ employees, seedRequests }: { employees: Employee[
     <div className="space-y-6">
 
       {/* Přiřazení benefitu */}
-      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <div className="w-9 h-9 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0">
             <Dumbbell className="w-4 h-4 text-green-600" />
@@ -102,7 +102,7 @@ export function BenefitAdmin({ employees, seedRequests }: { employees: Employee[
       </div>
 
       {/* Čekající žádosti o příspěvek */}
-      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <h3 className="font-headline font-semibold text-navy">Čekající žádosti o příspěvek</h3>
           {pending.length > 0 && (
@@ -148,7 +148,7 @@ export function BenefitAdmin({ employees, seedRequests }: { employees: Employee[
 
       {/* Historie */}
       {processed.length > 0 && (
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2">
             <HeartPulse className="w-4 h-4 text-slate-400" />
             <h3 className="font-headline font-semibold text-navy">Vyřízené žádosti</h3>

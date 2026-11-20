@@ -38,13 +38,13 @@ export default async function AdminEmployeesPage() {
       <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Create employee */}
-        <div className="bg-white border border-slate-100 shadow-sm p-6">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6">
           <h3 className="font-headline font-semibold text-navy mb-4">Přidat uživatele</h3>
           <CreateEmployeeForm />
         </div>
 
         {/* Table */}
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Přehled uživatelů ({employees.length})</h3>
           </div>

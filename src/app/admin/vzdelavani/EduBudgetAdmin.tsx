@@ -86,7 +86,7 @@ export function EduBudgetAdmin({
     <div className="space-y-6">
 
       {/* Rozpočty */}
-      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <div className="w-9 h-9 bg-alice rounded-full flex items-center justify-center flex-shrink-0">
             <GraduationCap className="w-4 h-4 text-navy" />
@@ -128,7 +128,7 @@ export function EduBudgetAdmin({
       </div>
 
       {/* Čekající žádosti */}
-      <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
           <h3 className="font-headline font-semibold text-navy">Čekající žádosti</h3>
           {pending.length > 0 && (
@@ -178,7 +178,7 @@ export function EduBudgetAdmin({
 
       {/* Historie */}
       {processed.length > 0 && (
-        <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Vyřízené žádosti</h3>
           </div>

@@ -29,7 +29,8 @@ function LoginForm() {
         </div>
 
         {/* Card */}
-        <div className="bg-white shadow-md border border-slate-100 p-8">
+        <div className="stair-corner bg-white shadow-[inset_0_0_0_1px_#0D214F] p-8" style={{ '--stair-color': '#834DFB' } as React.CSSProperties}>
+          <p className="kicker mb-2">Interní portál</p>
           <h2 className="text-xl font-headline font-semibold text-navy mb-1">Přihlásit se</h2>
           <p className="text-slate-500 text-sm mb-6">
             Zadejte svůj firemní e-mail pro přihlášení.
@@ -65,7 +66,7 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="vas@fourbros.cz"
                 required
-                className="w-full px-4 py-3 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent transition-all"
+                className="w-full px-4 py-3 shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] text-sm focus:outline-none focus:shadow-[inset_0_0_0_1px_#0D214F] transition-all"
               />
             </div>
             <button

@@ -57,7 +57,7 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
   }, [startDate])
 
   return (
-    <div className="relative overflow-hidden border border-slate-100 shadow-sm bg-white">
+    <div className="stair-corner shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] bg-white" style={{ '--stair-color': '#4DE791' } as React.CSSProperties}>
       <div className="relative z-10 px-7 py-7">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
@@ -78,7 +78,7 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
             </div>
           </div>
           <div className={` px-5 py-3 border ${isAnniversary ? 'bg-violet/5 border-violet/20' : 'bg-alice border-slate-100'}`}>
-            <p className={`text-[10px] uppercase tracking-widest mb-0.5 ${isAnniversary ? 'text-violet' : 'text-navy/60'}`}>
+            <p className={`kicker mb-0.5 ${isAnniversary ? 'text-violet' : 'text-navy/60'}`}>
               {isAnniversary ? 'Pracovní výročí 🎉' : 'Jsi s námi už'}
             </p>
             <p className="text-navy font-headline text-lg leading-tight">{tenure}</p>

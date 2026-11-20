@@ -53,7 +53,7 @@ export function FeedbackForm({ userName }: { userName: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-slate-100 shadow-sm p-6 space-y-5">
+    <form onSubmit={handleSubmit} className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-6 space-y-5">
 
       {/* Anonymity toggle */}
       <div>

@@ -125,7 +125,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="bg-white border border-slate-100 shadow-sm px-6 py-4 flex items-center justify-between">
+      <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-violet-600" />
           <h2 className="font-headline font-bold text-[#1e3a5f] text-lg">Interní směrnice</h2>
@@ -154,7 +154,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
             const Icon = cfg.icon
             const isOpen = expandedId === d.id
             return (
-              <div key={d.id} className={`bg-white  border border-slate-100 shadow-sm border-l-4 ${cfg.borderColor} overflow-hidden`}>
+              <div key={d.id} className={`bg-white  shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] border-l-4 ${cfg.borderColor} overflow-hidden`}>
                 <button
                   onClick={() => setExpandedId(isOpen ? null : d.id)}
                   className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-slate-50 transition-colors"
@@ -213,7 +213,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
           {/* Left: form */}
           <div className="space-y-5">
             {/* Step 1: Pick template */}
-            <div className="bg-white border border-slate-100 shadow-sm p-5">
+            <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
               <h3 className="text-sm font-semibold text-[#1e3a5f] mb-3">1. Vyberte šablonu</h3>
               <div className="grid grid-cols-1 gap-3">
                 {templates.map(tpl => {
@@ -243,7 +243,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
 
             {/* Step 2: Fill in */}
             {selectedTemplate && (
-              <div className="bg-white border border-slate-100 shadow-sm p-5 space-y-4">
+              <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 space-y-4">
                 <h3 className="text-sm font-semibold text-[#1e3a5f]">2. Vyplňte obsah</h3>
 
                 <div className="space-y-1">
