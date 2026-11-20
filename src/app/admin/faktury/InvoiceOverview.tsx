@@ -370,10 +370,16 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                     <td className="px-4 py-3 text-slate-600">
                       <div className="flex items-center gap-1.5">
                         <span>{invoice ? fmt(effectiveSalary) : '—'}</span>
-                        {rateOverridden && (
-                          <span className="text-[10px] bg-violet/10 text-violet px-1.5 py-0.5 rounded-full flex-shrink-0" title="Upraveno schválenou změnou odměny">
-                            upraveno
-                          </span>
+                        {invoice && (
+                          rateOverridden ? (
+                            <span className="text-[10px] font-semibold bg-red-50 text-red-700 px-1.5 py-0.5 flex-shrink-0" title={`Faktura neodpovídá schválené výši — mělo by být ${fmt(effectiveSalary)}`}>
+                              ⚠ neodpovídá
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-semibold bg-mint-tint text-mint-dark px-1.5 py-0.5 flex-shrink-0" title="Fakturovaná částka odpovídá schválené výši">
+                              ✓ sedí
+                            </span>
+                          )
                         )}
                         {pendingRate.length > 0 && (
                           <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full flex-shrink-0" title="Změna odměny čeká na schválení HR">
