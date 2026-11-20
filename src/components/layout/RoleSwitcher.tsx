@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import { UserCog, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
+import { IconUser } from '@/components/BrandIcons'
 
 const DEMO_ROLES = [
   { email: 'admin@fourbros.cz', label: 'Admin & HR' },
@@ -40,7 +41,7 @@ export function RoleSwitcher({ currentEmail }: { currentEmail?: string | null })
         title="Přepnout demo roli — bez odhlašování"
         className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium text-slate-500 hover:text-navy hover:bg-slate-100 transition-all duration-150"
       >
-        <UserCog className="w-4 h-4" />
+        <IconUser className="w-4 h-4" />
         {current?.label ?? 'Přepnout roli'}
         <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>

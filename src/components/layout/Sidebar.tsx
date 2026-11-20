@@ -64,7 +64,7 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
   }
 
   return (
-    <div className="relative flex flex-col h-full bg-white border-r border-[rgba(13,33,79,0.14)]">
+    <div className="relative flex flex-col h-full bg-alice border-r border-[rgba(13,33,79,0.14)]">
       {/* Logo header */}
       <div className="relative flex items-center justify-between border-b border-[rgba(13,33,79,0.14)] px-5 py-5">
         <Link href="/dashboard" className="flex items-center gap-3">

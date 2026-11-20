@@ -146,6 +146,10 @@
     background: url('/brand/rozky.svg') no-repeat center / contain;
     pointer-events: none;
   }
+  .rozky-lg::after {
+    width: 28px;
+    height: 28px;
+  }
 
   /* 4B schody — B1 Business / B2 Behavior / B3 Branding / B4 Boost */
   .stairs { display: flex; align-items: flex-end; gap: 4px; height: 28px; }
