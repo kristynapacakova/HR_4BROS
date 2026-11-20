@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { readAvatar } from '@/components/AvatarUpload'
 import { TEAM_PROFILE_CHANGED_EVENT } from '@/lib/team-profile-client'
+import { toVocativeCz } from '@/lib/cz-vocative'
 
 interface Stat {
   value: string
@@ -34,7 +35,7 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
   useEffect(() => {
     try { setNickname(localStorage.getItem('fb-nickname')) } catch { /* noop */ }
   }, [])
-  const displayName = nickname?.trim() || name
+  const displayName = nickname?.trim() || toVocativeCz(name)
 
   const [photo, setPhoto] = useState<string | null>(null)
   useEffect(() => {

@@ -19,45 +19,45 @@ const THEME_CFG: Record<DirectiveTheme, {
 }> = {
   STANDARD: {
     icon: FileText, label: 'Obecná',
-    borderColor: 'border-l-slate-700', badgeBg: 'bg-slate-100', badgeText: 'text-slate-700',
-    headerClass: 'bg-[#1e3a5f] text-white',
-    previewHeaderClass: 'bg-[#1e3a5f] text-white px-5 py-3',
-    previewBodyClass: 'bg-white border-l-4 border-slate-700',
+    borderColor: 'border-l-navy', badgeBg: 'bg-navy/10', badgeText: 'text-navy',
+    headerClass: 'bg-navy text-white',
+    previewHeaderClass: 'bg-navy text-white px-5 py-3',
+    previewBodyClass: 'bg-white border-l-4 border-navy',
   },
   IMPORTANT: {
     icon: AlertTriangle, label: 'Důležité',
-    borderColor: 'border-l-orange-500', badgeBg: 'bg-orange-50', badgeText: 'text-orange-700',
-    headerClass: 'bg-orange-500 text-white',
-    previewHeaderClass: 'bg-orange-500 text-white px-5 py-3',
-    previewBodyClass: 'bg-orange-50 border-l-4 border-orange-500',
+    borderColor: 'border-l-gold', badgeBg: 'bg-gold-tint', badgeText: 'text-gold-dark',
+    headerClass: 'bg-gold text-navy',
+    previewHeaderClass: 'bg-gold text-navy px-5 py-3',
+    previewBodyClass: 'bg-gold-tint border-l-4 border-gold',
   },
   GDPR: {
     icon: Shield, label: 'GDPR',
-    borderColor: 'border-l-violet-600', badgeBg: 'bg-violet-50', badgeText: 'text-violet-700',
-    headerClass: 'bg-violet-700 text-white',
-    previewHeaderClass: 'bg-gradient-to-r from-violet-700 to-purple-800 text-white px-5 py-3',
-    previewBodyClass: 'bg-purple-50 border-l-4 border-violet-600',
+    borderColor: 'border-l-violet', badgeBg: 'bg-violet/10', badgeText: 'text-violet',
+    headerClass: 'bg-violet text-white',
+    previewHeaderClass: 'bg-violet text-white px-5 py-3',
+    previewBodyClass: 'bg-violet/5 border-l-4 border-violet',
   },
   BOZP: {
     icon: HardHat, label: 'BOZP',
-    borderColor: 'border-l-amber-500', badgeBg: 'bg-amber-50', badgeText: 'text-amber-700',
-    headerClass: 'bg-amber-400 text-navy',
-    previewHeaderClass: 'bg-amber-400 text-[#1e3a5f] px-5 py-3',
-    previewBodyClass: 'bg-amber-50 border-l-4 border-amber-500',
+    borderColor: 'border-l-gold-dark', badgeBg: 'bg-gold-tint', badgeText: 'text-gold-dark',
+    headerClass: 'bg-gold-dark text-white',
+    previewHeaderClass: 'bg-gold-dark text-white px-5 py-3',
+    previewBodyClass: 'bg-gold-tint border-l-4 border-gold-dark',
   },
   BENEFIT: {
     icon: Gift, label: 'Benefity',
-    borderColor: 'border-l-emerald-500', badgeBg: 'bg-emerald-50', badgeText: 'text-emerald-700',
-    headerClass: 'bg-emerald-600 text-white',
-    previewHeaderClass: 'bg-emerald-600 text-white px-5 py-3',
-    previewBodyClass: 'bg-emerald-50 border-l-4 border-emerald-500',
+    borderColor: 'border-l-mint', badgeBg: 'bg-mint-tint', badgeText: 'text-mint-dark',
+    headerClass: 'bg-mint-dark text-white',
+    previewHeaderClass: 'bg-mint-dark text-white px-5 py-3',
+    previewBodyClass: 'bg-mint-tint border-l-4 border-mint',
   },
   WELCOME: {
     icon: Sparkles, label: 'Uvítání',
-    borderColor: 'border-l-violet-500', badgeBg: 'bg-violet-50', badgeText: 'text-violet-700',
-    headerClass: 'bg-gradient-to-r from-[#1e3a5f] to-violet-700 text-white',
-    previewHeaderClass: 'bg-gradient-to-r from-[#1e3a5f] to-violet-700 text-white px-5 py-3',
-    previewBodyClass: 'bg-white border-l-4 border-violet-500',
+    borderColor: 'border-l-violet', badgeBg: 'bg-violet/10', badgeText: 'text-violet',
+    headerClass: 'bg-navy text-white',
+    previewHeaderClass: 'bg-navy text-white px-5 py-3',
+    previewBodyClass: 'bg-white border-l-4 border-violet',
   },
 }
 
@@ -128,7 +128,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
       <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-violet-600" />
-          <h2 className="font-headline font-bold text-[#1e3a5f] text-lg">Interní směrnice</h2>
+          <h2 className="font-headline font-bold text-navy text-lg">Interní směrnice</h2>
         </div>
         <div className="flex gap-2">
           {(['list', 'create'] as const).map(t => (
@@ -163,9 +163,9 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                     <Icon className={`w-4 h-4 ${cfg.badgeText}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#1e3a5f]">{d.title}</p>
+                    <p className="text-sm font-semibold text-navy">{d.title}</p>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      <span className={`inline-block px-1.5 py-0.5 rounded-full text-[11px] font-medium mr-2 ${cfg.badgeBg} ${cfg.badgeText}`}>{cfg.label}</span>
+                      <span className={`inline-block px-1.5 py-0.5 text-[11px] font-medium mr-2 ${cfg.badgeBg} ${cfg.badgeText}`}>{cfg.label}</span>
                       Vydáno {formatDate(d.publishedAt)} · Platnost od {formatDate(d.validFrom)}
                     </p>
                   </div>
@@ -174,9 +174,9 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                       <Users className="w-3.5 h-3.5" />
                       {d.acknowledgements.length}/{TOTAL_EMPLOYEES} odsouhlasilo
                     </span>
-                    <div className="w-20 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="w-20 h-1.5 bg-slate-100 overflow-hidden">
                       <div
-                        className="h-full bg-violet-600 rounded-full"
+                        className="h-full bg-violet"
                         style={{ width: `${Math.round((d.acknowledgements.length / TOTAL_EMPLOYEES) * 100)}%` }}
                       />
                     </div>
@@ -193,7 +193,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                         {d.acknowledgements.map(a => (
                           <div key={a.employeeId} className="flex items-center gap-3 text-sm">
                             <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                            <span className="font-medium text-[#1e3a5f]">{a.employeeName}</span>
+                            <span className="font-medium text-navy">{a.employeeName}</span>
                             <span className="text-slate-400 text-xs">{formatDate(a.acknowledgedAt)}</span>
                           </div>
                         ))}
@@ -214,7 +214,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
           <div className="space-y-5">
             {/* Step 1: Pick template */}
             <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5">
-              <h3 className="text-sm font-semibold text-[#1e3a5f] mb-3">1. Vyberte šablonu</h3>
+              <h3 className="text-sm font-semibold text-navy mb-3">1. Vyberte šablonu</h3>
               <div className="grid grid-cols-1 gap-3">
                 {templates.map(tpl => {
                   const cfg = THEME_CFG[tpl.theme]
@@ -244,7 +244,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
             {/* Step 2: Fill in */}
             {selectedTemplate && (
               <div className="bg-white shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)] p-5 space-y-4">
-                <h3 className="text-sm font-semibold text-[#1e3a5f]">2. Vyplňte obsah</h3>
+                <h3 className="text-sm font-semibold text-navy">2. Vyplňte obsah</h3>
 
                 <div className="space-y-1">
                   <label className="text-xs font-medium text-slate-600">Název směrnice</label>

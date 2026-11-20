@@ -27,16 +27,16 @@ const STATUS_LABEL: Record<ContractStatus, string> = {
 
 const STATUS_COLOR: Record<ContractStatus, string> = {
   DRAFT: 'bg-slate-100 text-slate-600',
-  PENDING_MANAGEMENT: 'bg-amber-50 text-amber-700',
-  PENDING_EMPLOYEE: 'bg-blue-50 text-blue-700',
-  SIGNED: 'bg-green-50 text-green-700',
+  PENDING_MANAGEMENT: 'bg-gold-tint text-gold-dark',
+  PENDING_EMPLOYEE: 'bg-violet/10 text-violet',
+  SIGNED: 'bg-mint-tint text-mint-dark',
 }
 
 const TYPE_COLOR: Record<string, string> = {
-  HPP: 'bg-green-50 text-green-700',
-  DPP: 'bg-blue-50 text-blue-700',
-  DPC: 'bg-sky-50 text-sky-700',
-  ICO: 'bg-amber-50 text-amber-700',
+  HPP: 'bg-navy/10 text-navy',
+  DPP: 'bg-mint-tint text-mint-dark',
+  DPC: 'bg-violet/10 text-violet',
+  ICO: 'bg-gold-tint text-gold-dark',
   OBECNA: 'bg-slate-100 text-slate-600',
 }
 
@@ -200,7 +200,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
           >
             {label}
             {id === 'archiv' && archived.length > 0 && (
-              <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-violet/20 text-violet text-[10px] font-bold">{archived.length}</span>
+              <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 bg-violet/20 text-violet text-[10px] font-bold">{archived.length}</span>
             )}
           </button>
         ))}
@@ -215,7 +215,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                 <div className="w-10 h-10 bg-violet/10 flex items-center justify-center flex-shrink-0">
                   <FileText className="w-5 h-5 text-violet" />
                 </div>
-                <span className={`text-xs px-2 py-0.5 rounded font-medium ${TYPE_COLOR[tpl.type] ?? 'bg-slate-100 text-slate-600'}`}>{tpl.type}</span>
+                <span className={`text-xs px-2 py-0.5 font-medium ${TYPE_COLOR[tpl.type] ?? 'bg-slate-100 text-slate-600'}`}>{tpl.type}</span>
               </div>
               <div>
                 <p className="font-headline font-semibold text-navy">{tpl.name}</p>
@@ -281,7 +281,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                     <tr key={c.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-violet rounded-full flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 bg-violet flex items-center justify-center flex-shrink-0">
                             <span className="text-white text-xs font-bold">
                               {c.employeeName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                             </span>
@@ -297,7 +297,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                         {c.notes && <p className="text-xs text-slate-400 mt-0.5 italic">{c.notes}</p>}
                       </td>
                       <td className="px-5 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_COLOR[c.status]}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 text-xs font-medium ${STATUS_COLOR[c.status]}`}>
                           {STATUS_LABEL[c.status]}
                         </span>
                       </td>
@@ -309,7 +309,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                           {c.status === 'DRAFT' && (
                             <button
                               onClick={() => advance(c.id)}
-                              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-50 text-amber-700 text-xs font-medium hover:bg-amber-100 transition-colors"
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gold-tint text-gold-dark text-xs font-medium hover:bg-gold/20 transition-colors"
                             >
                               <Send className="w-3 h-3" />
                               Odeslat vedení
@@ -327,7 +327,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                           {c.status === 'PENDING_EMPLOYEE' && (
                             <button
                               onClick={() => advance(c.id)}
-                              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-blue-50 text-blue-700 text-xs font-medium hover:bg-blue-100 transition-colors"
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-violet/10 text-violet text-xs font-medium hover:bg-violet/20 transition-colors"
                               title="Simulovat podpis zaměstnance (demo)"
                             >
                               <Pen className="w-3 h-3" />
@@ -337,7 +337,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                           {c.status === 'SIGNED' && (
                             <button
                               onClick={() => printContract(c, templates.find(t => t.id === c.templateId))}
-                              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-green-50 text-green-700 text-xs font-medium hover:bg-green-100 transition-colors"
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-mint-tint text-mint-dark text-xs font-medium hover:bg-mint/20 transition-colors"
                             >
                               <CheckCircle2 className="w-3 h-3" />
                               PDF
@@ -386,7 +386,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                   <div className="w-10 h-10 bg-violet/10 flex items-center justify-center flex-shrink-0 group-hover:bg-violet/20 transition-colors">
                     <FileText className="w-5 h-5 text-violet" />
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded font-medium ${TYPE_COLOR[tpl.type] ?? 'bg-slate-100 text-slate-600'}`}>{tpl.type}</span>
+                  <span className={`text-xs px-2 py-0.5 font-medium ${TYPE_COLOR[tpl.type] ?? 'bg-slate-100 text-slate-600'}`}>{tpl.type}</span>
                 </div>
                 <div>
                   <p className="font-headline font-semibold text-navy">{tpl.name}</p>
@@ -550,7 +550,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                       </td>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 bg-violet rounded-full flex items-center justify-center flex-shrink-0">
+                          <div className="w-6 h-6 bg-violet flex items-center justify-center flex-shrink-0">
                             <span className="text-white text-[10px] font-bold">
                               {a.employeeName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                             </span>
@@ -560,7 +560,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
                         {a.notes && <p className="text-xs text-slate-400 mt-0.5 italic pl-8">{a.notes}</p>}
                       </td>
                       <td className="px-5 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${TYPE_COLOR[a.contractType] ?? 'bg-slate-100 text-slate-600'}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 text-xs font-medium ${TYPE_COLOR[a.contractType] ?? 'bg-slate-100 text-slate-600'}`}>
                           {a.contractType}
                         </span>
                       </td>
@@ -610,7 +610,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
             <div className="px-6 py-5 space-y-4 overflow-y-auto">
               {/* Drop zone */}
               <div
-                className={`border-2 border-dashed  p-6 text-center transition-colors cursor-pointer ${uploadDrag ? 'border-violet bg-violet/5' : uploadFile ? 'border-green-300 bg-green-50' : 'border-slate-200 hover:border-violet/40'}`}
+                className={`border-2 border-dashed p-6 text-center transition-colors cursor-pointer ${uploadDrag ? 'border-violet bg-violet/5' : uploadFile ? 'border-mint bg-mint-tint' : 'border-slate-200 hover:border-violet/40'}`}
                 onDragOver={e => { e.preventDefault(); setUploadDrag(true) }}
                 onDragLeave={() => setUploadDrag(false)}
                 onDrop={handleFileDrop}
