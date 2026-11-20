@@ -37,11 +37,18 @@ function LoginForm() {
             Všechno kolem týmu, dovolených, smluv a odměn na jednom místě. Přehledně a bez zbytečné administrativy.
           </p>
         </div>
-        <div className="relative flex items-center justify-between">
-          <div className="stairs">
-            <i /><i /><i /><i />
-          </div>
-          <div className="rozky w-5 h-5" />
+        {/* 4B schody — velký architektonický prvek, zarovnaný na spodní okraj */}
+        <div className="absolute left-0 bottom-0 flex items-end" style={{ width: 180, height: 180 }}>
+          <div className="flex-1 h-[25%] bg-alice border border-white/30" />
+          <div className="flex-1 h-[50%] bg-gold" />
+          <div className="flex-1 h-[75%] bg-violet" />
+          <div className="flex-1 h-full bg-mint" />
+        </div>
+
+        {/* Rožky — podpisová značka u dělicí čáry */}
+        <div className="absolute right-0 bottom-0" style={{ width: 64, height: 64 }}>
+          <div className="absolute top-0 right-0 bg-gold" style={{ width: 32, height: 32 }} />
+          <div className="absolute bottom-0 left-0 bg-violet" style={{ width: 32, height: 32 }} />
         </div>
       </div>
 
