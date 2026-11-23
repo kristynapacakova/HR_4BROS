@@ -352,7 +352,7 @@ export const DEMO_SPORT_REQUESTS: SportBenefitRequest[] = [
 // ── Team directory ──────────────────────────────────────────────────────────
 
 export const TEAM_DEPARTMENTS = [
-  'Head office', 'Creative', 'Performance', 'Account manager',
+  'Head office', 'Account manager', 'Creative', 'Performance',
 ]
 
 export interface PersonRecord {

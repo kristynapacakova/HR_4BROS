@@ -23,7 +23,6 @@ export function AnalyticsPanel() {
   const departmentHeadcount = TEAM_DEPARTMENTS
     .map((department) => ({ department, count: DEMO_TEAM.filter((m) => m.department === department).length }))
     .filter((d) => d.count > 0)
-    .sort((a, b) => b.count - a.count)
 
   return (
     <div className="space-y-6">
