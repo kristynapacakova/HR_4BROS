@@ -2,16 +2,16 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Banknote, FileText, Receipt } from 'lucide-react'
+import { IconBanknote, IconContract, IconReceipt } from '@/components/BrandIcons'
 import { OdmenyTabs } from './OdmenyTabs'
 import { InvoiceOverview } from '../faktury/InvoiceOverview'
 import { ExpenseAdmin } from '../vydaje/ExpenseAdmin'
 import type { IcoInvoiceRecord, ExpenseRequest } from '@/lib/mock-data'
 
 const SUB_TABS = [
-  { id: 'odmeny', label: 'Přehled odměn', icon: Banknote },
-  { id: 'faktury', label: 'Přehled faktur OSVČ', icon: FileText },
-  { id: 'doklady', label: 'Doklady k proplacení', icon: Receipt },
+  { id: 'odmeny', label: 'Přehled odměn', icon: IconBanknote },
+  { id: 'faktury', label: 'Přehled faktur OSVČ', icon: IconContract },
+  { id: 'doklady', label: 'Doklady k proplacení', icon: IconReceipt },
 ] as const
 type SubTabId = typeof SUB_TABS[number]['id']
 

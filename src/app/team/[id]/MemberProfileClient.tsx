@@ -322,7 +322,7 @@ export function MemberProfileClient({
                 <div className="flex gap-2">
                   <button
                     onClick={() => { save({ bio: bioDraft.trim() }); setEditingBio(false) }}
-                    className="px-3 py-1.5 bg-violet hover:bg-violet-dark text-white text-xs font-medium rounded-full transition-colors"
+                    className="px-3 py-1.5 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-xs font-medium rounded-full transition-colors"
                   >
                     Uložit
                   </button>
@@ -388,7 +388,7 @@ export function MemberProfileClient({
                     placeholder="Vlastní…"
                     className="flex-1 px-3 py-1.5 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
                   />
-                  <button onClick={() => addInterest(interestDraft)} className="px-3 py-1.5 bg-violet hover:bg-violet-dark text-white text-xs font-medium rounded-full transition-colors">
+                  <button onClick={() => addInterest(interestDraft)} className="px-3 py-1.5 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-xs font-medium rounded-full transition-colors">
                     Přidat
                   </button>
                   <button onClick={() => setEditingInterests(false)} className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-navy transition-colors">
@@ -423,7 +423,7 @@ export function MemberProfileClient({
                 <div className="flex gap-2">
                   <button
                     onClick={() => { save({ helpWith: helpDraft.trim() }); setEditingHelp(false) }}
-                    className="px-3 py-1.5 bg-violet hover:bg-violet-dark text-white text-xs font-medium rounded-full transition-colors"
+                    className="px-3 py-1.5 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-xs font-medium rounded-full transition-colors"
                   >
                     Uložit
                   </button>
