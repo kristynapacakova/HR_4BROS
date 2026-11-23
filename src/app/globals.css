@@ -177,10 +177,7 @@
   to { opacity: 0; visibility: hidden; }
 }
 
-/* Výjimka: Google CTA tlačítko na loginu má jemně zaoblené rohy podle Report Hub reference */
-.btn-rounded-exception {
-  border-radius: 10px !important;
-}
-.btn-rounded-exception-sm {
-  border-radius: 4px !important;
+/* Výjimka z ostrých hran: CTA tlačítka na loginu jsou pill jako na 4bros.cz */
+.btn-pill {
+  border-radius: 9999px !important;
 }
