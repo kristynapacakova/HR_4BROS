@@ -51,13 +51,15 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
         href={href}
         onClick={onClose}
         className={cn(
-          'flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
+          'flex items-center gap-3 px-2.5 py-2 text-[13px] font-semibold transition-colors duration-150',
           isActive
-            ? 'bg-navy text-white'
-            : 'text-slate-500 hover:bg-slate-50 hover:text-navy'
+            ? 'bg-gold text-navy'
+            : 'text-white/85 hover:bg-white/10 hover:text-white'
         )}
       >
-        <Icon className={cn('w-[18px] h-[18px] flex-shrink-0 transition-colors', isActive ? 'text-white' : 'text-navy/50')} />
+        <span className={cn('w-6 h-6 flex items-center justify-center flex-shrink-0', isActive ? 'bg-navy text-white' : 'text-white/70')}>
+          <Icon className="w-[15px] h-[15px]" />
+        </span>
         <span className="flex-1">{label}</span>
         {extra}
       </Link>
@@ -65,41 +67,37 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
   }
 
   return (
-    <div className="relative flex flex-col h-full bg-alice border-r border-[rgba(13,33,79,0.14)]">
-      {/* Logo header */}
-      <div className="relative flex items-center justify-between border-b border-[rgba(13,33,79,0.14)] px-5 py-5">
-        <Link href="/dashboard" className="flex items-center gap-3">
+    <div className="relative flex flex-col h-full bg-navy text-white">
+      {/* Logo — jako v Report Hubu */}
+      <div className="relative flex items-start justify-between px-5 pt-6 pb-5">
+        <Link href="/dashboard" className="block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/symbol.svg" alt="4B" className="h-6 w-auto flex-shrink-0" />
-          <p className="text-navy/50 text-[11px] tracking-wide border-l border-[rgba(13,33,79,0.14)] pl-3">HR Portál</p>
+          <img src="/brand/logo-white.svg" alt="4BROS" className="h-[22px] w-auto" />
+          <p className="font-headline text-white/80 text-[15px] mt-1.5" style={{ fontWeight: 500 }}>HR Portál</p>
         </Link>
         {onClose && (
-          <button onClick={onClose} className="lg:hidden text-navy/50 hover:text-navy p-1.5 transition-colors flex-shrink-0">
+          <button onClick={onClose} className="lg:hidden text-white/60 hover:text-white p-1.5 transition-colors flex-shrink-0">
             <X className="w-4 h-4" />
           </button>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 space-y-0.5 overflow-y-auto px-3">
-        <p className="kicker px-3 mb-2 mt-1">Navigace</p>
+      <nav className="flex-1 pb-4 space-y-0.5 overflow-y-auto px-2.5 scrollbar-none">
+        <p className="px-2.5 mb-2 mt-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">Navigace</p>
 
         {navItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
 
         {isAdmin && (
           <>
-            <div className="pt-5 pb-2 border-t border-[rgba(13,33,79,0.14)] mt-3">
-              <p className="kicker px-3 pt-3">Administrace</p>
-            </div>
+            <p className="px-2.5 pt-6 pb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">Administrace</p>
             {adminItems.map(({ href, label, icon: Icon }) => navLink(href, label, Icon))}
           </>
         )}
 
         {isTL && !isAdmin && (
           <>
-            <div className="pt-5 pb-2 border-t border-[rgba(13,33,79,0.14)] mt-3">
-              <p className="kicker px-3 pt-3">Tým</p>
-            </div>
+            <p className="px-2.5 pt-6 pb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">Tým</p>
             {navLink('/admin/leave-calendar', 'Docházka firmy', IconCalendar)}
             {navLink('/admin/tym-fakturace', 'Fakturace týmu', IconChart)}
           </>
@@ -107,23 +105,23 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
       </nav>
 
       {/* User footer */}
-      <div className="py-3 border-t border-[rgba(13,33,79,0.14)] px-3">
-        <div className="flex items-center mb-0.5 gap-3 px-3 py-2.5">
+      <div className="py-3 border-t border-white/10 mx-2.5">
+        <div className="flex items-center mb-0.5 gap-3 px-2.5 py-2.5">
           <div className="w-8 h-8 bg-violet flex items-center justify-center flex-shrink-0">
             <span className="text-white text-xs font-semibold">
               {userName?.[0]?.toUpperCase() || userEmail?.[0]?.toUpperCase() || '?'}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-navy truncate leading-tight">{userName || 'Uživatel'}</p>
-            <p className="text-[11px] text-navy/40 truncate">{userEmail}</p>
+            <p className="text-sm font-semibold text-white truncate leading-tight">{userName || 'Uživatel'}</p>
+            <p className="text-[11px] text-white/50 truncate">{userEmail}</p>
           </div>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="flex items-center w-full gap-3 px-3 py-2.5 text-sm font-medium text-navy/50 hover:bg-slate-50 hover:text-navy transition-all duration-150"
+          className="flex items-center w-full gap-3 px-2.5 py-2 text-[13px] font-semibold text-white/65 hover:bg-white/10 hover:text-white transition-colors duration-150"
         >
-          <IconLogOut className="w-[18px] h-[18px] flex-shrink-0" />
+          <span className="w-6 h-6 flex items-center justify-center flex-shrink-0"><IconLogOut className="w-[15px] h-[15px]" /></span>
           <span>Odhlásit se</span>
         </button>
       </div>
