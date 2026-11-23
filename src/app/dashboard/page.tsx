@@ -80,25 +80,6 @@ export default async function DashboardPage() {
     const dow = d.getDay()
     if (dow !== 0 && dow !== 6) workdaysSoFar.push(new Date(d))
   }
-  let officePersonDays = 0
-  let homeofficePersonDays = 0
-  let totalPersonDays = 0
-  for (const day of workdaysSoFar) {
-    for (const name of Array.from(scopeNames)) {
-      totalPersonDays++
-      const leave = DEMO_TEAM_LEAVES.find((l) => {
-        const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
-        const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
-        return l.userName === name && l.status === 'APPROVED' && day >= start && day <= end
-      })
-      if (!leave) officePersonDays++
-      else if (leave.type === 'HOMEOFFICE') homeofficePersonDays++
-    }
-  }
-  const officeOccupancyPct = totalPersonDays > 0 ? Math.round((officePersonDays / totalPersonDays) * 100) : 100
-  const homeofficeRatePct = totalPersonDays > 0 ? Math.round((homeofficePersonDays / totalPersonDays) * 100) : 0
-  const teamLabel = isAdmin ? 'firmy' : 'tvého týmu'
-
   // Moje vlastní čísla za tenhle měsíc — vidí to úplně každý, ne jen HR/TL.
   let myOfficeDays = 0
   let myHomeofficeDays = 0
@@ -113,27 +94,6 @@ export default async function DashboardPage() {
     else if (leave.type === 'HOMEOFFICE') myHomeofficeDays++
     else myOffDays++
   }
-
-  const scopeMembers = DEMO_TEAM.filter(m => scopeIds.includes(m.id))
-
-  // Vyčerpaná dovolená letos v týmu — vůči nároku (annualLeaveDays), OSVČ bez nároku se do součtu nepočítají.
-  const yearStart = new Date(today.getFullYear(), 0, 1)
-  const yearEnd = new Date(today.getFullYear(), 11, 31)
-  let vacationEntitlement = 0
-  let vacationUsed = 0
-  for (const m of scopeMembers) {
-    if (m.annualLeaveDays == null) continue
-    vacationEntitlement += m.annualLeaveDays
-    vacationUsed += DEMO_TEAM_LEAVES
-      .filter(l => l.userName === m.name && l.type === 'ANNUAL' && l.status === 'APPROVED')
-      .reduce((sum, l) => {
-        const start = l.startDate < yearStart ? yearStart : l.startDate
-        const end = l.endDate > yearEnd ? yearEnd : l.endDate
-        if (end < start) return sum
-        return sum + Math.round((end.getTime() - start.getTime()) / 86400000) + 1
-      }, 0)
-  }
-  const vacationUsedPct = vacationEntitlement > 0 ? Math.round((vacationUsed / vacationEntitlement) * 100) : null
 
   // Dovolená/docházka se teď schvaluje v TrackDecku — tady čekají jen doklady k proplacení a podpisy.
   const pendingExpenseClaims = DEMO_EXPENSE_REQUESTS.filter(r =>
@@ -186,21 +146,25 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <RingStat
-                pct={officeOccupancyPct}
-                value={`${officeOccupancyPct}%`}
-                label={`Obsazenost kanclu ${teamLabel} tento měsíc`}
+                pct={Math.round((inOfficeCount / scopeNames.size) * 100)}
+                value={`${Math.round((inOfficeCount / scopeNames.size) * 100)}%`}
+                label="v kanceláři"
                 tone="strong"
               />
-              {vacationUsedPct !== null && (
-                <RingStat
-                  pct={vacationUsedPct}
-                  value={`${vacationUsedPct}%`}
-                  label={`Vyčerpaná dovolená letos (${vacationUsed}/${vacationEntitlement} dní)`}
-                  tone="soft"
-                />
-              )}
+              <RingStat
+                pct={Math.round((homeofficeCount / scopeNames.size) * 100)}
+                value={`${Math.round((homeofficeCount / scopeNames.size) * 100)}%`}
+                label="home office"
+                tone="soft"
+              />
+              <RingStat
+                pct={Math.round((otherOutCount / scopeNames.size) * 100)}
+                value={`${Math.round((otherOutCount / scopeNames.size) * 100)}%`}
+                label="OFF"
+                tone="gold"
+              />
             </div>
           </div>
         )}
