@@ -362,7 +362,6 @@ export function MemberProfileClient({
 
           {/* Jméno a údaje */}
           <div className="min-w-0 flex flex-col justify-end pb-1">
-            <p className="kicker text-gold text-[11px] mb-3">Medailonek · {member.department}</p>
             <h1 className="font-headline text-[34px] sm:text-[46px] leading-[1.02] text-white break-words" style={{ fontWeight: 600 }}>
               {member.name}
             </h1>
