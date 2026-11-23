@@ -189,6 +189,8 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
     const fit = () => setScale(Math.min(1, (window.innerWidth - 32) / STAGE_W, (window.innerHeight - 96) / STAGE_H))
     fit()
     window.addEventListener('resize', fit)
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') finish() }
+    window.addEventListener('keydown', onKey)
     const timers = [
       setTimeout(() => setPhase('nodes'), 1000),
       setTimeout(() => setPhase('cards'), 3300),
@@ -200,6 +202,7 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
     return () => {
       timers.forEach(clearTimeout)
       window.removeEventListener('resize', fit)
+      window.removeEventListener('keydown', onKey)
     }
   }, [finish])
 
@@ -239,9 +242,11 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
     >
       <button
         onClick={finish}
-        className="absolute top-6 right-6 z-10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white border border-white/30 hover:bg-white hover:text-navy transition-colors"
+        autoFocus
+        className="absolute top-6 right-6 z-10 flex items-center gap-2.5 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white border border-white/30 hover:bg-white hover:text-navy transition-colors"
       >
         Přeskočit intro
+        <span className="px-1.5 py-0.5 text-[10px] leading-none border border-current opacity-60">Esc</span>
       </button>
 
       <div className="absolute inset-0 flex items-center justify-center">

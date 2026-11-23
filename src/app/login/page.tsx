@@ -211,9 +211,19 @@ function LoginForm() {
             Po přihlášení zůstane relace aktivní 12&nbsp;hodin. Odhlásit se můžete kdykoliv přímo v&nbsp;aplikaci.
           </p>
 
-          <p className="mt-10 text-[11px] text-navy/40">
-            © 2026 Four Bros — Všechna práva vyhrazena
-          </p>
+          <div className="mt-10 flex items-center justify-between gap-4 text-[11px] text-navy/40">
+            <p>© 2026 Four Bros — Všechna práva vyhrazena</p>
+            <button
+              type="button"
+              onClick={() => setShowIntro(true)}
+              className="flex items-center gap-1.5 font-semibold text-navy/60 hover:text-violet transition-colors whitespace-nowrap"
+            >
+              <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                <path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2.5 2.5v3h3" strokeLinecap="square" />
+              </svg>
+              Přehrát intro
+            </button>
+          </div>
         </div>
       </div>
     </div>
