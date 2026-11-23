@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { X, CheckCircle2, Clock } from 'lucide-react'
+import { X, CheckCircle2, Clock, Download } from 'lucide-react'
+import { LetterheadSheet } from '@/components/Letterhead'
+import { printDirective } from '@/lib/print-directive'
 import type { Directive, DirectiveAcknowledgement } from '@/lib/mock-data'
 import { CATEGORY_STYLES, CategoryTile } from './DirectiveIcons'
 
@@ -28,33 +30,35 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60">
       <div className="bg-white border border-navy w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
-        {/* Modal Header */}
-        <div className="relative bg-navy text-white px-6 py-5 flex items-start justify-between gap-4">
-          <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
-          <CategoryTile theme={directive.theme} />
-          <div className="relative flex-1 min-w-0 pr-4">
-            <p className="kicker !text-white/60 mb-1">{directive.category || config.label}</p>
-            <h2 className="text-xl font-headline leading-tight" style={{ fontWeight: 600 }}>{directive.title}</h2>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-white/70">
-              <span>Vydáno: {formatDate(directive.publishedAt)}</span>
-              <span>Platnost od: {formatDate(directive.validFrom)}</span>
-            </div>
+        {/* Lišta okna */}
+        <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-[rgba(13,33,79,0.14)]">
+          <div className="flex items-center gap-3 min-w-0">
+            <CategoryTile theme={directive.theme} />
+            <p className="kicker text-navy truncate">{directive.category || config.label}</p>
           </div>
-          <button
-            onClick={onClose}
-            aria-label="Zavřít"
-            className="relative text-white/70 hover:text-white transition-colors flex-shrink-0"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => printDirective(directive)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.06em] text-navy border border-navy/30 hover:border-navy transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" /> Stáhnout PDF
+            </button>
+            <button onClick={onClose} aria-label="Zavřít" className="p-1 text-navy/60 hover:text-navy transition-colors">
+              <X className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
-        {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-6">
-          <div
-            className="prose prose-slate max-w-none prose-h2:text-xl prose-h2:font-bold prose-h2:text-navy prose-h2:mt-0 prose-h3:text-base prose-h3:font-semibold prose-h3:text-slate-800 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:text-slate-700 prose-ol:text-slate-700 prose-li:leading-relaxed prose-strong:text-slate-800"
-            dangerouslySetInnerHTML={{ __html: directive.body }}
-          />
+        {/* Směrnice na hlavičkovém papíře 4Bros */}
+        <div className="flex-1 overflow-y-auto bg-alice p-5">
+          <LetterheadSheet
+            left={[<strong key="c">Four Bros s.r.o.</strong>, 'Interní směrnice', directive.category || config.label]}
+            right={[`Vydáno ${formatDate(directive.publishedAt)}`, `Platnost od ${formatDate(directive.validFrom)}`]}
+            title={directive.title}
+            footer={<><strong className="text-navy">Four Bros s.r.o.</strong> · Interní dokument — nešiřte mimo firmu</>}
+          >
+            <div dangerouslySetInnerHTML={{ __html: directive.body }} />
+          </LetterheadSheet>
         </div>
 
         {/* Modal Footer */}

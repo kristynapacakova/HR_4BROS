@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { LetterheadSheet } from '@/components/Letterhead'
 import { Directive, DirectiveTemplate, DirectiveTheme } from '@/lib/mock-data'
 import {
   FileText, AlertTriangle, Shield, HardHat, Gift, Sparkles,
@@ -308,21 +309,15 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
           <div className="space-y-3">
             <p className="text-xs font-medium text-slate-500 uppercase tracking-wider px-1">Živý náhled</p>
             {selectedTemplate ? (
-              <div className="border border-slate-200 overflow-hidden shadow-sm">
-                <div className={THEME_CFG[selectedTemplate.theme].previewHeaderClass}>
-                  <div className="flex items-center gap-2 mb-0.5">
-                    {(() => { const Icon = THEME_CFG[selectedTemplate.theme].icon; return <Icon className="w-4 h-4 opacity-80" /> })()}
-                    <span className="text-xs font-medium opacity-80">{THEME_CFG[selectedTemplate.theme].label}</span>
-                  </div>
-                  <p className="font-semibold">{title || selectedTemplate.name}</p>
-                  {validFrom && <p className="text-xs opacity-70 mt-0.5">Platnost od {new Date(validFrom).toLocaleDateString('cs-CZ')}</p>}
-                </div>
-                <div className={`${THEME_CFG[selectedTemplate.theme].previewBodyClass} px-5 py-5 max-h-[500px] overflow-y-auto`}>
-                  <div
-                    className="prose prose-sm max-w-none text-slate-700 prose-h2:text-base prose-h2:font-bold prose-h3:text-sm prose-h3:font-semibold"
-                    dangerouslySetInnerHTML={{ __html: previewHtml }}
-                  />
-                </div>
+              <div className="max-h-[640px] overflow-y-auto bg-alice p-3">
+                <LetterheadSheet
+                  left={[<strong key="c">Four Bros s.r.o.</strong>, 'Interní směrnice', THEME_CFG[selectedTemplate.theme].label]}
+                  right={[validFrom ? `Platnost od ${new Date(validFrom).toLocaleDateString('cs-CZ')}` : 'Platnost od —']}
+                  title={title || selectedTemplate.name}
+                  footer={<><strong className="text-navy">Four Bros s.r.o.</strong> · Interní dokument — nešiřte mimo firmu</>}
+                >
+                  <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
+                </LetterheadSheet>
               </div>
             ) : (
               <div className="border-2 border-dashed border-slate-200 h-64 flex items-center justify-center">

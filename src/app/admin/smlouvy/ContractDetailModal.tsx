@@ -3,10 +3,11 @@
 import { Contract, ContractStatus, ContractTemplate } from '@/lib/mock-data'
 import { printContract } from '@/lib/print-contract'
 import { loadDesign, fontStack } from '@/app/admin/smlouvy/ContractDesignerClient'
-import { X, CheckCircle2, User, Building2, Download, Pen, Clock, Send, ChevronLeft, ChevronRight } from 'lucide-react'
+import { X, CheckCircle2, User, Building2, Download, Pen, Clock, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
 import { SigniSimulationModal } from './SigniSimulationModal'
+import { LetterheadSheet } from '@/components/Letterhead'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
   DRAFT: 'Návrh',
@@ -33,16 +34,11 @@ interface Props {
   onSign: (id: string) => void
 }
 
-const BrandLogo = () => <img src="/brand/logo.svg" alt="4BROS" className="h-9 object-contain" />
-const BrandWatercolor = ({ className }: { className?: string }) => (
-  <img src="/brand/watercolor.png" alt="" className={className ?? 'absolute top-0 right-0 h-36 object-contain pointer-events-none select-none'} />
-)
 
 export function ContractDetailModal({ contract, template, onClose, onSign }: Props) {
   const filledBody = fillPlaceholders(template?.body ?? '', contract.values)
   const [design, setDesign] = useState<ContractDesign | null>(null)
   const [showSigni, setShowSigni] = useState(false)
-  const [page, setPage] = useState(0)
   useEffect(() => { setDesign(loadDesign()) }, [])
   const d = design
   const pc  = d?.primaryColor ?? '#0d214f'
@@ -123,211 +119,52 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
             </div>
           </div>
 
-          {/* ── Page navigation ── */}
-          <div className="px-6 pt-4 flex items-center justify-center gap-3">
-            <button
-              onClick={() => setPage(p => Math.max(0, p - 1))}
-              disabled={page === 0}
-              className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-navy transition-colors disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
-              aria-label="Předchozí strana"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <div className="flex gap-1 bg-white rounded-full border border-slate-200 p-1 shadow-sm">
-              {['Titulní strana', 'Smlouva a podpisy'].map((label, i) => (
-                <button
-                  key={label}
-                  onClick={() => setPage(i)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                    page === i ? 'text-white' : 'text-slate-500 hover:text-navy'
-                  }`}
-                  style={page === i ? { background: ac } : undefined}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setPage(p => Math.min(1, p + 1))}
-              disabled={page === 1}
-              className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-navy transition-colors disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
-              aria-label="Další strana"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Document sheet */}
+          {/* ── Dokument na hlavičkovém papíře 4Bros (stejně jako PDF) ── */}
           <div className="p-6">
-            <div className="bg-white overflow-hidden shadow-[0_4px_32px_rgba(13,33,79,0.10)] flex flex-col" style={page === 0 ? { minHeight: 720 } : undefined}>
+            <LetterheadSheet
+              left={[<strong key="n">{d?.companyName ?? 'Four Bros s.r.o.'}</strong>, d?.companyIco ? `IČO ${d.companyIco}` : '', d?.companyAddress ?? ''].filter(Boolean)}
+              right={[<strong key="n">{contract.employeeName}</strong>, contract.values.POZICE ?? '', `Vystaveno ${contract.createdAt.toLocaleDateString('cs-CZ')}`].filter(Boolean)}
+              title={contract.templateName}
+              subtitle={<>Uzavřená mezi {d?.companyName ?? 'Four Bros s.r.o.'} a {contract.employeeName}</>}
+              footer={<><strong className="text-navy">{d?.companyName ?? 'Four Bros s.r.o.'}</strong>{d?.companyIco && <> · IČO {d.companyIco}</>}{d?.companyAddress && <> · {d.companyAddress}</>}</>}
+            >
+              <p className="kicker text-navy mt-2 mb-2">Smluvní strany</p>
+              <table className="w-full mb-6">
+                <tbody>
+                  <tr><td className="py-0.5 pr-4 align-top text-navy/60 w-40"><strong className="text-navy">Zaměstnavatel</strong></td><td><strong>{d?.companyName ?? 'Four Bros s.r.o.'}</strong>{d?.companyIco && `, IČO ${d.companyIco}`}{d?.companyAddress && `, ${d.companyAddress}`}</td></tr>
+                  <tr><td className="py-0.5 pr-4 align-top text-navy/60"><strong className="text-navy">Zaměstnanec</strong></td><td><strong>{contract.employeeName}</strong></td></tr>
+                  {([
+                    ['Pracovní pozice', contract.values.POZICE],
+                    ['Datum nástupu', contract.values.DATUM_NASTUPU],
+                    ['Mzda', contract.values.MZDA],
+                    ['Hodinová sazba', contract.values.HODINOVA_SAZBA],
+                    ['Max. hodin ročně', contract.values.MAX_HODIN],
+                    ['Týdenní úvazek', contract.values.TYDENNI_UVAZEK ? `${contract.values.TYDENNI_UVAZEK} hod` : undefined],
+                  ] as const).filter(([, v]) => v).map(([l, v]) => (
+                    <tr key={l}><td className="py-0.5 pr-4 align-top text-navy/60">{l}</td><td>{v}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="kicker text-navy mb-2">Smluvní strany ujednávají následující</p>
+              <div className="contract-body" dangerouslySetInnerHTML={{ __html: filledBody }} />
 
-              {/* ═══ PAGE 1 — Cover (mirrors PDF) ═══ */}
-              {page === 0 && (
-                <>
-                  {/* Header: logo + watercolor */}
-                  <div className="relative px-10 pt-8 pb-4 overflow-hidden">
-                    {d?.decorDataUrl
-                      ? <img src={d.decorDataUrl} alt="" className="absolute top-0 right-0 h-40 object-contain pointer-events-none select-none opacity-70 z-0" />
-                      : <BrandWatercolor className="absolute top-0 right-0 h-40 object-contain pointer-events-none select-none opacity-80 z-0" />
-                    }
-                    <div className="relative z-10">
-                      {d?.logoDataUrl
-                        ? <img src={d.logoDataUrl} alt="Logo" className="h-10 object-contain" />
-                        : <BrandLogo />
-                      }
-                    </div>
+              <div className="grid grid-cols-2 gap-8 mt-10">
+                {[
+                  { role: 'Za zaměstnavatele', name: contract.managementSignedBy ?? d?.companyName ?? 'Four Bros s.r.o.', date: mgmtSignedAt },
+                  { role: 'Zaměstnanec', name: contract.employeeName, date: signedAt },
+                ].map(({ role, name, date }) => (
+                  <div key={role}>
+                    <p className="kicker text-navy mb-6">{role}</p>
+                    <p className="text-[11px] text-navy/60">V Praze, dne {date ?? '______________'}</p>
+                    <div className="h-8 border-b border-navy" />
+                    <p className="font-semibold mt-1.5">{name}</p>
+                    {date
+                      ? <p className="text-[11px] font-bold text-mint-dark">✓ Podepsáno elektronicky {date}</p>
+                      : <p className="text-[11px] text-navy/50 flex items-center gap-1"><Clock className="w-3 h-3" /> Čeká na podpis</p>}
                   </div>
-
-                  {/* Centered cover block */}
-                  <div className="flex-1 flex flex-col justify-center px-10 py-12">
-                    <p className="text-[11px] font-semibold tracking-wide mb-4" style={{ color: ac }}>
-                      {d?.companyName ?? 'Four Bros s.r.o.'} &nbsp;·&nbsp; {contract.employeeName}
-                    </p>
-                    <h1 style={{ fontFamily: ff, fontSize: 38, fontWeight: hStyle.fontWeight, fontStyle: hStyle.italic ? 'italic' : 'normal', color: pc, letterSpacing: '-0.5px', lineHeight: 1.15 }}>
-                      {contract.templateName}
-                    </h1>
-                    <div className="w-12 h-1 rounded-full my-7" style={{ background: ac }} />
-                    <p className="text-[11px]" style={{ color: `${pc}99` }}>{contract.createdAt.toLocaleDateString('cs-CZ')}</p>
-                  </div>
-
-                  {/* Footer */}
-                  <div className="px-10 py-4 border-t flex justify-between items-center" style={{ borderColor: `${pc}20` }}>
-                    <div style={{ fontSize: 9, color: `${pc}80`, lineHeight: 1.7 }}>
-                      <strong style={{ color: pc, fontWeight: 600 }}>{d?.companyName ?? 'Four Bros s.r.o.'}</strong>
-                      {d?.companyIco && <span> &nbsp;·&nbsp; IČO: {d.companyIco}</span>}
-                      {d?.companyAddress && <span> &nbsp;·&nbsp; {d.companyAddress}</span>}
-                    </div>
-                    {d?.logoDataUrl
-                      ? <img src={d.logoDataUrl} alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
-                      : <img src="/brand/logo.svg" alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
-                    }
-                  </div>
-                </>
-              )}
-
-              {/* ═══ PAGE 2 — Content (mirrors PDF) ═══ */}
-              {page === 1 && (
-                <>
-                  {/* Slim header */}
-                  <div className="relative px-10 pt-7 pb-3 overflow-hidden">
-                    {d?.decorDataUrl
-                      ? <img src={d.decorDataUrl} alt="" className="absolute top-0 right-0 h-28 object-contain pointer-events-none select-none opacity-70 z-0" />
-                      : <BrandWatercolor className="absolute top-0 right-0 h-28 object-contain pointer-events-none select-none opacity-80 z-0" />
-                    }
-                    <div className="relative z-10">
-                      {d?.logoDataUrl
-                        ? <img src={d.logoDataUrl} alt="Logo" className="h-8 object-contain" />
-                        : <img src="/brand/logo.svg" alt="4BROS" className="h-8 object-contain" />
-                      }
-                    </div>
-                  </div>
-
-                  <div className="px-10 pt-4">
-                    {/* Preamble */}
-                    <p className="text-center font-bold text-[10px] tracking-wide mb-7 leading-relaxed" style={{ color: pc, fontFamily: bff }}>
-                      TATO {contract.templateName.toUpperCase()} BYLA UZAVŘENA NÍŽE UVEDENÉHO DNE, MĚSÍCE A ROKU MEZI TĚMITO SMLUVNÍMI STRANAMI
-                    </p>
-
-                    {/* Party: employee */}
-                    <div className="px-5 py-4 mb-2.5" style={{ background: '#f3f0fd' }}>
-                      <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] mb-2.5" style={{ color: pc }}>Zaměstnanec</p>
-                      <table className="w-full" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>
-                        <tbody>
-                          <tr><td className="py-0.5" style={{ width: 150 }}>Jméno:</td><td>{contract.employeeName}</td></tr>
-                          {contract.values.DATUM_NASTUPU && <tr><td className="py-0.5">Datum nástupu:</td><td>{contract.values.DATUM_NASTUPU}</td></tr>}
-                          {contract.values.POZICE && <tr><td className="py-0.5">Pracovní pozice:</td><td>{contract.values.POZICE}</td></tr>}
-                          {contract.values.MZDA && <tr><td className="py-0.5">Mzda:</td><td>{contract.values.MZDA}</td></tr>}
-                          {contract.values.HODINOVA_SAZBA && <tr><td className="py-0.5">Hodinová sazba:</td><td>{contract.values.HODINOVA_SAZBA}</td></tr>}
-                          {contract.values.MAX_HODIN && <tr><td className="py-0.5">Max. hodin ročně:</td><td>{contract.values.MAX_HODIN}</td></tr>}
-                          {contract.values.TYDENNI_UVAZEK && <tr><td className="py-0.5">Týdenní úvazek:</td><td>{contract.values.TYDENNI_UVAZEK} hod</td></tr>}
-                        </tbody>
-                      </table>
-                      <p className="mt-2" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>(dále jako <strong>„Zaměstnanec&ldquo;</strong>)</p>
-                    </div>
-
-                    <p className="text-center font-bold py-1" style={{ color: pc, fontSize: 13 }}>a</p>
-
-                    {/* Party: employer */}
-                    <div className="px-5 py-4 mb-5" style={{ background: '#f3f0fd' }}>
-                      <p className="text-[8.5px] font-bold uppercase tracking-[0.12em] mb-2.5" style={{ color: pc }}>Zaměstnavatel</p>
-                      <table className="w-full" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>
-                        <tbody>
-                          <tr><td className="py-0.5" style={{ width: 150 }}>Firma:</td><td>{d?.companyName ?? 'Four Bros s.r.o.'}</td></tr>
-                          <tr><td className="py-0.5">IČO:</td><td>{d?.companyIco ?? ''}</td></tr>
-                          <tr><td className="py-0.5">Sídlo:</td><td>{d?.companyAddress ?? ''}</td></tr>
-                        </tbody>
-                      </table>
-                      <p className="mt-2" style={{ fontFamily: bff, fontSize: bStyle.fontSize, color: pc }}>(dále jako <strong>„Zaměstnavatel&ldquo;</strong>)</p>
-                    </div>
-
-                    <p className="font-bold tracking-wide mb-4" style={{ color: pc, fontSize: bStyle.fontSize, fontFamily: bff }}>
-                      SMLUVNÍ STRANY UJEDNÁVAJÍ NÁSLEDUJÍCÍ:
-                    </p>
-                  </div>
-
-                  {/* Body */}
-                  <div className="px-10 pb-4 contract-body leading-relaxed"
-                    style={{ fontFamily: bff, fontSize: bStyle.fontSize, fontWeight: bStyle.fontWeight, fontStyle: bStyle.italic ? 'italic' : 'normal', color: pc }}
-                    dangerouslySetInnerHTML={{ __html: filledBody }}
-                  />
-
-                  {/* Signature section */}
-                  <div className="px-10 pb-8 pt-2">
-                    <div className="p-5" style={{ background: '#f3f0fd' }}>
-                      <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-5" style={{ color: pc }}>
-                        NA DŮKAZ ČEHOŽ SMLUVNÍ STRANY PŘIPOJUJÍ SVÉ PODPISY
-                      </p>
-                      <div className="grid grid-cols-2 gap-8">
-                        {[
-                          { role: 'Za zaměstnavatele', name: contract.managementSignedBy ?? d?.companyName ?? 'Four Bros s.r.o.', signed: !!mgmtSignedAt, date: mgmtSignedAt },
-                          { role: 'Zaměstnanec',        name: contract.employeeName,                                               signed: !!signedAt,     date: signedAt },
-                        ].map(({ role, name, signed, date }) => (
-                          <div key={role}>
-                            <p className="text-[9px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: pc }}>{role}</p>
-                            {signed ? (
-                              <div className="px-4 py-3 border" style={{ borderColor: '#bbf7d0', background: '#f0fdf4' }}>
-                                <div className="flex items-center gap-2 mb-1">
-                                  <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
-                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8 3-3.3" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                  </div>
-                                  <span className="text-xs font-semibold" style={{ color: pc }}>{name}</span>
-                                </div>
-                                <p className="text-[10px] text-slate-400 pl-6">Podepsáno: {date}</p>
-                              </div>
-                            ) : (
-                              <div className="flex flex-col gap-1">
-                                <div className="h-10 border-b-2 border-dashed" style={{ borderColor: `${pc}30` }} />
-                                <p className="text-xs font-medium" style={{ color: pc }}>{name}</p>
-                                <p className="text-[10px] flex items-center gap-1 text-slate-400">
-                                  <Clock className="w-3 h-3" /> Čeká na podpis
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer */}
-                  <div className="px-10 py-4 border-t flex justify-between items-center" style={{ borderColor: `${pc}20` }}>
-                    <div style={{ fontSize: 9, color: `${pc}80`, lineHeight: 1.7 }}>
-                      <strong style={{ color: pc, fontWeight: 600 }}>{d?.companyName ?? 'Four Bros s.r.o.'}</strong>
-                      {d?.companyIco && <span> &nbsp;·&nbsp; IČO: {d.companyIco}</span>}
-                      {d?.companyAddress && <span> &nbsp;·&nbsp; {d.companyAddress}</span>}
-                    </div>
-                    {d?.logoDataUrl
-                      ? <img src={d.logoDataUrl} alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
-                      : <img src="/brand/logo.svg" alt="" style={{ height: 18, objectFit: 'contain', opacity: 0.3 }} />
-                    }
-                  </div>
-                </>
-              )}
-
-            </div>
-
-            {/* Page indicator */}
-            <p className="text-center text-[10px] text-slate-400 mt-3">Strana {page + 1} z 2</p>
+                ))}
+              </div>
+            </LetterheadSheet>
           </div>
         </div>
 

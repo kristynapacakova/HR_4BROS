@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { Contract, ContractTemplate } from '@/lib/mock-data'
 import { printContract } from '@/lib/print-contract'
+import { LetterheadSheet } from '@/components/Letterhead'
 import { Pen, X, CheckCircle2, FileText, Download, ShieldCheck, Upload, KeyRound, Loader2, BadgeCheck, AlertCircle } from 'lucide-react'
 
 function fillPlaceholders(body: string, values: Record<string, string>) {
@@ -110,10 +111,16 @@ function SignModal({ contract, template, onSign, onClose }: {
         {/* Step: Read */}
         {step === 'read' && (
           <>
-            <div
-              className="flex-1 overflow-y-auto px-6 py-5 prose prose-sm max-w-none text-navy"
-              dangerouslySetInnerHTML={{ __html: filled }}
-            />
+            <div className="flex-1 overflow-y-auto bg-alice p-5">
+              <LetterheadSheet
+                left={[<strong key="c">Four Bros s.r.o.</strong>, 'Zaměstnavatel']}
+                right={[<strong key="n">{contract.employeeName}</strong>, contract.values.POZICE ?? '', `Vystaveno ${new Date(contract.createdAt).toLocaleDateString('cs-CZ')}`].filter(Boolean)}
+                title={contract.templateName}
+                subtitle={<>Uzavřená mezi Four Bros s.r.o. a {contract.employeeName}</>}
+              >
+                <div dangerouslySetInnerHTML={{ __html: filled }} />
+              </LetterheadSheet>
+            </div>
             <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-between items-center gap-4">
               <p className="text-xs text-slate-500 flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-violet flex-shrink-0" />

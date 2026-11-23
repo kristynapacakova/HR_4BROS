@@ -216,3 +216,14 @@
   from { offset-distance: 0%; }
   to { offset-distance: 100%; }
 }
+
+/* Text dokumentů na hlavičkovém papíře (komponenta LetterheadSheet) */
+.letterhead-body h2 { font-family: 'Funnel Display', sans-serif; font-weight: 600; font-size: 17px; line-height: 1.25; margin: 22px 0 8px; }
+.letterhead-body h3 { font-family: 'Funnel Display', sans-serif; font-weight: 600; font-size: 14px; margin: 16px 0 6px; }
+.letterhead-body p { margin-bottom: 8px; }
+.letterhead-body ul, .letterhead-body ol { padding-left: 18px; margin-bottom: 8px; }
+.letterhead-body ul { list-style: square; }
+.letterhead-body ol { list-style: decimal; }
+.letterhead-body li { margin-bottom: 3px; }
+.letterhead-body strong { font-weight: 700; }
+.letterhead-body > :first-child { margin-top: 0; }
