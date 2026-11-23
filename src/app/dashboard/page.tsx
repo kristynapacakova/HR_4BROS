@@ -235,7 +235,7 @@ export default async function DashboardPage() {
                   pct={eduBudgetUsedPct}
                   value={`${eduBudgetUsedPct}%`}
                   label={`Vzdělávací budget letos (${fmtKc(eduBudgetUsed)} z ${fmtKc(eduBudgetTotal)})`}
-                  tone="soft"
+                  tone="gold"
                 />
               )}
             </div>

@@ -3,61 +3,60 @@
 import { useEffect, useRef, useState } from 'react'
 
 const SIZE = 92
-const TICKS = 24
-const TICK_W = 4
-const TICK_H = 9
-const RADIUS = SIZE / 2 - TICK_H / 2 - 2
+const STROKE = 10
+const RADIUS = (SIZE - STROKE) / 2
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+
+const TONE_COLOR: Record<string, string> = {
+  strong: '#4DE791',
+  soft: '#834DFB',
+  gold: '#F0E100',
+}
 
 export function RingStat({ pct, value, label, tone = 'strong' }: {
   pct: number
   value: string
   label: string
-  tone?: 'strong' | 'soft'
+  tone?: 'strong' | 'soft' | 'gold'
 }) {
   const clamped = Math.max(0, Math.min(100, pct))
-  const [animatedLit, setAnimatedLit] = useState(0)
+  const [animatedPct, setAnimatedPct] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
-  const litTarget = Math.round((clamped / 100) * TICKS)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        requestAnimationFrame(() => setAnimatedLit(litTarget))
+        requestAnimationFrame(() => setAnimatedPct(clamped))
         observer.disconnect()
       }
     }, { threshold: 0.3 })
     observer.observe(el)
     return () => observer.disconnect()
-  }, [litTarget])
+  }, [clamped])
 
-  const color = tone === 'strong' ? '#4DE791' : '#834DFB'
+  const offset = CIRCUMFERENCE * (1 - animatedPct / 100)
+  const color = TONE_COLOR[tone] ?? TONE_COLOR.strong
 
   return (
     <div ref={ref} className="flex flex-col items-center text-center">
       <div className="relative" style={{ width: SIZE, height: SIZE }}>
-        {Array.from({ length: TICKS }).map((_, i) => {
-          const deg = (360 / TICKS) * i
-          const lit = i < animatedLit
-          return (
-            <span
-              key={i}
-              style={{
-                position: 'absolute',
-                left: SIZE / 2 - TICK_W / 2,
-                top: SIZE / 2 - RADIUS - TICK_H,
-                width: TICK_W,
-                height: TICK_H,
-                background: lit ? color : '#F1F0F7',
-                transform: `rotate(${deg}deg)`,
-                transformOrigin: `50% ${RADIUS + TICK_H}px`,
-                transition: 'background 0.25s ease',
-                transitionDelay: `${i * 18}ms`,
-              }}
-            />
-          )
-        })}
+        <svg width={SIZE} height={SIZE} className="-rotate-90">
+          <circle cx={SIZE / 2} cy={SIZE / 2} r={RADIUS} fill="none" stroke="#F1F0F7" strokeWidth={STROKE} />
+          <circle
+            cx={SIZE / 2}
+            cy={SIZE / 2}
+            r={RADIUS}
+            fill="none"
+            stroke={color}
+            strokeWidth={STROKE}
+            strokeLinecap="butt"
+            strokeDasharray={CIRCUMFERENCE}
+            strokeDashoffset={offset}
+            style={{ transition: 'stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1)' }}
+          />
+        </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-lg font-headline font-semibold text-navy">{value}</span>
         </div>
