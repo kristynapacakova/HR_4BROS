@@ -71,9 +71,9 @@ function LoginForm() {
             className="font-headline leading-[1.08] tracking-[-0.015em] mb-7"
             style={{ fontSize: 'clamp(2.25rem, 3.4vw, 3.25rem)', fontWeight: 600 }}
           >
-            <span className="whitespace-nowrap">Makáme naplno.</span>
+            <span className="whitespace-nowrap">My makáme.</span>
             <br />
-            <span className="whitespace-nowrap">Ale umíme i vypnout.</span>
+            <span className="whitespace-nowrap">Portál papíruje.</span>
           </h1>
           <p className="text-white/75 text-[15px] leading-relaxed max-w-[420px]">
             Docházka, dovolené, smlouvy i&nbsp;odměny na jednom místě. Jasně, na rovinu a&nbsp;bez zbytečného papírování.

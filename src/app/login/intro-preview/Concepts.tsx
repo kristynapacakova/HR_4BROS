@@ -107,7 +107,7 @@ export function EndMark({ out, children }: { out: boolean; children?: ReactNode 
           HR Portál
         </p>
         <p className="text-[16px]" style={{ color: MUTED, animation: 'intro-rise .7s cubic-bezier(.16,1,.3,1) .55s both' }}>
-          Makáme naplno. Ale umíme i vypnout.
+          My makáme. Portál papíruje.
         </p>
       </div>
     </>
