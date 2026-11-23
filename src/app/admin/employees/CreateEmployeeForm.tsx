@@ -87,7 +87,7 @@ export function CreateEmployeeForm() {
         disabled={loading}
         className="bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide font-medium py-2.5 px-6 transition-colors disabled:opacity-50 shadow-sm"
       >
-        {loading ? 'Vytváří se...' : 'Vytvořit zaměstnance'}
+        {loading ? 'Vytváří se...' : 'Vytvořit uživatele'}
       </button>
     </form>
   )

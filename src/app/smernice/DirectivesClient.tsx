@@ -19,63 +19,32 @@ interface DirectivesClientProps {
   currentEmployeeId: string
 }
 
+// Jsou to jen směrnice — jeden sjednocený brandový vzhled, barva nenese žádný rozdílný význam.
+const UNIFIED = {
+  borderColor: 'border-l-navy',
+  iconColor: 'text-navy',
+  badgeBg: 'bg-navy/10 text-navy',
+  headerBg: 'bg-navy',
+}
+
 function getThemeConfig(theme: DirectiveTheme) {
-  switch (theme) {
-    case 'STANDARD':
-      return {
-        icon: FileText,
-        borderColor: 'border-l-[#1e3a5f]',
-        iconColor: 'text-slate-700',
-        badgeBg: 'bg-slate-100 text-slate-700',
-        headerBg: 'bg-[#1e3a5f]',
-        label: 'Obecná',
-      }
-    case 'IMPORTANT':
-      return {
-        icon: AlertTriangle,
-        borderColor: 'border-l-orange-500',
-        iconColor: 'text-orange-500',
-        badgeBg: 'bg-orange-100 text-orange-700',
-        headerBg: 'bg-orange-500',
-        label: 'Důležitá',
-      }
-    case 'GDPR':
-      return {
-        icon: Shield,
-        borderColor: 'border-l-violet-600',
-        iconColor: 'text-violet-600',
-        badgeBg: 'bg-violet-100 text-violet-700',
-        headerBg: 'bg-violet-700',
-        label: 'GDPR',
-      }
-    case 'BOZP':
-      return {
-        icon: HardHat,
-        borderColor: 'border-l-amber-500',
-        iconColor: 'text-amber-600',
-        badgeBg: 'bg-amber-100 text-amber-700',
-        headerBg: 'bg-amber-500',
-        label: 'BOZP',
-      }
-    case 'BENEFIT':
-      return {
-        icon: Gift,
-        borderColor: 'border-l-emerald-500',
-        iconColor: 'text-emerald-600',
-        badgeBg: 'bg-emerald-100 text-emerald-700',
-        headerBg: 'bg-emerald-600',
-        label: 'Benefity',
-      }
-    case 'WELCOME':
-      return {
-        icon: Sparkles,
-        borderColor: 'border-l-violet-500',
-        iconColor: 'text-violet-500',
-        badgeBg: 'bg-violet-100 text-violet-700',
-        headerBg: 'bg-gradient-to-r from-[#1e3a5f] to-violet-700',
-        label: 'Uvítání',
-      }
+  const icons: Record<DirectiveTheme, typeof FileText> = {
+    STANDARD: FileText,
+    IMPORTANT: AlertTriangle,
+    GDPR: Shield,
+    BOZP: HardHat,
+    BENEFIT: Gift,
+    WELCOME: Sparkles,
   }
+  const labels: Record<DirectiveTheme, string> = {
+    STANDARD: 'Obecná',
+    IMPORTANT: 'Důležitá',
+    GDPR: 'GDPR',
+    BOZP: 'BOZP',
+    BENEFIT: 'Benefity',
+    WELCOME: 'Uvítání',
+  }
+  return { ...UNIFIED, icon: icons[theme], label: labels[theme] }
 }
 
 function formatDate(date: Date): string {

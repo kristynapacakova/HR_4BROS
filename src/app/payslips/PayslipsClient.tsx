@@ -578,10 +578,6 @@ export function PayslipsClient({
       {/* Hero — current salary */}
       {latestReal && (
         <div className="relative bg-navy overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-violet opacity-20" />
-            <div className="absolute -left-6 -bottom-6 w-32 h-32 rounded-full bg-white opacity-[0.03]" />
-          </div>
           <div className="relative z-10 px-7 py-6">
             <p className="text-white/50 text-xs uppercase tracking-wider mb-3">
               {isICO ? 'Poslední faktura' : 'Poslední výplata'} — {MONTH_NAMES[latestReal.month - 1]} {latestReal.year}
