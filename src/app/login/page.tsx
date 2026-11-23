@@ -68,12 +68,12 @@ function LoginForm() {
           <img src="/brand/logo-white.svg" alt="4BROS" className="h-7 w-auto mb-10" />
           <p className="kicker text-gold text-[11px] mb-4">HR Portál</p>
           <h1
-            className="font-headline leading-[1.08] tracking-[-0.015em] mb-7 max-w-[460px]"
-            style={{ fontSize: 'clamp(2.5rem, 3.4vw, 3.25rem)', fontWeight: 600 }}
+            className="font-headline leading-[1.08] tracking-[-0.015em] mb-7"
+            style={{ fontSize: 'clamp(2.25rem, 3.4vw, 3.25rem)', fontWeight: 600 }}
           >
-            Makáme naplno.
+            <span className="whitespace-nowrap">Makáme naplno.</span>
             <br />
-            Ale umíme i&nbsp;vypnout.
+            <span className="whitespace-nowrap">Ale umíme i vypnout.</span>
           </h1>
           <p className="text-white/75 text-[15px] leading-relaxed max-w-[420px]">
             Docházka, dovolené, smlouvy i&nbsp;odměny na jednom místě. Jasně, na rovinu a&nbsp;bez zbytečného papírování.
@@ -117,7 +117,7 @@ function LoginForm() {
           <div className="flex items-center gap-3 mb-5">
             <div className="w-11 h-11 bg-navy flex items-center justify-center flex-shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/symbol.svg" alt="4B" className="w-7 h-auto" style={{ filter: 'brightness(0) invert(1)' }} />
+              <img src="/brand/symbol-white.svg" alt="4B" className="w-7 h-auto" />
             </div>
             <div>
               <p className="text-navy/70 text-[10px] font-semibold uppercase tracking-[0.14em] leading-snug">HR Portál</p>
