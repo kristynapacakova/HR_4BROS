@@ -52,6 +52,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
         {/* Směrnice na hlavičkovém papíře 4Bros */}
         <div className="flex-1 overflow-y-auto bg-alice p-5">
           <LetterheadSheet
+            variant="stairs"
             left={[<strong key="c">Four Bros s.r.o.</strong>, 'Interní směrnice', directive.category || config.label]}
             right={[`Vydáno ${formatDate(directive.publishedAt)}`, `Platnost od ${formatDate(directive.validFrom)}`]}
             title={directive.title}

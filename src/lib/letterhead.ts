@@ -13,7 +13,11 @@ export function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
+export type LetterheadVariant = 'grid' | 'stairs'
+
 export interface LetterheadDoc {
+  /** 'grid' = tenká mřížka (smlouvy), 'stairs' = čtverce do schodů (směrnice) */
+  variant?: LetterheadVariant
   /** <title> okna / název souboru při uložení do PDF */
   docTitle: string
   left: string[]
@@ -29,6 +33,10 @@ export interface LetterheadDoc {
 export function buildLetterheadHtml(doc: LetterheadDoc): string {
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   const lines = (arr: string[]) => arr.map((l) => `<p>${l}</p>`).join('')
+  // Schody: 4 čtverce 46,6 mm, sestupují zprava doleva (jen první stránka)
+  const stairs = [[157, 90], [111, 138], [65, 187], [19, 235]]
+    .map(([x, y]) => `<div class="stair" style="left:${x}mm;top:${y}mm"></div>`).join('')
+  const decor = (doc.variant ?? 'grid') === 'grid' ? '<div class="grid"></div>' : stairs
   return `<!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -60,6 +68,7 @@ export function buildLetterheadHtml(doc: LetterheadDoc): string {
     background-size: 25% 100%, 100% 74mm;
     background-position: 0 0, 0 52mm;
   }
+  .stair { position: absolute; width: 46.6mm; height: 46.6mm; background: #f4f2fc; z-index: 0; }
   .sheet { position: relative; z-index: 1; padding: 16mm 18mm 0; }
   .top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 11mm; }
   .logo { height: 8mm; display: block; }
@@ -95,7 +104,7 @@ export function buildLetterheadHtml(doc: LetterheadDoc): string {
 </style>
 </head>
 <body>
-<div class="grid"></div>
+${decor}
 <div class="sheet">
   <div class="top">
     <img class="logo" src="${origin}/brand/logo.svg" alt="4BROS"/>

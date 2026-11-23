@@ -311,6 +311,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
             {selectedTemplate ? (
               <div className="max-h-[640px] overflow-y-auto bg-alice p-3">
                 <LetterheadSheet
+            variant="stairs"
                   left={[<strong key="c">Four Bros s.r.o.</strong>, 'Interní směrnice', THEME_CFG[selectedTemplate.theme].label]}
                   right={[validFrom ? `Platnost od ${new Date(validFrom).toLocaleDateString('cs-CZ')}` : 'Platnost od —']}
                   title={title || selectedTemplate.name}
