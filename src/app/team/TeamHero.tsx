@@ -68,7 +68,7 @@ export function TeamHero({ members, departments, active = 'Všichni', onPick }: 
           <h2 className="font-headline text-[30px] leading-[1.1]" style={{ fontWeight: 600 }}>
             Každý umíme něco.
             <br />
-            <span style={{ fontWeight: 400 }}>Spolu umíme všechno.</span>
+            <span style={{ fontWeight: 400 }}>Spolu zvládneme všechno.</span>
           </h2>
         </div>
 
