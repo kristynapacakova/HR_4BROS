@@ -8,6 +8,7 @@ import {
   type TeamProfileOverride, type PhotoPosition,
 } from '@/lib/team-profile-client'
 import { departmentColor, departmentInk } from '@/lib/team-colors'
+import { tintOf } from '../teamPeople'
 import { PhotoPositionEditor } from '../PhotoPositionEditor'
 import { formatBirthday } from '../TeamClient'
 import {
@@ -101,15 +102,16 @@ function Portrait({ name, department, override, initialsClass }: {
       />
     )
   }
+  // Bez fotky: světlý odstín barvy týmu a silueta — stejně jako na stránce Tým
+  const c = departmentColor(department)
+  const sil = c.toUpperCase() === '#FFFFFF' || c === '#F0E100' || c === '#b9cbf3' ? '#0d214f' : c
+  void initialsClass
   return (
-    <div
-      className="w-full h-full flex items-center justify-center"
-      style={{ background: departmentColor(department), color: departmentInk(department) }}
-      aria-label={name}
-    >
-      <span className={`font-headline leading-none ${initialsClass}`} style={{ fontWeight: 600 }}>
-        {initials(name)}
-      </span>
+    <div className="relative w-full h-full overflow-hidden" style={{ background: tintOf(c, 0.22) }} role="img" aria-label={name}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMax meet" className="absolute inset-x-0 bottom-0 mx-auto h-[78%]" aria-hidden="true">
+        <circle cx="50" cy="40" r="19" fill={sil} opacity="0.22" />
+        <path d="M14 100 V92 Q14 66 40 64 H60 Q86 66 86 92 V100 Z" fill={sil} opacity="0.22" />
+      </svg>
     </div>
   )
 }
