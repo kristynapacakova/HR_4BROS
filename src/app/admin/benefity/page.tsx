@@ -21,7 +21,7 @@ export default async function BenefityPage() {
       userName={session.user.name}
       userEmail={session.user.email}
     >
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         <p className="text-sm text-slate-500">
           Nastav každému člověku Multisport kartu, nebo příspěvek na sport (600 Kč měsíčně proti dokladu).
           Žádosti o příspěvek schvaluješ tady — po schválení se částka přičte k odměně za daný měsíc.

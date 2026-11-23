@@ -68,7 +68,7 @@ export default async function TimeOffPage() {
       userEmail={session.user.email}
       employmentType={user.employmentType}
     >
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
 
         {/* Balance cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

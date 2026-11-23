@@ -63,7 +63,7 @@ export function AccountCard({ info, tabs }: { info: AccountInfo; tabs: Component
   const len = tenure(info.startDate)
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="w-full">
       <section className="relative bg-navy text-white overflow-hidden mb-6">
         <div className="relative flex flex-col sm:flex-row gap-6 px-7 sm:px-9 pt-8 sm:pt-9 pb-7">
           <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={144} hideGlow fallback={<Silhouette department={info.department} />} />

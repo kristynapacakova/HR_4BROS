@@ -114,7 +114,7 @@ export default async function DashboardPage() {
 
   return (
     <AppShell title="Dashboard" isAdmin={isAdmin} isTL={isTL} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
-      <div className="max-w-5xl mx-auto space-y-5">
+      <div className="w-full space-y-5">
 
         {/* Hero greeting with inline stats */}
         <DashboardGreeting

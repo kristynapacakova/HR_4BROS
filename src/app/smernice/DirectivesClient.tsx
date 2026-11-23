@@ -142,10 +142,9 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
   const allDone = totalMustAck > 0 && ackedCount === totalMustAck
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Navy hlavička s přehledem souhlasů */}
       <div className="relative bg-navy text-white overflow-hidden rozky rozky-lg after:z-20">
-        <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
         <div className="relative z-10 px-7 py-7 flex flex-col md:flex-row md:items-end gap-6">
           <div className="flex-1 min-w-0">
             <p className="kicker !text-white/60 mb-2">Přehled souhlasů</p>

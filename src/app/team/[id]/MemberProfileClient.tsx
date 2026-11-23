@@ -311,7 +311,7 @@ export function MemberProfileClient({
   const usedSuggestions = new Set(interests.map(stripEmoji))
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full">
       <Link href="/team" className="inline-flex items-center gap-1.5 text-sm font-semibold text-navy/60 hover:text-navy transition-colors mb-4">
         <ArrowLeft className="w-4 h-4" /> Zpět na tým
       </Link>
@@ -323,7 +323,6 @@ export function MemberProfileClient({
 
       {/* Medailonek — navy hlavička */}
       <section className="relative bg-navy text-white overflow-hidden">
-        <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
 
         <div className="relative flex flex-col sm:flex-row gap-6 sm:gap-8 p-6 sm:p-8">
           {/* Fotka */}

@@ -15,11 +15,10 @@ export default async function FeedbackPage() {
 
   return (
     <AppShell title="Schránka důvěry" isAdmin={isAdmin} isTL={isTL} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
 
         {/* Hero */}
         <div className="relative bg-navy overflow-hidden rozky rozky-lg after:z-20">
-          <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
           <div className="relative z-10 px-7 py-7 flex flex-col sm:flex-row sm:items-center gap-6">
             <div className="flex-1 min-w-0">
               <p className="kicker !text-white/60 mb-2">Bezpečný prostor</p>

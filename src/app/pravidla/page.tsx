@@ -21,7 +21,7 @@ export default async function PravidlaPage() {
       userEmail={session.user.email}
       employmentType={user.employmentType}
     >
-      <div className="max-w-3xl mx-auto">
+      <div className="w-full">
         <PravidlaAccordion />
       </div>
     </AppShell>

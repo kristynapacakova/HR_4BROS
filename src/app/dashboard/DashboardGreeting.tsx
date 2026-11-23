@@ -58,23 +58,23 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
   }, [startDate])
 
   return (
-    <div className="rozky rozky-lg relative overflow-hidden border border-[#0D214F] bg-white">
-      <div className="relative z-10 px-7 py-7">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 overflow-hidden bg-alice flex items-center justify-center flex-shrink-0 ring-2 ring-white shadow-sm">
+    <div className="relative overflow-hidden bg-navy text-white">
+      <div className="relative z-10 px-7 sm:px-9 py-8">
+        <div className="flex items-end justify-between flex-wrap gap-6">
+          <div className="flex items-end gap-6">
+            <div className="w-24 h-24 overflow-hidden bg-white/10 flex items-center justify-center flex-shrink-0">
               {photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={photo} alt="" className="w-full h-full object-cover" />
               ) : (
-                <span className="text-navy font-headline text-lg font-semibold">{initial}</span>
+                <span className="text-white font-headline text-3xl font-semibold">{initial}</span>
               )}
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-light tracking-wide mb-1">{greeting}</p>
-              <h1 className="text-3xl font-headline text-navy">{displayName}</h1>
+              <p className="kicker text-gold text-[11px] mb-2">{greeting}</p>
+              <h1 className="font-headline text-[32px] sm:text-[38px] leading-[1.05] text-white" style={{ fontWeight: 600 }}>{displayName}</h1>
               {position && department && (
-                <p className="text-sm mt-1.5 text-slate-500">{position} · {department}</p>
+                <p className="text-[15px] mt-1.5 text-white/70">{position} · {department}</p>
               )}
             </div>
           </div>
@@ -87,15 +87,19 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
         </div>
 
         {stats && stats.length > 0 && (
-          <div className="flex flex-wrap gap-x-8 gap-y-3 mt-6 pt-5 border-t border-slate-100">
+          <div className="flex flex-wrap gap-x-8 gap-y-3 mt-6 pt-5 border-t border-white/15">
             {stats.map(s => (
               <div key={s.label}>
-                <p className="text-xl font-headline text-navy leading-tight">{s.value}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+                <p className="text-xl font-headline text-white leading-tight">{s.value}</p>
+                <p className="text-xs text-white/60 mt-0.5">{s.label}</p>
               </div>
             ))}
           </div>
         )}
+      </div>
+      <div className="absolute right-0 bottom-0" style={{ width: 36, height: 36 }} aria-hidden="true">
+        <div className="absolute top-0 right-0 bg-gold" style={{ width: 18, height: 18 }} />
+        <div className="absolute bottom-0 left-0 bg-violet" style={{ width: 18, height: 18 }} />
       </div>
     </div>
   )

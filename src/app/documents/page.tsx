@@ -85,7 +85,7 @@ export default async function DocumentsPage() {
       userEmail={session.user.email}
       employmentType={user.employmentType}
     >
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
 
         {/* Smlouvy čekající na podpis zaměstnance */}
         <DocumentsSigningClient

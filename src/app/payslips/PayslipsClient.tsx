@@ -573,7 +573,7 @@ export function PayslipsClient({
   const isICO = employmentType === 'ICO'
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
 
       {/* Hero — current salary */}
       {latestReal && (

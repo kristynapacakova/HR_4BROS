@@ -35,7 +35,7 @@ export default async function AdminLeaveRequestsPage() {
       userName={session.user.name}
       userEmail={session.user.email}
     >
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         {/* Pending */}
         <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">

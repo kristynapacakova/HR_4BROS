@@ -58,8 +58,9 @@ export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, 
           userEmail={userEmail}
           teamMemberId={teamMemberId}
         />
-        <main className="flex-1 overflow-y-auto p-5 lg:p-7">
-          {children}
+        <main className="flex-1 overflow-y-auto px-5 py-6 lg:px-8 lg:py-8">
+          {/* Jedna šířka obsahu pro všechny stránky — přechody mezi záložkami neskáčou */}
+          <div className="max-w-6xl mx-auto w-full">{children}</div>
         </main>
         <VersionWatcher />
       </div>

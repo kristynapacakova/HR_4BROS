@@ -124,7 +124,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
   const previewHtml = selectedTemplate ? fillBody(selectedTemplate.body, values) : ''
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Header */}
       <div className="bg-white border border-[rgba(13,33,79,0.14)] px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">

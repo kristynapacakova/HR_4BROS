@@ -61,7 +61,6 @@ export function TeamHero({ members, departments, active = 'Všichni', onPick }: 
   let k = 0
   return (
     <div className="relative bg-navy text-white overflow-hidden">
-      <div className="absolute inset-0 grid-4x4 pointer-events-none" />
       <div className="relative flex flex-col xl:flex-row xl:items-end justify-between gap-6 xl:gap-8 p-6 lg:p-8">
         <div className="min-w-[260px] max-w-md">
           <p className="kicker text-gold text-[11px] mb-3">Tým Four Bros</p>

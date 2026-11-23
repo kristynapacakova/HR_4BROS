@@ -28,7 +28,7 @@ export default async function TymFakturacePage() {
       userName={session.user.name}
       userEmail={session.user.email}
     >
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         <p className="text-sm text-slate-500">
           Přehled faktur OSVČ spolupracovníků, které ti HR přiřadilo do týmu. Faktura za nájem kancelářského místa
           a občerstvení se časem bude tahat automaticky z Fakturoidu — zatím stav plateb nastavuje HR ručně.

@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth'
+import { PageHero } from '@/components/layout/PageHero'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { DEMO_EMPLOYEES, DEMO_HR_STATS } from '@/lib/mock-data'
@@ -46,7 +47,8 @@ export default async function AdminPage() {
 
   return (
     <AppShell title="Admin panel" isAdmin={true} userName={session.user.name} userEmail={session.user.email}>
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
+        <PageHero kicker="Administrace" title="Admin panel">Analytika týmu, lidé a zapůjčený majetek na jednom místě.</PageHero>
 
         <AdminTabs
           panels={{

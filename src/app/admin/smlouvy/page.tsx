@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth'
+import { PageHero } from '@/components/layout/PageHero'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { DEMO_ADMIN } from '@/lib/mock-data'
@@ -17,7 +18,8 @@ export default async function SmlouvyPage() {
       userEmail={session.user.email}
       employmentType={DEMO_ADMIN.employmentType}
     >
-      <div className="max-w-5xl mx-auto">
+      <div className="w-full">
+        <PageHero kicker="Administrace" title="Smlouvy">Vytváření, podpisy a archiv smluv. Všechno na hlavičkovém papíře 4Bros.</PageHero>
         <SmlouvySection />
       </div>
     </AppShell>
