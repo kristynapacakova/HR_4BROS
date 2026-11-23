@@ -13,8 +13,8 @@ export type HeroMember = { id: string; name: string; department: string; birthda
 
 const SQ = 22
 const SQ_GAP = 4
-const COL_W = 70
-const COL_GAP = 8
+const COL_W = 90
+const COL_GAP = 4
 const CHART_H = 160
 
 function seeded(seed: number) {
@@ -97,7 +97,7 @@ export function TeamHero({ members, departments, active, onPick }: {
                 aria-label={`Zobrazit tým ${c.dept}`}
               >
                 <span
-                  className="absolute left-0 right-0 text-[10px] font-bold uppercase tracking-[0.02em] text-center truncate transition-colors"
+                  className="absolute left-0 right-0 text-[10px] font-bold uppercase tracking-[0.02em] text-center whitespace-nowrap transition-colors"
                   style={{ bottom: 0, color: isActive ? '#F0E100' : dim ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.75)', opacity: placed ? 1 : 0, transition: instant ? 'color .2s' : `opacity .4s ease ${900 + ci * 60}ms, color .2s` }}
                 >
                   {c.dept}
