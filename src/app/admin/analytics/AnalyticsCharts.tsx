@@ -1,8 +1,8 @@
 'use client'
 
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   BarChart,
   Bar,
   XAxis,
@@ -10,24 +10,66 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
 } from 'recharts'
+import { departmentColor } from '@/lib/team-colors'
 
 interface HeadcountPoint { month: string; count: number }
 interface FluctuationPoint { month: string; nastupy: number; odchody: number }
 interface DeptPoint { department: string; count: number }
 
-const DEPT_COLORS = ['#091838', '#834dfb', '#3D6687', '#a97cfc', '#5A7D9A', '#5925d6']
+// Brandová paleta (tailwind.config.ts)
+const NAVY = '#0d214f'
+const NAVY_400 = '#5c7bb5'
+const NAVY_100 = '#e8eaf2'
+const VIOLET = '#834dfb'
+const GOLD = '#F0E100'
 
 const tooltipStyle = {
   backgroundColor: '#fff',
-  border: '1px solid #e2e8f0',
-  borderRadius: '8px',
+  border: `1px solid ${NAVY}`,
+  borderRadius: 0,
   fontSize: '12px',
-  color: '#091838',
+  color: NAVY,
+}
+
+const axisTick = { fontSize: 12, fill: NAVY_400 }
+
+/** Čtvercový marker; poslední měsíc zlatě, první a poslední s popiskem hodnoty. */
+function makeSquareDot(lastIndex: number) {
+  function SquareDot(props: { cx?: number; cy?: number; index?: number; value?: number | number[] }) {
+    const { cx, cy, index, value } = props
+    if (cx == null || cy == null) return <g />
+    const isLast = index === lastIndex
+    const isFirst = index === 0
+    const size = isLast ? 12 : 8
+    const v = Array.isArray(value) ? value[value.length - 1] : value
+    return (
+      <g>
+        <rect
+          x={cx - size / 2}
+          y={cy - size / 2}
+          width={size}
+          height={size}
+          fill={isLast ? GOLD : '#fff'}
+          stroke={NAVY}
+          strokeWidth={2}
+        />
+        {(isFirst || isLast) && v != null && (
+          <text
+            x={cx}
+            y={cy - 12}
+            textAnchor={isLast ? 'end' : 'start'}
+            fontSize={13}
+            fontWeight={600}
+            fill={NAVY}
+          >
+            {v}
+          </text>
+        )}
+      </g>
+    )
+  }
+  return SquareDot
 }
 
 export function AnalyticsCharts({
@@ -43,71 +85,92 @@ export function AnalyticsCharts({
   nastupy: number
   odchody: number
 }) {
+  const lastIndex = headcountTrend.length - 1
+  const first = headcountTrend[0]?.count ?? 0
+  const last = headcountTrend[lastIndex]?.count ?? 0
+  const delta = last - first
+
+  const deptTotal = departmentHeadcount.reduce((s, d) => s + d.count, 0)
+  const deptMax = Math.max(1, ...departmentHeadcount.map((d) => d.count))
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Headcount trend - spans 2 cols */}
+      {/* Headcount trend — line + čtvercové markery */}
       <div className="lg:col-span-2 bg-white border border-[rgba(13,33,79,0.14)] p-6">
-        <h3 className="font-headline font-semibold text-navy mb-1">Vývoj počtu zaměstnanců</h3>
-        <p className="text-xs text-slate-400 mb-5">Celkový počet zaměstnanců v průběhu roku 2024</p>
-        <ResponsiveContainer width="100%" height={200}>
-          <AreaChart data={headcountTrend} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="navyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#091838" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#091838" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-            <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} domain={['dataMin - 2', 'dataMax + 2']} />
-            <Tooltip contentStyle={tooltipStyle} />
-            <Area
-              type="monotone"
+        <div className="flex items-start justify-between gap-4 mb-5">
+          <div>
+            <p className="kicker mb-1">Headcount 2024</p>
+            <h3 className="font-headline text-navy text-lg" style={{ fontWeight: 600 }}>Vývoj počtu zaměstnanců</h3>
+          </div>
+          <div className="text-right">
+            <p className="font-headline text-navy text-2xl leading-none" style={{ fontWeight: 600 }}>{last}</p>
+            <p className="text-xs text-navy-400 mt-1">{delta >= 0 ? '+' : ''}{delta} od ledna</p>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart data={headcountTrend} margin={{ top: 24, right: 16, left: -12, bottom: 0 }}>
+            <CartesianGrid stroke={NAVY_100} vertical={false} />
+            <XAxis dataKey="month" tick={axisTick} axisLine={{ stroke: NAVY_100 }} tickLine={false} />
+            <YAxis
+              tick={axisTick}
+              axisLine={false}
+              tickLine={false}
+              allowDecimals={false}
+              domain={[(min: number) => Math.max(0, min - 2), (max: number) => max + 2]}
+            />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ stroke: NAVY_400, strokeDasharray: '3 3' }} />
+            <Line
+              type="linear"
               dataKey="count"
               name="Zaměstnanců"
-              stroke="#091838"
+              stroke={NAVY}
               strokeWidth={2}
-              fill="url(#navyGrad)"
-              dot={{ fill: '#091838', r: 3 }}
-              activeDot={{ r: 5, fill: '#834dfb' }}
+              dot={makeSquareDot(lastIndex)}
+              activeDot={false}
+              isAnimationActive={false}
             />
-          </AreaChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Department pie */}
+      {/* Oddělení — 100% pruh + horizontální sloupce podle týmů */}
       <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
-        <h3 className="font-headline font-semibold text-navy mb-1">Oddělení</h3>
-        <p className="text-xs text-slate-400 mb-4">Rozložení zaměstnanců</p>
-        <ResponsiveContainer width="100%" height={140}>
-          <PieChart>
-            <Pie
-              data={departmentHeadcount}
-              dataKey="count"
-              nameKey="department"
-              cx="50%"
-              cy="50%"
-              innerRadius={40}
-              outerRadius={65}
-              paddingAngle={3}
-            >
-              {departmentHeadcount.map((_, i) => (
-                <Cell key={i} fill={DEPT_COLORS[i % DEPT_COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip contentStyle={tooltipStyle} formatter={(v, n) => [v, n]} />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="space-y-1.5 mt-3">
-          {departmentHeadcount.map((d, i) => (
-            <div key={d.department} className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: DEPT_COLORS[i % DEPT_COLORS.length] }} />
-                <span className="text-slate-600">{d.department}</span>
-              </div>
-              <span className="font-medium text-navy">{d.count}</span>
-            </div>
+        <p className="kicker mb-1">Týmy</p>
+        <h3 className="font-headline text-navy text-lg mb-1" style={{ fontWeight: 600 }}>Oddělení</h3>
+        <p className="text-xs text-navy-400 mb-4">{deptTotal} lidí v {departmentHeadcount.length} týmech</p>
+
+        {/* 100% stacked strip */}
+        <div className="flex h-3 w-full mb-5 border border-navy" role="img" aria-label="Podíl týmů na počtu lidí">
+          {departmentHeadcount.map((d) => (
+            <div
+              key={d.department}
+              title={`${d.department}: ${d.count}`}
+              style={{ width: `${(d.count / Math.max(1, deptTotal)) * 100}%`, backgroundColor: departmentColor(d.department) }}
+            />
           ))}
+        </div>
+
+        <div className="space-y-2">
+          {departmentHeadcount.map((d) => {
+            const pct = Math.round((d.count / Math.max(1, deptTotal)) * 100)
+            return (
+              <div key={d.department} className="text-xs">
+                <div className="flex items-baseline justify-between gap-2 mb-1">
+                  <span className="text-navy font-medium truncate">{d.department}</span>
+                  <span className="text-navy tabular-nums flex-shrink-0">
+                    <span className="font-semibold">{d.count}</span>
+                    <span className="text-navy-400"> · {pct}%</span>
+                  </span>
+                </div>
+                <div className="h-3 bg-navy-50">
+                  <div
+                    className="h-full border border-navy"
+                    style={{ width: `${(d.count / deptMax) * 100}%`, backgroundColor: departmentColor(d.department) }}
+                  />
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -115,28 +178,28 @@ export function AnalyticsCharts({
       <div className="lg:col-span-3 bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h3 className="font-headline font-semibold text-navy mb-1">Fluktuace — nástupy a odchody</h3>
-            <p className="text-xs text-slate-400">Měsíční přehled za rok 2024</p>
+            <p className="kicker mb-1">Měsíční přehled 2024</p>
+            <h3 className="font-headline text-navy text-lg" style={{ fontWeight: 600 }}>Fluktuace — nástupy a odchody</h3>
           </div>
           <div className="flex gap-4 text-xs">
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-sm bg-navy inline-block" />
-              <span className="text-slate-500">Nástupy ({nastupy})</span>
+              <span className="w-3 h-3 bg-navy inline-block" />
+              <span className="text-navy">Nástupy ({nastupy})</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-sm bg-violet inline-block" />
-              <span className="text-slate-500">Odchody ({odchody})</span>
+              <span className="w-3 h-3 bg-violet inline-block" />
+              <span className="text-navy">Odchody ({odchody})</span>
             </div>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={fluctuation} margin={{ top: 0, right: 10, left: -20, bottom: 0 }} barGap={4}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-            <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} allowDecimals={false} />
-            <Tooltip contentStyle={tooltipStyle} />
-            <Bar dataKey="nastupy" name="Nástupy" fill="#091838" radius={[4, 4, 0, 0]} maxBarSize={28} />
-            <Bar dataKey="odchody" name="Odchody" fill="#834dfb" radius={[4, 4, 0, 0]} maxBarSize={28} />
+            <CartesianGrid stroke={NAVY_100} vertical={false} />
+            <XAxis dataKey="month" tick={axisTick} axisLine={{ stroke: NAVY_100 }} tickLine={false} />
+            <YAxis tick={axisTick} axisLine={false} tickLine={false} allowDecimals={false} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: '#f3f0fd' }} />
+            <Bar dataKey="nastupy" name="Nástupy" fill={NAVY} maxBarSize={28} isAnimationActive={false} />
+            <Bar dataKey="odchody" name="Odchody" fill={VIOLET} maxBarSize={28} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>
       </div>

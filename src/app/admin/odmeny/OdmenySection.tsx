@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { IconBanknote, IconContract, IconReceipt } from '@/components/BrandIcons'
-import { OdmenyTabs } from './OdmenyTabs'
+import { OdmenyTabs, type PayslipRow } from './OdmenyTabs'
 import { InvoiceOverview } from '../faktury/InvoiceOverview'
 import { ExpenseAdmin } from '../vydaje/ExpenseAdmin'
 import type { IcoInvoiceRecord, ExpenseRequest } from '@/lib/mock-data'
@@ -14,11 +14,6 @@ const SUB_TABS = [
   { id: 'doklady', label: 'Doklady k proplacení', icon: IconReceipt },
 ] as const
 type SubTabId = typeof SUB_TABS[number]['id']
-
-interface PayslipRow {
-  id: string; name: string; email: string; employmentType: string
-  grossAmount: number; netAmount: number; month: number; year: number; currency: string
-}
 
 export function OdmenySection({
   payslipRows, icoEmployees, invoices, expenseRequests,
@@ -56,7 +51,7 @@ export function OdmenySection({
 
       {sub === 'odmeny' && (
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">Výplaty zaměstnanců (HPP/DPP/DPČ).</p>
+          <p className="text-sm text-slate-500">Roční přehled odměn po lidech (HPP, DPP, DPČ i OSVČ). U OSVČ je částka fakturace — čistá = hrubá.</p>
           <OdmenyTabs payslips={payslipRows} />
         </div>
       )}

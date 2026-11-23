@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { EMPLOYMENT_TYPES } from '@/lib/mock-data'
 
-export function CreateEmployeeForm() {
+export function CreateEmployeeForm({ onCreated, onCancel }: { onCreated?: () => void; onCancel?: () => void } = {}) {
   const router = useRouter()
   const [form, setForm] = useState({
     name: '',
@@ -29,6 +29,7 @@ export function CreateEmployeeForm() {
     setLoading(false)
     setSuccess(true)
     setForm({ name: '', email: '', department: '', position: '', employmentType: '', startDate: '' })
+    if (onCreated) { setSuccess(false); onCreated(); return }
     setTimeout(() => setSuccess(false), 3000)
   }
 
@@ -82,13 +83,20 @@ export function CreateEmployeeForm() {
           </select>
         </div>
       </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide font-medium py-2.5 px-6 transition-colors disabled:opacity-50 shadow-sm"
-      >
-        {loading ? 'Vytváří se...' : 'Vytvořit uživatele'}
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-pill bg-gold hover:bg-navy hover:text-white text-navy text-[12px] font-bold uppercase tracking-[0.06em] py-2.5 px-6 transition-colors disabled:opacity-50"
+        >
+          {loading ? 'Vytváří se...' : 'Vytvořit uživatele'}
+        </button>
+        {onCancel && (
+          <button type="button" onClick={onCancel} className="text-sm font-medium text-slate-500 hover:text-navy px-2 py-2">
+            Zrušit
+          </button>
+        )}
+      </div>
     </form>
   )
 }

@@ -30,11 +30,11 @@ export function FeedbackForm({ userName }: { userName: string }) {
 
   if (sent) {
     return (
-      <div className="bg-white border border-green-100 shadow-sm p-10 text-center">
-        <div className="w-16 h-16 bg-green-50 flex items-center justify-center mx-auto mb-4">
-          <CheckCircle2 className="w-8 h-8 text-green-500" />
+      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-10 text-center rozky">
+        <div className="w-16 h-16 bg-mint flex items-center justify-center mx-auto mb-4">
+          <CheckCircle2 className="w-8 h-8 text-navy" />
         </div>
-        <h3 className="text-xl font-headline text-navy mb-2">Zpráva odeslána!</h3>
+        <h3 className="text-xl font-headline text-navy mb-2" style={{ fontWeight: 600 }}>Zpráva odeslána!</h3>
         <p className="text-sm text-slate-400 mb-1">
           {anonymous ? 'Odeslali jste anonymně.' : `Odeslali jste pod jménem ${userName}.`}
         </p>
@@ -117,9 +117,9 @@ export function FeedbackForm({ userName }: { userName: string }) {
       </div>
 
       {/* Guarantee */}
-      <div className="flex items-start gap-2">
-        <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-        <p className="text-sm text-green-700">
+      <div className="flex items-start gap-2 bg-mint-tint border border-mint px-4 py-3">
+        <ShieldCheck className="w-4 h-4 text-mint-dark flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-navy/80">
           <strong>Garantujeme bezpečí.</strong> Anonymní zprávy nelze dohledat. Nikdo tě za upřímný feedback nebude postihovat.
         </p>
       </div>
@@ -161,14 +161,14 @@ export function FeedbackForm({ userName }: { userName: string }) {
       <button
         type="submit"
         disabled={loading || !message.trim()}
-        className="w-full flex items-center justify-center gap-2 bg-navy hover:bg-navy-800 text-white font-medium py-3 px-6 transition-colors disabled:opacity-50 shadow-sm"
+        className="btn-pill w-full flex items-center justify-center gap-2 bg-gold hover:bg-gold/85 text-navy font-bold uppercase tracking-[0.06em] text-[12px] py-3.5 px-6 transition-colors disabled:bg-gold/40 disabled:text-navy/60 disabled:cursor-not-allowed"
       >
         {loading ? (
-          <span className="text-sm">Odesílám...</span>
+          <span>Odesílám...</span>
         ) : (
           <>
             <Send className="w-4 h-4" />
-            <span className="text-sm">Odeslat {anonymous ? 'anonymně' : 'pod svým jménem'}</span>
+            <span>Odeslat {anonymous ? 'anonymně' : 'pod svým jménem'}</span>
           </>
         )}
       </button>

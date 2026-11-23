@@ -1,4 +1,4 @@
-import { CreateEmployeeForm } from './CreateEmployeeForm'
+import { EmployeesListHeader } from './EmployeesListHeader'
 import { TeamLeadCell } from './TeamLeadCell'
 import { RoleCell, LeaveDaysCell, IcoFieldsCell } from './PersonFieldsCell'
 import { SENIORITY_LEVELS, DEMO_EMPLOYEES } from '@/lib/mock-data'
@@ -29,17 +29,9 @@ export function EmployeesPanel({ employees }: { employees: DemoEmployee[] }) {
   return (
     <div className="space-y-6">
 
-      {/* Create employee */}
-      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
-        <h3 className="font-headline font-semibold text-navy mb-4">Přidat uživatele</h3>
-        <CreateEmployeeForm />
-      </div>
-
       {/* Table */}
       <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h3 className="font-headline font-semibold text-navy">Přehled uživatelů ({employees.length})</h3>
-        </div>
+        <EmployeesListHeader count={employees.length} />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

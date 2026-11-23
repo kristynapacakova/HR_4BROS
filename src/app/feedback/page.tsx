@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
 import { DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
 import { FeedbackForm } from './FeedbackForm'
-import { MessageSquareHeart } from 'lucide-react'
+import { SafeEnvelope } from './SafeEnvelope'
 
 export default async function FeedbackPage() {
   const session = await auth()
@@ -18,17 +18,21 @@ export default async function FeedbackPage() {
       <div className="max-w-2xl mx-auto space-y-6">
 
         {/* Hero */}
-        <div className="relative bg-navy overflow-hidden">
-          <div className="relative z-10 px-7 py-6 flex items-start gap-4">
-            <div className="w-12 h-12 bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <MessageSquareHeart className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl font-headline text-white mb-1">Schránka důvěry</h2>
-              <p className="text-white/60 text-sm leading-relaxed">
+        <div className="relative bg-navy overflow-hidden rozky rozky-lg after:z-20">
+          <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
+          <div className="relative z-10 px-7 py-7 flex flex-col sm:flex-row sm:items-center gap-6">
+            <div className="flex-1 min-w-0">
+              <p className="kicker !text-white/60 mb-2">Bezpečný prostor</p>
+              <h2 className="text-2xl font-headline text-white mb-2" style={{ fontWeight: 600 }}>Schránka důvěry</h2>
+              <p className="text-white/70 text-sm leading-relaxed">
                 Tady máš bezpečný prostor říct cokoliv — pochvalu, stížnost, návrh nebo cokoliv, co tě trápí. Můžeš psát anonymně i pod svým jménem, volba je jen na tobě.
               </p>
+              <p className="mt-4 inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.06em] text-gold">
+                <span className="w-2 h-2 bg-gold" aria-hidden="true" />
+                Zpráva je zamčená — anonymní nelze dohledat
+              </p>
             </div>
+            <SafeEnvelope className="w-32 sm:w-36 flex-shrink-0 self-center" />
           </div>
         </div>
 

@@ -12,11 +12,16 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id']
 
-export function AdminTabs({ panels, header }: { panels: Record<TabId, React.ReactNode>; header?: React.ReactNode }) {
+export function AdminTabs({ panels, headers }: {
+  panels: Record<TabId, React.ReactNode>
+  /** Optional per-tab header (e.g. KPI strip) rendered above that tab's panel only. */
+  headers?: Partial<Record<TabId, React.ReactNode>>
+}) {
   const searchParams = useSearchParams()
   const requested = searchParams.get('tab')
   const initial = TABS.some(t => t.id === requested) ? (requested as TabId) : 'analytika'
   const [tab, setTab] = useState<TabId>(initial)
+  const header = headers?.[tab]
 
   return (
     <div>

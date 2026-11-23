@@ -29,7 +29,7 @@ export default async function TeamMemberPage({ params }: { params: { id: string 
     >
       <MemberProfileClient
         member={member}
-        allMembers={sorted.map((m) => ({ id: m.id, name: m.name, emoji: m.emoji }))}
+        allMembers={sorted.map((m) => ({ id: m.id, name: m.name, department: m.department }))}
         viewerEmail={session.user.email ?? null}
       />
     </AppShell>

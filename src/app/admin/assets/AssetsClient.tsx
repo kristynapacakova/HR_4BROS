@@ -26,6 +26,14 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
   const [editing, setEditing] = useState<AssetRecord | null>(null)
   const [filterUser, setFilterUser] = useState('')
   const [filterType, setFilterType] = useState('')
+  const [adding, setAdding] = useState(false)
+  const [flash, setFlash] = useState(false)
+
+  useEffect(() => {
+    if (!flash) return
+    const t = setTimeout(() => setFlash(false), 3500)
+    return () => clearTimeout(t)
+  }, [flash])
 
   useEffect(() => {
     const refresh = () => setAssets(loadAssets())
@@ -70,17 +78,16 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
         </div>
       </div>
 
-      {/* Add asset form */}
-      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
-        <h3 className="font-headline font-semibold text-navy mb-4">Přidat položku majetku</h3>
-        <AddAssetForm employees={employees.map(e => ({ id: e.id, name: e.name }))} />
-      </div>
-
       {/* Assets table */}
       <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
-          <h3 className="font-headline font-semibold text-navy">Všechen majetek ({filteredAssets.length} z {assets.length})</h3>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3 flex-wrap">
+            <h3 className="font-headline text-navy" style={{ fontWeight: 600 }}>Všechen majetek ({filteredAssets.length} z {assets.length})</h3>
+            {flash && (
+              <span className="text-xs font-medium text-mint-dark bg-mint-tint px-2 py-0.5">✓ Položka přidána</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
             <select
               value={filterUser}
               onChange={(e) => setFilterUser(e.target.value)}
@@ -98,8 +105,33 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
               <option value="">Všechny typy</option>
               {ASSET_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
+            {!adding && (
+              <button
+                type="button"
+                onClick={() => setAdding(true)}
+                className="btn-pill bg-gold hover:bg-navy hover:text-white text-navy text-[12px] font-bold uppercase tracking-[0.06em] py-2 px-4 transition-colors whitespace-nowrap"
+              >
+                + Přidat položku
+              </button>
+            )}
           </div>
         </div>
+
+        {adding && (
+          <div className="bg-alice border-b border-[rgba(13,33,79,0.14)] border-l-4 border-l-gold px-6 py-5 animate-rise">
+            <div className="flex items-center justify-between mb-4">
+              <p className="kicker">Nová položka majetku</p>
+              <button type="button" onClick={() => setAdding(false)} className="text-slate-400 hover:text-navy" aria-label="Zavřít formulář">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <AddAssetForm
+              employees={employees.map(e => ({ id: e.id, name: e.name }))}
+              onCancel={() => setAdding(false)}
+              onCreated={() => { setAdding(false); setFlash(true) }}
+            />
+          </div>
+        )}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

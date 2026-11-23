@@ -1,50 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  FileText,
-  AlertTriangle,
-  Shield,
-  HardHat,
-  Gift,
-  Sparkles,
-  X,
-  CheckCircle2,
-  Clock,
-} from 'lucide-react'
-import type { Directive, DirectiveTheme, DirectiveAcknowledgement } from '@/lib/mock-data'
+import { X, CheckCircle2, Clock } from 'lucide-react'
+import type { Directive, DirectiveAcknowledgement } from '@/lib/mock-data'
+import { CATEGORY_STYLES, CategoryTile } from './DirectiveIcons'
 
 interface DirectivesClientProps {
   directives: Directive[]
   currentEmployeeId: string
-}
-
-// Jsou to jen směrnice — jeden sjednocený brandový vzhled, barva nenese žádný rozdílný význam.
-const UNIFIED = {
-  borderColor: 'border-l-navy',
-  iconColor: 'text-navy',
-  badgeBg: 'bg-navy/10 text-navy',
-  headerBg: 'bg-navy',
-}
-
-function getThemeConfig(theme: DirectiveTheme) {
-  const icons: Record<DirectiveTheme, typeof FileText> = {
-    STANDARD: FileText,
-    IMPORTANT: AlertTriangle,
-    GDPR: Shield,
-    BOZP: HardHat,
-    BENEFIT: Gift,
-    WELCOME: Sparkles,
-  }
-  const labels: Record<DirectiveTheme, string> = {
-    STANDARD: 'Obecná',
-    IMPORTANT: 'Důležitá',
-    GDPR: 'GDPR',
-    BOZP: 'BOZP',
-    BENEFIT: 'Benefity',
-    WELCOME: 'Uvítání',
-  }
-  return { ...UNIFIED, icon: icons[theme], label: labels[theme] }
 }
 
 function formatDate(date: Date): string {
@@ -60,27 +23,27 @@ interface DirectiveModalProps {
 
 function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: DirectiveModalProps) {
   const [checked, setChecked] = useState(false)
-  const config = getThemeConfig(directive.theme)
+  const config = CATEGORY_STYLES[directive.theme]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60">
+      <div className="bg-white border border-navy w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Modal Header */}
-        <div className={`${config.headerBg} text-white px-6 py-5 flex items-start justify-between`}>
-          <div className="flex-1 min-w-0 pr-4">
-            <div className="flex items-center gap-2 mb-1">
-              <config.icon className="w-5 h-5 opacity-80 flex-shrink-0" />
-              <span className="text-sm font-medium opacity-80">{config.label}</span>
-            </div>
-            <h2 className="text-xl font-bold leading-tight">{directive.title}</h2>
-            <div className="flex gap-4 mt-2 text-sm opacity-80">
+        <div className="relative bg-navy text-white px-6 py-5 flex items-start justify-between gap-4">
+          <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
+          <CategoryTile theme={directive.theme} />
+          <div className="relative flex-1 min-w-0 pr-4">
+            <p className="kicker !text-white/60 mb-1">{directive.category || config.label}</p>
+            <h2 className="text-xl font-headline leading-tight" style={{ fontWeight: 600 }}>{directive.title}</h2>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-white/70">
               <span>Vydáno: {formatDate(directive.publishedAt)}</span>
               <span>Platnost od: {formatDate(directive.validFrom)}</span>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-white/70 hover:text-white transition-colors flex-shrink-0"
+            aria-label="Zavřít"
+            className="relative text-white/70 hover:text-white transition-colors flex-shrink-0"
           >
             <X className="w-6 h-6" />
           </button>
@@ -89,13 +52,13 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto px-6 py-6">
           <div
-            className="prose prose-slate max-w-none prose-h2:text-xl prose-h2:font-bold prose-h2:text-[#1e3a5f] prose-h2:mt-0 prose-h3:text-base prose-h3:font-semibold prose-h3:text-slate-800 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:text-slate-700 prose-ol:text-slate-700 prose-li:leading-relaxed prose-strong:text-slate-800"
+            className="prose prose-slate max-w-none prose-h2:text-xl prose-h2:font-bold prose-h2:text-navy prose-h2:mt-0 prose-h3:text-base prose-h3:font-semibold prose-h3:text-slate-800 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:text-slate-700 prose-ol:text-slate-700 prose-li:leading-relaxed prose-strong:text-slate-800"
             dangerouslySetInnerHTML={{ __html: directive.body }}
           />
         </div>
 
         {/* Modal Footer */}
-        <div className="border-t border-slate-200 px-6 py-4">
+        <div className="border-t border-[rgba(13,33,79,0.14)] px-6 py-4">
           {directive.mustAcknowledge && !isAcknowledged && (
             <div className="mb-4">
               <label className="flex items-start gap-3 cursor-pointer group">
@@ -103,16 +66,16 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
                   type="checkbox"
                   checked={checked}
                   onChange={(e) => setChecked(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded border-slate-300 text-violet-600 focus:ring-violet-500 cursor-pointer"
+                  className="mt-0.5 w-4 h-4 accent-violet cursor-pointer"
                 />
-                <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors">
+                <span className="text-sm text-navy/80 group-hover:text-navy transition-colors">
                   Přečetl/a jsem tuto směrnici a souhlasím s jejím obsahem
                 </span>
               </label>
             </div>
           )}
           {isAcknowledged && (
-            <div className="mb-4 flex items-center gap-2 text-emerald-700 text-sm font-medium">
+            <div className="mb-4 inline-flex items-center gap-2 bg-mint text-navy text-xs font-bold uppercase tracking-[0.06em] px-3 py-1.5">
               <CheckCircle2 className="w-4 h-4" />
               <span>Tato směrnice byla odsouhlasena</span>
             </div>
@@ -120,7 +83,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 border border-slate-300 hover:border-slate-400 transition-colors"
+              className="px-4 py-2 text-sm font-medium text-navy border border-navy/30 hover:border-navy transition-colors"
             >
               Zavřít
             </button>
@@ -131,7 +94,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
                   onAcknowledge(directive.id)
                   onClose()
                 }}
-                className="px-5 py-2 text-sm font-semibold text-white bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="btn-pill px-6 py-2.5 bg-gold hover:bg-gold/85 text-navy font-bold uppercase tracking-[0.06em] text-[12px] disabled:bg-gold/40 disabled:text-navy/60 disabled:cursor-not-allowed transition-colors"
               >
                 Potvrdit souhlas
               </button>
@@ -170,31 +133,71 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
   const ackedCount = directives.filter((d) => d.mustAcknowledge && isAcknowledged(d)).length
   const progressPct = totalMustAck > 0 ? Math.round((ackedCount / totalMustAck) * 100) : 100
 
+  const mustAckDirectives = directives.filter((d) => d.mustAcknowledge)
+  const allDone = totalMustAck > 0 && ackedCount === totalMustAck
+
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-      {/* Summary Card */}
-      <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <h2 className="text-base font-semibold text-slate-800">Přehled souhlasů</h2>
-            <p className="text-sm text-slate-500">
+      {/* Navy hlavička s přehledem souhlasů */}
+      <div className="relative bg-navy text-white overflow-hidden rozky rozky-lg after:z-20">
+        <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
+        <div className="relative z-10 px-7 py-7 flex flex-col md:flex-row md:items-end gap-6">
+          <div className="flex-1 min-w-0">
+            <p className="kicker !text-white/60 mb-2">Přehled souhlasů</p>
+            <h2 className="text-2xl font-headline text-white mb-1" style={{ fontWeight: 600 }}>
+              Interní směrnice
+            </h2>
+            <p className="text-sm text-white/70 leading-relaxed max-w-md">
+              {allDone
+                ? 'Máš odsouhlaseno všechno, co je potřeba. Díky!'
+                : 'Projdi si směrnice, které vyžadují tvůj souhlas — otevři je kliknutím a potvrď, že ses s nimi seznámil/a.'}
+            </p>
+          </div>
+          <div className="flex-shrink-0 md:text-right">
+            <div className="flex items-baseline gap-2 md:justify-end">
+              <span className="font-headline text-5xl leading-none text-white" style={{ fontWeight: 600 }}>
+                {ackedCount}
+              </span>
+              <span className="font-headline text-2xl leading-none text-white/50" style={{ fontWeight: 600 }}>
+                / {totalMustAck}
+              </span>
+              <span className="ml-2 text-[12px] font-bold uppercase tracking-[0.06em] text-gold">{progressPct}%</span>
+            </div>
+            <p className="text-xs text-white/60 mt-1">
               {ackedCount} z {totalMustAck} směrnic odsouhlaseno
             </p>
           </div>
-          <div className="text-2xl font-bold text-[#1e3a5f]">{progressPct}%</div>
         </div>
-        <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+        {/* Segmentovaný ukazatel — jeden čtverec za každou směrnici k odsouhlasení */}
+        <div className="relative z-10 px-7 pb-7">
           <div
-            className="h-full bg-violet-600 rounded-full transition-all duration-500"
-            style={{ width: `${progressPct}%` }}
-          />
+            className="flex gap-1.5"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={totalMustAck}
+            aria-valuenow={ackedCount}
+            aria-label="Odsouhlasené směrnice"
+          >
+            {mustAckDirectives.map((d) => {
+              const done = isAcknowledged(d)
+              return (
+                <div
+                  key={d.id}
+                  title={`${d.title} — ${done ? 'odsouhlaseno' : 'čeká na souhlas'}`}
+                  className={`h-4 flex-1 border transition-colors duration-500 ${
+                    done ? 'bg-mint border-mint' : 'bg-transparent border-white/30'
+                  }`}
+                />
+              )
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Directives List */}
+      {/* Seznam směrnic */}
       <div className="space-y-3">
         {directives.map((directive) => {
-          const config = getThemeConfig(directive.theme)
+          const config = CATEGORY_STYLES[directive.theme]
           const acked = isAcknowledged(directive)
           const needsAck = directive.mustAcknowledge && !acked
 
@@ -202,37 +205,27 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
             <button
               key={directive.id}
               onClick={() => setSelectedDirective(directive)}
-              className={`w-full text-left bg-white  border border-[rgba(13,33,79,0.14)] border-l-4 ${config.borderColor} px-5 py-4 hover:shadow-md transition-shadow`}
+              className={`group w-full text-left bg-white border px-5 py-4 transition-colors ${
+                needsAck ? 'border-navy/30 hover:border-navy' : 'border-[rgba(13,33,79,0.14)] hover:border-navy/40'
+              }`}
             >
-              <div className="flex items-start gap-4">
-                <div className={`mt-0.5 ${config.iconColor} flex-shrink-0`}>
-                  <config.icon className="w-5 h-5" />
-                </div>
+              <div className="flex items-center gap-4">
+                <CategoryTile theme={directive.theme} />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="text-sm font-semibold text-slate-800">{directive.title}</h3>
-                    {directive.mustAcknowledge && (
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                        Vyžaduje souhlas
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
-                    <span className={`font-medium px-2 py-0.5 rounded-full ${config.badgeBg}`}>
-                      {config.label}
-                    </span>
-                    <span>{directive.category}</span>
-                    <span>Vydáno {formatDate(directive.publishedAt)}</span>
-                  </div>
+                  <p className="kicker mb-0.5">{directive.category || config.label}</p>
+                  <h3 className="text-[15px] font-headline text-navy leading-snug group-hover:text-violet transition-colors" style={{ fontWeight: 600 }}>
+                    {directive.title}
+                  </h3>
+                  <p className="text-xs text-navy/50 mt-1">Vydáno {formatDate(directive.publishedAt)}</p>
                 </div>
                 <div className="flex-shrink-0">
                   {acked ? (
-                    <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+                    <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy bg-mint px-2.5 py-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Odsouhlaseno
                     </span>
                   ) : needsAck ? (
-                    <span className="flex items-center gap-1.5 text-xs font-semibold text-orange-700 bg-orange-50 px-2.5 py-1 rounded-full">
+                    <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy bg-gold-tint border border-gold px-2.5 py-1">
                       <Clock className="w-3.5 h-3.5" />
                       Vyžaduje souhlas
                     </span>

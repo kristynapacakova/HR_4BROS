@@ -24,6 +24,7 @@ const staticNavItemsAfter = [
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: IconShield },
   { label: 'Smlouvy', href: '/admin/smlouvy', icon: IconContract },
+  { label: 'Správa směrnic', href: '/admin/smernice', icon: IconBook },
   { label: 'Schránka důvěry', href: '/admin/feedback', icon: IconHeart },
   { label: 'Přehled odměn', href: '/admin/odmeny', icon: IconBanknote },
 ]

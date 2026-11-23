@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { departmentColor } from '@/lib/team-colors'
 
 /**
  * Hlavička stránky Tým: každý člověk je jeden barevný pixel. Při načtení se
@@ -10,7 +11,6 @@ import { useEffect, useState } from 'react'
 
 export type HeroMember = { id: string; name: string; department: string; birthdayInDays: number | null }
 
-const PALETTE = ['#F0E100', '#834DFB', '#4DE791', '#b9cbf3', '#FFFFFF', '#a97cfc', '#5c7bb5']
 const SQ = 22
 const SQ_GAP = 4
 const COL_W = 70
@@ -51,7 +51,7 @@ export function TeamHero({ members, departments, active, onPick }: {
   }, [])
 
   const cols = departments
-    .map((d, i) => ({ dept: d, color: PALETTE[i % PALETTE.length], people: members.filter(m => m.department === d) }))
+    .map(d => ({ dept: d, color: departmentColor(d), people: members.filter(m => m.department === d) }))
     .filter(c => c.people.length > 0)
   const chartW = cols.length * COL_W + (cols.length - 1) * COL_GAP
   const rnd = seeded(7)

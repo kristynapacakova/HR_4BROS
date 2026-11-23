@@ -9,7 +9,7 @@ interface Employee {
   name: string
 }
 
-export function AddAssetForm({ employees }: { employees: Employee[] }) {
+export function AddAssetForm({ employees, onCreated, onCancel }: { employees: Employee[]; onCreated?: () => void; onCancel?: () => void }) {
   const [form, setForm] = useState({
     name: '',
     type: '',
@@ -41,6 +41,7 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
     setLoading(false)
     setSuccess(true)
     setForm({ name: '', type: '', brand: '', model: '', serialNumber: '', condition: 'NOVY', assignedTo: '', notes: '' })
+    if (onCreated) { setSuccess(false); onCreated(); return }
     setTimeout(() => setSuccess(false), 3000)
   }
 
@@ -137,10 +138,15 @@ export function AddAssetForm({ employees }: { employees: Employee[] }) {
         <button
           type="submit"
           disabled={loading}
-          className="bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide font-medium py-2.5 px-6 transition-colors disabled:opacity-50 shadow-sm text-sm"
+          className="btn-pill bg-gold hover:bg-navy hover:text-white text-navy text-[12px] font-bold uppercase tracking-[0.06em] py-2.5 px-6 transition-colors disabled:opacity-50"
         >
           {loading ? 'Přidávám...' : 'Přidat položku'}
         </button>
+        {onCancel && (
+          <button type="button" onClick={onCancel} className="text-sm font-medium text-slate-500 hover:text-navy px-2 py-2">
+            Zrušit
+          </button>
+        )}
         {success && <p className="text-mint-dark text-sm">Položka přidána.</p>}
       </div>
     </form>

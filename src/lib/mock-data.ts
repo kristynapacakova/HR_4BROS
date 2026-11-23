@@ -86,20 +86,23 @@ export const DEMO_FLUCTUATION = [
   { month: "Pro", nastupy: 2, odchody: 1 },
 ]
 
+// Jen pro analytiku — stejné týmy jako TEAM_DEPARTMENTS / DEMO_TEAM (stránka Tým).
+// AnalyticsPanel počítá rozložení přímo z DEMO_TEAM; tohle je statická záloha se stejnými čísly.
 export const DEMO_DEPARTMENT_HEADCOUNT = [
-  { department: "Vývoj", count: 8 },
-  { department: "Marketing", count: 4 },
-  { department: "Obchod", count: 6 },
-  { department: "HR", count: 2 },
-  { department: "Finance", count: 3 },
-  { department: "Operace", count: 4 },
+  { department: "Creative", count: 5 },
+  { department: "Performance", count: 4 },
+  { department: "Account", count: 2 },
+  { department: "Sales", count: 2 },
+  { department: "Backoffice", count: 1 },
+  { department: "HR", count: 1 },
+  { department: "Vývoj", count: 1 },
 ]
 
 export const DEMO_EMPLOYEE_PERFORMANCE = [
   {
     id: "demo-employee-1",
     name: "Jan Novák",
-    department: "Vývoj",
+    department: "Creative",
     position: "Frontend Developer",
     employmentType: "HPP",
     onboardingProgress: 40,
@@ -114,7 +117,7 @@ export const DEMO_EMPLOYEE_PERFORMANCE = [
   {
     id: "demo-employee-2",
     name: "Marie Svobodová",
-    department: "Marketing",
+    department: "Performance",
     position: "Marketing Specialist",
     employmentType: "DPP",
     onboardingProgress: 100,
@@ -129,7 +132,7 @@ export const DEMO_EMPLOYEE_PERFORMANCE = [
   {
     id: "demo-employee-3",
     name: "Tomáš Dvořák",
-    department: "Obchod",
+    department: "Account",
     position: "Sales Manager",
     employmentType: "ICO",
     onboardingProgress: 100,
@@ -144,7 +147,7 @@ export const DEMO_EMPLOYEE_PERFORMANCE = [
   {
     id: "demo-employee-4",
     name: "Lucie Kratochvílová",
-    department: "Finance",
+    department: "Creative",
     position: "Finanční analytik",
     employmentType: "HPP",
     onboardingProgress: 100,

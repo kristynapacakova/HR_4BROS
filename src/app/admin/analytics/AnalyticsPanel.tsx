@@ -1,7 +1,8 @@
 import {
   DEMO_HEADCOUNT_TREND,
   DEMO_FLUCTUATION,
-  DEMO_DEPARTMENT_HEADCOUNT,
+  DEMO_TEAM,
+  TEAM_DEPARTMENTS,
   DEMO_EMPLOYEE_PERFORMANCE,
   DEMO_TURNOVER_RATE,
   DEMO_AVG_TENURE,
@@ -9,12 +10,18 @@ import {
   EMPLOYMENT_TYPES,
 } from '@/lib/mock-data'
 import { AnalyticsCharts } from './AnalyticsCharts'
-import { TrendingUp, TrendingDown, Users, Clock } from 'lucide-react'
+import { TrendingUp, TrendingDown, Users, Clock, Briefcase } from 'lucide-react'
 
 export function AnalyticsPanel() {
   const totalNastupy = DEMO_FLUCTUATION.reduce((s, m) => s + m.nastupy, 0)
   const totalOdchody = DEMO_FLUCTUATION.reduce((s, m) => s + m.odchody, 0)
   const currentHeadcount = DEMO_HEADCOUNT_TREND[DEMO_HEADCOUNT_TREND.length - 1].count
+
+  // Rozložení podle týmů — stejné týmy a lidé jako na stránce Tým (DEMO_TEAM / TEAM_DEPARTMENTS).
+  const departmentHeadcount = TEAM_DEPARTMENTS
+    .map((department) => ({ department, count: DEMO_TEAM.filter((m) => m.department === department).length }))
+    .filter((d) => d.count > 0)
+    .sort((a, b) => b.count - a.count)
 
   return (
     <div className="space-y-6">
@@ -26,23 +33,23 @@ export function AnalyticsPanel() {
             <div className="w-9 h-9 bg-alice flex items-center justify-center">
               <Users className="w-4 h-4 text-navy" />
             </div>
-            <span className="text-xs text-green-600 font-medium flex items-center gap-0.5">
+            <span className="text-xs text-mint-dark font-medium flex items-center gap-0.5">
               <TrendingUp className="w-3 h-3" /> +50%
             </span>
           </div>
           <p className="text-2xl font-headline font-semibold text-navy">{currentHeadcount}</p>
-          <p className="text-xs text-slate-400 mt-0.5">Celkem zaměstnanců</p>
+          <p className="text-xs text-navy-400 mt-0.5">Celkem zaměstnanců</p>
         </div>
 
         <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
           <div className="flex items-start justify-between mb-3">
-            <div className="w-9 h-9 bg-red-50 flex items-center justify-center">
-              <TrendingDown className="w-4 h-4 text-red-500" />
+            <div className="w-9 h-9 bg-violet-tint flex items-center justify-center">
+              <TrendingDown className="w-4 h-4 text-violet" />
             </div>
-            <span className="text-xs text-slate-400">2024</span>
+            <span className="text-xs text-navy-400">2024</span>
           </div>
           <p className="text-2xl font-headline font-semibold text-navy">{DEMO_TURNOVER_RATE}%</p>
-          <p className="text-xs text-slate-400 mt-0.5">Míra fluktuace</p>
+          <p className="text-xs text-navy-400 mt-0.5">Míra fluktuace</p>
         </div>
 
         <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
@@ -52,12 +59,17 @@ export function AnalyticsPanel() {
             </div>
           </div>
           <p className="text-2xl font-headline font-semibold text-navy">{DEMO_AVG_TENURE}</p>
-          <p className="text-xs text-slate-400 mt-0.5">Průměrná délka (měs.)</p>
+          <p className="text-xs text-navy-400 mt-0.5">Průměrná délka (měs.)</p>
         </div>
 
         <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
+          <div className="flex items-start justify-between mb-3">
+            <div className="w-9 h-9 bg-gold-tint flex items-center justify-center">
+              <Briefcase className="w-4 h-4 text-navy" />
+            </div>
+          </div>
           <p className="text-2xl font-headline font-semibold text-navy">{DEMO_OPEN_POSITIONS}</p>
-          <p className="text-xs text-slate-400 mt-0.5">Otevřené pozice</p>
+          <p className="text-xs text-navy-400 mt-0.5">Otevřené pozice</p>
         </div>
       </div>
 
@@ -65,7 +77,7 @@ export function AnalyticsPanel() {
       <AnalyticsCharts
         headcountTrend={DEMO_HEADCOUNT_TREND}
         fluctuation={DEMO_FLUCTUATION}
-        departmentHeadcount={DEMO_DEPARTMENT_HEADCOUNT}
+        departmentHeadcount={departmentHeadcount}
         nastupy={totalNastupy}
         odchody={totalOdchody}
       />
@@ -75,7 +87,7 @@ export function AnalyticsPanel() {
         <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
           <h3 className="font-headline font-semibold text-navy mb-4">Délka spolupráce</h3>
           <div className="space-y-3">
-            {DEMO_EMPLOYEE_PERFORMANCE.sort((a, b) => b.tenure - a.tenure).map((emp) => (
+            {[...DEMO_EMPLOYEE_PERFORMANCE].sort((a, b) => b.tenure - a.tenure).map((emp) => (
               <div key={emp.id} className="flex items-center gap-3">
                 <div className="w-7 h-7 bg-navy flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-xs font-semibold">{emp.name[0]}</span>
