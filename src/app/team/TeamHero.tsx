@@ -57,9 +57,6 @@ export function TeamHero({ members, departments, active = 'Všichni', onPick }: 
   const chartW = cols.length * COL_W + (cols.length - 1) * COL_GAP
   const rnd = seeded(7)
 
-  const next = members
-    .filter(m => m.birthdayInDays !== null)
-    .sort((a, b) => (a.birthdayInDays! - b.birthdayInDays!))[0]
 
   let k = 0
   return (
@@ -73,12 +70,6 @@ export function TeamHero({ members, departments, active = 'Všichni', onPick }: 
             <br />
             <span style={{ fontWeight: 400 }}>Jedna parta.</span>
           </h2>
-          {next && (
-            <p className="text-sm text-white/70">
-              Nejbližší narozeniny: <span className="text-white font-semibold">{next.name.split(' ')[0]}</span>{' '}
-              {next.birthdayInDays === 0 ? <span className="text-gold font-semibold">— dnes!</span> : <>za {next.birthdayInDays} {plural(next.birthdayInDays!, 'den', 'dny', 'dní')}</>}
-            </p>
-          )}
         </div>
 
         {/* pixelové sloupce týmů */}
