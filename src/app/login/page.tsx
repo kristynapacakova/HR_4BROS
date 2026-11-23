@@ -62,10 +62,10 @@ function LoginForm() {
       {showIntro && <IntroAnimation onDone={dismissIntro} />}
 
       {/* Levá polovina — navy, 4x4 mřížka, claim */}
-      <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
+      <div className="relative hidden lg:flex flex-col bg-navy text-white p-12 overflow-hidden">
         <div className="absolute inset-0 grid-4x4" />
         <div className="relative">
-          <svg role="img" aria-label="Four Bros" viewBox="0 0 320.856 63.608" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ height: 32, width: 'auto' }} className="mb-2">
+          <svg role="img" aria-label="Four Bros" viewBox="0 0 320.856 63.608" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ height: 28, width: 'auto' }} className="mb-4">
             <path d="M273.987 63.6082C266.011 63.6082 259.641 61.8777 254.875 58.4165C250.16 54.9052 247.577 50.0396 247.125 43.8196H257.96C258.261 47.4312 259.816 50.1901 262.625 52.0962C265.434 54.0023 269.347 54.9554 274.363 54.9554C278.777 54.9554 282.138 54.203 284.445 52.6981C286.753 51.1933 287.907 48.936 287.907 45.9264C287.907 43.6189 287.129 41.763 285.574 40.3585C284.019 38.9038 281.636 37.8504 278.426 37.1983L266.387 34.7906C260.92 33.687 256.781 31.7558 253.972 28.9969C251.214 26.2381 249.834 22.7268 249.834 18.4631C249.834 12.9955 251.891 8.70668 256.004 5.59669C260.117 2.43653 265.71 0.856445 272.783 0.856445C279.906 0.856445 285.674 2.51177 290.089 5.82241C294.553 9.0829 297.086 13.6476 297.688 19.5164H286.853C285.348 12.6945 280.458 9.28354 272.181 9.28354C268.419 9.28354 265.459 10.0109 263.302 11.4656C261.145 12.8701 260.067 14.9016 260.067 17.5602C260.067 21.7235 263.052 24.4072 269.021 25.611L281.586 28.1693C287.204 29.2728 291.368 31.2291 294.076 34.0381C296.785 36.8472 298.139 40.5591 298.139 45.1739C298.139 50.9927 296.008 55.5323 291.744 58.7927C287.53 62.0031 281.611 63.6082 273.987 63.6082Z" fill="white"/>
             <path d="M211.242 63.6082C205.072 63.6082 199.655 62.3291 194.99 59.7709C190.375 57.1625 186.788 53.5007 184.23 48.7856C181.672 44.0704 180.393 38.5527 180.393 32.2323C180.393 25.8618 181.672 20.3441 184.23 15.6791C186.788 10.9639 190.375 7.32725 194.99 4.76902C199.604 2.16064 205.022 0.856445 211.242 0.856445C217.462 0.856445 222.879 2.13556 227.494 4.69378C232.159 7.25201 235.746 10.8887 238.254 15.6039C240.812 20.2689 242.091 25.8117 242.091 32.2323C242.091 38.5527 240.812 44.0704 238.254 48.7856C235.695 53.5007 232.109 57.1625 227.494 59.7709C222.879 62.3291 217.462 63.6082 211.242 63.6082ZM211.242 54.5039C217.612 54.5039 222.578 52.4975 226.14 48.4846C229.751 44.4717 231.557 39.0543 231.557 32.2323C231.557 25.3602 229.776 19.9428 226.215 15.9801C222.653 11.9672 217.662 9.96072 211.242 9.96072C204.871 9.96072 199.88 11.9672 196.269 15.9801C192.707 19.9428 190.926 25.3602 190.926 32.2323C190.926 39.1044 192.707 44.5469 196.269 48.5598C199.88 52.5226 204.871 54.5039 211.242 54.5039Z" fill="white"/>
             <path d="M121.948 62.7047V1.75879H152.196C158.516 1.75879 163.482 3.21347 167.094 6.12282C170.705 9.03217 172.511 13.1203 172.511 18.3872C172.511 21.3969 171.834 24.0304 170.48 26.2877C169.125 28.4947 167.119 30.2002 164.46 31.4041V31.7051C167.018 31.7051 169 32.4073 170.404 33.8118C171.809 35.1662 172.511 37.1476 172.511 39.756V62.7047H162.128V38.5521H132.407V62.7047H121.948ZM132.407 29.6735H151.368C154.829 29.6735 157.488 28.8459 159.344 27.1906C161.25 25.5352 162.203 23.2027 162.203 20.1931C162.203 17.1332 161.25 14.8007 159.344 13.1956C157.488 11.5402 154.829 10.7126 151.368 10.7126H132.407V29.6735Z" fill="white"/>
@@ -74,25 +74,35 @@ function LoginForm() {
             <path d="M310.05 11.6034V9.37454M310.05 9.37454V6.03125H312.324C312.892 6.03125 314.03 6.03125 314.03 7.70289C314.03 9.37454 312.892 9.37454 312.324 9.37454M310.05 9.37454H312.324M312.324 9.37454L314.03 11.6034" stroke="white" strokeWidth="1.71269" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M312.04 16.7769C316.436 16.7769 320 13.2131 320 8.81665C320 4.42023 316.436 0.856445 312.04 0.856445C307.643 0.856445 304.08 4.42023 304.08 8.81665C304.08 13.2131 307.643 16.7769 312.04 16.7769Z" stroke="white" strokeWidth="1.71269" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <p className="kicker text-violet-light">HR Portál</p>
-        </div>
-        <div className="relative max-w-md">
-          <h1 className="font-headline text-4xl font-semibold leading-tight mb-4">
+          <p className="kicker text-gold mb-5">HR Portál</p>
+          <h1 className="font-headline text-4xl font-bold leading-[1.15] mb-4 max-w-md">
             Makáme naplno.
             <br />
-            Ale umíme i{' '}vypnout.
+            Ale umíme i vypnout.
           </h1>
-          <p className="text-white/60 text-sm leading-relaxed">
-            Docházka, dovolené, smlouvy i{' '}odměny na{' '}jednom místě. Jasně, na{' '}rovinu a{' '}bez zbytečného papírování.
+          <p className="text-white/60 text-sm leading-relaxed max-w-md">
+            Docházka, dovolené, smlouvy i odměny na jednom místě. Jasně, na rovinu a bez zbytečného papírování.
           </p>
         </div>
 
-        {/* 4B schody — levý dolní roh, zarovnané na stejnou osu jako nadpis */}
-        <div className="flex items-end" style={{ width: 96, height: 96 }}>
-          <div style={{ width: 24, height: '25%' }} className="bg-alice border border-white/30" />
-          <div style={{ width: 24, height: '50%' }} className="bg-gold" />
-          <div style={{ width: 24, height: '75%' }} className="bg-violet" />
-          <div style={{ width: 24, height: '100%' }} className="bg-mint" />
+        {/* 4B schody — stejná agenturní signatura jako v Report Hubu */}
+        <div className="relative flex items-end mt-20">
+          <div className="shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)] px-3 py-2" style={{ width: 96, height: 48 }}>
+            <p className="text-[10px] text-white/50 font-semibold">01</p>
+            <p className="text-[11px] font-bold leading-tight">BUSINESS</p>
+          </div>
+          <div className="bg-gold text-navy px-3 py-2" style={{ width: 96, height: 72, marginBottom: 48 }}>
+            <p className="text-[10px] text-navy/50 font-semibold">02</p>
+            <p className="text-[11px] font-bold leading-tight">BEHAVIOR</p>
+          </div>
+          <div className="bg-violet px-3 py-2" style={{ width: 96, height: 96, marginBottom: 96 }}>
+            <p className="text-[10px] text-white/60 font-semibold">03</p>
+            <p className="text-[11px] font-bold leading-tight">BRANDING</p>
+          </div>
+          <div className="bg-mint text-navy px-3 py-2" style={{ width: 96, height: 120, marginBottom: 144 }}>
+            <p className="text-[10px] text-navy/50 font-semibold">04</p>
+            <p className="text-[11px] font-bold leading-tight">BOOST</p>
+          </div>
         </div>
 
         {/* Rožky — pravý dolní roh, uvnitř tmavé plochy */}
@@ -111,14 +121,18 @@ function LoginForm() {
           </div>
 
           <div className="rozky bg-white border border-[#0D214F] p-8">
-            <div className="flex items-center gap-2 mb-5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/symbol.svg" alt="4B" className="h-5 w-auto" />
-              <p className="kicker mb-0">Interní HR portál</p>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-9 h-9 bg-navy flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-sm font-headline font-bold">4B</span>
+              </div>
+              <div>
+                <p className="text-navy text-xs font-bold leading-tight">HR PORTÁL</p>
+                <p className="text-navy/40 text-[10px] leading-tight">INTERNÍ HR PORTÁL</p>
+              </div>
             </div>
-            <h2 className="text-xl font-headline font-semibold text-navy mb-1">Přihlášení do HR Portálu</h2>
+            <h2 className="text-2xl font-headline font-bold text-navy mb-2 leading-tight">Přihlášení do{' '}HR Portálu</h2>
             <p className="text-navy/60 text-sm mb-6">
-              Přístup pouze pro tým Four Bros přes firemní e-mail (@fourbros.cz).
+              Pokračujte pomocí firemního e-mailu. Přístup je povolen pouze zaměstnancům Four Bros.
             </p>
 
             {error && (
@@ -133,12 +147,13 @@ function LoginForm() {
                   onClick={() => setShowPicker(true)}
                   className="w-full flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide py-3 px-4 transition-colors"
                 >
-                  <GoogleG className="w-5 h-5 flex-shrink-0" />
+                  <span className="w-5 h-5 bg-white flex items-center justify-center flex-shrink-0">
+                    <GoogleG className="w-3.5 h-3.5" />
+                  </span>
                   Přihlásit přes Google
                 </button>
-                <p className="text-xs text-navy/40 text-center mt-3 leading-relaxed">
-                  Skutečné přihlášení přes Google účet vyžaduje napojení na Google Workspace, které v{' '}tomto demu
-                  není zapojené — tlačítko simuluje výběr účtu.
+                <p className="text-xs text-navy/40 mt-3 leading-relaxed">
+                  Simulace Google Workspace přihlášení — skutečné napojení v tomto demu není zapojené.
                 </p>
               </>
             ) : (
@@ -196,8 +211,8 @@ function LoginForm() {
             )}
 
             <div className="mt-6 pt-6 shadow-[inset_0_1px_0_rgba(13,33,79,0.14)]">
-              <p className="text-xs text-navy/40 text-center leading-relaxed">
-                Přístup mají pouze zaměstnanci společnosti Four Bros.
+              <p className="text-xs text-navy/40 leading-relaxed">
+                Po přihlášení zůstane relace aktivní 12{' '}hodin. Odhlásit se můžete kdykoliv přímo v{' '}aplikaci.
               </p>
             </div>
           </div>
