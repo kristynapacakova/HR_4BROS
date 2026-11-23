@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Cake } from 'lucide-react'
+import { TeamHero } from './TeamHero'
 import { loadTeamProfiles, TEAM_PROFILE_CHANGED_EVENT, type TeamProfileOverride } from '@/lib/team-profile-client'
 
 interface Member {
@@ -77,8 +78,17 @@ export function TeamClient({ members, departments }: {
     .map(d => ({ dept: d, members: sortGroup(filtered.filter(m => m.department === d)) }))
     .filter(g => g.members.length > 0)
 
+  const heroMembers = members.map(m => {
+    const o = profiles[m.id]
+    const bd = o?.birthday !== undefined ? o.birthday : m.birthday
+    return { id: m.id, name: m.name, department: m.department, birthdayInDays: daysUntilBirthday(bd) }
+  })
+  let cardIndex = 0
+
   return (
     <div className="space-y-5">
+      <TeamHero members={heroMembers} departments={deptOrder} active={dept} onPick={setDept} />
+
       {/* Department filter */}
       <div className="flex gap-1.5 flex-wrap">
         {allDepts.map(d => (
@@ -110,10 +120,12 @@ export function TeamClient({ members, departments }: {
           const effectiveBirthday = override?.birthday !== undefined ? override.birthday : member.birthday
           const days = daysUntilBirthday(effectiveBirthday)
           const birthdaySoon = days !== null && days <= 30
+          const ci = cardIndex++
           return (
             <Link
               key={member.id}
               href={`/team/${member.id}`}
+              style={{ animation: `fb-rise .5s cubic-bezier(.16,1,.3,1) ${200 + ci * 40}ms backwards` }}
               className="group bg-white border border-[rgba(13,33,79,0.14)] p-4 flex flex-col items-center text-center hover:shadow-[0_8px_32px_rgba(13,33,79,0.08)] hover:-translate-y-0.5 transition-all duration-200"
             >
               <div className="relative w-16 h-16 overflow-hidden bg-[#f3f0fd] flex items-center justify-center flex-shrink-0">
