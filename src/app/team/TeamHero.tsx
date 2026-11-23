@@ -64,11 +64,13 @@ export function TeamHero({ members, departments, active = 'Všichni', onPick }: 
       <div className="absolute inset-0 grid-4x4 pointer-events-none" />
       <div className="relative flex flex-col xl:flex-row xl:items-end justify-between gap-6 xl:gap-8 p-6 lg:p-8">
         <div className="min-w-[260px] max-w-md">
-          <p className="kicker text-gold text-[11px] mb-3">Tým Four Bros</p>
-          <h2 className="font-headline text-[30px] leading-[1.1] mb-3" style={{ fontWeight: 600 }}>
-            {members.length} {plural(members.length, 'člověk', 'lidé', 'lidí')}. {cols.length} {plural(cols.length, 'tým', 'týmy', 'týmů')}.
+          <p className="kicker text-gold text-[11px] mb-3">
+            Tým Four Bros · {members.length} {plural(members.length, 'člověk', 'lidé', 'lidí')} · {cols.length} {plural(cols.length, 'tým', 'týmy', 'týmů')}
+          </p>
+          <h2 className="font-headline text-[30px] leading-[1.1]" style={{ fontWeight: 600 }}>
+            Každý umíme něco.
             <br />
-            <span style={{ fontWeight: 400 }}>Jedna parta.</span>
+            <span style={{ fontWeight: 400 }}>Spolu umíme všechno.</span>
           </h2>
         </div>
 
