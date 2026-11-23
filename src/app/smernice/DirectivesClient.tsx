@@ -6,6 +6,7 @@ import { LetterheadSheet } from '@/components/Letterhead'
 import { printDirective } from '@/lib/print-directive'
 import type { Directive, DirectiveAcknowledgement } from '@/lib/mock-data'
 import { CATEGORY_STYLES, CategoryTile } from './DirectiveIcons'
+import { DirectivesStack } from './DirectivesStack'
 
 interface DirectivesClientProps {
   directives: Directive[]
@@ -147,7 +148,7 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
       <div className="relative bg-navy text-white overflow-hidden rozky rozky-lg after:z-20">
         <div className="relative z-10 px-7 py-7 flex flex-col md:flex-row md:items-end gap-6">
           <div className="flex-1 min-w-0">
-            <p className="kicker !text-white/60 mb-2">Přehled souhlasů</p>
+            <p className="kicker text-gold text-[11px] mb-2">Přehled souhlasů</p>
             <h2 className="text-2xl font-headline text-white mb-1" style={{ fontWeight: 600 }}>
               Interní směrnice
             </h2>
@@ -156,6 +157,9 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
                 ? 'Máš odsouhlaseno všechno, co je potřeba. Díky!'
                 : 'Projdi si směrnice, které vyžadují tvůj souhlas — otevři je kliknutím a potvrď, že ses s nimi seznámil/a.'}
             </p>
+          </div>
+          <div className="hidden md:block flex-shrink-0 -mb-2">
+            <DirectivesStack themes={mustAckDirectives.map(d => d.theme)} remaining={totalMustAck - ackedCount} />
           </div>
           <div className="flex-shrink-0 md:text-right">
             <div className="flex items-baseline gap-2 md:justify-end">
@@ -182,16 +186,16 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
             aria-valuenow={ackedCount}
             aria-label="Odsouhlasené směrnice"
           >
-            {mustAckDirectives.map((d) => {
+            {mustAckDirectives.map((d, i) => {
               const done = isAcknowledged(d)
               return (
                 <div
                   key={d.id}
                   title={`${d.title} — ${done ? 'odsouhlaseno' : 'čeká na souhlas'}`}
-                  className={`h-4 flex-1 border transition-colors duration-500 ${
-                    done ? 'bg-mint border-mint' : 'bg-transparent border-white/30'
-                  }`}
-                />
+                  className="h-4 flex-1 border border-white/30 relative overflow-hidden"
+                >
+                  {done && <span className="absolute inset-0 bg-mint" style={{ transformOrigin: 'left', animation: `dir-fill .6s cubic-bezier(.16,1,.3,1) ${0.9 + i * 0.15}s both` }} />}
+                </div>
               )
             })}
           </div>
