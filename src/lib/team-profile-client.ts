@@ -65,3 +65,24 @@ export function saveTeamProfile(memberId: string, override: TeamProfileOverride)
   all[memberId] = { ...all[memberId], ...override }
   saveAll(all)
 }
+
+/**
+ * Styl <img> pro fotku s nastaveným výřezem — stejná matematika jako v editoru
+ * (PhotoPositionEditor): zoom zvětší obrázek, x/y vybírá, která část je vidět.
+ * Rodič musí mít `position: relative` a `overflow: hidden`.
+ */
+export function photoImgStyle(pos?: PhotoPosition): import('react').CSSProperties {
+  const x = pos?.x ?? 50
+  const y = pos?.y ?? 50
+  const z = Math.max(1, (pos?.zoom ?? 100) / 100)
+  return {
+    position: 'absolute',
+    width: `${z * 100}%`,
+    height: `${z * 100}%`,
+    left: `${-(x / 100) * (z - 1) * 100}%`,
+    top: `${-(y / 100) * (z - 1) * 100}%`,
+    maxWidth: 'none',
+    objectFit: 'cover',
+    objectPosition: `${x}% ${y}%`,
+  }
+}

@@ -1,3 +1,4 @@
+import { photoImgStyle } from '@/lib/team-profile-client'
 import type { PhotoPosition } from '@/lib/team-profile-client'
 
 const DEFAULT_POS: PhotoPosition = { x: 50, y: 50, zoom: 100 }
@@ -36,8 +37,7 @@ export function Medailonek({
           <img
             src={photo}
             alt={name}
-            className="w-full h-full object-cover"
-            style={{ objectPosition: `${pos.x}% ${pos.y}%`, transform: `scale(${pos.zoom / 100})` }}
+            style={photoImgStyle(pos)}
           />
         ) : (
           <span style={{ fontSize: size * 0.42 }}>{emoji}</span>

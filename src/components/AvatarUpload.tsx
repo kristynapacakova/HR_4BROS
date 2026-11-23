@@ -2,24 +2,25 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Camera, Pencil } from 'lucide-react'
-import { loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, type PhotoPosition } from '@/lib/team-profile-client'
+import { loadTeamProfiles, photoImgStyle, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, type PhotoPosition } from '@/lib/team-profile-client'
 import { PhotoPositionEditor } from '@/app/team/PhotoPositionEditor'
 
 const AVATAR_KEY = 'fb-avatar'
 
-/** Downscales the picked image and stores it as a data URL. */
+/** Zmenší fotku (delší strana max 1400 px) a zachová ji celou — výřez si člověk vybere v editoru. */
 function processFile(file: File, cb: (dataUrl: string) => void) {
   const img = new Image()
   const reader = new FileReader()
   reader.onload = () => {
     img.onload = () => {
-      const size = 400
+      const max = 1400
+      const scale = Math.min(1, max / Math.max(img.width, img.height))
       const canvas = document.createElement('canvas')
-      canvas.width = size; canvas.height = size
+      canvas.width = Math.round(img.width * scale)
+      canvas.height = Math.round(img.height * scale)
       const ctx = canvas.getContext('2d')!
-      const min = Math.min(img.width, img.height)
-      ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, size, size)
-      cb(canvas.toDataURL('image/jpeg', 0.85))
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+      cb(canvas.toDataURL('image/jpeg', 0.88))
     }
     img.src = reader.result as string
   }
@@ -61,6 +62,7 @@ export function AvatarUpload({ initial, teamMemberId, size = 64, fallback, hideG
     processFile(file, dataUrl => {
       if (teamMemberId) {
         saveTeamProfile(teamMemberId, { photo: dataUrl, photoPos: { x: 50, y: 50, zoom: 100 } })
+        setPositioning(true) // hned po nahrání si vyber výřez
       } else {
         try { localStorage.setItem(AVATAR_KEY, dataUrl) } catch { /* noop */ }
         window.dispatchEvent(new Event('fb-avatar-changed'))
@@ -79,18 +81,10 @@ export function AvatarUpload({ initial, teamMemberId, size = 64, fallback, hideG
         title="Nahrát novou fotku"
       >
         {avatar.photo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={avatar.photo}
-            alt="Profilová fotka"
-            className="relative object-cover"
-            width={size} height={size}
-            style={avatar.pos ? {
-              width: size, height: size,
-              objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
-              transform: `scale(${avatar.pos.zoom / 100})`,
-            } : { width: size, height: size }}
-          />
+          <div className="relative overflow-hidden" style={{ width: size, height: size }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={avatar.photo} alt="Profilová fotka" draggable={false} style={photoImgStyle(avatar.pos)} />
+          </div>
         ) : (
           fallback ? <div className="relative" style={{ width: size, height: size }}>{fallback}</div> :
           <div className="relative bg-navy flex items-center justify-center" style={{ width: size, height: size }}>
@@ -98,7 +92,16 @@ export function AvatarUpload({ initial, teamMemberId, size = 64, fallback, hideG
           </div>
         )}
       </button>
-      {avatar.photo && teamMemberId && (
+      {avatar.photo && teamMemberId && size >= 100 && (
+        <button
+          type="button"
+          onClick={() => setPositioning(true)}
+          className="absolute left-0 right-0 bottom-0 bg-navy/80 text-white text-[10px] font-bold uppercase tracking-[0.08em] py-1.5 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+        >
+          Upravit výřez
+        </button>
+      )}
+      {avatar.photo && teamMemberId && size < 100 && (
         <button
           type="button"
           onClick={() => setPositioning(true)}
@@ -153,15 +156,9 @@ export function HeaderAvatar({ initial, teamMemberId }: { initial: string; teamM
       />
       {avatar.photo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={avatar.photo}
-          alt=""
-          className="relative w-8 h-8  object-cover ring-2 ring-white"
-          style={avatar.pos ? {
-            objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
-            transform: `scale(${avatar.pos.zoom / 100})`,
-          } : undefined}
-        />
+        <span className="relative block w-8 h-8 overflow-hidden ring-2 ring-white">
+          <img src={avatar.photo} alt="" style={photoImgStyle(avatar.pos)} />
+        </span>
       ) : (
         <div className="relative w-8 h-8 bg-violet  flex items-center justify-center ring-2 ring-white">
           <span className="text-white text-xs font-semibold">{initial}</span>

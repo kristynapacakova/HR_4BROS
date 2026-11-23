@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ChevronLeft, ChevronRight, Camera, Pencil, Plus, X } from 'lucide-react'
 import {
-  loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, PERSONALITY_TYPES,
+  loadTeamProfiles, saveTeamProfile, TEAM_PROFILE_CHANGED_EVENT, PERSONALITY_TYPES, photoImgStyle,
   type TeamProfileOverride, type PhotoPosition,
 } from '@/lib/team-profile-client'
 import { departmentColor, departmentInk } from '@/lib/team-colors'
@@ -94,11 +94,7 @@ function Portrait({ name, department, override, initialsClass }: {
       <img
         src={override.photo}
         alt={name}
-        className="w-full h-full object-cover"
-        style={{
-          objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
-          transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
-        }}
+        style={photoImgStyle(override.photoPos)}
       />
     )
   }

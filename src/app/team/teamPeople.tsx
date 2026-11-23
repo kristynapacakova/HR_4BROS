@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import type { PersonRecord } from '@/lib/mock-data'
-import { loadTeamProfiles, TEAM_PROFILE_CHANGED_EVENT, type TeamProfileOverride } from '@/lib/team-profile-client'
+import { loadTeamProfiles, photoImgStyle, TEAM_PROFILE_CHANGED_EVENT, type TeamProfileOverride } from '@/lib/team-profile-client'
 import { departmentColor, departmentInk } from '@/lib/team-colors'
 
 /** Výchozí záliby pro demo (přebíjí je to, co si člověk uloží v medailonku). Schválně se překrývají. */
@@ -119,8 +119,7 @@ export function Avatar({ p, size, fontSize }: { p: PersonView; size: number | st
         <img
           src={p.photo}
           alt={p.name}
-          className="w-full h-full object-cover"
-          style={{ objectPosition: `${p.photoPos?.x ?? 50}% ${p.photoPos?.y ?? 50}%`, transform: `scale(${(p.photoPos?.zoom ?? 100) / 100})` }}
+          style={photoImgStyle(p.photoPos)}
         />
       ) : (
         <span className="font-headline leading-none" style={{ color: p.ink, fontWeight: 600, fontSize: fontSize ?? 16 }}>{initials(p.name)}</span>
@@ -138,8 +137,7 @@ export function PhotoFill({ p, tone = 0.22 }: { p: PersonView; tone?: number }) 
       <img
         src={p.photo}
         alt={p.name}
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: `${p.photoPos?.x ?? 50}% ${p.photoPos?.y ?? 50}%`, transform: `scale(${(p.photoPos?.zoom ?? 100) / 100})` }}
+        style={photoImgStyle(p.photoPos)}
       />
     )
   }

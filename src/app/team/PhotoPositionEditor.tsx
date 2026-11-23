@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { PhotoPosition } from '@/lib/team-profile-client'
 
-const BOX = 240 // editor preview size, px
+const BOX = 300 // editor preview size, px
 
 export function PhotoPositionEditor({
   photo, initial, onSave, onCancel,
@@ -56,49 +56,63 @@ export function PhotoPositionEditor({
 
   const onPointerUp = () => { dragRef.current = null }
 
+  const onWheel = (e: React.WheelEvent) => {
+    setPos((p) => ({ ...p, zoom: Math.min(300, Math.max(100, Math.round(p.zoom - e.deltaY * 0.15))) }))
+  }
+
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4" onClick={onCancel}>
-      <div className="bg-white shadow-xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
-        <h3 className="font-headline font-semibold text-navy mb-1">Upravit fotku</h3>
-        <p className="text-xs text-slate-400 mb-4">Foto přetáhni myší nebo prstem, ať je vidět obličej.</p>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-navy/60 p-4" onClick={onCancel}>
+      <div className="bg-white border border-navy w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
+        <p className="kicker text-navy/50 mb-1">Fotka</p>
+        <h3 className="font-headline text-navy text-[22px] mb-1" style={{ fontWeight: 600 }}>Vyber výřez</h3>
+        <p className="text-sm text-navy/60 mb-5">Fotku přetáhni myší nebo prstem a přibliž ji, ať je vidět přesně to, co chceš.</p>
 
         <div
-          className="rounded-full overflow-hidden mx-auto ring-4 ring-alice shadow-md relative touch-none select-none cursor-grab active:cursor-grabbing"
+          className="overflow-hidden mx-auto relative touch-none select-none cursor-grab active:cursor-grabbing bg-alice border border-[rgba(13,33,79,0.14)]"
           style={{ width: BOX, height: BOX }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}
+          onWheel={onWheel}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={photo}
             alt=""
             draggable={false}
-            className="absolute top-0 left-0 pointer-events-none"
+            className="absolute top-0 left-0 pointer-events-none max-w-none"
             style={{ width: dispW, height: dispH, transform: `translate(${translateX}px, ${translateY}px)` }}
           />
+          {/* vodítka třetin */}
+          <div className="absolute inset-0 pointer-events-none" aria-hidden="true" style={{
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.45) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.45) 1px, transparent 1px)',
+            backgroundSize: `${BOX / 3}px ${BOX / 3}px`,
+          }} />
         </div>
 
         <div className="mt-6">
-          <label className="flex items-center justify-between text-xs font-medium text-slate-500 mb-1">
-            <span>Přiblížení</span><span>{pos.zoom}%</span>
-          </label>
+          <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.1em] text-navy/50 mb-1.5">
+            <span>Přiblížení</span><span className="text-navy">{pos.zoom} %</span>
+          </div>
           <input
             type="range" min={100} max={300} value={pos.zoom}
             onChange={(e) => setPos((p) => ({ ...p, zoom: Number(e.target.value) }))}
-            className="w-full accent-violet"
+            className="w-full accent-navy"
           />
         </div>
 
-        <div className="flex items-center gap-2 mt-6">
+        <div className="flex items-center gap-3 mt-6">
           <button
             onClick={() => onSave(pos)}
-            className="px-4 py-2 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-sm font-medium rounded-full transition-colors"
+            className="btn-pill bg-gold hover:bg-navy hover:text-white text-navy text-[12px] font-bold uppercase tracking-[0.06em] px-6 py-3 transition-colors"
           >
-            Uložit
+            Uložit výřez
           </button>
-          <button onClick={onCancel} className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-navy transition-colors">
+          <button onClick={() => setPos({ x: 50, y: 50, zoom: 100 })} className="text-sm font-semibold text-navy/60 hover:text-navy transition-colors">
+            Na střed
+          </button>
+          <button onClick={onCancel} className="ml-auto text-sm font-semibold text-navy/60 hover:text-navy transition-colors">
             Zrušit
           </button>
         </div>
