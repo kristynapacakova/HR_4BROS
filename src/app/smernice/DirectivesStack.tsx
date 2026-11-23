@@ -30,7 +30,7 @@ export function DirectivesStack({ themes, remaining }: { themes: DirectiveTheme[
       onClick={() => setRun(r => r + 1)}
       className="block w-40 focus:outline-none"
       aria-label="Přehrát animaci směrnic"
-      title={done ? 'Všechno odsouhlaseno' : `Zbývá odsouhlasit: ${remaining}`}
+      title={done ? 'Všechno odsouhlaseno' : 'Interní směrnice'}
     >
       <svg key={run} viewBox="0 0 160 120" className="w-full h-auto dir-anim" aria-hidden="true">
         {pages.map((t, i) => {
@@ -63,18 +63,18 @@ export function DirectivesStack({ themes, remaining }: { themes: DirectiveTheme[
           )
         })}
 
-        {/* razítko */}
-        <g className="dir-stamp" style={{ animationDelay: `${stampDelay}s`, transformBox: 'view-box', transformOrigin: '112px 84px' }}>
-          <rect x="94" y="66" width="36" height="36" fill={done ? '#4DE791' : '#F0E100'} />
-          <rect x="94" y="66" width="36" height="36" fill="none" stroke="#0D214F" strokeWidth="2" />
-          {done ? (
-            <path d="M103 84L110 91L122 76" stroke="#0D214F" strokeWidth="4" fill="none" strokeLinecap="square" />
-          ) : (
-            <text x="112" y="92" textAnchor="middle" fontFamily="Funnel Display, sans-serif" fontWeight="600" fontSize="22" fill="#0D214F">{remaining}</text>
-          )}
-        </g>
-        <rect className="dir-spark" style={{ animationDelay: `${stampDelay + 0.25}s` }} x="136" y="58" width="6" height="6" fill="#834DFB" />
-        <rect className="dir-spark" style={{ animationDelay: `${stampDelay + 0.33}s` }} x="86" y="104" width="4" height="4" fill="#4DE791" />
+        {/* razítko ✓ — jen když je všechno odsouhlasené */}
+        {done && (
+          <>
+            <g className="dir-stamp" style={{ animationDelay: `${stampDelay}s`, transformBox: 'view-box', transformOrigin: '112px 84px' }}>
+              <rect x="94" y="66" width="36" height="36" fill="#4DE791" />
+              <rect x="94" y="66" width="36" height="36" fill="none" stroke="#0D214F" strokeWidth="2" />
+              <path d="M103 84L110 91L122 76" stroke="#0D214F" strokeWidth="4" fill="none" strokeLinecap="square" />
+            </g>
+            <rect className="dir-spark" style={{ animationDelay: `${stampDelay + 0.25}s` }} x="136" y="58" width="6" height="6" fill="#834DFB" />
+            <rect className="dir-spark" style={{ animationDelay: `${stampDelay + 0.33}s` }} x="86" y="104" width="4" height="4" fill="#4DE791" />
+          </>
+        )}
       </svg>
     </button>
   )
