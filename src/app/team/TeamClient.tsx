@@ -38,7 +38,7 @@ export function TeamClient({ members, departments }: {
         departments={deptOrder}
       />
 
-      <p className="text-xs text-navy/50">Najeď na kolegu a uvidíš, co ho baví. Kliknutím otevřeš jeho medailonek.</p>
+      <p className="text-xs text-navy/50">Klikni na kolegu a otevřeš jeho medailonek.</p>
 
       <TeamRows people={people} teams={deptOrder} />
     </div>

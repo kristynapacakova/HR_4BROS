@@ -6,7 +6,7 @@ import { plural, PhotoFill, tintOf, useReducedMotion, type PersonView } from './
 
 /**
  * Týmy v řadách: každý tým je jedna řada — vlevo název týmu, vpravo svislé portréty
- * (fotka, jinak silueta) s jménem a pozicí. Řady se objeví při scrollu, najetí ukáže záliby.
+ * (fotka, jinak silueta) s jménem a pozicí. Řady se objeví při scrollu.
  */
 export function TeamRows({ people, teams }: { people: PersonView[]; teams: string[] }) {
   const rows = teams
@@ -53,10 +53,6 @@ function TeamRow({ dept, people, index, first }: { dept: string; people: PersonV
           >
             <div className="relative aspect-[3/4] overflow-hidden" style={{ background: tintOf(p.color, 0.22) }}>
               <PhotoFill p={p} />
-              <div className="absolute inset-x-0 bottom-0 bg-white/95 border-t border-[rgba(13,33,79,0.12)] px-2 py-1.5 text-[10px] leading-snug text-navy translate-y-full group-hover:translate-y-0 group-focus-visible:translate-y-0 transition-transform duration-300">
-                <span className="kicker text-navy/50 text-[9px] block mb-0.5">Baví mě</span>
-                {p.interests.join(', ')}
-              </div>
             </div>
             <p className="mt-2 text-center text-[13px] font-semibold text-navy leading-tight truncate group-hover:text-violet transition-colors" title={p.name}>{p.name}</p>
             <p className="mt-1 text-center text-[9px] font-semibold uppercase tracking-[0.08em] text-navy/55 leading-tight truncate" title={p.position}>{p.position}</p>
