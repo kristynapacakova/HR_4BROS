@@ -24,6 +24,8 @@ interface Employee { id: string; name: string; email: string }
 export function AssetsClient({ employees }: { employees: Employee[] }) {
   const [assets, setAssets] = useState<AssetRecord[]>([])
   const [editing, setEditing] = useState<AssetRecord | null>(null)
+  const [filterUser, setFilterUser] = useState('')
+  const [filterType, setFilterType] = useState('')
 
   useEffect(() => {
     const refresh = () => setAssets(loadAssets())
@@ -39,6 +41,11 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
   const getEmployeeName = (id: string | null) => id ? employees.find(e => e.id === id)?.name || 'Neznámý' : null
   const assigned = assets.filter(a => a.assignedTo !== null)
   const unassigned = assets.filter(a => a.assignedTo === null)
+
+  const filteredAssets = assets.filter(a =>
+    (filterUser === '' || (filterUser === 'SKLADEM' ? a.assignedTo === null : a.assignedTo === filterUser)) &&
+    (filterType === '' || a.type === filterType)
+  )
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -71,8 +78,27 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
 
       {/* Assets table */}
       <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h3 className="font-headline font-semibold text-navy">Všechen majetek ({assets.length} položek)</h3>
+        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
+          <h3 className="font-headline font-semibold text-navy">Všechen majetek ({filteredAssets.length} z {assets.length})</h3>
+          <div className="flex gap-2">
+            <select
+              value={filterUser}
+              onChange={(e) => setFilterUser(e.target.value)}
+              className="px-3 py-1.5 border border-[rgba(13,33,79,0.14)] text-sm text-navy bg-white focus:outline-none focus:border-[#0D214F]"
+            >
+              <option value="">Všichni uživatelé</option>
+              <option value="SKLADEM">Skladem (nepřiřazeno)</option>
+              {employees.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </select>
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="px-3 py-1.5 border border-[rgba(13,33,79,0.14)] text-sm text-navy bg-white focus:outline-none focus:border-[#0D214F]"
+            >
+              <option value="">Všechny typy</option>
+              {ASSET_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -87,7 +113,7 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {assets.map((asset) => {
+              {filteredAssets.map((asset) => {
                 const Icon = TYPE_ICONS[asset.type] || Package
                 const typeLabel = ASSET_TYPES.find((t) => t.value === asset.type)?.label || asset.type
                 const conditionLabel = ASSET_CONDITIONS.find((c) => c.value === asset.condition)?.label || asset.condition
@@ -137,46 +163,6 @@ export function AssetsClient({ employees }: { employees: Employee[] }) {
               })}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      {/* Per-employee view */}
-      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h3 className="font-headline font-semibold text-navy">Majetek podle zaměstnanců</h3>
-        </div>
-        <div className="divide-y divide-slate-50">
-          {employees.map((emp) => {
-            const empAssets = assets.filter((a) => a.assignedTo === emp.id)
-            return (
-              <div key={emp.id} className="px-6 py-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-navy flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-xs font-semibold">{emp.name[0]}</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-navy">{emp.name}</p>
-                    <p className="text-xs text-slate-400">{emp.email} · {empAssets.length} položek</p>
-                  </div>
-                </div>
-                {empAssets.length > 0 ? (
-                  <div className="flex flex-wrap gap-2 ml-11">
-                    {empAssets.map((a) => {
-                      const Icon = TYPE_ICONS[a.type] || Package
-                      return (
-                        <div key={a.id} className="flex items-center gap-1.5 bg-alice px-3 py-1.5 text-xs text-navy">
-                          <Icon className="w-3.5 h-3.5 text-violet" />
-                          <span>{a.name}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-xs text-slate-300 ml-11">Žádný přiřazený majetek</p>
-                )}
-              </div>
-            )
-          })}
         </div>
       </div>
 

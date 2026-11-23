@@ -14,9 +14,6 @@ import {
   DEMO_USER,
   DEMO_TL,
   DEMO_USER_ICO,
-  DEMO_EDU_BUDGETS,
-  DEMO_EDU_REQUESTS,
-  DEFAULT_EDU_BUDGET,
   getDemoUserById,
   demoTeamIdFor,
 } from '@/lib/mock-data'
@@ -24,10 +21,6 @@ import { CountUp } from '@/components/CountUp'
 import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
 import { RingStat } from './RingStat'
-
-function fmtKc(n: number) {
-  return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
-}
 
 function tenureText(startDate: Date): string {
   const now = new Date()
@@ -121,14 +114,6 @@ export default async function DashboardPage() {
     else myOffDays++
   }
 
-  // Přihlašovací demo účty mají e-mail navázaný na svůj DEMO_TEAM záznam — přes to dohledáme jejich id
-  // v prostoru vzdělávacího budgetu / žádostí o dovolenou (ty jsou historicky vedené podle login id, ne DEMO_TEAM id).
-  const PERSONA_ID_BY_EMAIL: Record<string, string> = {
-    [DEMO_ADMIN.email.toLowerCase()]: DEMO_ADMIN.id,
-    [DEMO_USER.email.toLowerCase()]: DEMO_USER.id,
-    [DEMO_TL.email.toLowerCase()]: DEMO_TL.id,
-    [DEMO_USER_ICO.email.toLowerCase()]: DEMO_USER_ICO.id,
-  }
   const scopeMembers = DEMO_TEAM.filter(m => scopeIds.includes(m.id))
 
   // Vyčerpaná dovolená letos v týmu — vůči nároku (annualLeaveDays), OSVČ bez nároku se do součtu nepočítají.
@@ -149,20 +134,6 @@ export default async function DashboardPage() {
       }, 0)
   }
   const vacationUsedPct = vacationEntitlement > 0 ? Math.round((vacationUsed / vacationEntitlement) * 100) : null
-
-  // Vzdělávací budget vyčerpaný v týmu — každý má nárok na výchozí budget, čerpání se sčítá jen tam, kde je evidované.
-  let eduBudgetTotal = 0
-  let eduBudgetUsed = 0
-  for (const m of scopeMembers) {
-    const personaId = PERSONA_ID_BY_EMAIL[m.email.toLowerCase()]
-    eduBudgetTotal += personaId ? (DEMO_EDU_BUDGETS[personaId] ?? DEFAULT_EDU_BUDGET) : DEFAULT_EDU_BUDGET
-    if (personaId) {
-      eduBudgetUsed += DEMO_EDU_REQUESTS
-        .filter(r => r.employeeId === personaId && r.status === 'APPROVED')
-        .reduce((sum, r) => sum + r.amount, 0)
-    }
-  }
-  const eduBudgetUsedPct = eduBudgetTotal > 0 ? Math.round((eduBudgetUsed / eduBudgetTotal) * 100) : null
 
   // Dovolená/docházka se teď schvaluje v TrackDecku — tady čekají jen doklady k proplacení a podpisy.
   const pendingExpenseClaims = DEMO_EXPENSE_REQUESTS.filter(r =>
@@ -228,14 +199,6 @@ export default async function DashboardPage() {
                   value={`${vacationUsedPct}%`}
                   label={`Vyčerpaná dovolená letos (${vacationUsed}/${vacationEntitlement} dní)`}
                   tone="soft"
-                />
-              )}
-              {isAdmin && eduBudgetUsedPct !== null && (
-                <RingStat
-                  pct={eduBudgetUsedPct}
-                  value={`${eduBudgetUsedPct}%`}
-                  label={`Vzdělávací budget letos (${fmtKc(eduBudgetUsed)} z ${fmtKc(eduBudgetTotal)})`}
-                  tone="gold"
                 />
               )}
             </div>

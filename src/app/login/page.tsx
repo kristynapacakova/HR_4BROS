@@ -40,7 +40,7 @@ function LoginForm() {
         <div className="absolute inset-0 grid-4x4" />
         <div className="relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.svg" alt="Four Bros" className="h-7 w-auto brightness-0 invert mb-2" />
+          <img src="/brand/logo-white.svg" alt="Four Bros" className="h-7 w-auto mb-2" />
           <p className="kicker text-violet-light">HR Portál</p>
         </div>
         <div className="relative max-w-md">
@@ -51,12 +51,12 @@ function LoginForm() {
             Všechno kolem týmu, dovolených, smluv a odměn na jednom místě. Přehledně a bez zbytečné administrativy.
           </p>
         </div>
-        {/* 4B schody — velký architektonický prvek, zarovnaný na spodní okraj */}
-        <div className="absolute left-0 bottom-0 flex items-end" style={{ width: 180, height: 180 }}>
-          <div className="flex-1 h-[25%] bg-alice border border-white/30" />
-          <div className="flex-1 h-[50%] bg-gold" />
-          <div className="flex-1 h-[75%] bg-violet" />
-          <div className="flex-1 h-full bg-mint" />
+        {/* 4B schody — zarovnané vpravo dole, v normálním toku (bez position: absolute), takže se nikdy nepřekryjí s textem nahoře */}
+        <div className="relative self-end flex items-end" style={{ width: 96, height: 96 }}>
+          <div style={{ width: 24, height: '25%' }} className="bg-alice border border-white/30" />
+          <div style={{ width: 24, height: '50%' }} className="bg-gold" />
+          <div style={{ width: 24, height: '75%' }} className="bg-violet" />
+          <div style={{ width: 24, height: '100%' }} className="bg-mint" />
         </div>
 
         {/* Rožky — podpisová značka u dělicí čáry */}

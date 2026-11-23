@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Download, ChevronLeft, ChevronRight } from 'lucide-react'
+import { IconContract } from '@/components/BrandIcons'
 
 const MONTH_NAMES = [
   'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
@@ -61,11 +62,8 @@ export function PayslipYearPicker({ payslipsByYear, years }: {
       {/* Months */}
       <div className="divide-y divide-slate-50">
         {docs.map(doc => (
-          <div key={doc.id} className="px-6 py-3 flex items-center gap-4 hover:bg-slate-50 transition-colors">
-            <div className="w-14 text-center flex-shrink-0 bg-alice py-1.5">
-              <p className="text-[10px] font-medium text-navy/50 uppercase tracking-wide">{doc.year}</p>
-              <p className="text-sm font-headline font-bold text-navy leading-tight">{MONTH_NAMES[(doc.month ?? 1) - 1]}</p>
-            </div>
+          <div key={doc.id} className="px-6 py-3 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+            <IconContract className="w-4 h-4 text-navy/40 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-navy">{MONTH_NAMES[(doc.month ?? 1) - 1]} {doc.year}</p>
               <p className="text-xs text-slate-400">Výplatní páska</p>
