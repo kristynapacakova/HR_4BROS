@@ -18,14 +18,14 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
       onDone()
       return
     }
-    const t1 = setTimeout(() => setPhase('collapse'), 900)
-    const t2 = setTimeout(() => setPhase('reveal'), 1700)
-    const t3 = setTimeout(() => onDone(), 2900)
+    const t1 = setTimeout(() => setPhase('collapse'), 2400)
+    const t2 = setTimeout(() => setPhase('reveal'), 3800)
+    const t3 = setTimeout(() => onDone(), 6800)
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
   }, [onDone])
 
   return (
-    <div className="fixed inset-0 z-50 bg-navy overflow-hidden" style={{ animation: phase === 'reveal' ? 'intro-fade-out 0.6s ease 0.6s forwards' : undefined }}>
+    <div className="fixed inset-0 z-50 bg-navy overflow-hidden" style={{ animation: phase === 'reveal' ? 'intro-fade-out 1s ease 2s forwards' : undefined }}>
       <div className="absolute inset-0 grid-4x4" />
 
       <button
@@ -44,8 +44,8 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
             left: c.x,
             top: c.y,
             background: c.color,
-            transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1)',
-            transitionDelay: `${i * 60}ms`,
+            transition: 'all 1.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            transitionDelay: `${i * 150}ms`,
             transform: phase === 'scatter' ? 'translate(-50%, -50%) scale(1)' : 'translate(-50%, -50%) scale(0.2)',
             opacity: phase === 'scatter' ? 1 : 0,
           }}
@@ -63,8 +63,8 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
           height: 220,
           transform: 'translate(-50%, -50%)',
           opacity: phase === 'scatter' ? 0 : 1,
-          transition: 'opacity 0.5s ease',
-          transitionDelay: phase === 'collapse' ? '0.5s' : '0s',
+          transition: 'opacity 0.8s ease',
+          transitionDelay: phase === 'collapse' ? '0.9s' : '0s',
         }}
       >
         <span className="font-headline text-5xl font-bold text-white leading-none">4B</span>
