@@ -52,10 +52,12 @@ function LoginForm() {
         </div>
         <div className="relative max-w-md">
           <h1 className="font-headline text-4xl font-semibold leading-tight mb-4">
-            Pravda bez výmluv. I v docházce.
+            Makáme naplno.
+            <br />
+            Ale umíme i{' '}vypnout.
           </h1>
           <p className="text-white/60 text-sm leading-relaxed">
-            Všechno kolem týmu, dovolených, smluv a odměn na jednom místě. Přehledně a bez zbytečné administrativy.
+            Docházka, dovolené, smlouvy i{' '}odměny na{' '}jednom místě. Jasně, na{' '}rovinu a{' '}bez zbytečného papírování.
           </p>
         </div>
 
