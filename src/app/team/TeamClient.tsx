@@ -1,27 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { Cake } from 'lucide-react'
+import { useState } from 'react'
+import type { PersonRecord } from '@/lib/mock-data'
 import { TeamHero } from './TeamHero'
-import { loadTeamProfiles, TEAM_PROFILE_CHANGED_EVENT, type TeamProfileOverride } from '@/lib/team-profile-client'
-
-interface Member {
-  id: string
-  name: string
-  email: string
-  position: string
-  department: string
-  seniority: string | null
-  employmentType: string
-  birthday: string | null
-  bio: string | null
-  emoji: string
-}
-
-const SENIORITY_ORDER: Record<string, number> = {
-  LEAD: 0, SENIOR: 2, MEDIOR: 3, JUNIOR: 4,
-}
+import { TeamRows } from './TeamRows'
+import { personView, useProfiles } from './teamPeople'
 
 export function formatBirthday(raw: string | null): string {
   if (!raw) return '—'
@@ -40,125 +23,37 @@ function daysUntilBirthday(raw: string | null): number | null {
 }
 
 export function TeamClient({ members, departments }: {
-  members: Member[]
+  members: PersonRecord[]
   departments: string[]
   isAdmin: boolean
   viewerEmail?: string | null
 }) {
   const [dept, setDept] = useState<string>('Všichni')
-  const [profiles, setProfiles] = useState<Record<string, TeamProfileOverride>>({})
-  const allDepts = ['Všichni', ...departments]
-
-  useEffect(() => {
-    const refresh = () => setProfiles(loadTeamProfiles())
-    refresh()
-    window.addEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
-    window.addEventListener('storage', refresh)
-    return () => {
-      window.removeEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
-      window.removeEventListener('storage', refresh)
-    }
-  }, [])
-
-  const filtered = dept === 'Všichni' ? members : members.filter(m => m.department === dept)
-
-  // Řazení uvnitř oddělení: Team Leadi nahoře, pak podle seniority, pak abecedně.
-  const rankOf = (m: Member) => (m.seniority === 'LEAD' ? 0 : SENIORITY_ORDER[m.seniority ?? ''] ?? 5)
-
-  const sortGroup = (arr: Member[]) => [...arr].sort((a, b) => {
-    const ra = rankOf(a)
-    const rb = rankOf(b)
-    if (ra !== rb) return ra - rb
-    return a.name.localeCompare(b.name, 'cs')
-  })
-
-  // Oddělení do sekcí — HR (vedení) první, pak zbytek v pořadí TEAM_DEPARTMENTS.
+  const profiles = useProfiles()
+  const people = members.map(m => personView(m, profiles[m.id]))
   const deptOrder = ['Head office', ...departments.filter(d => d !== 'Head office')]
-  const groups = deptOrder
-    .map(d => ({ dept: d, members: sortGroup(filtered.filter(m => m.department === d)) }))
-    .filter(g => g.members.length > 0)
-
-  const heroMembers = members.map(m => {
-    const o = profiles[m.id]
-    const bd = o?.birthday !== undefined ? o.birthday : m.birthday
-    return { id: m.id, name: m.name, department: m.department, birthdayInDays: daysUntilBirthday(bd) }
-  })
-  let cardIndex = 0
+  const shown = dept === 'Všichni' ? people : people.filter(p => p.department === dept)
 
   return (
     <div className="space-y-5">
-      <TeamHero members={heroMembers} departments={deptOrder} active={dept} onPick={setDept} />
+      <TeamHero
+        members={people.map(p => ({ id: p.id, name: p.name, department: p.department, birthdayInDays: daysUntilBirthday(p.birthdayEff) }))}
+        departments={deptOrder}
+        active={dept}
+        onPick={setDept}
+      />
 
-      {/* Department filter */}
-      <div className="flex gap-1.5 flex-wrap">
-        {allDepts.map(d => (
-          <button
-            key={d}
-            onClick={() => setDept(d)}
-            className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
-              dept === d ? 'bg-violet text-white shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:text-navy'
-            }`}
-          >
-            {d}
-          </button>
-        ))}
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="text-sm text-navy/60">
+          {dept === 'Všichni' ? 'Celý tým' : dept} · {shown.length} {shown.length === 1 ? 'člověk' : shown.length < 5 ? 'lidé' : 'lidí'}
+          {dept !== 'Všichni' && (
+            <button onClick={() => setDept('Všichni')} className="ml-3 text-violet font-semibold">Zobrazit všechny ×</button>
+          )}
+        </p>
+        <p className="text-xs text-navy/50">Klikni na tým v hlavičce, najeď na kolegu a uvidíš, co ho baví.</p>
       </div>
 
-      <p className="text-sm text-slate-400">{filtered.length} {filtered.length === 1 ? 'člen' : filtered.length < 5 ? 'členové' : 'členů'}</p>
-
-      {/* Sekce podle oddělení */}
-      {groups.map(group => (
-        <div key={group.dept} className="space-y-3">
-          <div className="flex items-center gap-2">
-            <h3 className="font-headline text-navy text-sm">{group.dept}</h3>
-            <span className="text-xs text-slate-400">{group.members.length}</span>
-            <div className="flex-1 h-px bg-slate-100" />
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
-            {group.members.map(member => {
-          const override = profiles[member.id]
-          const effectiveBirthday = override?.birthday !== undefined ? override.birthday : member.birthday
-          const days = daysUntilBirthday(effectiveBirthday)
-          const birthdaySoon = days !== null && days <= 30
-          const ci = cardIndex++
-          return (
-            <Link
-              key={member.id}
-              href={`/team/${member.id}`}
-              style={{ animation: `fb-rise .5s cubic-bezier(.16,1,.3,1) ${200 + ci * 40}ms backwards` }}
-              className="group bg-white border border-[rgba(13,33,79,0.14)] p-4 flex flex-col items-center text-center hover:shadow-[0_8px_32px_rgba(13,33,79,0.08)] hover:-translate-y-0.5 transition-all duration-200"
-            >
-              <div className="relative w-16 h-16 overflow-hidden bg-[#f3f0fd] flex items-center justify-center flex-shrink-0">
-                {override?.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={override.photo}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                    style={{
-                      objectPosition: `${override.photoPos?.x ?? 50}% ${override.photoPos?.y ?? 50}%`,
-                      transform: `scale(${(override.photoPos?.zoom ?? 100) / 100})`,
-                    }}
-                  />
-                ) : (
-                  <span style={{ fontSize: 28 }}>{member.emoji}</span>
-                )}
-              </div>
-              <p className="font-headline font-semibold text-navy text-sm mt-3 truncate w-full group-hover:text-violet transition-colors">{member.name}</p>
-              <p className="text-xs text-slate-400 mt-0.5 truncate w-full">{member.position}</p>
-              <div className={`inline-flex items-center gap-1 text-[11px] mt-2 ${birthdaySoon ? 'text-violet font-medium' : 'text-slate-400'}`}>
-                <Cake className="w-3 h-3 flex-shrink-0" />
-                {effectiveBirthday ? formatBirthday(effectiveBirthday) : 'Narozeniny neuvedeny'}
-                {birthdaySoon && days !== null && <span>· za {days === 0 ? 'dnes!' : `${days} dní`}</span>}
-              </div>
-            </Link>
-              )
-            })}
-          </div>
-        </div>
-      ))}
-
-      <p className="text-xs text-slate-400 text-center pt-2">Klikni na kolegu a podívej se na jeho medailonek. Svůj vlastní si můžeš upravit.</p>
+      <TeamRows key={dept} people={shown} teams={deptOrder} />
     </div>
   )
 }
