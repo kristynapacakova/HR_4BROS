@@ -379,16 +379,6 @@ export function MemberProfileClient({
                 <IconBirthday />
                 {birthday ? formatBirthday(birthday) : 'Narozeniny neuvedeny'}
               </span>
-              {personality && (
-                <span className="group relative inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold bg-violet text-white cursor-default">
-                  <IconPersonality />
-                  {personality} · {PERSONALITY_TYPES[personality].name}
-                  <span className="pointer-events-none absolute left-0 top-full mt-1.5 w-64 bg-white text-navy border border-navy text-[11px] font-normal leading-snug px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 text-left">
-                    <strong className="block mb-0.5 font-semibold">{personality} — {PERSONALITY_TYPES[personality].name}</strong>
-                    {PERSONALITY_TYPES[personality].desc}
-                  </span>
-                </span>
-              )}
             </div>
           </div>
         </div>
