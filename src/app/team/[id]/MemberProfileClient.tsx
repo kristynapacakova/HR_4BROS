@@ -376,12 +376,6 @@ export function MemberProfileClient({
                 <IconTeamMark />
                 {member.department}
               </span>
-              {member.seniority && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold border border-white/25 text-white">
-                  <IconSeniority />
-                  {SENIORITY_LABEL[member.seniority] ?? member.seniority}
-                </span>
-              )}
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold border border-white/25 text-white/80">
                 <IconBirthday />
                 {birthday ? formatBirthday(birthday) : 'Narozeniny neuvedeny'}
