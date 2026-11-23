@@ -176,3 +176,11 @@
 @keyframes intro-fade-out {
   to { opacity: 0; visibility: hidden; }
 }
+
+/* Výjimka: Google CTA tlačítko na loginu má jemně zaoblené rohy podle Report Hub reference */
+.btn-rounded-exception {
+  border-radius: 10px !important;
+}
+.btn-rounded-exception-sm {
+  border-radius: 4px !important;
+}
