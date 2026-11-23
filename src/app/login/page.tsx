@@ -62,7 +62,7 @@ function LoginForm() {
       {showIntro && <IntroAnimation onDone={dismissIntro} />}
 
       {/* Levá polovina — navy, 4x4 mřížka, claim */}
-      <div className="relative hidden lg:flex flex-col bg-navy text-white p-12 overflow-hidden">
+      <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
         <div className="absolute inset-0 grid-4x4" />
         <div className="relative">
           <svg role="img" aria-label="Four Bros" viewBox="0 0 320.856 63.608" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ height: 28, width: 'auto' }} className="mb-4">
@@ -86,20 +86,20 @@ function LoginForm() {
         </div>
 
         {/* 4B schody — stejná agenturní signatura jako v Report Hubu */}
-        <div className="relative flex items-end mt-20">
-          <div className="shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)] px-3 py-2" style={{ width: 96, height: 48 }}>
+        <div className="relative flex items-end">
+          <div className="shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)] px-3 py-2" style={{ width: 80, height: 40 }}>
             <p className="text-[10px] text-white/50 font-semibold">01</p>
             <p className="text-[11px] font-bold leading-tight">BUSINESS</p>
           </div>
-          <div className="bg-gold text-navy px-3 py-2" style={{ width: 96, height: 72, marginBottom: 48 }}>
+          <div className="bg-gold text-navy px-3 py-2" style={{ width: 80, height: 60, marginBottom: 40 }}>
             <p className="text-[10px] text-navy/50 font-semibold">02</p>
             <p className="text-[11px] font-bold leading-tight">BEHAVIOR</p>
           </div>
-          <div className="bg-violet px-3 py-2" style={{ width: 96, height: 96, marginBottom: 96 }}>
+          <div className="bg-violet px-3 py-2" style={{ width: 80, height: 80, marginBottom: 80 }}>
             <p className="text-[10px] text-white/60 font-semibold">03</p>
             <p className="text-[11px] font-bold leading-tight">BRANDING</p>
           </div>
-          <div className="bg-mint text-navy px-3 py-2" style={{ width: 96, height: 120, marginBottom: 144 }}>
+          <div className="bg-mint text-navy px-3 py-2" style={{ width: 80, height: 100, marginBottom: 120 }}>
             <p className="text-[10px] text-navy/50 font-semibold">04</p>
             <p className="text-[11px] font-bold leading-tight">BOOST</p>
           </div>
@@ -145,9 +145,9 @@ function LoginForm() {
               <>
                 <button
                   onClick={() => setShowPicker(true)}
-                  className="w-full flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide py-3 px-4 transition-colors"
+                  className="btn-rounded-exception w-full flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide py-3 px-4 transition-colors"
                 >
-                  <span className="w-5 h-5 bg-white flex items-center justify-center flex-shrink-0">
+                  <span className="btn-rounded-exception-sm w-5 h-5 bg-white flex items-center justify-center flex-shrink-0">
                     <GoogleG className="w-3.5 h-3.5" />
                   </span>
                   Přihlásit přes Google
