@@ -328,9 +328,8 @@ export function MemberProfileClient({
       {/* Medailonek — navy hlavička */}
       <section className="relative bg-navy text-white overflow-hidden">
         <div className="absolute inset-0 grid-4x4 pointer-events-none" aria-hidden="true" />
-        <div className="absolute left-0 top-0 bottom-0 w-2 sm:w-3" style={{ background: teamColor }} aria-hidden="true" />
 
-        <div className="relative flex flex-col sm:flex-row gap-6 sm:gap-8 p-6 pl-8 sm:p-8 sm:pl-11">
+        <div className="relative flex flex-col sm:flex-row gap-6 sm:gap-8 p-6 sm:p-8">
           {/* Fotka */}
           <div className="relative flex-shrink-0 self-start">
             <div className="relative w-44 h-52 sm:w-52 sm:h-64 overflow-hidden border border-white/15">
