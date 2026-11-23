@@ -39,12 +39,12 @@ function TeamRow({ dept, people, index, first }: { dept: string; people: PersonV
         <h2 className="font-headline text-navy text-[26px] leading-none" style={{ fontWeight: 600 }}>{dept}</h2>
         <p className="text-sm text-navy/55 mt-2">{people.length} {plural(people.length, 'člověk', 'lidé', 'lidí')}</p>
       </div>
-      <div className="flex flex-wrap gap-x-4 gap-y-5">
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-6">
         {people.map((p, k) => (
           <Link
             key={p.id}
             href={`/team/${p.id}`}
-            className="group flex-shrink-0 w-[112px]"
+            className="group block min-w-0"
             style={{
               opacity: seen || reduced ? 1 : 0,
               transform: seen || reduced ? 'none' : 'translateY(16px)',
@@ -58,8 +58,8 @@ function TeamRow({ dept, people, index, first }: { dept: string; people: PersonV
                 {p.interests.join(', ')}
               </div>
             </div>
-            <p className="mt-2 text-[13px] font-semibold text-navy leading-tight group-hover:text-violet transition-colors">{p.name}</p>
-            <p className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-navy/55 leading-snug">{p.position}</p>
+            <p className="mt-2 text-center text-[13px] font-semibold text-navy leading-tight truncate group-hover:text-violet transition-colors" title={p.name}>{p.name}</p>
+            <p className="mt-1 text-center text-[9px] font-semibold uppercase tracking-[0.08em] text-navy/55 leading-tight truncate" title={p.position}>{p.position}</p>
           </Link>
         ))}
       </div>
