@@ -243,7 +243,7 @@ function EditAssetModal({ asset, employees, onClose, onSave }: {
               serialNumber: form.serialNumber || null, condition: form.condition,
               assignedTo: form.assignedTo || null, notes: form.notes || null,
             })}
-            className="flex-1 py-2.5 bg-violet hover:bg-violet-dark text-white text-sm font-medium transition-colors"
+            className="flex-1 py-2.5 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-sm font-medium transition-colors"
           >
             Uložit
           </button>

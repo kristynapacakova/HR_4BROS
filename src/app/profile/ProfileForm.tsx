@@ -314,7 +314,7 @@ export function ProfileForm({ user, employment }: ProfileFormProps) {
         <button
           type="submit"
           disabled={saving}
-          className="bg-violet hover:bg-violet-dark text-white font-medium py-2.5 px-6 rounded-full transition-colors disabled:opacity-50 shadow-sm"
+          className="bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide font-medium py-2.5 px-6 rounded-full transition-colors disabled:opacity-50 shadow-sm"
         >
           {saving ? 'Ukládám...' : 'Uložit změny'}
         </button>

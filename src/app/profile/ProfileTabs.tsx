@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProfileForm } from './ProfileForm'
-import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, User as UserIcon, Banknote, FileText, ClipboardList } from 'lucide-react'
+import { Laptop, Smartphone, Mouse, Keyboard, Monitor, Zap, Headphones, Package, ClipboardList } from 'lucide-react'
+import { IconUser, IconLaptop, IconBanknote, IconContract } from '@/components/BrandIcons'
 import { loadAssets, ASSET_CHANGED_EVENT } from '@/lib/asset-client'
 
 const TYPE_ICONS: Record<string, React.ElementType> = {
@@ -71,10 +72,10 @@ export function ProfileTabs({
   documentsPanel?: React.ReactNode
 }) {
   const tabs = [
-    { id: 'udaje', label: 'Osobní údaje', icon: UserIcon },
-    { id: 'majetek', label: 'Majetek', icon: Laptop },
-    { id: 'vyplata', label: payslipsLabel ?? 'Moje odměna', icon: Banknote },
-    { id: 'dokumenty', label: 'Dokumenty', icon: FileText },
+    { id: 'udaje', label: 'Osobní údaje', icon: IconUser },
+    { id: 'majetek', label: 'Majetek', icon: IconLaptop },
+    { id: 'vyplata', label: payslipsLabel ?? 'Moje odměna', icon: IconBanknote },
+    { id: 'dokumenty', label: 'Dokumenty', icon: IconContract },
   ] as const
   type TabId = typeof tabs[number]['id']
   const searchParams = useSearchParams()

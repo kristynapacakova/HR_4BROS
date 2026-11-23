@@ -802,7 +802,7 @@ export function PayslipsClient({
                     <input ref={expFileRef} type="file" accept="image/*,.pdf" required={!editingExpenseId} className="w-full text-sm" />
                   </div>
                   <div className="flex items-center gap-2">
-                    <button type="submit" className="px-4 py-2 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
+                    <button type="submit" className="px-4 py-2 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-sm font-medium rounded-full transition-colors">
                       {editingExpenseId ? 'Uložit změny' : 'Odeslat ke schválení'}
                     </button>
                     <button type="button" onClick={resetExpenseForm} className="px-4 py-2 text-sm font-medium text-slate-500 hover:text-navy transition-colors">

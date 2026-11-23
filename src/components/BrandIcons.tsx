@@ -145,6 +145,16 @@ export function IconLaptop({ className, ...p }: IconProps) {
   )
 }
 
+export function IconReceipt({ className, ...p }: IconProps) {
+  return (
+    <svg {...base} className={className} {...p}>
+      <path d="M6 3H18V21L15 19L12 21L9 19L6 21V3Z" stroke="currentColor" />
+      <path d="M9 8H15M9 12H15" stroke="currentColor" />
+      <rect x="9" y="15" width="3" height="3" fill="#4DE791" />
+    </svg>
+  )
+}
+
 export function IconChart({ className, ...p }: IconProps) {
   return (
     <svg {...base} className={className} {...p}>

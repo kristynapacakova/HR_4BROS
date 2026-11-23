@@ -501,7 +501,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 </select>
               </div>
             </div>
-            <button type="submit" className="w-full px-4 py-2.5 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
+            <button type="submit" className="w-full px-4 py-2.5 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-sm font-medium rounded-full transition-colors">
               Odeslat ke schválení HR
             </button>
           </form>
@@ -567,7 +567,7 @@ export function InvoiceOverview({ employees, invoices, canPropose, proposerId, p
                 className="w-full px-3 py-2 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
               />
             </div>
-            <button type="submit" className="w-full px-4 py-2.5 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors">
+            <button type="submit" className="w-full px-4 py-2.5 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-sm font-medium rounded-full transition-colors">
               Odeslat ke schválení HR
             </button>
           </form>

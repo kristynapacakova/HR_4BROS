@@ -109,7 +109,7 @@ function EditForm({ req, onSave, onCancel }: {
       <div className="flex items-center gap-2">
         <button
           onClick={() => onSave({ title: title.trim(), amount: Number(amount) || req.amount, sign, category, month, year })}
-          className="px-4 py-2 bg-violet hover:bg-violet-dark text-white text-sm font-medium rounded-full transition-colors"
+          className="px-4 py-2 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide text-sm font-medium rounded-full transition-colors"
         >
           Uložit změny
         </button>

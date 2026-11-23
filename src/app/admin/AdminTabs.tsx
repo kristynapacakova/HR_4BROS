@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Users, BarChart2, Laptop } from 'lucide-react'
+import { IconTeam, IconChart, IconLaptop } from '@/components/BrandIcons'
 
 const TABS = [
-  { id: 'analytika', label: 'Analytika', icon: BarChart2 },
-  { id: 'uzivatele', label: 'Uživatelé', icon: Users },
-  { id: 'majetek', label: 'Majetek', icon: Laptop },
+  { id: 'analytika', label: 'Analytika', icon: IconChart },
+  { id: 'uzivatele', label: 'Uživatelé', icon: IconTeam },
+  { id: 'majetek', label: 'Majetek', icon: IconLaptop },
 ] as const
 
 type TabId = typeof TABS[number]['id']
