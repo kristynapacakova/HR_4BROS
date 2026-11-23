@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import type { PersonRecord } from '@/lib/mock-data'
 import { TeamHero } from './TeamHero'
 import { TeamRows } from './TeamRows'
@@ -28,32 +27,20 @@ export function TeamClient({ members, departments }: {
   isAdmin: boolean
   viewerEmail?: string | null
 }) {
-  const [dept, setDept] = useState<string>('Všichni')
   const profiles = useProfiles()
   const people = members.map(m => personView(m, profiles[m.id]))
   const deptOrder = ['Head office', ...departments.filter(d => d !== 'Head office')]
-  const shown = dept === 'Všichni' ? people : people.filter(p => p.department === dept)
 
   return (
     <div className="space-y-5">
       <TeamHero
         members={people.map(p => ({ id: p.id, name: p.name, department: p.department, birthdayInDays: daysUntilBirthday(p.birthdayEff) }))}
         departments={deptOrder}
-        active={dept}
-        onPick={setDept}
       />
 
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-sm text-navy/60">
-          {dept === 'Všichni' ? 'Celý tým' : dept} · {shown.length} {shown.length === 1 ? 'člověk' : shown.length < 5 ? 'lidé' : 'lidí'}
-          {dept !== 'Všichni' && (
-            <button onClick={() => setDept('Všichni')} className="ml-3 text-violet font-semibold">Zobrazit všechny ×</button>
-          )}
-        </p>
-        <p className="text-xs text-navy/50">Klikni na tým v hlavičce, najeď na kolegu a uvidíš, co ho baví.</p>
-      </div>
+      <p className="text-xs text-navy/50">Najeď na kolegu a uvidíš, co ho baví. Kliknutím otevřeš jeho medailonek.</p>
 
-      <TeamRows key={dept} people={shown} teams={deptOrder} />
+      <TeamRows people={people} teams={deptOrder} />
     </div>
   )
 }

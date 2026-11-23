@@ -29,11 +29,12 @@ function plural(n: number, one: string, few: string, many: string) {
   return n === 1 ? one : n >= 2 && n <= 4 ? few : many
 }
 
-export function TeamHero({ members, departments, active, onPick }: {
+export function TeamHero({ members, departments, active = 'Všichni', onPick }: {
   members: HeroMember[]
   departments: string[]
-  active: string
-  onPick: (dept: string) => void
+  /** Volitelný filtr — bez onPick je hlavička čistě dekorativní (jen animace). */
+  active?: string
+  onPick?: (dept: string) => void
 }) {
   const [placed, setPlaced] = useState(false)
   const [instant, setInstant] = useState(false)
@@ -88,13 +89,14 @@ export function TeamHero({ members, departments, active, onPick }: {
             const isActive = active === c.dept
             const dim = active !== 'Všichni' && !isActive
             return (
-              <button
+              <div
                 key={c.dept}
-                type="button"
-                onClick={() => onPick(isActive ? 'Všichni' : c.dept)}
-                className="absolute group"
+                role={onPick ? 'button' : undefined}
+                tabIndex={onPick ? 0 : undefined}
+                onClick={onPick ? () => onPick(isActive ? 'Všichni' : c.dept) : undefined}
+                className={`absolute group ${onPick ? 'cursor-pointer' : ''}`}
                 style={{ left: x0, top: 0, width: COL_W, height: CHART_H + 30 }}
-                aria-label={`Zobrazit tým ${c.dept}`}
+                aria-label={onPick ? `Zobrazit tým ${c.dept}` : undefined}
               >
                 <span
                   className="absolute left-0 right-0 text-[10px] font-bold uppercase tracking-[0.02em] text-center whitespace-nowrap transition-colors"
@@ -106,7 +108,7 @@ export function TeamHero({ members, departments, active, onPick }: {
                   className="absolute left-0 right-0 transition-opacity"
                   style={{ bottom: 22, height: 2, background: '#F0E100', opacity: isActive ? 1 : 0 }}
                 />
-              </button>
+              </div>
             )
           })}
 
