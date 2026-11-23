@@ -39,7 +39,7 @@ export function readAvatar(teamMemberId?: string): { photo: string | null; pos?:
 }
 
 /** Profilová fotka je sdílená s medailonkem v Týmu Four Bros — jedna fotka pro obě místa. */
-export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamMemberId?: string }) {
+export function AvatarUpload({ initial, teamMemberId, size = 64, fallback, hideGlow }: { initial: string; teamMemberId?: string; size?: number; fallback?: React.ReactNode; hideGlow?: boolean }) {
   const [avatar, setAvatar] = useState<{ photo: string | null; pos?: PhotoPosition }>({ photo: null })
   const [positioning, setPositioning] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -71,7 +71,7 @@ export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamM
 
   return (
     <div className="relative flex-shrink-0 group">
-      <div className="absolute -inset-1 rounded-full opacity-30 pointer-events-none" style={{ background: 'linear-gradient(135deg, #834dfb, #a97cfc)', filter: 'blur(6px)' }} />
+      {!hideGlow && <div className="absolute -inset-1 rounded-full opacity-30 pointer-events-none" style={{ background: 'linear-gradient(135deg, #834dfb, #a97cfc)', filter: 'blur(6px)' }} />}
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
@@ -83,15 +83,18 @@ export function AvatarUpload({ initial, teamMemberId }: { initial: string; teamM
           <img
             src={avatar.photo}
             alt="Profilová fotka"
-            className="relative w-16 h-16  object-cover"
+            className="relative object-cover"
+            width={size} height={size}
             style={avatar.pos ? {
+              width: size, height: size,
               objectPosition: `${avatar.pos.x}% ${avatar.pos.y}%`,
               transform: `scale(${avatar.pos.zoom / 100})`,
-            } : undefined}
+            } : { width: size, height: size }}
           />
         ) : (
-          <div className="relative w-16 h-16 bg-navy  flex items-center justify-center">
-            <span className="text-white font-headline text-2xl font-bold">{initial}</span>
+          fallback ? <div className="relative" style={{ width: size, height: size }}>{fallback}</div> :
+          <div className="relative bg-navy flex items-center justify-center" style={{ width: size, height: size }}>
+            <span className="text-white font-headline font-bold" style={{ fontSize: Math.round(size * 0.38) }}>{initial}</span>
           </div>
         )}
       </button>

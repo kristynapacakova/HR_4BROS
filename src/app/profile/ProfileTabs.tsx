@@ -57,6 +57,7 @@ function tenure(startDate?: Date | null): string {
 export function ProfileTabs({
   user, assets, assetTypes, assetConditions, isAdmin, hrData, seniorityLevels, employmentTypes,
   payslipsLabel, payslipsPanel, timeOffPanel, documentsPanel,
+  activeTab, onTabChange, hideNav, stacked, sectionHeader, formLayout,
 }: {
   user: User & { startDate?: Date | null }
   assets: Asset[]
@@ -70,6 +71,17 @@ export function ProfileTabs({
   payslipsPanel?: React.ReactNode
   timeOffPanel?: React.ReactNode
   documentsPanel?: React.ReactNode
+  /** Řízení záložek zvenku (varianty rozvržení). */
+  activeTab?: string
+  onTabChange?: (id: string) => void
+  /** Skryje vlastní řádek záložek. */
+  hideNav?: boolean
+  /** Všechny sekce pod sebou místo záložek. */
+  stacked?: boolean
+  /** Hlavička sekce v režimu stacked. */
+  sectionHeader?: (id: string, label: string, index: number) => React.ReactNode
+  /** Rozložení formuláře osobních údajů. */
+  formLayout?: 'cards' | 'facts' | 'split'
 }) {
   const tabs = [
     { id: 'udaje', label: 'Osobní údaje', icon: IconUser },
@@ -81,7 +93,10 @@ export function ProfileTabs({
   const searchParams = useSearchParams()
   const requestedTab = searchParams.get('tab')
   const initialTab = tabs.some(t => t.id === requestedTab) ? (requestedTab as TabId) : 'udaje'
-  const [tab, setTab] = useState<TabId>(initialTab)
+  const [innerTab, setInnerTab] = useState<TabId>(initialTab)
+  const tab = (activeTab as TabId | undefined) ?? innerTab
+  const setTab = (id: TabId) => { setInnerTab(id); onTabChange?.(id) }
+  const show = (id: TabId) => stacked || tab === id
 
   // Majetek přiřazený adminem (localStorage client) má přednost před statickým SSR seznamem.
   const [liveAssets, setLiveAssets] = useState<Asset[] | null>(null)
@@ -108,7 +123,7 @@ export function ProfileTabs({
   return (
     <div>
       {/* Tab bar — horizontal pill row under the profile header, clearly separate from the main nav */}
-      <div className="flex flex-wrap gap-1.5 bg-slate-50 p-1.5 mb-6">
+      {!hideNav && !stacked && <div className="flex flex-wrap gap-1.5 bg-slate-50 p-1.5 mb-6">
         {tabs.map(t => {
           const Icon = t.icon
           const active = tab === t.id
@@ -125,12 +140,14 @@ export function ProfileTabs({
             </button>
           )
         })}
-      </div>
+      </div>}
 
       {/* Osobní údaje + HR údaje */}
-      {tab === 'udaje' && (
+      {show('udaje') && (
         <div className="space-y-6">
+          {stacked && sectionHeader?.('udaje', tabs[0].label, 0)}
           <ProfileForm
+            layout={formLayout}
             user={user}
             employment={{
               startDate: (user as { startDate?: Date | null }).startDate,
@@ -221,7 +238,9 @@ export function ProfileTabs({
       )}
 
       {/* Zapůjčený majetek */}
-      {tab === 'majetek' && (
+      {show('majetek') && (
+        <div className={stacked ? 'mt-14' : ''}>
+        {stacked && sectionHeader?.('majetek', tabs[1].label, 1)}
         <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h3 className="font-headline font-semibold text-navy">Zapůjčený majetek ({resolvedAssets.length} položek)</h3>
@@ -264,13 +283,24 @@ export function ProfileTabs({
             </div>
           )}
         </div>
+        </div>
       )}
 
       {/* Moje odměna */}
-      {tab === 'vyplata' && payslipsPanel}
+      {show('vyplata') && (
+        <div className={stacked ? 'mt-14' : ''}>
+          {stacked && sectionHeader?.('vyplata', tabs[2].label, 2)}
+          {payslipsPanel}
+        </div>
+      )}
 
       {/* Dokumenty a smlouvy */}
-      {tab === 'dokumenty' && documentsPanel}
+      {show('dokumenty') && (
+        <div className={stacked ? 'mt-14' : ''}>
+          {stacked && sectionHeader?.('dokumenty', tabs[3].label, 3)}
+          {documentsPanel}
+        </div>
+      )}
     </div>
   )
 }
