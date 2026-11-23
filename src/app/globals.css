@@ -204,3 +204,15 @@
 .btn-pill {
   border-radius: 9999px !important;
 }
+@keyframes intro-grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes intro-grow-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@keyframes intro-loop {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}

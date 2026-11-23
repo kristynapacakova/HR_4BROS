@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { IntroAnimation } from './IntroAnimation'
+import { IntroTwoSides } from './intro-preview/Concepts2'
 
 const DEMO_ACCOUNTS = [
   { email: 'admin@fourbros.cz', name: 'Admin & HR' },
@@ -59,7 +59,7 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-alice text-navy">
-      {showIntro && <IntroAnimation onDone={dismissIntro} />}
+      {showIntro && <IntroTwoSides onDone={dismissIntro} />}
 
       {/* Levá polovina — navy, claim + 4B schody (podle Report Hub reference) */}
       <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white px-10 xl:px-11 pt-11 pb-6 overflow-hidden">
