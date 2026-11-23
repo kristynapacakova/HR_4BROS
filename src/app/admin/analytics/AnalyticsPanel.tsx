@@ -16,6 +16,8 @@ export function AnalyticsPanel() {
   const totalNastupy = DEMO_FLUCTUATION.reduce((s, m) => s + m.nastupy, 0)
   const totalOdchody = DEMO_FLUCTUATION.reduce((s, m) => s + m.odchody, 0)
   const currentHeadcount = DEMO_HEADCOUNT_TREND[DEMO_HEADCOUNT_TREND.length - 1].count
+  const startHeadcount = DEMO_HEADCOUNT_TREND[0].count
+  const headcountDelta = startHeadcount ? Math.round(((currentHeadcount - startHeadcount) / startHeadcount) * 100) : 0
 
   // Rozložení podle týmů — stejné týmy a lidé jako na stránce Tým (DEMO_TEAM / TEAM_DEPARTMENTS).
   const departmentHeadcount = TEAM_DEPARTMENTS
@@ -33,8 +35,9 @@ export function AnalyticsPanel() {
             <div className="w-9 h-9 bg-alice flex items-center justify-center">
               <Users className="w-4 h-4 text-navy" />
             </div>
-            <span className="text-xs text-mint-dark font-medium flex items-center gap-0.5">
-              <TrendingUp className="w-3 h-3" /> +50%
+            <span className={`text-xs font-medium flex items-center gap-0.5 ${headcountDelta >= 0 ? 'text-mint-dark' : 'text-violet'}`}>
+              {headcountDelta >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+              {headcountDelta >= 0 ? '+' : ''}{headcountDelta} % za 12 měs.
             </span>
           </div>
           <p className="text-2xl font-headline font-semibold text-navy">{currentHeadcount}</p>
@@ -46,7 +49,7 @@ export function AnalyticsPanel() {
             <div className="w-9 h-9 bg-violet-tint flex items-center justify-center">
               <TrendingDown className="w-4 h-4 text-violet" />
             </div>
-            <span className="text-xs text-navy-400">2024</span>
+            <span className="text-xs text-navy-400">12 měs.</span>
           </div>
           <p className="text-2xl font-headline font-semibold text-navy">{DEMO_TURNOVER_RATE}%</p>
           <p className="text-xs text-navy-400 mt-0.5">Míra fluktuace</p>
@@ -130,11 +133,11 @@ export function AnalyticsPanel() {
           <div className="mt-4 pt-4 border-t border-slate-50 grid grid-cols-2 gap-3 text-center">
             <div>
               <p className="text-lg font-semibold text-navy">{totalNastupy}</p>
-              <p className="text-xs text-slate-400">Nástupy 2024</p>
+              <p className="text-xs text-slate-400">Nástupy · 12 měs.</p>
             </div>
             <div>
               <p className="text-lg font-semibold text-navy">{totalOdchody}</p>
-              <p className="text-xs text-slate-400">Odchody 2024</p>
+              <p className="text-xs text-slate-400">Odchody · 12 měs.</p>
             </div>
           </div>
         </div>

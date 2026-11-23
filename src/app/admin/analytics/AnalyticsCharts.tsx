@@ -99,12 +99,12 @@ export function AnalyticsCharts({
       <div className="lg:col-span-2 bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <div className="flex items-start justify-between gap-4 mb-5">
           <div>
-            <p className="kicker mb-1">Headcount 2024</p>
+            <p className="kicker mb-1">Headcount · posledních 12 měsíců</p>
             <h3 className="font-headline text-navy text-lg" style={{ fontWeight: 600 }}>Vývoj počtu zaměstnanců</h3>
           </div>
           <div className="text-right">
             <p className="font-headline text-navy text-2xl leading-none" style={{ fontWeight: 600 }}>{last}</p>
-            <p className="text-xs text-navy-400 mt-1">{delta >= 0 ? '+' : ''}{delta} od ledna</p>
+            <p className="text-xs text-navy-400 mt-1">{delta >= 0 ? '+' : ''}{delta} za 12 měsíců</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={220}>
@@ -178,7 +178,7 @@ export function AnalyticsCharts({
       <div className="lg:col-span-3 bg-white border border-[rgba(13,33,79,0.14)] p-6">
         <div className="flex items-start justify-between mb-5">
           <div>
-            <p className="kicker mb-1">Měsíční přehled 2024</p>
+            <p className="kicker mb-1">Měsíční přehled · posledních 12 měsíců</p>
             <h3 className="font-headline text-navy text-lg" style={{ fontWeight: 600 }}>Fluktuace — nástupy a odchody</h3>
           </div>
           <div className="flex gap-4 text-xs">

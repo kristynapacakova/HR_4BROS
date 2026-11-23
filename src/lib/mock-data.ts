@@ -2,182 +2,15 @@
 
 // ── Team Leave Calendar ────────────────────────────────────────────────────
 
-export const DEMO_TEAM_LEAVES = [
-  // 2026 – current year leaves
-  { id: "tl1", userName: "Jan Novák", department: "Vývoj", type: "ANNUAL", startDate: new Date("2026-05-26"), endDate: new Date("2026-05-30"), status: "APPROVED" },
-  { id: "tl2", userName: "Marie Svobodová", department: "Marketing", type: "ANNUAL", startDate: new Date("2026-06-09"), endDate: new Date("2026-06-20"), status: "APPROVED" },
-  { id: "tl3", userName: "Tomáš Dvořák", department: "Obchod", type: "ANNUAL", startDate: new Date("2026-06-15"), endDate: new Date("2026-06-19"), status: "APPROVED" },
-  { id: "tl4", userName: "Lucie Kratochvílová", department: "Finance", type: "SICK", startDate: new Date("2026-06-02"), endDate: new Date("2026-06-03"), status: "APPROVED" },
-  { id: "tl5", userName: "Ondřej Pospíšil", department: "Vývoj", type: "ANNUAL", startDate: new Date("2026-07-07"), endDate: new Date("2026-07-18"), status: "APPROVED" },
-  { id: "tl6", userName: "Jan Novák", department: "Vývoj", type: "ANNUAL", startDate: new Date("2026-07-21"), endDate: new Date("2026-08-01"), status: "PENDING" },
-  { id: "tl7", userName: "Marie Svobodová", department: "Marketing", type: "ANNUAL", startDate: new Date("2026-08-10"), endDate: new Date("2026-08-21"), status: "APPROVED" },
-  { id: "tl8", userName: "Tomáš Dvořák", department: "Obchod", type: "PERSONAL", startDate: new Date("2026-05-12"), endDate: new Date("2026-05-12"), status: "APPROVED" },
-  { id: "tl9", userName: "Lucie Kratochvílová", department: "Finance", type: "ANNUAL", startDate: new Date("2026-09-01"), endDate: new Date("2026-09-12"), status: "PENDING" },
-  { id: "tl10", userName: "Ondřej Pospíšil", department: "Vývoj", type: "SICK", startDate: new Date("2026-05-05"), endDate: new Date("2026-05-06"), status: "APPROVED" },
-  { id: "tl11", userName: "Jan Novák", department: "Vývoj", type: "ANNUAL", startDate: new Date("2025-12-22"), endDate: new Date("2025-12-31"), status: "APPROVED" },
-  { id: "tl12", userName: "Marie Svobodová", department: "Marketing", type: "ANNUAL", startDate: new Date("2025-12-27"), endDate: new Date("2025-12-31"), status: "APPROVED" },
-  { id: "tl13", userName: "Lucie Kratochvílová", department: "Creative", type: "HOMEOFFICE", startDate: new Date("2026-08-25"), endDate: new Date("2026-08-27"), status: "APPROVED" },
-  { id: "tl14", userName: "Veronika Jelínková", department: "Account", type: "HOMEOFFICE", startDate: new Date("2026-08-27"), endDate: new Date("2026-08-27"), status: "APPROVED" },
-  { id: "tl15", userName: "Tomáš Dvořák", department: "Obchod", type: "LEKAR", startDate: new Date("2026-08-27"), endDate: new Date("2026-08-27"), status: "APPROVED" },
-]
+// DEMO_TEAM_LEAVES je odvozený z DEMO_TEAM — viz konec souboru.
 
 // ── Analytics ──────────────────────────────────────────────────────────────
 
 // ── HR Dashboard Stats ─────────────────────────────────────────────────────
 
-export const DEMO_HR_STATS = {
-  activePeople: 27,
-  paidPeople: 24,          // placení (HPP + IČO + DPP/DPČ)
-  monthlyCost: 1123115,    // Kč
-  annualCost: 13477380,    // Kč
-  avgCostPerPerson: 46796, // Kč (z placených)
-  totalHoursPerMonth: 3132,
-  clientHoursPerMonth: 1527,
-  efficiency: 49,          // %
-  costPerClientHour: 736,  // Kč
-  contractTypes: [
-    { label: 'HPP',  count: 4,  percent: 15 },
-    { label: 'IČO',  count: 21, percent: 78 },
-    { label: 'DPP',  count: 2,  percent: 7  },
-  ],
-  seniority: [
-    { label: 'Junior', count: 9,  percent: 33 },
-    { label: 'Medior', count: 10, percent: 37 },
-    { label: 'Senior', count: 5,  percent: 19 },
-    { label: 'Lead',   count: 0,  percent: 0  },
-  ],
-  departments: [
-    { label: 'Creative',    count: 10, percent: 37 },
-    { label: 'Performance', count: 8,  percent: 30 },
-    { label: 'Account',     count: 3,  percent: 11 },
-    { label: 'Sales',       count: 3,  percent: 11 },
-    { label: 'Backoffice',  count: 2,  percent: 7  },
-    { label: 'HR',          count: 1,  percent: 4  },
-  ],
-}
+// DEMO_HR_STATS, DEMO_HEADCOUNT_TREND, DEMO_FLUCTUATION, DEMO_DEPARTMENT_HEADCOUNT,
+// DEMO_EMPLOYEE_PERFORMANCE, DEMO_TURNOVER_RATE a DEMO_AVG_TENURE se počítají z DEMO_TEAM — viz konec souboru.
 
-export const DEMO_HEADCOUNT_TREND = [
-  { month: "Led", year: 2024, count: 18 },
-  { month: "Úno", year: 2024, count: 19 },
-  { month: "Bře", year: 2024, count: 21 },
-  { month: "Dub", year: 2024, count: 21 },
-  { month: "Kvě", year: 2024, count: 23 },
-  { month: "Čvn", year: 2024, count: 22 },
-  { month: "Čvc", year: 2024, count: 22 },
-  { month: "Srp", year: 2024, count: 24 },
-  { month: "Zář", year: 2024, count: 25 },
-  { month: "Říj", year: 2024, count: 26 },
-  { month: "Lis", year: 2024, count: 26 },
-  { month: "Pro", year: 2024, count: 27 },
-]
-
-export const DEMO_FLUCTUATION = [
-  { month: "Led", nastupy: 2, odchody: 1 },
-  { month: "Úno", nastupy: 1, odchody: 0 },
-  { month: "Bře", nastupy: 3, odchody: 1 },
-  { month: "Dub", nastupy: 1, odchody: 1 },
-  { month: "Kvě", nastupy: 2, odchody: 0 },
-  { month: "Čvn", nastupy: 0, odchody: 1 },
-  { month: "Čvc", nastupy: 1, odchody: 1 },
-  { month: "Srp", nastupy: 3, odchody: 1 },
-  { month: "Zář", nastupy: 2, odchody: 1 },
-  { month: "Říj", nastupy: 2, odchody: 1 },
-  { month: "Lis", nastupy: 1, odchody: 1 },
-  { month: "Pro", nastupy: 2, odchody: 1 },
-]
-
-// Jen pro analytiku — stejné týmy jako TEAM_DEPARTMENTS / DEMO_TEAM (stránka Tým).
-// AnalyticsPanel počítá rozložení přímo z DEMO_TEAM; tohle je statická záloha se stejnými čísly.
-export const DEMO_DEPARTMENT_HEADCOUNT = [
-  { department: "Creative", count: 5 },
-  { department: "Performance", count: 4 },
-  { department: "Account", count: 2 },
-  { department: "Sales", count: 2 },
-  { department: "Backoffice", count: 1 },
-  { department: "HR", count: 1 },
-  { department: "Vývoj", count: 1 },
-]
-
-export const DEMO_EMPLOYEE_PERFORMANCE = [
-  {
-    id: "demo-employee-1",
-    name: "Jan Novák",
-    department: "Creative",
-    position: "Frontend Developer",
-    employmentType: "HPP",
-    onboardingProgress: 40,
-    leaveUsedPercent: 25,
-    tasksCompleted: 12,
-    tasksTotal: 15,
-    attendanceRate: 96,
-    performanceScore: 88,
-    lastReview: new Date("2024-09-01"),
-    tenure: 11, // months
-  },
-  {
-    id: "demo-employee-2",
-    name: "Marie Svobodová",
-    department: "Performance",
-    position: "Marketing Specialist",
-    employmentType: "DPP",
-    onboardingProgress: 100,
-    leaveUsedPercent: 40,
-    tasksCompleted: 28,
-    tasksTotal: 30,
-    attendanceRate: 99,
-    performanceScore: 94,
-    lastReview: new Date("2024-10-15"),
-    tenure: 18,
-  },
-  {
-    id: "demo-employee-3",
-    name: "Tomáš Dvořák",
-    department: "Account",
-    position: "Sales Manager",
-    employmentType: "ICO",
-    onboardingProgress: 100,
-    leaveUsedPercent: 60,
-    tasksCompleted: 45,
-    tasksTotal: 50,
-    attendanceRate: 91,
-    performanceScore: 79,
-    lastReview: new Date("2024-08-01"),
-    tenure: 27,
-  },
-  {
-    id: "demo-employee-4",
-    name: "Lucie Kratochvílová",
-    department: "Creative",
-    position: "Finanční analytik",
-    employmentType: "HPP",
-    onboardingProgress: 100,
-    leaveUsedPercent: 50,
-    tasksCompleted: 33,
-    tasksTotal: 35,
-    attendanceRate: 98,
-    performanceScore: 91,
-    lastReview: new Date("2024-11-01"),
-    tenure: 14,
-  },
-  {
-    id: "demo-employee-5",
-    name: "Ondřej Pospíšil",
-    department: "Vývoj",
-    position: "Backend Developer",
-    employmentType: "HPP",
-    onboardingProgress: 80,
-    leaveUsedPercent: 15,
-    tasksCompleted: 8,
-    tasksTotal: 12,
-    attendanceRate: 94,
-    performanceScore: 82,
-    lastReview: null,
-    tenure: 4,
-  },
-]
-
-export const DEMO_TURNOVER_RATE = 8.3
-export const DEMO_AVG_TENURE = 16.2
 export const DEMO_OPEN_POSITIONS = 3
 
 // ── General Tasks (all employees) ─────────────────────────────────────────
@@ -553,11 +386,11 @@ export const DEMO_TEAM: PersonRecord[] = [
   { id: "t8",  name: "Martin Beneš",       email: "martin.benes@fourbros.cz", position: "Sales Manager",        department: "Sales",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2019-05-01"), monthlyHours: 160, clientHours: 130, monthlySalary: null, hourlyRate: 1300, icoNumber: "33445566", officeAmount: 1800, refreshAmount: 400, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t9",  name: "Veronika Jelínková", email: "veronika.jelinkova@fourbros.cz", position: "Project Manager",      department: "Account",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-02-01"), monthlyHours: 150, clientHours: 100, monthlySalary: null, hourlyRate: 1000, icoNumber: "44556677", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t10", name: "Pavel Šimánek",      email: "pavel.simanek@fourbros.cz", position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-04-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1000, icoNumber: "55667788", officeAmount: 1300, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-11-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "66778899", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2024-02-01"), monthlyHours: 140, clientHours: 90, monthlySalary: null, hourlyRate: 750, icoNumber: "77889900", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-03-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "66778899", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-06-01"), monthlyHours: 140, clientHours: 90, monthlySalary: null, hourlyRate: 750, icoNumber: "77889900", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t13", name: "Michaela Červenková",email: "michaela.cervenkova@fourbros.cz", position: "Office Manager",       department: "Backoffice",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2020-06-01"), monthlyHours: 160, clientHours: null, monthlySalary: 42000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t14", name: "Radek Pospíšil",     email: "radek.pospisil@fourbros.cz", position: "Business Developer",   department: "Sales",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-07-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1050, icoNumber: "88990011", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-05-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "99001122", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2025-12-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "99001122", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t16", name: "Eva Horáková",       email: DEMO_TL.email,        position: "Team Lead — Vývoj",    department: "Vývoj",       seniority: "LEAD",   employmentType: "HPP", birthday: "1987-11-02", bio: "Vedu tým vývojářů a mám ráda, když věci dávají smysl.", emoji: "🧭", teamLeadId: null, role: "TL", startDate: new Date("2021-04-01"), monthlyHours: 168, clientHours: 100, monthlySalary: 85000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
 ]
 
@@ -1281,3 +1114,147 @@ export const DEMO_DIRECTIVES: Directive[] = [
 <p>Tato směrnice nabývá účinnosti dnem <strong>1. 6. 2026</strong>. Školení BOZP musí absolvovat každý zaměstnanec nejpozději do 30 dnů od tohoto data.</p>`,
   },
 ]
+
+
+// ── Odvozená data — všechno se počítá z DEMO_TEAM, ať demo drží pohromadě ──────
+
+const DAY_MS = 86400000
+const demoToday = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d })()
+const relDay = (days: number) => new Date(demoToday.getTime() + days * DAY_MS)
+const departmentOf = (name: string) => DEMO_TEAM.find((m) => m.name === name)?.department ?? 'HR'
+
+// Dovolené / home office / nemoc — jména a týmy přesně podle DEMO_TEAM.
+// Pár záznamů je relativně k dnešku, ať dashboard („Jak to vypadá dnes ve firmě“) vždycky něco ukazuje.
+const TEAM_LEAVE_SEEDS = [
+  { id: "tl1", userName: "Jan Novák", type: "ANNUAL", startDate: new Date("2026-05-26"), endDate: new Date("2026-05-30"), status: "APPROVED" },
+  { id: "tl2", userName: "Marie Svobodová", type: "ANNUAL", startDate: new Date("2026-06-09"), endDate: new Date("2026-06-20"), status: "APPROVED" },
+  { id: "tl3", userName: "Tomáš Dvořák", type: "ANNUAL", startDate: new Date("2026-06-15"), endDate: new Date("2026-06-19"), status: "APPROVED" },
+  { id: "tl4", userName: "Lucie Kratochvílová", type: "SICK", startDate: new Date("2026-06-02"), endDate: new Date("2026-06-03"), status: "APPROVED" },
+  { id: "tl5", userName: "Radek Pospíšil", type: "ANNUAL", startDate: new Date("2026-07-07"), endDate: new Date("2026-07-18"), status: "APPROVED" },
+  { id: "tl6", userName: "Jan Novák", type: "ANNUAL", startDate: new Date("2026-07-21"), endDate: new Date("2026-08-01"), status: "PENDING" },
+  { id: "tl7", userName: "Marie Svobodová", type: "ANNUAL", startDate: new Date("2026-08-10"), endDate: new Date("2026-08-21"), status: "APPROVED" },
+  { id: "tl8", userName: "Tomáš Dvořák", type: "PERSONAL", startDate: new Date("2026-05-12"), endDate: new Date("2026-05-12"), status: "APPROVED" },
+  { id: "tl9", userName: "Lucie Kratochvílová", type: "ANNUAL", startDate: new Date("2026-09-01"), endDate: new Date("2026-09-12"), status: "PENDING" },
+  { id: "tl10", userName: "Radek Pospíšil", type: "SICK", startDate: new Date("2026-05-05"), endDate: new Date("2026-05-06"), status: "APPROVED" },
+  { id: "tl11", userName: "Jan Novák", type: "ANNUAL", startDate: new Date("2025-12-22"), endDate: new Date("2025-12-31"), status: "APPROVED" },
+  { id: "tl12", userName: "Marie Svobodová", type: "ANNUAL", startDate: new Date("2025-12-27"), endDate: new Date("2025-12-31"), status: "APPROVED" },
+  { id: "tl13", userName: "Lucie Kratochvílová", type: "HOMEOFFICE", startDate: new Date("2026-08-25"), endDate: new Date("2026-08-27"), status: "APPROVED" },
+  { id: "tl14", userName: "Veronika Jelínková", type: "HOMEOFFICE", startDate: new Date("2026-08-27"), endDate: new Date("2026-08-27"), status: "APPROVED" },
+  { id: "tl15", userName: "Tomáš Dvořák", type: "LEKAR", startDate: new Date("2026-08-27"), endDate: new Date("2026-08-27"), status: "APPROVED" },
+  { id: "tl16", userName: "Klára Horáková", type: "HOMEOFFICE", startDate: relDay(0), endDate: relDay(0), status: "APPROVED" },
+  { id: "tl17", userName: "Adéla Procházková", type: "HOMEOFFICE", startDate: relDay(0), endDate: relDay(1), status: "APPROVED" },
+  { id: "tl18", userName: "Pavel Šimánek", type: "ANNUAL", startDate: relDay(-2), endDate: relDay(3), status: "APPROVED" },
+  { id: "tl19", userName: "Martin Beneš", type: "SICK", startDate: relDay(0), endDate: relDay(1), status: "APPROVED" },
+  { id: "tl20", userName: "Veronika Jelínková", type: "ANNUAL", startDate: relDay(7), endDate: relDay(11), status: "PENDING" },
+]
+
+export const DEMO_TEAM_LEAVES = TEAM_LEAVE_SEEDS.map((l) => ({
+  id: l.id, userName: l.userName, department: departmentOf(l.userName),
+  type: l.type, startDate: l.startDate, endDate: l.endDate, status: l.status,
+}))
+
+// Lidé, kteří za posledních 12 měsíců odešli — jen pro fluktuaci a vývoj počtu lidí.
+const DEMO_DEPARTURES = [
+  { name: "Filip Král", department: "Performance", employmentType: "ICO", startDate: new Date("2023-02-01"), endDate: new Date("2026-02-28") },
+  { name: "Barbora Šťastná", department: "Creative", employmentType: "ICO", startDate: new Date("2024-04-01"), endDate: new Date("2026-06-30") },
+  { name: "Lukáš Marek", department: "Sales", employmentType: "HPP", startDate: new Date("2025-09-01"), endDate: new Date("2026-09-15") },
+]
+
+const MONTH_SHORT = ["Led", "Úno", "Bře", "Dub", "Kvě", "Čvn", "Čvc", "Srp", "Zář", "Říj", "Lis", "Pro"]
+// Posledních 12 měsíců končících tím aktuálním.
+const LAST_12_MONTHS = Array.from({ length: 12 }, (_, i) => {
+  const d = new Date(demoToday.getFullYear(), demoToday.getMonth() - 11 + i, 1)
+  return { y: d.getFullYear(), m: d.getMonth() }
+})
+const monthEnd = (y: number, m: number) => new Date(y, m + 1, 0, 23, 59, 59)
+const inMonth = (d: Date, y: number, m: number) => d.getFullYear() === y && d.getMonth() === m
+
+/** Popisek období pro analytiku, např. „pro 2025 – lis 2026“. */
+export const DEMO_ANALYTICS_PERIOD = (() => {
+  const f = LAST_12_MONTHS[0], l = LAST_12_MONTHS[11]
+  return `${MONTH_SHORT[f.m].toLowerCase()} ${f.y} – ${MONTH_SHORT[l.m].toLowerCase()} ${l.y}`
+})()
+
+export const DEMO_HEADCOUNT_TREND = LAST_12_MONTHS.map(({ y, m }) => {
+  const end = monthEnd(y, m)
+  const count =
+    DEMO_TEAM.filter((p) => p.startDate <= end).length +
+    DEMO_DEPARTURES.filter((d) => d.startDate <= end && d.endDate > end).length
+  return { month: MONTH_SHORT[m], year: y, count }
+})
+
+export const DEMO_FLUCTUATION = LAST_12_MONTHS.map(({ y, m }) => ({
+  month: MONTH_SHORT[m],
+  nastupy: [...DEMO_TEAM, ...DEMO_DEPARTURES].filter((p) => inMonth(p.startDate, y, m)).length,
+  odchody: DEMO_DEPARTURES.filter((d) => inMonth(d.endDate, y, m)).length,
+}))
+
+const avgHeadcount = DEMO_HEADCOUNT_TREND.reduce((s, x) => s + x.count, 0) / DEMO_HEADCOUNT_TREND.length
+const round1 = (n: number) => Math.round(n * 10) / 10
+const tenureMonths = (start: Date) =>
+  Math.max(0, (demoToday.getFullYear() - start.getFullYear()) * 12 + demoToday.getMonth() - start.getMonth())
+
+export const DEMO_TURNOVER_RATE = round1((DEMO_FLUCTUATION.reduce((s, x) => s + x.odchody, 0) / avgHeadcount) * 100)
+export const DEMO_AVG_TENURE = round1(DEMO_TEAM.reduce((s, p) => s + tenureMonths(p.startDate), 0) / DEMO_TEAM.length)
+
+export const DEMO_DEPARTMENT_HEADCOUNT = TEAM_DEPARTMENTS.map((department) => ({
+  department, count: DEMO_TEAM.filter((m) => m.department === department).length,
+}))
+
+// Výkonnostní přehled pro analytiku (délka spolupráce, typy spolupráce) — všichni z DEMO_TEAM.
+export const DEMO_EMPLOYEE_PERFORMANCE = DEMO_TEAM.map((p, i) => {
+  const tenure = tenureMonths(p.startDate)
+  const tasksTotal = 10 + ((i * 7) % 30)
+  return {
+    id: p.id,
+    name: p.name,
+    department: p.department,
+    position: p.position,
+    employmentType: p.employmentType,
+    onboardingProgress: tenure < 3 ? 40 : tenure < 6 ? 80 : 100,
+    leaveUsedPercent: (i * 13) % 70 + 10,
+    tasksCompleted: tasksTotal - (i % 4),
+    tasksTotal,
+    attendanceRate: 90 + (i % 10),
+    performanceScore: 75 + ((i * 11) % 24),
+    lastReview: tenure < 6 ? null : new Date(demoToday.getFullYear(), (i * 5) % 12, 1),
+    tenure,
+  }
+})
+
+// Mzdové KPI pro admin — z platů / sazeb a hodin v DEMO_TEAM.
+const EMPLOYER_LEVY = 1.338 // HPP: odvody zaměstnavatele
+const monthlyCostOf = (p: PersonRecord) => {
+  if (p.employmentType === "ICO") return (p.hourlyRate ?? 0) * (p.monthlyHours ?? 0) + (p.officeAmount ?? 0) + (p.refreshAmount ?? 0)
+  if (p.employmentType === "HPP") return (p.monthlySalary ?? 0) * EMPLOYER_LEVY
+  return p.monthlySalary ?? 0
+}
+const pct = (n: number, total: number) => (total ? Math.round((n / total) * 100) : 0)
+
+export const DEMO_HR_STATS = (() => {
+  const people = DEMO_TEAM
+  const paid = people.filter((p) => monthlyCostOf(p) > 0)
+  const monthlyCost = Math.round(paid.reduce((s, p) => s + monthlyCostOf(p), 0))
+  const totalHoursPerMonth = people.reduce((s, p) => s + (p.monthlyHours ?? 0), 0)
+  const clientHoursPerMonth = people.reduce((s, p) => s + (p.clientHours ?? 0), 0)
+  const n = people.length
+  const countBy = (pred: (p: PersonRecord) => boolean) => people.filter(pred).length
+  return {
+    activePeople: n,
+    paidPeople: paid.length,
+    monthlyCost,
+    annualCost: monthlyCost * 12,
+    avgCostPerPerson: paid.length ? Math.round(monthlyCost / paid.length) : 0,
+    totalHoursPerMonth,
+    clientHoursPerMonth,
+    efficiency: pct(clientHoursPerMonth, totalHoursPerMonth),
+    costPerClientHour: clientHoursPerMonth ? Math.round(monthlyCost / clientHoursPerMonth) : 0,
+    contractTypes: [
+      { label: "HPP", value: "HPP" }, { label: "IČO", value: "ICO" }, { label: "DPP", value: "DPP" }, { label: "DPČ", value: "DPC" },
+    ].map((t) => { const c = countBy((p) => p.employmentType === t.value); return { label: t.label, count: c, percent: pct(c, n) } }),
+    seniority: [
+      { label: "Junior", value: "JUNIOR" }, { label: "Medior", value: "MEDIOR" }, { label: "Senior", value: "SENIOR" }, { label: "Lead", value: "LEAD" },
+    ].map((t) => { const c = countBy((p) => p.seniority === t.value); return { label: t.label, count: c, percent: pct(c, n) } }),
+    departments: TEAM_DEPARTMENTS.map((d) => { const c = countBy((p) => p.department === d); return { label: d, count: c, percent: pct(c, n) } }),
+  }
+})()
