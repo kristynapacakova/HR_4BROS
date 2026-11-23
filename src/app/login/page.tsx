@@ -6,10 +6,30 @@ import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import { IntroAnimation } from './IntroAnimation'
 
+const DEMO_ACCOUNTS = [
+  { email: 'admin@fourbros.cz', name: 'Admin & HR' },
+  { email: 'eva.horakova@fourbros.cz', name: 'Eva Horáková', role: 'Team Lead' },
+  { email: 'tomas.dvorak@fourbros.cz', name: 'Tomáš Dvořák', role: 'OSVČ' },
+  { email: 'jan.novak@fourbros.cz', name: 'Jan Novák', role: 'Zaměstnanec' },
+]
+
+function GoogleG({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+      <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+      <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/>
+      <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+    </svg>
+  )
+}
+
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
+  const [showPicker, setShowPicker] = useState(false)
+  const [showOther, setShowOther] = useState(false)
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
 
@@ -28,6 +48,12 @@ function LoginForm() {
     e.preventDefault()
     setLoading(true)
     await signIn('credentials', { email, callbackUrl: '/dashboard' })
+    setLoading(false)
+  }
+
+  const loginAs = async (accountEmail: string) => {
+    setLoading(true)
+    await signIn('credentials', { email: accountEmail, callbackUrl: '/dashboard' })
     setLoading(false)
   }
 
@@ -101,41 +127,73 @@ function LoginForm() {
               </div>
             )}
 
-            <div className="mb-5 p-3 bg-gold-tint border border-[rgba(240,225,0,0.4)]">
-              <p className="text-navy text-xs font-bold mb-1">Demo verze</p>
-              <p className="text-navy/70 text-xs leading-relaxed">
-                <strong>admin@fourbros.cz</strong> — Admin &amp; HR,{' '}
-                <strong>eva.horakova@fourbros.cz</strong> — Team Lead,{' '}
-                <strong>tomas.dvorak@fourbros.cz</strong> — OSVČ,{' '}
-                <strong>jan.novak@fourbros.cz</strong> — zaměstnanec.
-                Libovolný jiný e-mail se přihlásí jako zaměstnanec. (Skutečné přihlášení přes Google účet vyžaduje
-                napojení na Google Workspace, které v tomto demu není zapojené.)
-              </p>
-            </div>
+            {!showPicker ? (
+              <>
+                <button
+                  onClick={() => setShowPicker(true)}
+                  className="w-full flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide py-3 px-4 transition-colors"
+                >
+                  <GoogleG className="w-5 h-5 flex-shrink-0" />
+                  Přihlásit přes Google
+                </button>
+                <p className="text-xs text-navy/40 text-center mt-3 leading-relaxed">
+                  Skutečné přihlášení přes Google účet vyžaduje napojení na Google Workspace, které v{' '}tomto demu
+                  není zapojené — tlačítko simuluje výběr účtu.
+                </p>
+              </>
+            ) : (
+              <div className="shadow-[inset_0_0_0_1px_rgba(13,33,79,0.14)]">
+                <div className="px-4 py-3 shadow-[inset_0_-1px_0_rgba(13,33,79,0.14)] flex items-center gap-2">
+                  <GoogleG className="w-4 h-4 flex-shrink-0" />
+                  <p className="text-sm text-navy/70">Vybrat účet</p>
+                </div>
+                {DEMO_ACCOUNTS.map(acc => (
+                  <button
+                    key={acc.email}
+                    disabled={loading}
+                    onClick={() => loginAs(acc.email)}
+                    className="w-full flex items-center gap-3 px-4 py-3 shadow-[inset_0_-1px_0_rgba(13,33,79,0.08)] hover:bg-navy/5 transition-colors text-left disabled:opacity-50"
+                  >
+                    <div className="w-8 h-8 bg-violet flex items-center justify-center flex-shrink-0">
+                      <span className="text-white text-xs font-semibold">{acc.name[0]}</span>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-navy truncate">{acc.name}</p>
+                      <p className="text-xs text-navy/50 truncate">{acc.email}{acc.role ? ` · ${acc.role}` : ''}</p>
+                    </div>
+                  </button>
+                ))}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-navy mb-1.5">
-                  Firemní e-mail
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="vas@fourbros.cz"
-                  required
-                  className="w-full px-4 py-3 border border-[rgba(13,33,79,0.14)] text-sm focus:outline-none focus:border-[#0D214F] transition-all"
-                />
+                {!showOther ? (
+                  <button
+                    onClick={() => setShowOther(true)}
+                    className="w-full px-4 py-3 text-left text-sm text-violet hover:bg-navy/5 transition-colors"
+                  >
+                    + Použít jiný účet
+                  </button>
+                ) : (
+                  <form onSubmit={handleSubmit} className="p-4 space-y-3">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="vas@fourbros.cz"
+                      required
+                      autoFocus
+                      className="w-full px-3 py-2.5 border border-[rgba(13,33,79,0.14)] text-sm focus:outline-none focus:border-[#0D214F] transition-all"
+                    />
+                    <p className="text-xs text-navy/40">Libovolný jiný e-mail se přihlásí jako zaměstnanec.</p>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide py-2.5 px-4 transition-colors disabled:opacity-50"
+                    >
+                      {loading ? 'Přihlašování...' : 'Pokračovat'}
+                    </button>
+                  </form>
+                )}
               </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gold hover:bg-gold-dark hover:text-white text-navy font-bold uppercase tracking-wide py-3 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Přihlašování...' : 'Přihlásit se'}
-              </button>
-            </form>
+            )}
 
             <div className="mt-6 pt-6 shadow-[inset_0_1px_0_rgba(13,33,79,0.14)]">
               <p className="text-xs text-navy/40 text-center leading-relaxed">
