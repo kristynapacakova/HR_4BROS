@@ -1,15 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import { IntroAnimation } from './IntroAnimation'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showIntro, setShowIntro] = useState(false)
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
+
+  useEffect(() => {
+    try {
+      if (!sessionStorage.getItem('fb-intro-seen')) setShowIntro(true)
+    } catch { /* noop */ }
+  }, [])
+
+  const dismissIntro = () => {
+    try { sessionStorage.setItem('fb-intro-seen', '1') } catch { /* noop */ }
+    setShowIntro(false)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,6 +33,7 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      {showIntro && <IntroAnimation onDone={dismissIntro} />}
 
       {/* Levá polovina — navy, 4x4 mřížka, claim */}
       <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
