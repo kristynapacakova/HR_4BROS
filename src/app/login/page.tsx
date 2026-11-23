@@ -120,8 +120,8 @@ function LoginForm() {
               <img src="/brand/symbol-white.svg" alt="4B" className="w-7 h-auto" />
             </div>
             <div>
-              <p className="text-navy/70 text-[10px] font-semibold uppercase tracking-[0.14em] leading-snug">HR Portál</p>
-              <p className="text-navy/70 text-[10px] font-semibold uppercase tracking-[0.14em] leading-snug">Interní HR Portál</p>
+              <p className="text-navy/70 text-[10px] font-semibold uppercase tracking-[0.14em] leading-snug">Four Bros</p>
+              <p className="text-navy/70 text-[10px] font-semibold uppercase tracking-[0.14em] leading-snug">Interní systém</p>
             </div>
           </div>
 
@@ -129,7 +129,7 @@ function LoginForm() {
             Přihlášení do HR&nbsp;Portálu
           </h2>
           <p className="text-navy/75 text-[13px] leading-relaxed mb-5">
-            Pokračujte pomocí firemního e-mailu. Přístup je povolen pouze zaměstnancům Four&nbsp;Bros.
+            Pokračujte pomocí firemního e-mailu. Přístup mají pouze uživatelé Four&nbsp;Bros.
           </p>
 
           {error && (
