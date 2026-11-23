@@ -232,19 +232,32 @@
   to { transform: none; opacity: 1; }
 }
 
-/* Schránka důvěry — animace obálky (SafeEnvelope.tsx) */
+/* Schránka důvěry — animace obálky se zámkem a rukou (SafeEnvelope.tsx) */
 .env-anim .env-letter { animation: env-letter 0.9s cubic-bezier(.5,0,.3,1) both; }
 .env-anim .env-flap { animation: env-flap 0.5s cubic-bezier(.6,0,.3,1) 0.85s both; }
 .env-anim .env-lock { animation: env-lock 0.55s cubic-bezier(.3,1.6,.5,1) 1.35s both; }
-.env-anim .env-shackle { animation: env-shackle 0.25s ease-in 1.85s both; }
+.env-anim .env-shackle { animation: env-shackle 0.18s cubic-bezier(.7,0,1,1) 2.68s both; }
+.env-anim .env-hand { animation: env-hand 1.7s cubic-bezier(.45,0,.25,1) 1.85s both; }
+.env-anim .env-flash { animation: env-flash 0.5s ease-out 2.82s both; }
 .env-anim .env-spark { transform-box: fill-box; transform-origin: center; animation: env-spark 0.35s cubic-bezier(.3,1.8,.5,1) both; }
 @keyframes env-letter { 0% { transform: translateY(-58px); opacity: 0; } 25% { opacity: 1; } 70% { transform: translateY(-58px); } 100% { transform: translateY(6px); } }
 @keyframes env-flap { from { transform: scaleY(-1); } to { transform: scaleY(1); } }
 @keyframes env-lock { from { transform: translateY(-34px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes env-shackle { from { transform: translateY(-6px); } to { transform: none; } }
+@keyframes env-shackle { from { transform: translateY(-11px); } to { transform: none; } }
+@keyframes env-hand {
+  0% { transform: translateX(70px); opacity: 0; }
+  25% { transform: translateX(0); opacity: 1; }
+  38% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(0) rotate(-32deg); }
+  62% { transform: translateX(0) rotate(0deg); opacity: 1; }
+  78% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(80px); opacity: 0; }
+}
+@keyframes env-flash { 0% { transform: scale(0.8); opacity: 0; } 30% { opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
 @keyframes env-spark { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .env-anim .env-letter, .env-anim .env-flap, .env-anim .env-lock, .env-anim .env-shackle, .env-anim .env-spark { animation: none; }
+  .env-anim .env-hand, .env-anim .env-flash { animation: none; opacity: 0; }
 }
 
 /* Interní směrnice — animace štosu (DirectivesStack.tsx) */

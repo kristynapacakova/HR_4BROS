@@ -31,7 +31,7 @@ export default async function FeedbackPage() {
                 Zpráva je zamčená — anonymní nelze dohledat
               </p>
             </div>
-            <SafeEnvelope className="w-32 sm:w-36 flex-shrink-0 self-center" />
+            <SafeEnvelope className="w-40 sm:w-48 flex-shrink-0 self-center" />
           </div>
         </div>
 
