@@ -3,13 +3,10 @@
  * analytika). Barvy jen z 4B palety.
  */
 export const DEPARTMENT_COLORS: Record<string, string> = {
-  HR: '#F0E100',
+  'Head office': '#F0E100',
   Creative: '#834DFB',
   Performance: '#4DE791',
-  Account: '#b9cbf3',
-  Sales: '#FFFFFF',
-  Backoffice: '#a97cfc',
-  'Vývoj': '#5c7bb5',
+  'Account manager': '#b9cbf3',
 }
 
 /** Barva týmu; neznámý tým dostane navy-400. */

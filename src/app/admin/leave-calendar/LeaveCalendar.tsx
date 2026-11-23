@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { DEMO_TEAM } from '@/lib/mock-data'
 import { Plus, ChevronDown, Plane, Home, Stethoscope, Thermometer, Wallet, Ban, Trash2 } from 'lucide-react'
 
 interface Leave {
@@ -27,22 +28,8 @@ const LEGEND_ORDER = ['ANNUAL', 'PLACENE_VOLNO', 'NEPLACENE_VOLNO', 'SICK', 'LEK
 const CZ_MONTHS = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec']
 const CZ_DAYS_SHORT = ['Po','Út','St','Čt','Pá','So','Ne']
 
-// All demo people (combine employees + admin for display)
-const ALL_PEOPLE = [
-  { id: 'p1',  name: 'Jan Novák',           department: 'Vývoj' },
-  { id: 'p2',  name: 'Ondřej Pospíšil',     department: 'Vývoj' },
-  { id: 'p3',  name: 'Karolína Horáčková',  department: 'Vývoj' },
-  { id: 'p4',  name: 'Marek Blažek',        department: 'Vývoj' },
-  { id: 'p5',  name: 'Simona Veselá',       department: 'Vývoj' },
-  { id: 'p6',  name: 'Marie Svobodová',     department: 'Marketing' },
-  { id: 'p7',  name: 'Radek Šimánek',      department: 'Marketing' },
-  { id: 'p8',  name: 'Veronika Procházková',department: 'Marketing' },
-  { id: 'p9',  name: 'Tomáš Dvořák',       department: 'Obchod' },
-  { id: 'p10', name: 'Lenka Marková',       department: 'Obchod' },
-  { id: 'p11', name: 'Pavel Černý',         department: 'Obchod' },
-  { id: 'p12', name: 'Lucie Kratochvílová', department: 'Finance' },
-  { id: 'p13', name: 'Petra Nováková',      department: 'HR' },
-]
+// Všichni lidé z týmu — stejný zdroj jako stránka Tým
+const ALL_PEOPLE = DEMO_TEAM.map((m) => ({ id: m.id, name: m.name, department: m.department }))
 
 function getDaysInMonth(y: number, m: number) { return new Date(y, m + 1, 0).getDate() }
 function dayOfWeek(y: number, m: number, d: number) { return (new Date(y, m, d).getDay() + 6) % 7 } // Mon=0

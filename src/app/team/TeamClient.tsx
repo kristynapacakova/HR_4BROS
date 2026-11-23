@@ -73,7 +73,7 @@ export function TeamClient({ members, departments }: {
   })
 
   // Oddělení do sekcí — HR (vedení) první, pak zbytek v pořadí TEAM_DEPARTMENTS.
-  const deptOrder = ['HR', ...departments.filter(d => d !== 'HR')]
+  const deptOrder = ['Head office', ...departments.filter(d => d !== 'Head office')]
   const groups = deptOrder
     .map(d => ({ dept: d, members: sortGroup(filtered.filter(m => m.department === d)) }))
     .filter(g => g.members.length > 0)

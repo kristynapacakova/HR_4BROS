@@ -53,7 +53,7 @@ export function CreateEmployeeForm({ onCreated, onCancel }: { onCreated?: () => 
         {[
           { key: 'name', label: 'Jméno a příjmení', placeholder: 'Jan Novák', required: true },
           { key: 'email', label: 'Firemní e-mail', placeholder: 'jan.novak@fourbros.cz', type: 'email', required: true },
-          { key: 'department', label: 'Oddělení', placeholder: 'Vývoj' },
+          { key: 'department', label: 'Tým', placeholder: 'Creative' },
           { key: 'position', label: 'Pozice', placeholder: 'Developer' },
           { key: 'startDate', label: 'Datum nástupu', type: 'date' },
         ].map(({ key, label, placeholder, type = 'text', required }) => (

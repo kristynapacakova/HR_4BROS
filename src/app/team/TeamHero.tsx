@@ -13,8 +13,8 @@ export type HeroMember = { id: string; name: string; department: string; birthda
 
 const SQ = 22
 const SQ_GAP = 4
-const COL_W = 90
-const COL_GAP = 4
+const COL_W = 118
+const COL_GAP = 10
 const CHART_H = 160
 
 function seeded(seed: number) {
