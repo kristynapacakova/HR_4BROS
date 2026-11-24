@@ -7,10 +7,12 @@ import { OdmenyTabs, type PayslipRow } from './OdmenyTabs'
 import { InvoiceOverview } from '../faktury/InvoiceOverview'
 import { ExpenseAdmin } from '../vydaje/ExpenseAdmin'
 import { PayScheduleSettings } from './PayScheduleSettings'
+import { PayslipUploadAdmin } from './PayslipUploadAdmin'
 import type { IcoInvoiceRecord, ExpenseRequest } from '@/lib/mock-data'
 
 const SUB_TABS = [
   { id: 'odmeny', label: 'Přehled odměn', icon: IconBanknote },
+  { id: 'pasky', label: 'Výplatní pásky', icon: IconContract },
   { id: 'faktury', label: 'Přehled faktur OSVČ', icon: IconContract },
   { id: 'doklady', label: 'Doklady k proplacení', icon: IconReceipt },
 ] as const
@@ -56,6 +58,8 @@ export function OdmenySection({
           <OdmenyTabs payslips={payslipRows} />
         </div>
       )}
+
+      {sub === 'pasky' && <PayslipUploadAdmin />}
 
       {sub === 'faktury' && (
         <div className="space-y-4">

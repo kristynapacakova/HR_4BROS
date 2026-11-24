@@ -5,12 +5,25 @@ import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbe
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
-  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, INVOICE_STATUS_LABELS, DEMO_TEAM_LEAVES,
+  DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, INVOICE_STATUS_LABELS, DEMO_TEAM_LEAVES, DEMO_TEAM, PERSONA_EMAIL_BY_ID,
   type BenefitType, type ExpenseRequest, type SportBenefitRequest, type InvoicePaymentStatus,
 } from '@/lib/mock-data'
 import { loadBenefitSelections, loadSportRequests, saveSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
 import { loadInvoiceStatuses, invoiceStatusKey, INVOICE_STATUS_CHANGED_EVENT } from '@/lib/invoice-status-client'
+import { loadPayslipFiles, openPayslipFile, payslipKey, PAYSLIP_FILES_CHANGED_EVENT, type PayslipFile } from '@/lib/payslip-file-client'
+
+/** Výplatní pásky nahrané HR (Přehled odměn → Výplatní pásky) */
+function usePayslipFiles() {
+  const [files, setFiles] = useState<Record<string, PayslipFile>>({})
+  useEffect(() => {
+    const refresh = () => setFiles(loadPayslipFiles())
+    refresh()
+    window.addEventListener(PAYSLIP_FILES_CHANGED_EVENT, refresh)
+    return () => window.removeEventListener(PAYSLIP_FILES_CHANGED_EVENT, refresh)
+  }, [])
+  return files
+}
 
 const MONTH_NAMES = [
   'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
@@ -221,7 +234,8 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
   )
 }
 
-function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeName, monthlySalary }: {
+function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeName, monthlySalary, personId }: {
+  personId?: string
   p: Payslip
   benefitType: BenefitType | null
   sportRequests: { employeeId: string; month: number; year: number; status: string }[]
@@ -230,6 +244,8 @@ function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeN
   monthlySalary: number
 }) {
   const [open, setOpen] = useState(false)
+  const files = usePayslipFiles()
+  const file = personId ? files[payslipKey(personId, p.month, p.year)] : undefined
 
   const monthSportApproved = sportRequests.some(r => r.status === 'APPROVED' && r.month === p.month && r.year === p.year)
   const monthExpenses = expenseRequests.filter(e => e.status === 'APPROVED' && e.month === p.month && e.year === p.year)
@@ -295,10 +311,12 @@ function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeN
               <div className="flex items-center justify-between gap-4">
                 <span className="text-slate-500 flex items-center gap-1.5">
                   Výplatní páska
-                  {!p.planned && (
-                    <button type="button" title="Stáhnout výplatní pásku (demo)" className="text-slate-400 hover:text-violet transition-colors">
-                      <Download className="w-3.5 h-3.5" />
+                  {file ? (
+                    <button type="button" onClick={e => { e.stopPropagation(); openPayslipFile(file) }} title={`Stáhnout ${file.fileName}`} className="flex items-center gap-1 text-violet hover:underline">
+                      <Download className="w-3.5 h-3.5" /> <span className="text-xs">PDF</span>
                     </button>
+                  ) : !p.planned && (
+                    <span className="text-[11px] text-slate-400">— HR ji zatím nenahrálo</span>
                   )}
                 </span>
                 <span className="font-medium text-navy">{fmt(p.netAmount, p.currency)}</span>
@@ -332,7 +350,8 @@ function HppMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeN
   )
 }
 
-function HppYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeName, monthlySalary }: {
+function HppYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeName, monthlySalary, personId }: {
+  personId?: string
   year: number
   payslips: Payslip[]
   benefitType: BenefitType | null
@@ -364,7 +383,7 @@ function HppYearTable({ year, payslips, benefitType, sportRequests, expenseReque
         </thead>
         <tbody className="divide-y divide-slate-50">
           {allMonths.map((p) => (
-            <HppMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeName={employeeName} monthlySalary={monthlySalary} />
+            <HppMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeName={employeeName} monthlySalary={monthlySalary} personId={personId} />
           ))}
         </tbody>
       </table>
@@ -397,6 +416,8 @@ export function PayslipsClient({
   icoExpenses?: { label: string; amount: number }[]
 }) {
   const [showSickDetail, setShowSickDetail] = useState(false)
+  // přihlašovací id → člověk v týmu (pásky nahrává HR pod id člověka)
+  const personId = employeeId ? (DEMO_TEAM.find(m => m.id === employeeId) ?? DEMO_TEAM.find(m => m.email === PERSONA_EMAIL_BY_ID[employeeId]))?.id : undefined
   const [benefitType, setBenefitType] = useState<BenefitType | null>(null)
   const [approvedThisMonth, setApprovedThisMonth] = useState(false)
   const [allSportRequests, setAllSportRequests] = useState<SportBenefitRequest[]>([])
@@ -991,6 +1012,7 @@ export function PayslipsClient({
               expenseRequests={myExpenses}
               employeeName={employeeName}
               monthlySalary={salaryInfo.currentSalary}
+              personId={personId}
             />
           )
         ) : (

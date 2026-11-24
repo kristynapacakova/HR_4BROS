@@ -19,6 +19,14 @@ Zkratky souborů: `MD` = `src/lib/mock-data.ts`, `PC` = `src/app/payslips/Paysli
 | planned | boolean | budoucí plánovaná mzda, páska ještě není |
 
 - ⚠️ **Chybí vazba na člověka** — stejné (Janovy) pásky vidí každý, i OSVČ. V DB: `personId`.
+
+### PayslipFile — nahraná výplatní páska (PDF) (`src/lib/payslip-file-client.ts`, `fb-payslip-files`)
+`personId`, `month`, `year`, `fileName`, `size`, `uploadedAt` (+ v demu obsah jako data URL).
+- **HR nahrává** v Admin → Přehled odměn → **Výplatní pásky**: výběr měsíce (výchozí minulý), seznam lidí s HPP/DPP/DPČ, u každého „Nahrát PDF / Nahradit / Stáhnout / Smazat“, stav „Nahráno / Chybí“, počítadlo „X / 5 nahráno“. **Hromadně**: soubory pojmenované příjmením (`novak_rijen.pdf`) se spárují samy (bez diakritiky).
+- Po nahrání dostane člověk notifikaci „Výplatní páska za {měsíc} je k dispozici“ → Moje odměna.
+- **Zaměstnanec stahuje** v Moje odměna → rozbalený měsíc → „Výplatní páska · PDF“; když chybí: „HR ji zatím nenahrálo“.
+- Jen PDF. Napojení: soubor do úložiště (`Document`, kind = PAYSLIP) — dnes jen v prohlížeči (větší soubory jen jménem).
+- **K rozhodnutí:** nahrává HR ručně, nebo přijdou rovnou od mzdové účetní / ze mzdového systému?
 - ⚠️ 2026 má všech 12 měsíců `planned: true`, i když je listopad.
 
 ### SalaryInfo — plat a navýšení (`MD:61-67`)

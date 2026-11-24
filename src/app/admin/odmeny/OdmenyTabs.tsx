@@ -90,16 +90,17 @@ function buildPeople(rows: PayslipRow[]): PersonYear[] {
 }
 
 function MonthBars({ person, max, width = 108, height = 28 }: { person: PersonYear; max: number; width?: number; height?: number }) {
-  const slot = width / 12
-  const barW = Math.max(2, slot - 2)
+  // celočíselné rozměry → všechny sloupečky stejně široké i při přiblížení
+  const slot = Math.floor(width / 12)
+  const barW = slot - 3
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden="true" className="block">
       {person.months.map((m, i) => {
-        const x = i * slot + (slot - barW) / 2
+        const x = i * slot + 1
         if (!m) return <rect key={i} x={x} y={height - 2} width={barW} height={2} fill={C_EMPTY} />
-        const h = Math.max(2, (m.grossAmount / (max || 1)) * height)
+        const h = Math.max(2, Math.round((m.grossAmount / (max || 1)) * height))
         const fill = i === person.latestIdx ? C_GOLD : m.planned ? C_PLANNED : C_NAVY
-        return <rect key={i} x={x} y={height - h} width={barW} height={h} fill={fill} shapeRendering="crispEdges" />
+        return <rect key={i} x={x} y={height - h} width={barW} height={h} fill={fill} />
       })}
     </svg>
   )
