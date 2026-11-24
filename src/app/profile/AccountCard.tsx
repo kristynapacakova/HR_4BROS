@@ -66,7 +66,7 @@ export function AccountCard({ info, tabs }: { info: AccountInfo; tabs: Component
   return (
     <div className="w-full">
       <section className="relative bg-navy text-white overflow-hidden mb-6 min-h-[256px] flex flex-col">
-        <div className="relative flex-1 flex flex-col sm:flex-row sm:items-start gap-6 px-7 sm:px-9 pt-9 pb-8">
+        <div className="relative flex-1 flex flex-col sm:flex-row sm:items-start gap-6 px-7 sm:px-9 pt-6 pb-6">
           {/* fotka + jméno — stejná pozice a velikost jako na Dashboardu, ať přechod neposkočí */}
           <div className="flex items-end gap-6 flex-1 min-w-0">
             <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={HERO_PHOTO} hideGlow fallback={<Silhouette department={info.department} />} />

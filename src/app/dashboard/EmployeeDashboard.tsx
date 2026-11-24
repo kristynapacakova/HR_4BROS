@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { DEMO_TEAM } from '@/lib/mock-data'
 import { Avatar, personView, plural, useProfiles } from '@/app/team/teamPeople'
@@ -35,6 +34,8 @@ export interface EmployeeDashData {
 const MONTHS_SHORT = ['led', 'úno', 'bře', 'dub', 'kvě', 'čvn', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro']
 /** Velikost fotky v hlavičce — stejná na Dashboardu i v Můj účet */
 export const HERO_PHOTO = 112
+/** kolik úkolů se vejde do hlavičky; zbytek po rozbalení */
+const VISIBLE_TODOS = 2
 const rise = (i: number) => ({ animation: `fb-rise .5s cubic-bezier(.16,1,.3,1) ${i * 70}ms backwards` })
 
 function usePeople() {
@@ -136,16 +137,6 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
   const upcoming = useUpcomingEvents()
   const meP = data.meId ? person(data.meId) : null
   const [showAll, setShowAll] = useState(false)
-  const todoRef = useRef<HTMLDivElement>(null)
-  // rozbalené úkoly zavřít kliknutím mimo nebo klávesou Esc
-  useEffect(() => {
-    if (!showAll) return
-    const onDown = (e: MouseEvent) => { if (todoRef.current && !todoRef.current.contains(e.target as Node)) setShowAll(false) }
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowAll(false) }
-    document.addEventListener('mousedown', onDown)
-    document.addEventListener('keydown', onKey)
-    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey) }
-  }, [showAll])
   // HR sama sobě kontakt neukazuje
   const hr = data.hrContact && data.hrContact.id !== data.meId ? person(data.hrContact.id) : null
 
@@ -161,8 +152,8 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
   return (
     <div className="w-full space-y-5">
       {/* ── hlavička ── */}
-      <section className="relative bg-navy text-white min-h-[256px] flex">
-        <div className="flex-1 grid lg:grid-cols-[1fr_400px] gap-8 px-7 sm:px-9 pt-9 pb-8">
+      <section className="relative bg-navy text-white overflow-hidden min-h-[256px] flex flex-col">
+        <div className="flex-1 grid lg:grid-cols-[1fr_420px] gap-8 px-7 sm:px-9 pt-6 pb-[19px]">
           <div className="flex flex-col gap-6 min-w-0">
             <div className="flex items-end gap-6">
               {meP ? <Avatar p={meP} size={HERO_PHOTO} fontSize={34} /> : <span className="flex-shrink-0 bg-white/10 flex items-center justify-center font-headline text-4xl" style={{ width: HERO_PHOTO, height: HERO_PHOTO }}>{data.initial}</span>}
@@ -178,56 +169,49 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 self-start w-full">
-            {/* Čeká na tebe — rozbalovací, ať hlavička drží stejnou výšku jako ostatní záložky */}
-            <div className="relative" ref={todoRef}>
-              <button
-                type="button"
-                onClick={() => todos.length && setShowAll(v => !v)}
-                aria-expanded={showAll}
-                className={`w-full bg-white text-navy px-5 py-4 flex items-center gap-4 text-left ${todos.length ? 'hover:bg-alice' : 'cursor-default'}`}
-              >
-                {todos.length === 0 ? (
-                  <span className="relative w-9 h-9 bg-mint flex items-center justify-center font-bold flex-shrink-0" style={{ animation: 'dash-pop .4s ease-out' }}>✓<DoneBurst /></span>
-                ) : (
-                  <span className="w-9 h-9 bg-gold flex items-center justify-center font-headline text-[18px] flex-shrink-0" style={{ fontWeight: 600 }}>{todos.length}</span>
-                )}
-                <span className="flex-1 min-w-0">
-                  <span className="block font-headline text-[17px] leading-tight" style={{ fontWeight: 600 }}>Čeká na tebe</span>
-                  <span className="block text-xs text-navy/55 truncate">{todos.length ? `${todos.length} ${plural(todos.length, 'úkol', 'úkoly', 'úkolů')} · ${todos[0].label}` : 'Máš hotovo, díky!'}</span>
-                </span>
-                {todos.length > 0 && (showAll ? <ChevronUp className="w-4 h-4 text-navy/50" /> : <ChevronDown className="w-4 h-4 text-navy/50" />)}
-              </button>
-              {showAll && todos.length > 0 && (
-                <ul className="absolute left-0 right-0 top-full z-30 bg-white text-navy border-t border-[rgba(13,33,79,0.08)] px-5 py-1 divide-y divide-[rgba(13,33,79,0.08)] outline outline-1 outline-[rgba(13,33,79,0.14)]">
-                  {todos.map((td, i) => (
-                    <li key={td.id}>
-                      <Link href={td.href} className="group flex items-center gap-3 py-2.5" style={rise(i)}>
-                        <span className="w-5 h-5 border-2 border-navy/30 flex-shrink-0 transition-colors group-hover:border-violet" />
-                        <span className="flex-1 min-w-0">
-                          <span className="block text-sm font-semibold group-hover:text-violet">{td.label}</span>
-                          <span className="block text-[11px] text-navy/50">{td.hint}</span>
-                        </span>
-                        <span className="text-navy/30 group-hover:text-violet">→</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+          {/* úkoly — bílý papír na navy; ukáže, kolik se vejde do výšky hlavičky, zbytek po rozbalení */}
+          <div className={`bg-white text-navy px-5 pt-3 pb-2 flex flex-col ${showAll ? '' : 'max-h-[168px] overflow-hidden'}`}>
+            <div className="flex items-baseline justify-between mb-0.5">
+              <p className="font-headline text-[17px]" style={{ fontWeight: 600 }}>Čeká na tebe</p>
+              {todos.length > VISIBLE_TODOS ? (
+                <button type="button" onClick={() => setShowAll(v => !v)} className="text-xs font-semibold text-violet hover:underline">
+                  {showAll ? 'Sbalit' : `Všech ${todos.length} →`}
+                </button>
+              ) : (
+                <span className="text-xs text-navy/50">{todos.length ? `${todos.length} ${plural(todos.length, 'úkol', 'úkoly', 'úkolů')}` : ''}</span>
               )}
             </div>
-
-            {/* odpočet do faktury / výplaty */}
-            <Link href="/payslips" className="group flex items-center gap-4 bg-white/10 hover:bg-white/15 p-3 pr-5">
-              <span className="bg-gold text-navy w-12 h-12 flex flex-col items-center justify-center leading-none flex-shrink-0">
-                <span className="font-headline text-[20px]" style={{ fontWeight: 600 }}>{pn.inDays}</span>
-                <span className="text-[9px] font-bold uppercase tracking-[0.08em] mt-0.5">{plural(pn.inDays, 'den', 'dny', 'dní')}</span>
-              </span>
-              <span className="min-w-0">
-                <span className="block font-semibold text-[14px] leading-snug group-hover:text-gold">{pn.title} <span className="text-white/50 group-hover:text-gold">→</span></span>
-                <span className="block text-[12px] text-white/55 mt-0.5">{pn.sub}</span>
-              </span>
-            </Link>
+            {todos.length === 0 ? (
+              <p className="flex items-center gap-3 py-2 font-semibold"><span className="relative w-7 h-7 bg-mint flex items-center justify-center" style={{ animation: 'dash-pop .4s ease-out' }}>✓<DoneBurst /></span>Máš hotovo, díky!</p>
+            ) : (
+              <ul className="divide-y divide-[rgba(13,33,79,0.08)]">
+                {(showAll ? todos : todos.slice(0, VISIBLE_TODOS)).map((td, i) => (
+                  <li key={td.id}>
+                    <Link href={td.href} className="group flex items-center gap-3 py-2" style={rise(i)}>
+                      <span className="w-5 h-5 border-2 border-navy/30 flex-shrink-0 transition-colors group-hover:border-violet" />
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-sm font-semibold truncate group-hover:text-violet">{td.label}</span>
+                        <span className="block text-[11px] text-navy/50 truncate">{td.hint}</span>
+                      </span>
+                      <span className="text-navy/30 group-hover:text-violet">→</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+        </div>
+
+        {/* odpočet do faktury / výplaty — tenký pruh jako záložky v Můj účet */}
+        <div className="border-t border-white/15 px-7 sm:px-9 py-2 pr-16">
+          <Link href="/payslips" className="group flex items-center gap-3 min-w-0">
+            <span className="bg-gold text-navy h-7 px-2 flex items-center gap-1 leading-none flex-shrink-0">
+              <span className="font-headline text-[16px]" style={{ fontWeight: 600 }}>{pn.inDays}</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.08em]">{plural(pn.inDays, 'den', 'dny', 'dní')}</span>
+            </span>
+            <span className="font-semibold text-[14px] whitespace-nowrap group-hover:text-gold">{pn.title} →</span>
+            <span className="text-[12px] text-white/55 truncate hidden md:block">{pn.sub}</span>
+          </Link>
         </div>
         <Corner />
       </section>
