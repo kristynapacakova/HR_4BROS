@@ -210,7 +210,7 @@ export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
                 <Avatar p={p} size={40} fontSize={13} />
                 <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-navy group-hover:text-violet truncate">{p.name}</span><span className="block text-[11px] text-navy/55">narozeniny {b.date}</span></span>
                 <GiftBox size={20} />
-                <Tag cls="bg-violet text-white">{b.inDays === 0 ? 'dnes!' : `za ${b.inDays} d`}</Tag>
+                <Tag cls="bg-violet text-white">{b.inDays === 0 ? 'dnes!' : b.inDays === 1 ? 'zítra' : `za ${b.inDays} ${plural(b.inDays, 'den', 'dny', 'dní')}`}</Tag>
               </Link></li>
             ) })}
             {data.anniversaries.slice(0, 2).map(a => { const p = person(a.id); return (
