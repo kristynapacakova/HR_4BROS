@@ -31,17 +31,20 @@ const SECTIONS = [
   { id: 'dokumenty', label: 'Dokumenty' },
 ] as const
 
-const EMPLOYMENT: Record<string, string> = { HPP: 'HPP', DPP: 'DPP', DPC: 'DPČ', ICO: 'OSVČ' }
 
-function tenure(raw: string | null) {
+
+/** „4 roky a 8 měsíců“ — stejně jako na Dashboardu */
+function tenureText(raw: string | null): string | null {
   if (!raw) return null
-  const d = new Date(raw)
+  const start = new Date(raw)
   const now = new Date()
-  const m = (now.getFullYear() - d.getFullYear()) * 12 + now.getMonth() - d.getMonth()
-  const y = Math.floor(m / 12), r = m % 12
-  const yl = y === 0 ? '' : y === 1 ? '1 rok' : y < 5 ? `${y} roky` : `${y} let`
-  const ml = r === 0 ? '' : r === 1 ? '1 měsíc' : r < 5 ? `${r} měsíce` : `${r} měsíců`
-  return [yl, ml].filter(Boolean).join(' ') || 'pár dní'
+  const months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth())
+  if (months < 1) return 'méně než měsíc'
+  if (months < 12) return `${months} ${months === 1 ? 'měsíc' : months < 5 ? 'měsíce' : 'měsíců'}`
+  const years = Math.floor(months / 12)
+  const rem = months % 12
+  const yr = `${years} ${years === 1 ? 'rok' : years < 5 ? 'roky' : 'let'}`
+  return rem === 0 ? yr : `${yr} a ${rem} ${rem === 1 ? 'měsíc' : rem < 5 ? 'měsíce' : 'měsíců'}`
 }
 
 function Silhouette({ department }: { department: string }) {
@@ -61,30 +64,31 @@ function Silhouette({ department }: { department: string }) {
 export function AccountCard({ info, tabs }: { info: AccountInfo; tabs: ComponentProps<typeof ProfileTabs> }) {
   const requested = useSearchParams().get('tab')
   const [tab, setTab] = useState<string>(SECTIONS.some(s => s.id === requested) ? requested! : 'udaje')
-  const len = tenure(info.startDate)
 
   return (
     <div className="w-full">
       <section className="relative bg-navy text-white overflow-hidden mb-6 min-h-[256px] flex flex-col">
-        <div className="relative flex-1 flex flex-col sm:flex-row sm:items-start gap-6 px-7 sm:px-9 pt-6 pb-6">
+        <div className="relative flex-1 flex flex-col sm:flex-row sm:items-start gap-6 px-7 sm:px-9 pt-6 pb-4">
           {/* fotka + jméno — stejná pozice a velikost jako na Dashboardu, ať přechod neposkočí */}
-          <div className="flex items-end gap-6 flex-1 min-w-0">
-            <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={HERO_PHOTO} hideGlow fallback={<Silhouette department={info.department} />} />
-            <div className="min-w-0">
-              <p className="kicker text-gold text-[11px] mb-2">Můj účet</p>
-              <h1 className="font-headline text-[34px] sm:text-[38px] leading-[1.05]" style={{ fontWeight: 600 }}>{info.name}</h1>
-              <p className="text-white/65 text-[15px] mt-1.5">{info.position}</p>
+          <div className="flex flex-col gap-4 flex-1 min-w-0">
+            <div className="flex items-end gap-6 min-w-0">
+              <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={HERO_PHOTO} hideGlow fallback={<Silhouette department={info.department} />} />
+              <div className="min-w-0">
+                <p className="kicker text-gold text-[11px] mb-2">Můj účet</p>
+                <h1 className="font-headline text-[34px] sm:text-[38px] leading-[1.05]" style={{ fontWeight: 600 }}>{info.name}</h1>
+                <p className="text-white/65 text-[15px] mt-1.5 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 flex-shrink-0" style={{ background: departmentColor(info.department) }} aria-hidden="true" />
+                  {/* pozice a tým jen jednou, když se jmenují stejně (Account Manager · Account manager) */}
+                  {info.position && info.department && info.position.toLowerCase() !== info.department.toLowerCase()
+                    ? `${info.position} · ${info.department}`
+                    : info.position || info.department}
+                </p>
+              </div>
             </div>
+            {tenureText(info.startDate) && (
+              <div><span className="inline-block bg-gold text-navy px-3 py-1.5 text-sm font-semibold">Jsi s námi {tenureText(info.startDate)}</span></div>
+            )}
           </div>
-          <dl className="sm:self-end sm:mb-1 grid grid-cols-[auto_auto] gap-x-5 gap-y-1.5 text-sm">
-            <dt className="text-white/50">Tým</dt>
-            <dd className="font-semibold flex items-center gap-2">
-              <span className="w-2.5 h-2.5" style={{ background: departmentColor(info.department) }} />{info.department}
-            </dd>
-            <dt className="text-white/50">Spolupráce</dt>
-            <dd className="font-semibold">{EMPLOYMENT[info.employmentType] ?? info.employmentType}</dd>
-            {len && <><dt className="text-white/50">Ve 4B</dt><dd className="font-semibold">{len}</dd></>}
-          </dl>
         </div>
 
         <nav className="relative flex gap-8 px-7 sm:px-9 border-t border-white/15 overflow-x-auto scrollbar-none">

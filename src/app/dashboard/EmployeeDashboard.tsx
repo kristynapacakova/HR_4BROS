@@ -163,7 +163,7 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
               <div className="min-w-0">
                 <p className="kicker text-gold text-[11px] mb-2">{greeting}</p>
                 <h1 className="font-headline text-[34px] sm:text-[38px] leading-[1.05]" style={{ fontWeight: 600 }}>{name}</h1>
-                {data.subtitle && <p className="text-white/65 text-[15px] mt-1.5">{data.subtitle}</p>}
+                {data.subtitle && <p className="text-white/65 text-[15px] mt-1.5 flex items-center gap-2">{meP && <span className="w-2.5 h-2.5 flex-shrink-0" style={{ background: meP.color }} aria-hidden="true" />}{data.subtitle}</p>}
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
