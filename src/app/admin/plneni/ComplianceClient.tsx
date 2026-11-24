@@ -96,7 +96,7 @@ export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-1 text-sm">
-        {([['issues', `S něčím nesplněným (${counts.issues})`], ['all', `Všichni (${rows.length})`]] as [Filter, string][]).map(([k, l]) => (
+        {([['issues', `Nesplněno (${counts.issues})`], ['all', `Všichni (${rows.length})`]] as [Filter, string][]).map(([k, l]) => (
           <button key={k} type="button" onClick={() => setFilter(k)} className={`px-3 py-1.5 font-semibold border ${filter === k ? 'bg-navy text-white border-navy' : 'bg-white text-navy border-[rgba(13,33,79,0.14)] hover:border-navy'}`}>{l}</button>
         ))}
         {!['issues', 'all'].includes(filter) && <span className="ml-2 text-navy/55">Filtr: {tiles.find(t => t.k === filter)?.label} · <button className="underline" onClick={() => setFilter('issues')}>zrušit</button></span>}
