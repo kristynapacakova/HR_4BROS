@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { DEMO_TEAM } from '@/lib/mock-data'
 import { Avatar, personView, plural, useProfiles } from '@/app/team/teamPeople'
 import { toVocativeCz } from '@/lib/cz-vocative'
-import { StairsHop, DoneBurst, GiftBox } from './DashboardAnimations'
+import { DoneBurst, GiftBox } from './DashboardAnimations'
 import { computePayNext, loadPaySchedule, PAY_SCHEDULE_CHANGED_EVENT, type PayNext } from '@/lib/pay-schedule'
 
 /**
@@ -150,7 +150,9 @@ export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
               {todos.length === 0 && <span className="bg-mint text-navy px-3 py-1.5 text-sm font-semibold">Všechno vyřízeno ✓</span>}
             </div>
             {/* schody 4B — dekorace */}
-            <div className="hidden lg:block mt-auto pt-8"><StairsHop /></div>
+            <div className="hidden lg:flex items-end gap-1 mt-auto pt-8" aria-hidden="true">
+              {[10, 18, 26, 34].map((h, i) => <span key={h} className={i === 3 ? 'bg-gold' : 'bg-white/15'} style={{ width: 14, height: h }} />)}
+            </div>
           </div>
 
           {/* úkoly — bílý papír na navy */}
