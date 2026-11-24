@@ -204,19 +204,14 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
         </div>
         <Field label="Město" value={formData.city} onChange={(v) => update('city', v)} />
         <Field label="Stát" value={user.country || 'CZ'} readOnly />
-        <Field label="Kontakt pro případ nouze — jméno" value={formData.ecName} onChange={(v) => update('ecName', v)} />
+        <div className="sm:col-span-2">
+          <Field label="Kontakt pro případ nouze — jméno" value={formData.ecName} onChange={(v) => update('ecName', v)} />
+        </div>
         <Field label="Telefon na něj" value={formData.ecPhone} onChange={(v) => update('ecPhone', v)} type="tel" />
         <Field label="Vztah" value={formData.ecRelationship} onChange={(v) => update('ecRelationship', v)} placeholder="Manžel/ka, rodič..." />
-      </div>
-    </Section>
-  )
-  const editable = (
-    <>
-      {personalSection}
-      {/* Zaměstnanecké údaje — jen pro HPP/DPP/DPČ */}
-      {isEmployee && (
-        <Section title="Zaměstnanecké údaje">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* jen pro HPP/DPP/DPČ — pojišťovna, plat, BOZP */}
+        {isEmployee && (
+          <>
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Zdravotní pojišťovna</label>
               <select
@@ -248,10 +243,8 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
                 )}
               </div>
             </div>
-          </div>
-
           {/* Školení BOZP */}
-          <div className={`mt-5 p-4 border-l-4 ${bozpOverdue || bozpSoon ? 'bg-gold-light border-gold' : 'bg-mint-light border-mint'}`}>
+          <div className={`sm:col-span-2 p-4 border-l-4 ${bozpOverdue || bozpSoon ? 'bg-gold-light border-gold' : 'bg-mint-light border-mint'}`}>
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div>
                 <p className="text-sm font-semibold text-navy">Školení BOZP</p>
@@ -286,8 +279,14 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
               </div>
             </div>
           </div>
-        </Section>
-      )}
+          </>
+        )}
+      </div>
+    </Section>
+  )
+  const editable = (
+    <>
+      {personalSection}
     </>
   )
 
