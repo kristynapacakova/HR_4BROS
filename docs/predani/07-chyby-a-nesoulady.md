@@ -25,7 +25,7 @@ Seřazeno podle dopadu. Většinu vyřeší napojení databáze s **jedním ID �
 15. Smlouvy na 4 místech (šablonové, syntetické pro plnění, statické dokumenty, archiv) → Dashboard a Přehled plnění nesedí se Smlouvami. Chybí šablona pro OSVČ a DPČ.
 16. Nová směrnice se k lidem nedostane; potvrzení se neukládají.
 17. Statistika směrnic „X/15“ — natvrdo 15 místo 16, počítá i nepovinné. 🔧
-18. BOZP: OSVČ nemá v profilu tlačítko, ale BOZP se po něm vyžaduje; výpočet v profilu duplikovaný mimo model. 🔧
+18. ~~BOZP se vyžadoval i po OSVČ~~ ✅ opraveno (BOZP jen HPP/DPP/DPČ); výpočet v profilu je ale pořád duplikovaný mimo model. 🔧
 19. Docházka: 4 číselníky typů, pracovní vs. kalendářní dny, zůstatek 20 vs. nárok 25, nemoc v profilu počítá jen měsíc bez roku.
 20. Srážka za nemoc nesráží dny od 15.; počítá od začátku měsíce; bere plat z ukázky místo platu člověka.
 21. Rozpis odměny „tento měsíc“ má nadpis posledního měsíce s páskou, ale počítá doklady z aktuálního měsíce.

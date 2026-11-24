@@ -82,7 +82,12 @@ export const RULES = {
   bozpWarnDays: 30,
   /** kolik dní předem hlídat konec smlouvy na dobu určitou */
   contractEndWarnDays: 90,
+  /** BOZP se týká jen zaměstnanců — OSVČ (IČO) ho nemají */
+  bozpRequiredFor: ['HPP', 'DPP', 'DPC'] as EmploymentType[],
 } as const
+
+/** Musí mít člověk školení BOZP? (OSVČ ne) */
+export const bozpRequired = (employmentType: EmploymentType) => RULES.bozpRequiredFor.includes(employmentType)
 
 const DAY = 86400000
 const startOfDay = (d: Date) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x }
@@ -157,6 +162,8 @@ export interface PersonCompliance {
   contract: ContractStatusInfo
   directives: DirectivesStatus
   bozp: BozpStatus
+  /** false = BOZP se ho netýká (OSVČ) */
+  bozpRequired: boolean
   issues: Issue[]
 }
 
@@ -177,9 +184,10 @@ export function complianceOf(
   if (contract.state === 'ENDED') issues.push({ kind: 'CONTRACT_ENDED', severity: 'urgent', owner: 'hr', label: 'Smlouva skončila' })
   if (contract.state === 'ENDING') issues.push({ kind: 'CONTRACT_ENDING', severity: 'soon', owner: 'hr', label: `Smlouva končí za ${contract.daysLeft} ${plural(contract.daysLeft!, 'den', 'dny', 'dní')}` })
   if (directives.missing.length) issues.push({ kind: 'DIRECTIVES', severity: 'urgent', owner: 'person', label: `Nepotvrzené směrnice: ${directives.missing.length}` })
-  if (bozp.state === 'MISSING') issues.push({ kind: 'BOZP_MISSING', severity: 'urgent', owner: 'person', label: 'BOZP neabsolvováno' })
-  if (bozp.state === 'EXPIRED') issues.push({ kind: 'BOZP_EXPIRED', severity: 'urgent', owner: 'person', label: 'BOZP propadlé' })
-  if (bozp.state === 'EXPIRING') issues.push({ kind: 'BOZP_EXPIRING', severity: 'soon', owner: 'person', label: `BOZP vyprší za ${bozp.daysLeft} ${plural(bozp.daysLeft!, 'den', 'dny', 'dní')}` })
+  const needsBozp = bozpRequired(person.employmentType)
+  if (needsBozp && bozp.state === 'MISSING') issues.push({ kind: 'BOZP_MISSING', severity: 'urgent', owner: 'person', label: 'BOZP neabsolvováno' })
+  if (needsBozp && bozp.state === 'EXPIRED') issues.push({ kind: 'BOZP_EXPIRED', severity: 'urgent', owner: 'person', label: 'BOZP propadlé' })
+  if (needsBozp && bozp.state === 'EXPIRING') issues.push({ kind: 'BOZP_EXPIRING', severity: 'soon', owner: 'person', label: `BOZP vyprší za ${bozp.daysLeft} ${plural(bozp.daysLeft!, 'den', 'dny', 'dní')}` })
 
-  return { person, contract, directives, bozp, issues }
+  return { person, contract, directives, bozp, bozpRequired: needsBozp, issues }
 }

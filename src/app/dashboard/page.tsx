@@ -13,7 +13,7 @@ import { EventsCard } from './EventsCard'
 import { EmployeeDashboard, type EmployeeDashData } from './EmployeeDashboard'
 import { computePayNext } from '@/lib/pay-schedule'
 import { getHrSource } from '@/lib/hr/source'
-import { complianceOf, contractStatus, directivesStatus, latestBozp, type PersonCompliance } from '@/lib/hr/model'
+import { complianceOf, contractStatus, directivesStatus, latestBozp, bozpRequired, type PersonCompliance } from '@/lib/hr/model'
 
 const MONTHS_GEN = ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince']
 
@@ -81,6 +81,7 @@ async function employeeDashData(sessionUserId: string, email: string, user: Retu
     hrContact: hrPerson ? { id: hrPerson.id, email: hrPerson.email } : undefined,
     payNext: computePayNext(isIco),
     bozpCompletedAt: bozpLast ? bozpLast.toISOString().slice(0, 10) : null,
+    bozpRequired: me ? bozpRequired(me.employmentType) : !isIco,
   }
 }
 

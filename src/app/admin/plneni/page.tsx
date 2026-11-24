@@ -23,7 +23,7 @@ export default async function PlneniPage() {
       id: p.id,
       contract: { state: c.contract.state, endsAt: iso(c.contract.endsAt), daysLeft: c.contract.daysLeft, template: c.contract.contract?.templateName ?? null },
       directives: { required: c.directives.required, acknowledged: c.directives.acknowledged, missing: c.directives.missing.map(d => d.title.replace(/^Směrnice č\. [^—]+— /, '')) },
-      bozp: { state: c.bozp.state, validUntil: iso(c.bozp.validUntil), daysLeft: c.bozp.daysLeft },
+      bozp: { state: c.bozp.state, validUntil: iso(c.bozp.validUntil), daysLeft: c.bozp.daysLeft, required: c.bozpRequired },
       issues: c.issues,
     }
   })

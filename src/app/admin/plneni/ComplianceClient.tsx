@@ -10,7 +10,7 @@ export interface ComplianceRow {
   id: string
   contract: { state: ContractState; endsAt: string | null; daysLeft: number | null; template: string | null }
   directives: { required: number; acknowledged: number; missing: string[] }
-  bozp: { state: BozpState; validUntil: string | null; daysLeft: number | null }
+  bozp: { state: BozpState; validUntil: string | null; daysLeft: number | null; required: boolean }
   issues: Issue[]
 }
 
@@ -38,6 +38,7 @@ function ContractCell({ c }: { c: ComplianceRow['contract'] }) {
 }
 
 function BozpCell({ b }: { b: ComplianceRow['bozp'] }) {
+  if (!b.required) return <span className="text-[12px] text-navy/40">netýká se (OSVČ)</span>
   switch (b.state) {
     case 'MISSING': return <Chip tone="bad">Neabsolvováno</Chip>
     case 'EXPIRED': return <Chip tone="bad">Propadlé {fmt(b.validUntil)}</Chip>
@@ -55,7 +56,7 @@ export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
   const is = {
     contracts: (r: ComplianceRow) => r.issues.some(i => i.kind.startsWith('CONTRACT')),
     directives: (r: ComplianceRow) => r.directives.missing.length > 0,
-    bozp: (r: ComplianceRow) => r.bozp.state !== 'OK',
+    bozp: (r: ComplianceRow) => r.bozp.required && r.bozp.state !== 'OK',
     photo: (r: ComplianceRow) => !hasPhoto(r.id),
   }
   // fotka je jen doporučení — do „nesplněného“ se nepočítá
@@ -142,7 +143,7 @@ export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
       </section>
 
       <p className="text-xs text-navy/50">
-        Pravidla: BOZP platí 12 měsíců a upozorňujeme 30 dní předem · konec smlouvy na dobu určitou hlídáme 90 dní předem · povinné směrnice musí potvrdit každý.
+        Pravidla: BOZP mají jen HPP, DPP a DPČ (ne OSVČ), platí 12 měsíců a upozorňujeme 30 dní předem · konec smlouvy na dobu určitou hlídáme 90 dní předem · povinné směrnice musí potvrdit každý.
         Nastavují se v <code>src/lib/hr/model.ts</code>.
       </p>
     </div>

@@ -56,7 +56,7 @@ Konstanty jsou v `RULES` v `src/lib/hr/model.ts`.
 
 | Co | Pravidlo | Kde se projeví |
 |---|---|---|
-| **BOZP** | platí **12 měsíců** od absolvování. **30 dní** před vypršením „brzy vyprší“, po vypršení „propadlé“, bez záznamu „neabsolvováno“. | Dashboard (úkol), Můj účet (blok BOZP), Přehled plnění |
+| **BOZP** | týká se jen **HPP, DPP a DPČ** (OSVČ ne). Platí **12 měsíců** od absolvování. **30 dní** před vypršením „brzy vyprší“, po vypršení „propadlé“, bez záznamu „neabsolvováno“. | Dashboard (úkol), Můj účet (blok BOZP), Přehled plnění |
 | **Směrnice** | každou s `mustAcknowledge` musí potvrdit každý člověk. Chybějící = úkol. | Dashboard (úkol + štítek „potvrdit“), Přehled plnění |
 | **Smlouva k podpisu** | `PENDING_EMPLOYEE` → úkol pro člověka; `PENDING_MANAGEMENT` → úkol pro HR. | Dashboard, Přehled plnění |
 | **Konec smlouvy** | smlouvy na dobu určitou hlídáme **90 dní** předem; po konci „skončila“. | Dashboard HR, Přehled plnění |

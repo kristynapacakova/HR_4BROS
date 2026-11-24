@@ -29,6 +29,8 @@ export interface EmployeeDashData {
   payNext: PayNext
   /** poslední BOZP ze zdroje dat (YYYY-MM-DD) */
   bozpCompletedAt: string | null
+  /** BOZP se týká jen HPP/DPP/DPČ — OSVČ úkol nedostanou */
+  bozpRequired: boolean
 }
 
 const MONTHS_SHORT = ['led', 'úno', 'bře', 'dub', 'kvě', 'čvn', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro']
@@ -58,7 +60,8 @@ function useTodos(data: EmployeeDashData) {
     try { local = localStorage.getItem(data.meId ? `fb-bozp-last-done:${data.meId}` : 'fb-bozp-last-done') } catch { /* noop */ }
     const last = [data.bozpCompletedAt, local].filter(Boolean).sort().pop() ?? null
     const b = bozpStatus(last ? new Date(last) : null)
-    if (b.state === 'MISSING' || b.state === 'EXPIRED') list.push({ id: 'bozp', label: 'Projdi školení BOZP', hint: b.state === 'EXPIRED' ? 'Platnost vypršela, je potřeba každý rok' : 'Jednou ročně, zabere pár minut', href: '/profile' })
+    if (!data.bozpRequired) { /* OSVČ — BOZP se netýká */ }
+    else if (b.state === 'MISSING' || b.state === 'EXPIRED') list.push({ id: 'bozp', label: 'Projdi školení BOZP', hint: b.state === 'EXPIRED' ? 'Platnost vypršela, je potřeba každý rok' : 'Jednou ročně, zabere pár minut', href: '/profile' })
     else if (b.state === 'EXPIRING') list.push({
       id: 'bozp-soon',
       label: b.daysLeft === 0 ? 'Školení BOZP ti dnes vyprší' : `Školení BOZP ti vyprší za ${b.daysLeft} ${plural(b.daysLeft!, 'den', 'dny', 'dní')}`,
@@ -66,7 +69,7 @@ function useTodos(data: EmployeeDashData) {
       href: '/profile',
     })
     setExtra(list)
-  }, [data.meId, data.bozpCompletedAt, profiles])
+  }, [data.meId, data.bozpCompletedAt, data.bozpRequired, profiles])
   return [...data.todos, ...extra]
 }
 

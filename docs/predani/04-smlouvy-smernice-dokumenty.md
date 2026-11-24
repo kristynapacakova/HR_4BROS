@@ -106,7 +106,7 @@ Obecná (Obecné), GDPR, BOZP, Benefity a odměňování, Onboardingová příru
 ## BOZP
 - Platí **12 měsíců**, upozornění **30 dní** předem, stavy: neabsolvováno / propadlé / brzy vyprší / platné (`src/lib/hr/model.ts`).
 - Dnes: odkaz na `skolenibozp.cz` a **samodeklarace** „Označit jako splněné“ (bez dokladu).
-- ⚠️ Blok BOZP v profilu vidí jen HPP/DPP/DPČ, ale Dashboard a Přehled plnění vyžadují BOZP i po OSVČ → **rozhodnout, zda se BOZP týká OSVČ**.
+- ✅ **BOZP se týká jen HPP, DPP a DPČ — OSVČ ne** (`RULES.bozpRequiredFor` v `src/lib/hr/model.ts`). OSVČ nedostanou úkol na Dashboardu a v Přehledu plnění mají „netýká se“.
 - ⚠️ Výpočet v profilu je zduplikovaný mimo model (může se lišit o den) → sjednotit.
 - Směrnice BOZP říká „školení do 30 dnů od účinnosti“ — neimplementováno.
 - Do DB `BozpTraining`: člověk, datum, zdroj (sám / HR / poskytovatel), certifikát (soubor), kdo zapsal.

@@ -30,7 +30,7 @@ Seznam věcí, které dnes aplikace jen simuluje nebo kde chybí rozhodnutí. Vy
 | P3 | Vidí TL docházku **celé firmy**, nebo jen svého týmu? | |
 | P4 | **Kdo podepisuje smlouvy za firmu** — jednatel, nebo HR? Samostatná role? | |
 | P5 | Schránka důvěry — „jen HR“: samostatné oprávnění? Jak dostat **odpověď** k anonymnímu odesílateli? | |
-| P6 | Týká se **BOZP i OSVČ**? (dnes ho vyžadujeme, ale OSVČ nemá v profilu tlačítko) | |
+| P6 | Týká se **BOZP i OSVČ**? | ✅ **Ne** — BOZP mají jen HPP, DPP a DPČ (`RULES.bozpRequiredFor`) |
 | P7 | Na koho se vztahují **povinné směrnice** — všichni / jen zaměstnanci / i OSVČ? Lidé nastoupivší po platnosti? Potvrzení před platností? | |
 | P8 | Ukládat **verze směrnic** a u potvrzení verzi? (otisk `documentHash` už se ukládá) | |
 | P8b | Které směrnice podepisovat přes DocuSign (BOZP? všechny?) — volí HR u každé směrnice | |
