@@ -171,8 +171,9 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
       </dl>
     </div>
   )
-  const aboutSection = (
-    <Section title="O tobě">
+  /** Osobní údaje v jednom rámečku — jméno, kontakt, účet, adresa a kontakt pro případ nouze */
+  const personalSection = (
+    <Section title="Osobní údaje">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Jméno a příjmení" value={formData.name} onChange={(v) => update('name', v)} />
           <div>
@@ -194,23 +195,24 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
               className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
             />
           </div>
-      </div>
-    </Section>
-  )
-  const contactSection = (
-    <Section title="Kontakt a platby">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Telefon" value={formData.phone} onChange={(v) => update('phone', v)} type="tel" />
         {user.employmentType !== 'ICO' && (
-          <Field label="Bankovní účet (IBAN)" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
+          <Field label="Bankovní účet" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
         )}
+        <div className="sm:col-span-2">
+          <Field label="Ulice a číslo" value={formData.address} onChange={(v) => update('address', v)} />
+        </div>
+        <Field label="Město" value={formData.city} onChange={(v) => update('city', v)} />
+        <Field label="Stát" value={user.country || 'CZ'} readOnly />
+        <Field label="Kontakt pro případ nouze — jméno" value={formData.ecName} onChange={(v) => update('ecName', v)} />
+        <Field label="Telefon na něj" value={formData.ecPhone} onChange={(v) => update('ecPhone', v)} type="tel" />
+        <Field label="Vztah" value={formData.ecRelationship} onChange={(v) => update('ecRelationship', v)} placeholder="Manžel/ka, rodič..." />
       </div>
     </Section>
   )
   const editable = (
     <>
-      {aboutSection}
-      {contactSection}
+      {personalSection}
       {/* Zaměstnanecké údaje — jen pro HPP/DPP/DPČ */}
       {isEmployee && (
         <Section title="Zaměstnanecké údaje">
@@ -286,24 +288,6 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
           </div>
         </Section>
       )}
-      {/* Address */}
-      <Section title="Adresa">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="sm:col-span-2">
-            <Field label="Ulice a číslo" value={formData.address} onChange={(v) => update('address', v)} />
-          </div>
-          <Field label="Město" value={formData.city} onChange={(v) => update('city', v)} />
-          <Field label="Stát" value={user.country || 'CZ'} readOnly />
-        </div>
-      </Section>
-      {/* Emergency contact */}
-      <Section title="Kontakt pro případ nouze">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Field label="Jméno" value={formData.ecName} onChange={(v) => update('ecName', v)} />
-          <Field label="Telefon" value={formData.ecPhone} onChange={(v) => update('ecPhone', v)} type="tel" />
-          <Field label="Vztah" value={formData.ecRelationship} onChange={(v) => update('ecRelationship', v)} placeholder="Manžel/ka, rodič..." />
-        </div>
-      </Section>
     </>
   )
 
