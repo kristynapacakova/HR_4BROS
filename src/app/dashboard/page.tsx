@@ -1,28 +1,17 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-
-import Link from 'next/link'
-import { CheckSquare, ChevronRight, FileClock } from 'lucide-react'
 import {
-  DEMO_TASKS,
-  DEMO_TEAM_LEAVES,
   DEMO_TEAM,
   DEMO_EMPLOYEES,
   DEMO_EXPENSE_REQUESTS,
   DEMO_DIRECTIVES,
   DEMO_CONTRACTS,
-  DEMO_ADMIN,
-  DEMO_USER,
-  DEMO_TL,
-  DEMO_USER_ICO,
+  DEMO_FEEDBACK,
   getDemoUserById,
   demoTeamIdFor,
 } from '@/lib/mock-data'
-import { CountUp } from '@/components/CountUp'
-import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
-import { RingStat } from './RingStat'
 import { EmployeeDashboard, type EmployeeDashData } from './EmployeeDashboard'
 import { computePayNext } from '@/lib/pay-schedule'
 
@@ -107,214 +96,34 @@ export default async function DashboardPage() {
   const isAdmin = session.user.role === 'ADMIN'
   const isTL = session.user.role === 'TL'
   const user = getDemoUserById(session.user.id)
-  const myTeamId = isTL ? demoTeamIdFor(session.user.email ?? '') : undefined
-  const myTeamMemberId = demoTeamIdFor(session.user.email ?? '')
-
-  const tasks = DEMO_TASKS
-  const pendingTasks = tasks.filter(t => !t.completed)
-  const completedTasks = tasks.filter(t => t.completed)
-  const onboardingTasks = tasks.filter(t => t.category === 'ONBOARDING')
-  const onboardingDone = onboardingTasks.every(t => t.completed)
-  const onboardingPct = Math.round((onboardingTasks.filter(t => t.completed).length / onboardingTasks.length) * 100)
-
   const startDate = user.startDate || new Date('2024-01-15')
-  const tenure = tenureText(startDate)
+  const data = employeeDashData(session.user.id, session.user.email ?? '', user, tenureText(startDate))
 
-  // Zaměstnanec / OSVČ — vlastní přehled (HR a team leadi zatím mají původní)
-  if (!isAdmin && !isTL) {
-    return (
-      <AppShell title="Dashboard" isAdmin={false} isTL={false} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
-        <EmployeeDashboard data={employeeDashData(session.user.id, session.user.email ?? '', user, tenure)} />
-      </AppShell>
-    )
+  // Stejný Dashboard pro všechny — HR a team leadi mají navíc své povinnosti v „Čeká na tebe“.
+  const n = (k: number, one: string, few: string, many: string) => `${k} ${k === 1 ? one : k < 5 ? few : many}`
+  const roleTodos: EmployeeDashData['todos'] = []
+  if (isAdmin || isTL) {
+    const myTeamId = isTL ? demoTeamIdFor(session.user.email ?? '') : undefined
+    const expenses = DEMO_EXPENSE_REQUESTS.filter(r => r.status === 'PENDING' && (isAdmin || DEMO_TEAM.find(m => m.id === r.employeeId)?.teamLeadId === myTeamId))
+    if (expenses.length) roleTodos.push({ id: 'hr-exp', label: `Schval ${n(expenses.length, 'doklad', 'doklady', 'dokladů')} k proplacení`, hint: isTL ? 'Od lidí z tvého týmu' : 'Sport, cestovné, náklady ke klientům', href: '/admin/odmeny?sub=doklady' })
   }
-
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  // Tento týden (pondělí–neděle) — širší okno než jen dnešek, ať karta není prázdná ve dnech, kdy nikdo nechybí.
-  // Kdo je z týmu daného uživatele dnes v kanceláři vs. na home office — TL vidí svůj tým, HR všechny týmy dohromady.
-  const scopeIds = isAdmin
-    ? DEMO_TEAM.map(m => m.id)
-    : isTL
-      ? DEMO_TEAM.filter(m => m.teamLeadId === myTeamId).map(m => m.id)
-      : []
-  const scopeNames = new Set(DEMO_TEAM.filter(m => scopeIds.includes(m.id)).map(m => m.name))
-  const todayOutByType = DEMO_TEAM_LEAVES.filter((l) => {
-    const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
-    const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
-    return today >= start && today <= end && l.status === 'APPROVED' && scopeNames.has(l.userName)
-  })
-  const homeofficeCount = todayOutByType.filter(l => l.type === 'HOMEOFFICE').length
-  const otherOutCount = todayOutByType.filter(l => l.type !== 'HOMEOFFICE').length
-  const inOfficeCount = Math.max(0, scopeNames.size - homeofficeCount - otherOutCount)
-
-  // Obsazenost kanclu od začátku měsíce do dneška — pracovní dny × lidé z týmu, kolik z toho reálně sedělo v kanceláři.
-  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
-  const workdaysSoFar: Date[] = []
-  for (const d = new Date(monthStart); d <= today; d.setDate(d.getDate() + 1)) {
-    const dow = d.getDay()
-    if (dow !== 0 && dow !== 6) workdaysSoFar.push(new Date(d))
+  if (isAdmin) {
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const fb = DEMO_FEEDBACK.filter(f => f.status === 'NEW').length
+    if (fb) roleTodos.push({ id: 'hr-fb', label: `Přečti ${n(fb, 'novou zprávu', 'nové zprávy', 'nových zpráv')} ve schránce důvěry`, hint: 'Anonymní i podepsané', href: '/admin/feedback' })
+    const toSign = DEMO_CONTRACTS.filter(c => c.status === 'PENDING_MANAGEMENT').length
+    if (toSign) roleTodos.push({ id: 'hr-sign', label: `Podepiš ${n(toSign, 'smlouvu', 'smlouvy', 'smluv')} za firmu`, hint: 'Čekají na podpis vedení', href: '/admin/smlouvy' })
+    const expiring = DEMO_EMPLOYEES.filter(e => e.contractTermType === 'URCITA' && e.contractEndDate && e.contractEndDate >= today && (e.contractEndDate.getTime() - today.getTime()) / 86400000 <= 90).length
+    if (expiring) roleTodos.push({ id: 'hr-exp-c', label: `Vyřeš ${n(expiring, 'smlouvu, která končí', 'smlouvy, které končí', 'smluv, které končí')}`, hint: 'Na dobu určitou do 3 měsíců — prodloužit, nebo ukončit', href: '/admin/smlouvy' })
   }
-  // Moje vlastní čísla za tenhle měsíc — vidí to úplně každý, ne jen HR/TL.
-  let myOfficeDays = 0
-  let myHomeofficeDays = 0
-  let myOffDays = 0
-  for (const day of workdaysSoFar) {
-    const leave = DEMO_TEAM_LEAVES.find((l) => {
-      const start = new Date(l.startDate); start.setHours(0, 0, 0, 0)
-      const end = new Date(l.endDate); end.setHours(0, 0, 0, 0)
-      return l.userName === user.name && l.status === 'APPROVED' && day >= start && day <= end
-    })
-    if (!leave) myOfficeDays++
-    else if (leave.type === 'HOMEOFFICE') myHomeofficeDays++
-    else myOffDays++
-  }
-
-  // Dovolená/docházka se teď schvaluje v TrackDecku — tady čekají jen doklady k proplacení a podpisy.
-  const pendingExpenseClaims = DEMO_EXPENSE_REQUESTS.filter(r =>
-    r.status === 'PENDING' && (isAdmin || (isTL &&
-      DEMO_TEAM.find(m => m.id === r.employeeId)?.teamLeadId === myTeamId
-    ))
-  )
-
-  // Smlouvy na dobu určitou končící do 3 měsíců — potřebují řešit prodloužení/ukončení
-  const expiringContracts = DEMO_EMPLOYEES
-    .filter((e) => e.contractTermType === 'URCITA' && e.contractEndDate)
-    .map((e) => ({ ...e, daysLeft: Math.round((e.contractEndDate!.getTime() - today.getTime()) / 86400000) }))
-    .filter((e) => e.daysLeft >= 0 && e.daysLeft <= 90)
-    .sort((a, b) => a.daysLeft - b.daysLeft)
-
-  // Narozeniny tento týden — základní data z DEMO_TEAM, EventsCard si k tomu domíchá případné úpravy z profilu
-  const teamBirthdays = DEMO_TEAM.map(m => ({ id: m.id, name: m.name, birthday: m.birthday }))
+  data.todos = [...roleTodos, ...data.todos]
 
   return (
     <AppShell title="Dashboard" isAdmin={isAdmin} isTL={isTL} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
-      <div className="w-full space-y-5">
-
-        {/* Hero greeting with inline stats */}
-        <DashboardGreeting
-          name={(user?.name || session.user.email || '').split(' ')[0]}
-          initial={(user?.name || session.user.email || '?')[0]?.toUpperCase()}
-          teamMemberId={myTeamMemberId}
-          position={user?.position || undefined}
-          department={user?.department || undefined}
-          tenure={tenure}
-          startDate={startDate.toISOString()}
-        />
-
-        {/* Přehled týmu/firmy — dnešní přítomnost + obsazenost kanclu, dovolená a vzdělávací budget od začátku měsíce/roku */}
-        {(isAdmin || isTL) && scopeNames.size > 0 && (
-          <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
-            <h3 className="font-headline text-navy mb-4">{isAdmin ? 'Jak to vypadá dnes ve firmě?' : 'Jak to vypadá dnes ve tvém týmu?'}</h3>
-            <div className="grid grid-cols-3 gap-3 pb-5 mb-5 border-b border-slate-100">
-              <div className="text-center">
-                <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={inOfficeCount} /></p>
-                <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={homeofficeCount} /></p>
-                <p className="text-xs text-slate-400 mt-0.5">home office</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={otherOutCount} /></p>
-                <p className="text-xs text-slate-400 mt-0.5">OFF</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <RingStat
-                pct={Math.round((inOfficeCount / scopeNames.size) * 100)}
-                value={`${Math.round((inOfficeCount / scopeNames.size) * 100)}%`}
-                label="v kanceláři"
-                tone="strong"
-              />
-              <RingStat
-                pct={Math.round((homeofficeCount / scopeNames.size) * 100)}
-                value={`${Math.round((homeofficeCount / scopeNames.size) * 100)}%`}
-                label="home office"
-                tone="soft"
-              />
-              <RingStat
-                pct={Math.round((otherOutCount / scopeNames.size) * 100)}
-                value={`${Math.round((otherOutCount / scopeNames.size) * 100)}%`}
-                label="OFF"
-                tone="gold"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Moje čísla za tenhle měsíc — vidí úplně každý */}
-        <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6">
-          <h3 className="font-headline text-navy mb-4">Jak to vypadá tenhle měsíc u tebe?</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={myOfficeDays} /></p>
-              <p className="text-xs text-slate-400 mt-0.5">v kanceláři</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={myHomeofficeDays} /></p>
-              <p className="text-xs text-slate-400 mt-0.5">home office</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-headline font-semibold text-navy"><CountUp value={myOffDays} /></p>
-              <p className="text-xs text-slate-400 mt-0.5">OFF</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Kalendář akcí — Google Kalendář + narozeniny tento týden */}
-        <EventsCard teamBirthdays={teamBirthdays} isAdmin={isAdmin} />
-
-        {/* Čeká na tebe — admin vidí vše, TL jen svůj tým */}
-        {(isAdmin || isTL) && (
-          <Link
-            href="/admin/odmeny?sub=doklady"
-            className="block bg-white border-l-4 border-l-violet border border-[rgba(13,33,79,0.14)] p-6 hover:border-[#834DFB] transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-violet/10 flex items-center justify-center flex-shrink-0">
-                  <CheckSquare className="w-4 h-4 text-violet" />
-                </div>
-                <div>
-                  <p className="font-headline text-navy leading-tight">Čeká na tebe</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {pendingExpenseClaims.length === 0
-                      ? isTL ? 'Žádné doklady od tvého týmu' : 'Žádné doklady ke schválení'
-                      : `${pendingExpenseClaims.length} ${pendingExpenseClaims.length === 1 ? 'doklad čeká' : 'doklady čekají'} na schválení${isTL ? ' od tvého týmu' : ''}`}
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-violet transition-colors flex-shrink-0" />
-            </div>
-          </Link>
-        )}
-
-        {/* Smlouvy na dobu určitou končící do 3 měsíců — jen admin */}
-        {isAdmin && expiringContracts.length > 0 && (
-          <Link
-            href="/admin/smlouvy"
-            className="block bg-white border border-[rgba(13,33,79,0.14)] p-6 hover:border-navy/20 transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-alice rounded-full flex items-center justify-center flex-shrink-0">
-                  <FileClock className="w-4 h-4 text-navy" />
-                </div>
-                <div>
-                  <p className="font-headline text-navy leading-tight">Smlouvy končící brzy</p>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    {expiringContracts.length} {expiringContracts.length === 1 ? 'smlouva na dobu určitou končí' : 'smlouvy na dobu určitou končí'} do 3 měsíců — je třeba řešit prodloužení
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-navy transition-colors flex-shrink-0" />
-            </div>
-          </Link>
-        )}
-      </div>
+      <EmployeeDashboard
+        data={data}
+        footer={isAdmin ? <EventsCard teamBirthdays={DEMO_TEAM.map(m => ({ id: m.id, name: m.name, birthday: m.birthday }))} isAdmin /> : undefined}
+      />
     </AppShell>
   )
 }

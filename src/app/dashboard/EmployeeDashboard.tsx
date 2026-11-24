@@ -47,7 +47,7 @@ function useTodos(data: EmployeeDashData) {
     const list: EmployeeDashData['todos'] = []
     if (data.meId && !profiles[data.meId]?.photo) list.push({ id: 'photo', label: 'Nahraj svou fotku', hint: 'Ať tě kolegové poznají v Týmu', href: '/profile' })
     let bozp: string | null = null
-    try { bozp = localStorage.getItem('fb-bozp-last-done') } catch { /* noop */ }
+    try { bozp = localStorage.getItem(data.meId ? `fb-bozp-last-done:${data.meId}` : 'fb-bozp-last-done') } catch { /* noop */ }
     if (!bozp || new Date(bozp).getTime() + 365 * 86400000 < Date.now()) list.push({ id: 'bozp', label: 'Projdi školení BOZP', hint: 'Jednou ročně, zabere pár minut', href: '/profile' })
     setExtra(list)
   }, [data.meId, profiles])
@@ -63,9 +63,9 @@ function useGreeting() {
   return g
 }
 
-function useNick(firstName: string) {
+function useNick(firstName: string, meId?: string) {
   const [nick, setNick] = useState<string | null>(null)
-  useEffect(() => { try { setNick(localStorage.getItem('fb-nickname')) } catch { /* noop */ } }, [])
+  useEffect(() => { try { setNick(localStorage.getItem(meId ? `fb-nickname:${meId}` : 'fb-nickname')) } catch { /* noop */ } }, [meId])
   return nick?.trim() || toVocativeCz(firstName)
 }
 
@@ -113,14 +113,15 @@ const Tag = ({ cls, children }: { cls: string; children: ReactNode }) => (
   <span className={`text-[10px] font-bold uppercase tracking-[0.06em] px-1.5 py-0.5 flex-shrink-0 ${cls}`}>{children}</span>
 )
 
-export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
+export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; footer?: ReactNode }) {
   const todos = useTodos(data)
   const greeting = useGreeting()
-  const name = useNick(data.firstName)
+  const name = useNick(data.firstName, data.meId)
   const person = usePeople()
   const upcoming = useUpcomingEvents()
   const meP = data.meId ? person(data.meId) : null
-  const hr = data.hrContact ? person(data.hrContact.id) : null
+  // HR sama sobě kontakt neukazuje
+  const hr = data.hrContact && data.hrContact.id !== data.meId ? person(data.hrContact.id) : null
 
   // termíny podle nastavení HR (Přehled odměn → Termíny); server posílá výchozí
   const [pn, setPn] = useState<PayNext>(data.payNext)
@@ -289,6 +290,8 @@ export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
           )}
         </section>
       </div>
+
+      {footer}
     </div>
   )
 }

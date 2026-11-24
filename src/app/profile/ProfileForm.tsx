@@ -68,12 +68,15 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
     ecRelationship: '',
   })
 
+  // Přezdívka a BOZP se pamatují zvlášť pro každého člověka (v demu se v jednom prohlížeči střídají role)
+  const nickKey = teamMemberId ? `fb-nickname:${teamMemberId}` : 'fb-nickname'
+  const bozpKey = teamMemberId ? `${BOZP_KEY}:${teamMemberId}` : BOZP_KEY
   useEffect(() => {
     try {
-      setNickname(localStorage.getItem('fb-nickname') ?? '')
-      setBozpLastDone(localStorage.getItem(BOZP_KEY))
+      setNickname(localStorage.getItem(nickKey) ?? '')
+      setBozpLastDone(localStorage.getItem(bozpKey))
     } catch { /* noop */ }
-  }, [])
+  }, [nickKey, bozpKey])
 
   useEffect(() => {
     if (!teamMemberId) return
@@ -104,7 +107,7 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
 
   const markBozpDone = () => {
     const today = new Date().toISOString().slice(0, 10)
-    try { localStorage.setItem(BOZP_KEY, today) } catch { /* noop */ }
+    try { localStorage.setItem(bozpKey, today) } catch { /* noop */ }
     setBozpLastDone(today)
   }
 
@@ -126,8 +129,8 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
     setSaving(true)
     // Nickname is persisted locally — the dashboard greets you with it
     try {
-      if (nickname.trim()) localStorage.setItem('fb-nickname', nickname.trim())
-      else localStorage.removeItem('fb-nickname')
+      if (nickname.trim()) localStorage.setItem(nickKey, nickname.trim())
+      else localStorage.removeItem(nickKey)
     } catch { /* noop */ }
     await new Promise((r) => setTimeout(r, 600))
     setSaving(false)
