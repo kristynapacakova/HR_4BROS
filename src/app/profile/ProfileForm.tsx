@@ -115,6 +115,8 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
     ? new Date(new Date(bozpLastDone).setFullYear(new Date(bozpLastDone).getFullYear() + 1))
     : null
   const bozpOverdue = bozpNextDue ? bozpNextDue < new Date() : true
+  const bozpDaysLeft = bozpNextDue ? Math.ceil((bozpNextDue.getTime() - Date.now()) / 86400000) : 0
+  const bozpSoon = !bozpOverdue && bozpDaysLeft <= 30
 
   const currentSalary = employment?.currentSalary ?? null
   const startSalaryNum = Number(startingSalary) || null
@@ -243,7 +245,7 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
           </div>
 
           {/* Školení BOZP */}
-          <div className={`mt-5 p-4 border-l-4 ${bozpOverdue ? 'bg-gold-light border-gold' : 'bg-mint-light border-mint'}`}>
+          <div className={`mt-5 p-4 border-l-4 ${bozpOverdue || bozpSoon ? 'bg-gold-light border-gold' : 'bg-mint-light border-mint'}`}>
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div>
                 <p className="text-sm font-semibold text-navy">Školení BOZP</p>
@@ -251,7 +253,9 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
                   <p className="text-xs mt-0.5 text-navy/70">
                     {bozpOverdue
                       ? `Propadlé — naposledy ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')}`
-                      : `✓ Splněno ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')} · další termín ${bozpNextDue!.toLocaleDateString('cs-CZ')}`}
+                      : bozpSoon
+                        ? `Brzy vyprší — platí do ${bozpNextDue!.toLocaleDateString('cs-CZ')} (${bozpDaysLeft} ${bozpDaysLeft === 1 ? 'den' : bozpDaysLeft < 5 ? 'dny' : 'dní'})`
+                        : `✓ Splněno ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')} · další termín ${bozpNextDue!.toLocaleDateString('cs-CZ')}`}
                   </p>
                 ) : (
                   <p className="text-xs text-navy/70 mt-0.5">Zatím neabsolvováno — je potřeba každý rok</p>
@@ -396,7 +400,7 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
           </div>
 
           {/* Školení BOZP */}
-          <div className={`mt-5 p-4 border-l-4 ${bozpOverdue ? 'bg-gold-light border-gold' : 'bg-mint-light border-mint'}`}>
+          <div className={`mt-5 p-4 border-l-4 ${bozpOverdue || bozpSoon ? 'bg-gold-light border-gold' : 'bg-mint-light border-mint'}`}>
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div>
                 <p className="text-sm font-semibold text-navy">Školení BOZP</p>
@@ -404,7 +408,9 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
                   <p className="text-xs mt-0.5 text-navy/70">
                     {bozpOverdue
                       ? `Propadlé — naposledy ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')}`
-                      : `✓ Splněno ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')} · další termín ${bozpNextDue!.toLocaleDateString('cs-CZ')}`}
+                      : bozpSoon
+                        ? `Brzy vyprší — platí do ${bozpNextDue!.toLocaleDateString('cs-CZ')} (${bozpDaysLeft} ${bozpDaysLeft === 1 ? 'den' : bozpDaysLeft < 5 ? 'dny' : 'dní'})`
+                        : `✓ Splněno ${new Date(bozpLastDone).toLocaleDateString('cs-CZ')} · další termín ${bozpNextDue!.toLocaleDateString('cs-CZ')}`}
                   </p>
                 ) : (
                   <p className="text-xs text-navy/70 mt-0.5">Zatím neabsolvováno — je potřeba každý rok</p>

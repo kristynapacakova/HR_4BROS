@@ -48,7 +48,17 @@ function useTodos(data: EmployeeDashData) {
     if (data.meId && !profiles[data.meId]?.photo) list.push({ id: 'photo', label: 'Nahraj svou fotku', hint: 'Ať tě kolegové poznají v Týmu', href: '/profile' })
     let bozp: string | null = null
     try { bozp = localStorage.getItem(data.meId ? `fb-bozp-last-done:${data.meId}` : 'fb-bozp-last-done') } catch { /* noop */ }
-    if (!bozp || new Date(bozp).getTime() + 365 * 86400000 < Date.now()) list.push({ id: 'bozp', label: 'Projdi školení BOZP', hint: 'Jednou ročně, zabere pár minut', href: '/profile' })
+    // BOZP platí rok — po vypršení úkol, 30 dní předem upozornění
+    const due = bozp ? new Date(bozp) : null
+    if (due) due.setFullYear(due.getFullYear() + 1)
+    const daysLeft = due ? Math.ceil((due.getTime() - Date.now()) / 86400000) : -1
+    if (daysLeft < 0) list.push({ id: 'bozp', label: 'Projdi školení BOZP', hint: bozp ? 'Platnost vypršela, je potřeba každý rok' : 'Jednou ročně, zabere pár minut', href: '/profile' })
+    else if (daysLeft <= 30) list.push({
+      id: 'bozp-soon',
+      label: daysLeft === 0 ? 'Školení BOZP ti dnes vyprší' : `Školení BOZP ti vyprší za ${daysLeft} ${plural(daysLeft, 'den', 'dny', 'dní')}`,
+      hint: `Obnov ho do ${due!.toLocaleDateString('cs-CZ')}`,
+      href: '/profile',
+    })
     setExtra(list)
   }, [data.meId, profiles])
   return [...data.todos, ...extra]

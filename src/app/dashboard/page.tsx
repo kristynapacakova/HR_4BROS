@@ -8,6 +8,7 @@ import {
   DEMO_DIRECTIVES,
   DEMO_CONTRACTS,
   DEMO_FEEDBACK,
+  PERSONA_EMAIL_BY_ID,
   getDemoUserById,
   demoTeamIdFor,
 } from '@/lib/mock-data'
@@ -104,7 +105,9 @@ export default async function DashboardPage() {
   const roleTodos: EmployeeDashData['todos'] = []
   if (isAdmin || isTL) {
     const myTeamId = isTL ? demoTeamIdFor(session.user.email ?? '') : undefined
-    const expenses = DEMO_EXPENSE_REQUESTS.filter(r => r.status === 'PENDING' && (isAdmin || DEMO_TEAM.find(m => m.id === r.employeeId)?.teamLeadId === myTeamId))
+    // doklady jsou vedené pod přihlašovacím (persona) id — dohledat člověka v týmu přes e-mail
+    const teamMemberOf = (id: string) => DEMO_TEAM.find(m => m.id === id || m.email === PERSONA_EMAIL_BY_ID[id])
+    const expenses = DEMO_EXPENSE_REQUESTS.filter(r => r.status === 'PENDING' && (isAdmin || teamMemberOf(r.employeeId)?.teamLeadId === myTeamId))
     if (expenses.length) roleTodos.push({ id: 'hr-exp', label: `Schval ${n(expenses.length, 'doklad', 'doklady', 'dokladů')} k proplacení`, hint: isTL ? 'Od lidí z tvého týmu' : 'Sport, cestovné, náklady ke klientům', href: '/admin/odmeny?sub=doklady' })
   }
   if (isAdmin) {
