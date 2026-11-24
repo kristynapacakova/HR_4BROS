@@ -78,7 +78,8 @@ async function employeeDashData(sessionUserId: string, email: string, user: Retu
   return {
     meId, isIco, firstName, initial: firstName[0]?.toUpperCase() ?? '?', subtitle, tenure,
     todos, birthdays, anniversaries, newcomers, news,
-    hrContact: hrPerson ? { id: hrPerson.id, email: hrPerson.email } : undefined,
+    // telefon HR — v ukázce z přihlašovacího účtu HR; po napojení z údajů člověka
+    hrContact: hrPerson ? { id: hrPerson.id, email: hrPerson.email, phone: getDemoUserById(Object.keys(PERSONA_EMAIL_BY_ID).find(k => PERSONA_EMAIL_BY_ID[k] === hrPerson.email) ?? '').phone ?? undefined } : undefined,
     payNext: computePayNext(isIco),
     bozpCompletedAt: bozpLast ? bozpLast.toISOString().slice(0, 10) : null,
     bozpRequired: me ? bozpRequired(me.employmentType) : !isIco,
