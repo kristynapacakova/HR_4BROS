@@ -2,6 +2,7 @@
 
 import { useState, type ComponentProps } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { HERO_PHOTO } from '@/app/dashboard/EmployeeDashboard'
 import { ProfileTabs } from './ProfileTabs'
 import { AvatarUpload } from '@/components/AvatarUpload'
 import { departmentColor } from '@/lib/team-colors'
@@ -64,13 +65,13 @@ export function AccountCard({ info, tabs }: { info: AccountInfo; tabs: Component
 
   return (
     <div className="w-full">
-      <section className="relative bg-navy text-white overflow-hidden mb-6">
-        <div className="relative flex flex-col sm:flex-row gap-6 px-7 sm:px-9 pt-8 sm:pt-9 pb-7">
-          <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={144} hideGlow fallback={<Silhouette department={info.department} />} />
+      <section className="relative bg-navy text-white overflow-hidden mb-6 min-h-[256px] flex flex-col">
+        <div className="relative flex-1 flex flex-col sm:flex-row sm:items-end gap-6 px-7 sm:px-9 pt-8 pb-7">
+          <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={HERO_PHOTO} hideGlow fallback={<Silhouette department={info.department} />} />
           <div className="flex flex-col justify-end min-w-0 flex-1">
             <p className="kicker text-gold text-[11px] mb-2">Můj účet</p>
-            <h1 className="font-headline text-[36px] sm:text-[46px] leading-[1.0]" style={{ fontWeight: 600 }}>{info.name}</h1>
-            <p className="text-white/70 text-lg mt-1.5">{info.position}</p>
+            <h1 className="font-headline text-[34px] sm:text-[38px] leading-[1.05]" style={{ fontWeight: 600 }}>{info.name}</h1>
+            <p className="text-white/65 text-[15px] mt-1">{info.position}</p>
           </div>
           <dl className="sm:self-end grid grid-cols-[auto_auto] gap-x-5 gap-y-1.5 text-sm">
             <dt className="text-white/50">Tým</dt>

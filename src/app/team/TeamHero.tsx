@@ -60,8 +60,8 @@ export function TeamHero({ members, departments, active = 'Všichni', onPick }: 
 
   let k = 0
   return (
-    <div className="relative bg-navy text-white overflow-hidden">
-      <div className="relative flex flex-col xl:flex-row xl:items-end justify-between gap-6 xl:gap-8 p-6 lg:p-8">
+    <div className="relative bg-navy text-white overflow-hidden min-h-[256px] flex">
+      <div className="relative flex-1 flex flex-col xl:flex-row xl:items-end justify-between gap-6 xl:gap-8 p-6 lg:p-8">
         <div className="min-w-[260px] max-w-md">
           <p className="kicker text-gold text-[11px] mb-3">Tým Four Bros</p>
           <h2 className="font-headline text-[30px] leading-[1.1]" style={{ fontWeight: 600 }}>
