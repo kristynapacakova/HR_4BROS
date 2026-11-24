@@ -1,5 +1,7 @@
 # Datový model HR portálu
 
+> **Kompletní předávací specifikace celé aplikace je v [docs/predani/](predani/README.md).** Tento dokument popisuje jen model plnění (smlouvy, směrnice, BOZP) zavedený v `src/lib/hr/`.
+
 Tenhle dokument popisuje, **jaká data portál používá, jak spolu souvisí a jak se chovají**. Je nezávislý na konkrétní databázi — vyberte jakoukoli (PostgreSQL, MySQL, MS SQL, Firestore…), vazby a pravidla zůstávají stejná.
 
 ## Jak je to v kódu poskládané
