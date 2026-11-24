@@ -145,8 +145,8 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
   return (
     <div className="w-full space-y-6">
       {/* Navy hlavička s přehledem souhlasů */}
-      <div className="relative bg-navy text-white overflow-hidden rozky rozky-lg after:z-20 min-h-[256px] flex">
-        <div className="relative z-10 flex-1 px-7 sm:px-9 py-7 flex flex-col md:flex-row md:items-end gap-6">
+      <div className="relative bg-navy text-white overflow-hidden rozky rozky-lg after:z-20 min-h-[256px] flex flex-col">
+        <div className="relative z-10 flex-1 px-7 sm:px-9 pt-8 pb-6 flex flex-col md:flex-row md:items-end gap-6">
           <div className="flex-1 min-w-0">
             <p className="kicker text-gold text-[11px] mb-2">Přehled souhlasů</p>
             <h2 className="text-2xl font-headline text-white mb-1" style={{ fontWeight: 600 }}>
@@ -177,7 +177,7 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
           </div>
         </div>
         {/* Segmentovaný ukazatel — jeden čtverec za každou směrnici k odsouhlasení */}
-        <div className="relative z-10 px-7 pb-7">
+        <div className="relative z-10 px-7 sm:px-9 pb-8">
           <div
             className="flex gap-1.5"
             role="progressbar"

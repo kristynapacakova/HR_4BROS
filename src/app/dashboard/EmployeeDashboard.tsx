@@ -34,6 +34,7 @@ export interface EmployeeDashData {
 const MONTHS_SHORT = ['led', 'úno', 'bře', 'dub', 'kvě', 'čvn', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro']
 /** Velikost fotky v hlavičce — stejná na Dashboardu i v Můj účet */
 export const HERO_PHOTO = 112
+const VISIBLE_TODOS = 4
 const rise = (i: number) => ({ animation: `fb-rise .5s cubic-bezier(.16,1,.3,1) ${i * 70}ms backwards` })
 
 function usePeople() {
@@ -150,34 +151,26 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
   return (
     <div className="w-full space-y-5">
       {/* ── hlavička ── */}
-      <section className="relative bg-navy text-white overflow-hidden min-h-[256px] flex">
-        <div className="flex-1 grid lg:grid-cols-[1fr_400px] gap-8 items-center px-7 sm:px-9 py-6">
-          <div className="flex flex-col gap-5 min-w-0">
-            <div className="flex items-end gap-5">
+      <section className="relative bg-navy text-white overflow-hidden">
+        <div className="grid lg:grid-cols-[1fr_420px] gap-8 px-7 sm:px-9 pt-9 pb-8">
+          <div className="flex flex-col gap-6 min-w-0">
+            <div className="flex items-end gap-6">
               {meP ? <Avatar p={meP} size={HERO_PHOTO} fontSize={34} /> : <span className="flex-shrink-0 bg-white/10 flex items-center justify-center font-headline text-4xl" style={{ width: HERO_PHOTO, height: HERO_PHOTO }}>{data.initial}</span>}
               <div className="min-w-0">
                 <p className="kicker text-gold text-[11px] mb-2">{greeting}</p>
                 <h1 className="font-headline text-[34px] sm:text-[38px] leading-[1.05]" style={{ fontWeight: 600 }}>{name}</h1>
-                {data.subtitle && <p className="text-white/65 text-[15px] mt-1">{data.subtitle}</p>}
+                {data.subtitle && <p className="text-white/65 text-[15px] mt-1.5">{data.subtitle}</p>}
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="bg-gold text-navy px-3 h-11 flex items-center text-sm font-semibold">Jsi s námi {data.tenure}</span>
-              {/* odpočet do faktury / výplaty */}
-              <Link href="/payslips" className="group flex items-center gap-3 bg-white/10 hover:bg-white/15 h-11 pr-4 min-w-0" title={pn.sub}>
-                <span className="bg-gold text-navy w-11 h-11 flex flex-col items-center justify-center leading-none flex-shrink-0">
-                  <span className="font-headline text-[18px]" style={{ fontWeight: 600 }}>{pn.inDays}</span>
-                  <span className="text-[8px] font-bold uppercase tracking-[0.08em] mt-0.5">{plural(pn.inDays, 'den', 'dny', 'dní')}</span>
-                </span>
-                <span className="text-[13px] font-semibold truncate group-hover:text-gold">{pn.title}</span>
-              </Link>
-              {todos.length === 0 && <span className="bg-mint text-navy px-3 h-11 flex items-center text-sm font-semibold">Všechno vyřízeno ✓</span>}
+            <div className="flex flex-wrap gap-2">
+              <span className="bg-gold text-navy px-3 py-1.5 text-sm font-semibold">Jsi s námi {data.tenure}</span>
+              {todos.length === 0 && <span className="bg-mint text-navy px-3 py-1.5 text-sm font-semibold">Všechno vyřízeno ✓</span>}
             </div>
           </div>
 
-          {/* úkoly — bílý papír na navy; v hlavičce první 3, zbytek po rozbalení */}
-          <div className="bg-white text-navy px-5 py-3 self-center">
-            <div className="flex items-baseline justify-between mb-1">
+          {/* úkoly — bílý papír na navy; při hodně úkolech první 4, zbytek po rozbalení */}
+          <div className="bg-white text-navy p-5 self-start">
+            <div className="flex items-baseline justify-between mb-2">
               <p className="font-headline text-[17px]" style={{ fontWeight: 600 }}>Čeká na tebe</p>
               <span className="text-xs text-navy/50">{todos.length ? `${todos.length} ${plural(todos.length, 'úkol', 'úkoly', 'úkolů')}` : ''}</span>
             </div>
@@ -186,27 +179,42 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
             ) : (
               <>
                 <ul className="divide-y divide-[rgba(13,33,79,0.08)]">
-                  {(showAll ? todos : todos.slice(0, 3)).map((td, i) => (
+                  {(showAll ? todos : todos.slice(0, VISIBLE_TODOS)).map((td, i) => (
                     <li key={td.id}>
-                      <Link href={td.href} title={td.hint} className="group flex items-center gap-3 py-2" style={rise(i)}>
+                      <Link href={td.href} className="group flex items-center gap-3 py-2.5" style={rise(i)}>
                         <span className="w-5 h-5 border-2 border-navy/30 flex-shrink-0 transition-colors group-hover:border-violet" />
                         <span className="flex-1 min-w-0">
-                          <span className="block text-sm font-semibold truncate group-hover:text-violet">{td.label}</span>
-                          {showAll && <span className="block text-[11px] text-navy/50">{td.hint}</span>}
+                          <span className="block text-sm font-semibold group-hover:text-violet">{td.label}</span>
+                          <span className="block text-[11px] text-navy/50">{td.hint}</span>
                         </span>
                         <span className="text-navy/30 group-hover:text-violet">→</span>
                       </Link>
                     </li>
                   ))}
                 </ul>
-                {todos.length > 3 && (
-                  <button type="button" onClick={() => setShowAll(v => !v)} className="mt-1 text-xs font-semibold text-violet hover:underline">
-                    {showAll ? 'Sbalit' : `+ ${todos.length - 3} ${plural(todos.length - 3, 'další', 'další', 'dalších')}`}
+                {todos.length > VISIBLE_TODOS && (
+                  <button type="button" onClick={() => setShowAll(v => !v)} className="mt-2 text-xs font-semibold text-violet hover:underline">
+                    {showAll ? 'Sbalit' : `+ ${todos.length - VISIBLE_TODOS} ${plural(todos.length - VISIBLE_TODOS, 'další', 'další', 'dalších')}`}
                   </button>
                 )}
               </>
             )}
           </div>
+        </div>
+
+        {/* odpočet do faktury / výplaty */}
+        <div className="border-t border-white/15 px-7 sm:px-9 py-4 pr-16">
+          <Link href="/payslips" className="group flex items-center gap-x-6 gap-y-2">
+            <span className="bg-gold text-navy px-3 py-2 text-center leading-none flex-shrink-0">
+              <span className="block font-headline text-[26px]" style={{ fontWeight: 600 }}>{pn.inDays}</span>
+              <span className="block text-[10px] font-bold uppercase tracking-[0.08em] mt-0.5">{plural(pn.inDays, 'den', 'dny', 'dní')}</span>
+            </span>
+            <span className="flex-1 min-w-0">
+              <span className="block font-semibold text-[15px] group-hover:text-gold">{pn.title}</span>
+              <span className="block text-[12px] text-white/55">{pn.sub}</span>
+            </span>
+            <span className="text-white/40 group-hover:text-gold">→</span>
+          </Link>
         </div>
         <Corner />
       </section>
