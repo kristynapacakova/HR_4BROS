@@ -6,6 +6,7 @@ import { DEMO_TEAM } from '@/lib/mock-data'
 import { Avatar, personView, plural, useProfiles } from '@/app/team/teamPeople'
 import { toVocativeCz } from '@/lib/cz-vocative'
 import { DoneBurst, GiftBox } from './DashboardAnimations'
+import { bozpStatus } from '@/lib/hr/model'
 import { computePayNext, loadPaySchedule, PAY_SCHEDULE_CHANGED_EVENT, type PayNext } from '@/lib/pay-schedule'
 
 /**
@@ -26,6 +27,8 @@ export interface EmployeeDashData {
   news: { id: string; title: string; category: string; date: string; mine: boolean }[]
   hrContact?: { id: string; email: string }
   payNext: PayNext
+  /** poslední BOZP ze zdroje dat (YYYY-MM-DD) */
+  bozpCompletedAt: string | null
 }
 
 const MONTHS_SHORT = ['led', 'úno', 'bře', 'dub', 'kvě', 'čvn', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro']
@@ -46,21 +49,20 @@ function useTodos(data: EmployeeDashData) {
   useEffect(() => {
     const list: EmployeeDashData['todos'] = []
     if (data.meId && !profiles[data.meId]?.photo) list.push({ id: 'photo', label: 'Nahraj svou fotku', hint: 'Ať tě kolegové poznají v Týmu', href: '/profile' })
-    let bozp: string | null = null
-    try { bozp = localStorage.getItem(data.meId ? `fb-bozp-last-done:${data.meId}` : 'fb-bozp-last-done') } catch { /* noop */ }
-    // BOZP platí rok — po vypršení úkol, 30 dní předem upozornění
-    const due = bozp ? new Date(bozp) : null
-    if (due) due.setFullYear(due.getFullYear() + 1)
-    const daysLeft = due ? Math.ceil((due.getTime() - Date.now()) / 86400000) : -1
-    if (daysLeft < 0) list.push({ id: 'bozp', label: 'Projdi školení BOZP', hint: bozp ? 'Platnost vypršela, je potřeba každý rok' : 'Jednou ročně, zabere pár minut', href: '/profile' })
-    else if (daysLeft <= 30) list.push({
+    // BOZP: ze zdroje dat + co si člověk odklikl v prohlížeči (dokud není databáze); rozhoduje novější
+    let local: string | null = null
+    try { local = localStorage.getItem(data.meId ? `fb-bozp-last-done:${data.meId}` : 'fb-bozp-last-done') } catch { /* noop */ }
+    const last = [data.bozpCompletedAt, local].filter(Boolean).sort().pop() ?? null
+    const b = bozpStatus(last ? new Date(last) : null)
+    if (b.state === 'MISSING' || b.state === 'EXPIRED') list.push({ id: 'bozp', label: 'Projdi školení BOZP', hint: b.state === 'EXPIRED' ? 'Platnost vypršela, je potřeba každý rok' : 'Jednou ročně, zabere pár minut', href: '/profile' })
+    else if (b.state === 'EXPIRING') list.push({
       id: 'bozp-soon',
-      label: daysLeft === 0 ? 'Školení BOZP ti dnes vyprší' : `Školení BOZP ti vyprší za ${daysLeft} ${plural(daysLeft, 'den', 'dny', 'dní')}`,
-      hint: `Obnov ho do ${due!.toLocaleDateString('cs-CZ')}`,
+      label: b.daysLeft === 0 ? 'Školení BOZP ti dnes vyprší' : `Školení BOZP ti vyprší za ${b.daysLeft} ${plural(b.daysLeft!, 'den', 'dny', 'dní')}`,
+      hint: `Obnov ho do ${b.validUntil!.toLocaleDateString('cs-CZ')}`,
       href: '/profile',
     })
     setExtra(list)
-  }, [data.meId, profiles])
+  }, [data.meId, data.bozpCompletedAt, profiles])
   return [...data.todos, ...extra]
 }
 

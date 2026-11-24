@@ -15,6 +15,8 @@ interface UserData {
   position: string | null
   country: string | null
   employmentType?: string | null
+  /** poslední BOZP ze zdroje dat (YYYY-MM-DD) */
+  bozpCompletedAt?: string | null
 }
 
 interface ProfileFormProps {
@@ -74,9 +76,11 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
   useEffect(() => {
     try {
       setNickname(localStorage.getItem(nickKey) ?? '')
-      setBozpLastDone(localStorage.getItem(bozpKey))
+      // BOZP: zdroj dat + odkliknuté v prohlížeči (dokud není databáze) — rozhoduje novější
+      const local = localStorage.getItem(bozpKey)
+      setBozpLastDone([user.bozpCompletedAt ?? null, local].filter(Boolean).sort().pop() ?? null)
     } catch { /* noop */ }
-  }, [nickKey, bozpKey])
+  }, [nickKey, bozpKey, user.bozpCompletedAt])
 
   useEffect(() => {
     if (!teamMemberId) return

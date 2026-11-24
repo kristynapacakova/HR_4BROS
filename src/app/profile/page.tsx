@@ -7,6 +7,8 @@ import { PayslipsClient } from '@/app/payslips/PayslipsClient'
 import { TimeOffPanel } from './panels/TimeOffPanel'
 import { DocumentsPanel } from './panels/DocumentsPanel'
 import { AccountCard } from './AccountCard'
+import { getHrSource } from '@/lib/hr/source'
+import { latestBozp } from '@/lib/hr/model'
 
 export default async function ProfilePage() {
   const session = await auth()
@@ -20,6 +22,12 @@ export default async function ProfilePage() {
   const teamMember = DEMO_TEAM.find((m) => m.email.toLowerCase() === user.email.toLowerCase())
 
   const payslipsLabel = 'Moje odměna'
+
+  // Poslední BOZP ze zdroje dat (src/lib/hr) — profil ho spojí s tím, co si člověk odklikl v prohlížeči
+  const src = getHrSource()
+  const me = await src.personForLogin(session.user.id, session.user.email)
+  const bozpLast = me ? latestBozp(await src.bozpTrainings(me.id)) : null
+  const userWithBozp = { ...user, bozpCompletedAt: bozpLast ? bozpLast.toISOString().slice(0, 10) : null }
 
   // Dny nemoci v aktuálním měsíci → rozpis srážky v Moje odměna
   const now = new Date()
@@ -55,7 +63,7 @@ export default async function ProfilePage() {
             assetCount: myAssets.length,
           }}
           tabs={{
-            user,
+            user: userWithBozp,
             assets: myAssets,
             assetTypes: ASSET_TYPES,
             assetConditions: ASSET_CONDITIONS,

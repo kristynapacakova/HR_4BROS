@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import {
   IconDashboard, IconUser, IconHeart, IconBook, IconTeam,
-  IconShield, IconContract, IconBanknote, IconCalendar, IconChart, IconLogOut,
+  IconShield, IconCheck, IconContract, IconBanknote, IconCalendar, IconChart, IconLogOut,
 } from '@/components/BrandIcons'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -23,6 +23,7 @@ const staticNavItemsAfter = [
 
 const adminItems = [
   { label: 'Admin panel', href: '/admin', icon: IconShield },
+  { label: 'Přehled plnění', href: '/admin/plneni', icon: IconCheck },
   { label: 'Smlouvy', href: '/admin/smlouvy', icon: IconContract },
   { label: 'Správa směrnic', href: '/admin/smernice', icon: IconBook },
   { label: 'Schránka důvěry', href: '/admin/feedback', icon: IconHeart },

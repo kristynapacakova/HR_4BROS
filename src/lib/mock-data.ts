@@ -191,7 +191,7 @@ export const DEMO_USER = {
   monthlySalary: 65000,
   hourlyRate: null as number | null,
   contractTermType: "URCITA" as "URCITA" | "NEURCITA",
-  contractEndDate: new Date("2026-11-15") as Date | null,
+  contractEndDate: new Date("2027-01-31") as Date | null,
 }
 
 export const DEMO_ADMIN = {
@@ -377,7 +377,7 @@ export interface PersonRecord {
 
 export const DEMO_TEAM: PersonRecord[] = [
   { id: "t1",  name: "Petra Nováková",    email: DEMO_ADMIN.email,     position: "HR Manager",           department: "Head office",          seniority: "SENIOR", employmentType: "HPP", birthday: "1988-03-15", bio: "Mám ráda lidi, kávu a pořádek.", emoji: "🌿", teamLeadId: null, role: "ADMIN", startDate: new Date("2022-01-01"), monthlyHours: 160, clientHours: null, monthlySalary: 58000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t2",  name: "Jan Novák",          email: DEMO_USER.email,      position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2024-01-15"), monthlyHours: 168, clientHours: 120, monthlySalary: 65000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "URCITA", contractEndDate: new Date("2026-11-15") },
+  { id: "t2",  name: "Jan Novák",          email: DEMO_USER.email,      position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2024-01-15"), monthlyHours: 168, clientHours: 120, monthlySalary: 65000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "URCITA", contractEndDate: new Date("2027-01-31") },
   { id: "t3",  name: "Marie Svobodová",    email: "marie.svobodova@fourbros.cz", position: "Social Media Manager", department: "Performance", seniority: "JUNIOR", employmentType: "DPP", birthday: "1997-11-03", bio: "Tvořím obsah, který lidi zastaví při scrollování.", emoji: "📱", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-06-01"), monthlyHours: 80, clientHours: 60, monthlySalary: 28000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 20, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t4",  name: "Tomáš Dvořák",       email: DEMO_USER_ICO.email,  position: "Account Manager",      department: "Account manager",     seniority: "SENIOR", employmentType: "ICO", birthday: "1985-07-22", bio: "Klienti jsou základ. Rád řeším výzvy.", emoji: "🤝", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2022-03-15"), monthlyHours: 140, clientHours: 110, monthlySalary: null, hourlyRate: 1200, icoNumber: "01234567", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t5",  name: "Lucie Kratochvílová",email: "lucie.kratochvilova@fourbros.cz", position: "Art Director",         department: "Creative",    seniority: "SENIOR", employmentType: "ICO", birthday: "1991-02-08", bio: "Vizuál je moje řeč. Pixely jsou moji přátelé.", emoji: "🎨", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-09-01"), monthlyHours: 150, clientHours: 120, monthlySalary: null, hourlyRate: 1100, icoNumber: "87654321", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
@@ -386,8 +386,8 @@ export const DEMO_TEAM: PersonRecord[] = [
   { id: "t8",  name: "Martin Beneš",       email: "martin.benes@fourbros.cz", position: "Sales Manager",        department: "Head office",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2019-05-01"), monthlyHours: 160, clientHours: 130, monthlySalary: null, hourlyRate: 1300, icoNumber: "33445566", officeAmount: 1800, refreshAmount: 400, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t9",  name: "Veronika Jelínková", email: "veronika.jelinkova@fourbros.cz", position: "Project Manager",      department: "Account manager",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-02-01"), monthlyHours: 150, clientHours: 100, monthlySalary: null, hourlyRate: 1000, icoNumber: "44556677", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t10", name: "Pavel Šimánek",      email: "pavel.simanek@fourbros.cz", position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-04-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1000, icoNumber: "55667788", officeAmount: 1300, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-03-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "66778899", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-06-01"), monthlyHours: 140, clientHours: 90, monthlySalary: null, hourlyRate: 750, icoNumber: "77889900", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-03-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "66778899", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "URCITA", contractEndDate: new Date("2026-12-31") },
+  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-06-01"), monthlyHours: 140, clientHours: 90, monthlySalary: null, hourlyRate: 750, icoNumber: "77889900", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "URCITA", contractEndDate: new Date("2027-05-31") },
   { id: "t13", name: "Michaela Červenková",email: "michaela.cervenkova@fourbros.cz", position: "Office Manager",       department: "Head office",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2020-06-01"), monthlyHours: 160, clientHours: null, monthlySalary: 42000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t14", name: "Radek Pospíšil",     email: "radek.pospisil@fourbros.cz", position: "Business Developer",   department: "Head office",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-07-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1050, icoNumber: "88990011", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2025-12-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "99001122", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
@@ -1023,6 +1023,16 @@ export const DEMO_DIRECTIVES: Directive[] = [
         employeeName: 'Jan Novák',
         acknowledgedAt: new Date('2024-01-16'),
       },
+      { employeeId: 't3', employeeName: 'Marie Svobodová', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't5', employeeName: 'Lucie Kratochvílová', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't6', employeeName: 'Ondřej Mašek', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't7', employeeName: 'Klára Horáková', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't8', employeeName: 'Martin Beneš', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't9', employeeName: 'Veronika Jelínková', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't10', employeeName: 'Pavel Šimánek', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't13', employeeName: 'Michaela Červenková', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't14', employeeName: 'Radek Pospíšil', acknowledgedAt: new Date('2025-12-10') },
+      { employeeId: 't15', employeeName: 'Tereza Müllerová', acknowledgedAt: new Date('2025-12-10') },
     ],
     body: `<h2>Příručka č. 1/2024 — Vítejte v Four Bros</h2>
 <p><strong>Datum vydání:</strong> 1. 1. 2024</p>
@@ -1063,6 +1073,13 @@ export const DEMO_DIRECTIVES: Directive[] = [
         employeeName: 'Jan Novák',
         acknowledgedAt: new Date('2025-03-05'),
       },
+      { employeeId: 't3', employeeName: 'Marie Svobodová', acknowledgedAt: new Date('2025-03-10') },
+      { employeeId: 't5', employeeName: 'Lucie Kratochvílová', acknowledgedAt: new Date('2025-03-10') },
+      { employeeId: 't7', employeeName: 'Klára Horáková', acknowledgedAt: new Date('2025-03-10') },
+      { employeeId: 't8', employeeName: 'Martin Beneš', acknowledgedAt: new Date('2025-03-10') },
+      { employeeId: 't9', employeeName: 'Veronika Jelínková', acknowledgedAt: new Date('2025-03-10') },
+      { employeeId: 't13', employeeName: 'Michaela Červenková', acknowledgedAt: new Date('2025-03-10') },
+      { employeeId: 't14', employeeName: 'Radek Pospíšil', acknowledgedAt: new Date('2025-03-10') },
     ],
     body: `<h2>Interní směrnice č. 2/2025 — Pravidla homeoffice</h2>
 <p><strong>Datum vydání:</strong> 1. 3. 2025</p>
@@ -1089,7 +1106,11 @@ export const DEMO_DIRECTIVES: Directive[] = [
     validFrom: new Date('2026-06-01'),
     mustAcknowledge: true,
     createdBy: 'Petra Nováková',
-    acknowledgements: [],
+    acknowledgements: [
+      { employeeId: 't3', employeeName: 'Marie Svobodová', acknowledgedAt: new Date('2026-05-12') },
+      { employeeId: 't8', employeeName: 'Martin Beneš', acknowledgedAt: new Date('2026-05-12') },
+      { employeeId: 't13', employeeName: 'Michaela Červenková', acknowledgedAt: new Date('2026-05-12') },
+    ],
     body: `<h2>Směrnice BOZP č. 1/2026 — Bezpečnost a ochrana zdraví při práci</h2>
 <p><strong>Datum vydání:</strong> 1. 5. 2026</p>
 <h3>1. Úvod a účel</h3>
