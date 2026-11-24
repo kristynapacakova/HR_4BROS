@@ -3,66 +3,13 @@
 import { useState } from 'react'
 import { LetterheadSheet } from '@/components/Letterhead'
 import { Directive, DirectiveTemplate, DirectiveTheme } from '@/lib/mock-data'
-import {
-  FileText, AlertTriangle, Shield, HardHat, Gift, Sparkles,
-  Plus, ChevronDown, ChevronUp, CheckCircle2, Users, BookOpen,
-} from 'lucide-react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
+import { DEMO_TEAM, PERSONA_EMAIL_BY_ID } from '@/lib/mock-data'
+import { CATEGORY_STYLES, CategoryTile } from '@/app/smernice/DirectiveIcons'
+import { Avatar, personView, useProfiles } from '@/app/team/teamPeople'
 
-const THEME_CFG: Record<DirectiveTheme, {
-  icon: React.ComponentType<{ className?: string }>
-  label: string
-  borderColor: string
-  badgeBg: string
-  badgeText: string
-  headerClass: string
-  previewHeaderClass: string
-  previewBodyClass: string
-}> = {
-  STANDARD: {
-    icon: FileText, label: 'Obecná',
-    borderColor: 'border-l-navy', badgeBg: 'bg-navy/10', badgeText: 'text-navy',
-    headerClass: 'bg-navy text-white',
-    previewHeaderClass: 'bg-navy text-white px-5 py-3',
-    previewBodyClass: 'bg-white border-l-4 border-navy',
-  },
-  IMPORTANT: {
-    icon: AlertTriangle, label: 'Důležité',
-    borderColor: 'border-l-gold', badgeBg: 'bg-gold-tint', badgeText: 'text-gold-dark',
-    headerClass: 'bg-gold text-navy',
-    previewHeaderClass: 'bg-gold text-navy px-5 py-3',
-    previewBodyClass: 'bg-gold-tint border-l-4 border-gold',
-  },
-  GDPR: {
-    icon: Shield, label: 'GDPR',
-    borderColor: 'border-l-violet', badgeBg: 'bg-violet/10', badgeText: 'text-violet',
-    headerClass: 'bg-violet text-white',
-    previewHeaderClass: 'bg-violet text-white px-5 py-3',
-    previewBodyClass: 'bg-violet/5 border-l-4 border-violet',
-  },
-  BOZP: {
-    icon: HardHat, label: 'BOZP',
-    borderColor: 'border-l-gold-dark', badgeBg: 'bg-gold-tint', badgeText: 'text-gold-dark',
-    headerClass: 'bg-gold-dark text-white',
-    previewHeaderClass: 'bg-gold-dark text-white px-5 py-3',
-    previewBodyClass: 'bg-gold-tint border-l-4 border-gold-dark',
-  },
-  BENEFIT: {
-    icon: Gift, label: 'Benefity',
-    borderColor: 'border-l-mint', badgeBg: 'bg-mint-tint', badgeText: 'text-mint-dark',
-    headerClass: 'bg-mint-dark text-white',
-    previewHeaderClass: 'bg-mint-dark text-white px-5 py-3',
-    previewBodyClass: 'bg-mint-tint border-l-4 border-mint',
-  },
-  WELCOME: {
-    icon: Sparkles, label: 'Uvítání',
-    borderColor: 'border-l-violet', badgeBg: 'bg-violet/10', badgeText: 'text-violet',
-    headerClass: 'bg-navy text-white',
-    previewHeaderClass: 'bg-navy text-white px-5 py-3',
-    previewBodyClass: 'bg-white border-l-4 border-violet',
-  },
-}
-
-const TOTAL_EMPLOYEES = 15
+/** Potvrzení jsou v ukázce vedená pod přihlašovacím id nebo id člověka — sjednotit na člověka. */
+const personIdOf = (id: string) => DEMO_TEAM.some(m => m.id === id) ? id : DEMO_TEAM.find(m => m.email === PERSONA_EMAIL_BY_ID[id])?.id ?? id
 
 function fillBody(body: string, values: Record<string, string>) {
   return body.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] || `<span class="text-slate-400 italic">{{${k}}}</span>`)
@@ -121,85 +68,82 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
     }, 1500)
   }
 
+  const profiles = useProfiles()
+  const person = (id: string) => { const m = DEMO_TEAM.find(x => x.id === id); return m ? personView(m, profiles[m.id]) : null }
+
   const previewHtml = selectedTemplate ? fillBody(selectedTemplate.body, values) : ''
 
   return (
     <div className="w-full space-y-6">
-      {/* Header */}
-      <div className="bg-white border border-[rgba(13,33,79,0.14)] px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-violet-600" />
-          <h2 className="font-headline font-bold text-navy text-lg">Interní směrnice</h2>
-        </div>
-        <div className="flex gap-2">
-          {(['list', 'create'] as const).map(t => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`flex items-center gap-2 px-4 py-2  text-sm font-medium transition-colors ${
-                tab === t ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {t === 'create' && <Plus className="w-3.5 h-3.5" />}
-              {t === 'list' ? 'Vydané směrnice' : 'Vytvořit novou'}
-            </button>
-          ))}
-        </div>
+      {/* Záložky */}
+      <div className="flex flex-wrap gap-1 bg-white border border-[rgba(13,33,79,0.14)] p-1 w-fit">
+        {(['list', 'create'] as const).map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`px-4 py-2 text-sm font-semibold transition-colors ${tab === t ? 'bg-navy text-white' : 'text-navy/60 hover:text-navy'}`}
+          >
+            {t === 'list' ? 'Vydané směrnice' : '+ Vytvořit novou'}
+          </button>
+        ))}
       </div>
 
-      {/* Tab: List */}
+      {/* Seznam vydaných směrnic */}
       {tab === 'list' && (
         <div className="space-y-3">
           {directives.map(d => {
-            const cfg = THEME_CFG[d.theme]
-            const Icon = cfg.icon
             const isOpen = expandedId === d.id
+            const ackedIds = new Set(d.acknowledgements.map(a => personIdOf(a.employeeId)))
+            const done = DEMO_TEAM.filter(m => ackedIds.has(m.id))
+            const missing = DEMO_TEAM.filter(m => !ackedIds.has(m.id))
+            const pct = Math.round((done.length / DEMO_TEAM.length) * 100)
             return (
-              <div key={d.id} className={`bg-white  border border-[rgba(13,33,79,0.14)] border-l-4 ${cfg.borderColor} overflow-hidden`}>
+              <div key={d.id} className="bg-white border border-[rgba(13,33,79,0.14)]">
                 <button
                   onClick={() => setExpandedId(isOpen ? null : d.id)}
-                  className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-slate-50 transition-colors"
+                  className="group w-full px-5 py-4 flex items-center gap-4 text-left"
                 >
-                  <div className={`w-9 h-9  flex items-center justify-center flex-shrink-0 ${cfg.badgeBg}`}>
-                    <Icon className={`w-4 h-4 ${cfg.badgeText}`} />
-                  </div>
+                  <CategoryTile theme={d.theme} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-navy">{d.title}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      <span className={`inline-block px-1.5 py-0.5 text-[11px] font-medium mr-2 ${cfg.badgeBg} ${cfg.badgeText}`}>{cfg.label}</span>
-                      Vydáno {formatDate(d.publishedAt)} · Platnost od {formatDate(d.validFrom)}
-                    </p>
+                    <p className="kicker mb-0.5">{d.category || CATEGORY_STYLES[d.theme].label}</p>
+                    <h3 className="text-[15px] font-headline text-navy leading-snug group-hover:text-violet transition-colors" style={{ fontWeight: 600 }}>{d.title}</h3>
+                    <p className="text-xs text-navy/50 mt-1">Vydáno {formatDate(d.publishedAt)} · Platnost od {formatDate(d.validFrom)}</p>
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                      <Users className="w-3.5 h-3.5" />
-                      {d.acknowledgements.length}/{TOTAL_EMPLOYEES} odsouhlasilo
-                    </span>
-                    <div className="w-20 h-1.5 bg-slate-100 overflow-hidden">
-                      <div
-                        className="h-full bg-violet"
-                        style={{ width: `${Math.round((d.acknowledgements.length / TOTAL_EMPLOYEES) * 100)}%` }}
-                      />
+                  {d.mustAcknowledge ? (
+                    <div className="flex-shrink-0 w-44">
+                      <p className="text-xs text-navy/60 mb-1.5 text-right"><span className="font-headline text-navy text-[15px]" style={{ fontWeight: 600 }}>{done.length}</span> / {DEMO_TEAM.length} potvrdilo</p>
+                      <div className="h-2 bg-alice"><div className="h-full bg-mint" style={{ width: `${pct}%` }} /></div>
                     </div>
-                    {isOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
-                  </div>
+                  ) : (
+                    <span className="text-[11px] font-bold uppercase tracking-[0.06em] text-navy/50 bg-alice px-2 py-1">Bez souhlasu</span>
+                  )}
+                  {isOpen ? <ChevronUp className="w-4 h-4 text-navy/40" /> : <ChevronDown className="w-4 h-4 text-navy/40" />}
                 </button>
-                {isOpen && (
-                  <div className="border-t border-slate-100 px-5 py-4 bg-slate-50">
-                    {d.acknowledgements.length === 0 ? (
-                      <p className="text-sm text-slate-400 italic">Zatím nikdo neodsouhlasil.</p>
-                    ) : (
-                      <div className="space-y-2">
-                        <p className="text-xs font-medium text-slate-500 mb-2">Potvrzené souhlasy:</p>
-                        {d.acknowledgements.map(a => (
-                          <div key={a.employeeId} className="flex items-center gap-3 text-sm">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                            <span className="font-medium text-navy">{a.employeeName}</span>
-                            <span className="text-slate-400 text-xs">{formatDate(a.acknowledgedAt)}</span>
-                          </div>
-                        ))}
+                {isOpen && d.mustAcknowledge && (
+                  <div className="border-t border-[rgba(13,33,79,0.08)] px-5 py-4 grid md:grid-cols-2 gap-6">
+                    {[
+                      { title: `Chybí (${missing.length})`, people: missing, tag: 'bg-gold text-navy', tagText: 'čeká' },
+                      { title: `Potvrdili (${done.length})`, people: done, tag: 'bg-mint text-navy', tagText: '✓' },
+                    ].map(g => (
+                      <div key={g.title}>
+                        <p className="kicker text-navy/55 mb-2">{g.title}</p>
+                        {g.people.length === 0 ? <p className="text-sm text-navy/50">Nikdo.</p> : (
+                          <ul className="space-y-1.5">
+                            {g.people.map(m => {
+                              const p = person(m.id)!
+                              const ack = d.acknowledgements.find(a => personIdOf(a.employeeId) === m.id)
+                              return (
+                                <li key={m.id} className="flex items-center gap-2.5 text-sm">
+                                  <Avatar p={p} size={26} fontSize={10} />
+                                  <span className="flex-1 font-semibold text-navy truncate">{p.name}</span>
+                                  {ack ? <span className="text-xs text-navy/50">{formatDate(ack.acknowledgedAt)}</span> : <span className={`text-[10px] font-bold uppercase tracking-[0.06em] px-1.5 py-0.5 ${g.tag}`}>{g.tagText}</span>}
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
                 )}
               </div>
@@ -215,27 +159,23 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
           <div className="space-y-5">
             {/* Step 1: Pick template */}
             <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5">
-              <h3 className="text-sm font-semibold text-navy mb-3">1. Vyberte šablonu</h3>
+              <p className="kicker text-navy/55 mb-3">1 · Vyberte šablonu</p>
               <div className="grid grid-cols-1 gap-3">
                 {templates.map(tpl => {
-                  const cfg = THEME_CFG[tpl.theme]
-                  const Icon = cfg.icon
                   const isSel = selectedTemplate?.id === tpl.id
                   return (
                     <button
                       key={tpl.id}
                       onClick={() => selectTemplate(tpl)}
-                      className={`text-left  border-2 overflow-hidden transition-all ${
-                        isSel ? 'border-violet-600 ring-2 ring-violet-200' : 'border-slate-200 hover:border-slate-300'
+                      className={`text-left border p-3 flex items-center gap-3 transition-colors ${
+                        isSel ? 'border-navy bg-alice' : 'border-[rgba(13,33,79,0.14)] hover:border-navy'
                       }`}
                     >
-                      <div className={`${cfg.headerClass} px-4 py-2.5 flex items-center gap-2`}>
-                        <Icon className="w-4 h-4 flex-shrink-0 opacity-90" />
-                        <span className="text-sm font-semibold">{tpl.name}</span>
-                      </div>
-                      <div className="px-4 py-2 bg-white">
-                        <p className="text-xs text-slate-500">{tpl.description}</p>
-                      </div>
+                      <CategoryTile theme={tpl.theme} size="sm" />
+                      <span className="min-w-0">
+                        <span className="block text-sm font-semibold text-navy">{tpl.name}</span>
+                        <span className="block text-xs text-navy/55">{tpl.description}</span>
+                      </span>
                     </button>
                   )
                 })}
@@ -245,12 +185,12 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
             {/* Step 2: Fill in */}
             {selectedTemplate && (
               <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5 space-y-4">
-                <h3 className="text-sm font-semibold text-navy">2. Vyplňte obsah</h3>
+                <p className="kicker text-navy/55">2 · Vyplňte obsah</p>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-slate-600">Název směrnice</label>
+                  <label className="text-[11px] font-bold uppercase tracking-[0.06em] text-navy/60">Název směrnice</label>
                   <input
-                    className="w-full border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
+                    className="w-full border border-[rgba(13,33,79,0.25)] px-3 py-2 text-sm text-navy focus:outline-none focus:border-violet"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     placeholder="Název..."
@@ -258,10 +198,10 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-slate-600">Platnost od</label>
+                  <label className="text-[11px] font-bold uppercase tracking-[0.06em] text-navy/60">Platnost od</label>
                   <input
                     type="date"
-                    className="w-full border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
+                    className="w-full border border-[rgba(13,33,79,0.25)] px-3 py-2 text-sm text-navy focus:outline-none focus:border-violet"
                     value={validFrom}
                     onChange={e => setValidFrom(e.target.value)}
                   />
@@ -269,10 +209,10 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
 
                 {selectedTemplate.placeholders.map(ph => (
                   <div key={ph} className="space-y-1">
-                    <label className="text-xs font-medium text-slate-600">{ph.replace(/_/g, ' ')}</label>
+                    <label className="text-[11px] font-bold uppercase tracking-[0.06em] text-navy/60">{ph.replace(/_/g, ' ')}</label>
                     <textarea
                       rows={ph === 'OBSAH' || ph.includes('OBSAH') || ph === 'POPIS_RIZIK' || ph === 'OCHRANA_OPATRENI' || ph === 'BENEFITY' || ph === 'PODMINKY' ? 3 : 1}
-                      className="w-full border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none"
+                      className="w-full border border-[rgba(13,33,79,0.25)] px-3 py-2 text-sm text-navy focus:outline-none focus:border-violet resize-none"
                       placeholder={`{{${ph}}}`}
                       value={values[ph] || ''}
                       onChange={e => setValues(v => ({ ...v, [ph]: e.target.value }))}
@@ -285,21 +225,17 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                     type="checkbox"
                     checked={mustAck}
                     onChange={e => setMustAck(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-violet-600 focus:ring-violet-500"
+                    className="w-4 h-4 accent-violet"
                   />
-                  <span className="text-sm text-slate-700">Vyžadovat souhlas od zaměstnanců</span>
+                  <span className="text-sm text-navy">Vyžadovat souhlas od zaměstnanců</span>
                 </label>
 
                 <button
                   onClick={publish}
                   disabled={published}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-60 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-navy text-white text-sm font-semibold hover:bg-violet disabled:opacity-60 transition-colors"
                 >
-                  {published ? (
-                    <><CheckCircle2 className="w-4 h-4" />Publikováno!</>
-                  ) : (
-                    <><Plus className="w-4 h-4" />Publikovat směrnici</>
-                  )}
+                  {published ? 'Publikováno ✓' : 'Publikovat směrnici'}
                 </button>
               </div>
             )}
@@ -307,12 +243,12 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
 
           {/* Right: live preview */}
           <div className="space-y-3">
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider px-1">Živý náhled</p>
+            <p className="kicker text-navy/55 px-1">Živý náhled</p>
             {selectedTemplate ? (
               <div className="max-h-[640px] overflow-y-auto bg-alice p-3">
                 <LetterheadSheet
-            variant="stairs"
-                  left={[<strong key="c">Four Bros s.r.o.</strong>, 'Interní směrnice', THEME_CFG[selectedTemplate.theme].label]}
+                  variant="stairs"
+                  left={[<strong key="c">Four Bros s.r.o.</strong>, 'Interní směrnice', CATEGORY_STYLES[selectedTemplate.theme].label]}
                   right={[validFrom ? `Platnost od ${new Date(validFrom).toLocaleDateString('cs-CZ')}` : 'Platnost od —']}
                   title={title || selectedTemplate.name}
                   footer={<><strong className="text-navy">Four Bros s.r.o.</strong> · Interní dokument — nešiřte mimo firmu</>}
@@ -321,8 +257,8 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                 </LetterheadSheet>
               </div>
             ) : (
-              <div className="border-2 border-dashed border-slate-200 h-64 flex items-center justify-center">
-                <p className="text-sm text-slate-400">Vyberte šablonu vlevo pro živý náhled</p>
+              <div className="border-2 border-dashed border-[rgba(13,33,79,0.2)] h-64 flex items-center justify-center">
+                <p className="text-sm text-navy/50">Vyberte šablonu vlevo pro živý náhled</p>
               </div>
             )}
           </div>

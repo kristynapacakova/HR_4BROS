@@ -54,12 +54,12 @@ export function computePayNext(isIco: boolean, schedule: PaySchedule = DEFAULT_P
 
   const pay = next(schedule.payDay)
   if (!isIco) {
-    return { title: `Výplata za ${prevMonthOf(pay)} přijde ${label(pay)}`, sub: 'Výplatní pásku najdeš v Moje odměna', inDays: days(pay), dateLabel: label(pay) }
+    return { title: `Výplata za ${prevMonthOf(pay)} přijde ${label(pay)}`, sub: 'Výplatní pásku najdeš v sekci Moje odměna.', inDays: days(pay), dateLabel: label(pay) }
   }
   const due = next(schedule.invoiceDueDay)
   // Po termínu odeslání a před proplacením se odpočítává proplacení.
   if (due.getTime() > pay.getTime()) {
-    return { title: `Faktura za ${prevMonthOf(pay)} bude proplacená kolem ${label(pay)}`, sub: `Další fakturu pošli do ${schedule.invoiceDueDay}. příštího měsíce`, inDays: days(pay), dateLabel: label(pay) }
+    return { title: `Faktura za ${prevMonthOf(pay)} bude proplacená kolem ${label(pay)}`, sub: `Další fakturu pošli do ${schedule.invoiceDueDay}. dne příštího měsíce.`, inDays: days(pay), dateLabel: label(pay) }
   }
-  return { title: `Fakturu za ${prevMonthOf(due)} pošli do ${label(due)}`, sub: `Proplácí se kolem ${schedule.payDay}. · podklady najdeš v Moje odměna`, inDays: days(due), dateLabel: label(due) }
+  return { title: `Fakturu za ${prevMonthOf(due)} pošli do ${label(due)}`, sub: `Proplácí se kolem ${schedule.payDay}. dne v měsíci. Podklady najdeš v sekci Moje odměna.`, inDays: days(due), dateLabel: label(due) }
 }

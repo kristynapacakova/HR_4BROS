@@ -157,7 +157,7 @@ export const EMPLOYMENT_TYPES = [
   { value: "HPP", label: "HPP – Hlavní pracovní poměr" },
   { value: "DPP", label: "DPP – Dohoda o provedení práce" },
   { value: "DPC", label: "DPČ – Dohoda o pracovní činnosti" },
-  { value: "ICO", label: "IČO – Spolupráce na živnostenský list" },
+  { value: "ICO", label: "IČO" },
   { value: "STAZ", label: "Stáž" },
 ]
 
