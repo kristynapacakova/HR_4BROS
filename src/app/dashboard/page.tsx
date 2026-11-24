@@ -10,6 +10,8 @@ import {
   DEMO_TEAM,
   DEMO_EMPLOYEES,
   DEMO_EXPENSE_REQUESTS,
+  DEMO_DIRECTIVES,
+  DEMO_CONTRACTS,
   DEMO_ADMIN,
   DEMO_USER,
   DEMO_TL,
@@ -21,6 +23,71 @@ import { CountUp } from '@/components/CountUp'
 import { DashboardGreeting } from './DashboardGreeting'
 import { EventsCard } from './EventsCard'
 import { RingStat } from './RingStat'
+import { EmployeeDashboard, type EmployeeDashData } from './EmployeeDashboard'
+import { computePayNext } from '@/lib/pay-schedule'
+
+const MONTHS_GEN = ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince']
+
+/** Data pro Dashboard zaměstnance / OSVČ — úkoly, lidé, novinky od HR a termín faktury/výplaty. */
+function employeeDashData(sessionUserId: string, email: string, user: ReturnType<typeof getDemoUserById>, tenure: string): EmployeeDashData {
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const meId = demoTeamIdFor(email)
+  const nextOf = (d: Date) => {
+    let n = new Date(today.getFullYear(), d.getMonth(), d.getDate())
+    if (n < today) n = new Date(today.getFullYear() + 1, d.getMonth(), d.getDate())
+    return n
+  }
+  const inDaysOf = (d: Date) => Math.round((d.getTime() - today.getTime()) / 86400000)
+  const dayLabel = (d: Date) => `${d.getDate()}. ${MONTHS_GEN[d.getMonth()]}`
+
+  const todos: EmployeeDashData['todos'] = []
+  const toAck = DEMO_DIRECTIVES.filter(d => d.mustAcknowledge && !d.acknowledgements.some(a => a.employeeId === sessionUserId))
+  if (toAck.length) todos.push({ id: 'dir', label: toAck.length === 1 ? `Odsouhlas směrnici „${toAck[0].title.replace(/^Směrnice č\. [^—]+— /, '')}“` : `Odsouhlas ${toAck.length} směrnice`, hint: 'Přečti a potvrď, že o nich víš', href: '/smernice' })
+  DEMO_CONTRACTS
+    .filter(c => c.status === 'PENDING_EMPLOYEE' && (c.employeeId === sessionUserId || c.employeeName === user.name))
+    .forEach(c => todos.push({ id: c.id, label: `Podepiš: ${c.templateName}`, hint: 'Smlouva čeká na tvůj podpis', href: '/profile?tab=dokumenty' }))
+
+  const birthdays = DEMO_TEAM.flatMap(m => {
+    if (!m.birthday) return []
+    const b = new Date(m.birthday)
+    const inDays = inDaysOf(nextOf(b))
+    return inDays <= 30 ? [{ id: m.id, inDays, date: dayLabel(b) }] : []
+  }).sort((a, b) => a.inDays - b.inDays)
+
+  const anniversaries = DEMO_TEAM.flatMap(m => {
+    const next = nextOf(m.startDate)
+    const years = next.getFullYear() - m.startDate.getFullYear()
+    const inDays = inDaysOf(next)
+    return years >= 1 && inDays <= 30 ? [{ id: m.id, years, inDays, date: dayLabel(m.startDate) }] : []
+  }).sort((a, b) => a.inDays - b.inDays)
+
+  const byStart = [...DEMO_TEAM].sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
+  const recent = byStart.filter(m => today.getTime() - m.startDate.getTime() < 183 * 86400000)
+  const newcomers = (recent.length ? recent : byStart.slice(0, 2)).slice(0, 3)
+    .map(m => ({ id: m.id, since: `${m.startDate.getDate()}. ${m.startDate.getMonth() + 1}.` }))
+
+  const news = [...DEMO_DIRECTIVES].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime()).slice(0, 3).map(d => ({
+    id: d.id,
+    title: d.title.replace(/^Směrnice č\. [^—]+— /, ''),
+    category: d.category,
+    date: `${d.publishedAt.getDate()}. ${d.publishedAt.getMonth() + 1}. ${d.publishedAt.getFullYear()}`,
+    mine: d.mustAcknowledge && !d.acknowledgements.some(a => a.employeeId === sessionUserId),
+  }))
+
+  const hrPerson = DEMO_TEAM.find(m => m.role === 'ADMIN')
+  const isIco = user.employmentType === 'ICO'
+  const firstName = (user.name || email).split(' ')[0]
+  const pos = user.position || ''
+  const dept = user.department || ''
+  const subtitle = pos && dept && pos.toLowerCase() !== dept.toLowerCase() ? `${pos} · ${dept}` : pos || dept
+
+  return {
+    meId, isIco, firstName, initial: firstName[0]?.toUpperCase() ?? '?', subtitle, tenure,
+    todos, birthdays, anniversaries, newcomers, news,
+    hrContact: hrPerson ? { id: hrPerson.id, email: hrPerson.email } : undefined,
+    payNext: computePayNext(isIco),
+  }
+}
 
 function tenureText(startDate: Date): string {
   const now = new Date()
@@ -52,6 +119,15 @@ export default async function DashboardPage() {
 
   const startDate = user.startDate || new Date('2024-01-15')
   const tenure = tenureText(startDate)
+
+  // Zaměstnanec / OSVČ — vlastní přehled (HR a team leadi zatím mají původní)
+  if (!isAdmin && !isTL) {
+    return (
+      <AppShell title="Dashboard" isAdmin={false} isTL={false} userName={session.user.name} userEmail={session.user.email} employmentType={user.employmentType}>
+        <EmployeeDashboard data={employeeDashData(session.user.id, session.user.email ?? '', user, tenure)} />
+      </AppShell>
+    )
+  }
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)

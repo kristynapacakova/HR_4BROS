@@ -6,6 +6,7 @@ import { IconBanknote, IconContract, IconReceipt } from '@/components/BrandIcons
 import { OdmenyTabs, type PayslipRow } from './OdmenyTabs'
 import { InvoiceOverview } from '../faktury/InvoiceOverview'
 import { ExpenseAdmin } from '../vydaje/ExpenseAdmin'
+import { PayScheduleSettings } from './PayScheduleSettings'
 import type { IcoInvoiceRecord, ExpenseRequest } from '@/lib/mock-data'
 
 const SUB_TABS = [
@@ -63,6 +64,7 @@ export function OdmenySection({
             automaticky z Fakturoidu (napárovaného na banku), včetně toho, jestli je zaplacená. Zatím je to mock —
             stav plateb nastavuje HR ručně přímo tady.
           </p>
+          <PayScheduleSettings />
           <InvoiceOverview employees={icoEmployees} invoices={invoices} isHrReviewer />
         </div>
       )}
