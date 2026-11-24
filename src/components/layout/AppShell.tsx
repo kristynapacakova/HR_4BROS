@@ -44,6 +44,7 @@ export function AppShell({ children, title, isAdmin, isTL, userName, userEmail, 
           isTL={isTL}
           userName={userName}
           userEmail={userEmail}
+          teamMemberId={teamMemberId}
           employmentType={employmentType}
           onClose={() => setSidebarOpen(false)}
         />

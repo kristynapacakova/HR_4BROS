@@ -7,7 +7,7 @@ Seznam věcí, které dnes aplikace jen simuluje nebo kde chybí rozhodnutí. Vy
 |---|---|---|---|
 | I1 | **Databáze** — jaká (vyberou majitelé) | celé | |
 | I2 | **Přihlášení** — Google Workspace s omezením na `fourbros.cz`? Délka relace (12 h?) | [01](01-identita-a-opravneni.md) | |
-| I3 | **Profilové fotky** — vlastní nahrávání, nebo z Google Workspace? | [02](02-lide-profil-majetek.md) | |
+| I3 | **Profilové fotky** — z Google Workspace účtu, kterým se člověk přihlašuje (Directory API / profil Google), s možností nahrát vlastní? Fotka se dnes ukazuje na Dashboardu, v Můj účet, v hlavičce, v menu a v Týmu z jednoho zdroje (`TeamProfile.photo`) | [02](02-lide-profil-majetek.md) | Z Google Workspace (přihlašovací e-mail) |
 | I4 | **E-podpis** — u směrnic připraven **DocuSign** (`src/lib/esign.ts`). Použít DocuSign i pro smlouvy (dnes simulace Signi)? Úroveň podpisu, účet DocuSign | [04](04-smlouvy-smernice-dokumenty.md) | DocuSign pro směrnice |
 | I5 | **Fakturoid** — faktury OSVČ, čísla, PDF, stav úhrady | [03](03-odmeny.md) | |
 | I6 | **Banka** — zdroj stavu úhrady (Fakturoid / banka), smí HR přepsat ručně? | [03](03-odmeny.md) | |

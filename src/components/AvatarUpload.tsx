@@ -134,6 +134,29 @@ export function AvatarUpload({ initial, teamMemberId, size = 64, fallback, hideG
 }
 
 /** Small read-only avatar used in the top header — follows the same photo as Můj účet a medailonek v Týmu. */
+/** Malá profilová fotka (menu, seznamy) — stejný zdroj jako hlavička, Dashboard a Můj účet. */
+export function ProfilePhoto({ initial, teamMemberId, size = 32 }: { initial: string; teamMemberId?: string; size?: number }) {
+  const [avatar, setAvatar] = useState<{ photo: string | null; pos?: PhotoPosition }>({ photo: null })
+  useEffect(() => {
+    const refresh = () => setAvatar(readAvatar(teamMemberId))
+    refresh()
+    window.addEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+    window.addEventListener('fb-avatar-changed', refresh)
+    return () => {
+      window.removeEventListener(TEAM_PROFILE_CHANGED_EVENT, refresh)
+      window.removeEventListener('fb-avatar-changed', refresh)
+    }
+  }, [teamMemberId])
+  return avatar.photo ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <span className="relative block overflow-hidden flex-shrink-0" style={{ width: size, height: size }}>
+      <img src={avatar.photo} alt="" style={photoImgStyle(avatar.pos)} />
+    </span>
+  ) : (
+    <span className="bg-violet flex items-center justify-center flex-shrink-0 text-white text-xs font-semibold" style={{ width: size, height: size }}>{initial}</span>
+  )
+}
+
 export function HeaderAvatar({ initial, teamMemberId }: { initial: string; teamMemberId?: string }) {
   const [avatar, setAvatar] = useState<{ photo: string | null; pos?: PhotoPosition }>({ photo: null })
 

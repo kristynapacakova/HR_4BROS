@@ -8,6 +8,7 @@ import {
   IconShield, IconCheck, IconContract, IconBanknote, IconCalendar, IconChart, IconLogOut,
 } from '@/components/BrandIcons'
 import { X } from 'lucide-react'
+import { ProfilePhoto } from '@/components/AvatarUpload'
 import { cn } from '@/lib/utils'
 
 const staticNavItemsBefore = [
@@ -35,11 +36,13 @@ interface SidebarProps {
   isTL?: boolean
   userName?: string | null
   userEmail?: string | null
+  /** id člověka v týmu — podle něj se načte profilová fotka */
+  teamMemberId?: string
   employmentType?: string | null
   onClose?: () => void
 }
 
-export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: SidebarProps) {
+export function Sidebar({ isAdmin, isTL, userName, userEmail, teamMemberId, onClose }: SidebarProps) {
   const pathname = usePathname()
 
   const navItems = [...staticNavItemsBefore, ...staticNavItemsAfter]
@@ -108,11 +111,7 @@ export function Sidebar({ isAdmin, isTL, userName, userEmail, onClose }: Sidebar
       {/* User footer */}
       <div className="py-3 border-t border-white/10 mx-2.5">
         <div className="flex items-center mb-0.5 gap-3 px-2.5 py-2.5">
-          <div className="w-8 h-8 bg-violet flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-xs font-semibold">
-              {userName?.[0]?.toUpperCase() || userEmail?.[0]?.toUpperCase() || '?'}
-            </span>
-          </div>
+          <ProfilePhoto initial={userName?.[0]?.toUpperCase() || userEmail?.[0]?.toUpperCase() || '?'} teamMemberId={teamMemberId} />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-white truncate leading-tight">{userName || 'Uživatel'}</p>
             <p className="text-[11px] text-white/50 truncate">{userEmail}</p>
