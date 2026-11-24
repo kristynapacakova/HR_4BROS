@@ -149,10 +149,6 @@ export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
               <span className="bg-gold text-navy px-3 py-1.5 text-sm font-semibold">Jsi s námi {data.tenure}</span>
               {todos.length === 0 && <span className="bg-mint text-navy px-3 py-1.5 text-sm font-semibold">Všechno vyřízeno ✓</span>}
             </div>
-            {/* schody 4B — dekorace */}
-            <div className="hidden lg:flex items-end gap-1 mt-auto pt-8" aria-hidden="true">
-              {[10, 18, 26, 34].map((h, i) => <span key={h} className={i === 3 ? 'bg-gold' : 'bg-white/15'} style={{ width: 14, height: h }} />)}
-            </div>
           </div>
 
           {/* úkoly — bílý papír na navy */}
