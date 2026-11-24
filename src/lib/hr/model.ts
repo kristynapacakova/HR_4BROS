@@ -50,13 +50,21 @@ export interface Directive {
   category: string
   publishedAt: Date
   mustAcknowledge: boolean
+  /** souhlas vyžaduje elektronický podpis (DocuSign) */
+  requireESign: boolean
 }
 
-/** Potvrzení směrnice člověkem (vazba Directive × Person). */
+/** Potvrzení směrnice člověkem (vazba Directive × Person). Slouží jako doklad o seznámení. */
 export interface Acknowledgement {
   directiveId: string
   personId: PersonId
   acknowledgedAt: Date
+  /** odkliknutí v portálu (přihlášení přes Google Workspace), nebo elektronický podpis */
+  method: 'CHECKBOX' | 'ESIGN'
+  /** ID obálky u poskytovatele e-podpisu (DocuSign envelopeId) */
+  envelopeId?: string
+  /** SHA-256 otisk textu směrnice — prokazuje, se kterou verzí člověk souhlasil */
+  documentHash?: string
 }
 
 /** Absolvované školení BOZP (historie — rozhoduje poslední). */

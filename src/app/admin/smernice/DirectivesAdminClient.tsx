@@ -32,6 +32,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
   const [title, setTitle] = useState('')
   const [validFrom, setValidFrom] = useState('')
   const [mustAck, setMustAck] = useState(true)
+  const [esign, setEsign] = useState(false)
   const [values, setValues] = useState<Record<string, string>>({})
   const [published, setPublished] = useState(false)
 
@@ -53,6 +54,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
       publishedAt: new Date(),
       validFrom: validFrom ? new Date(validFrom) : new Date(),
       mustAcknowledge: mustAck,
+      requireESign: mustAck && esign,
       acknowledgements: [],
       createdBy: 'Petra Nováková',
     }
@@ -65,6 +67,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
       setTitle('')
       setValidFrom('')
       setValues({})
+      setEsign(false)
     }, 1500)
   }
 
@@ -107,11 +110,11 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                   <div className="flex-1 min-w-0">
                     <p className="kicker mb-0.5">{d.category || CATEGORY_STYLES[d.theme].label}</p>
                     <h3 className="text-[15px] font-headline text-navy leading-snug group-hover:text-violet transition-colors" style={{ fontWeight: 600 }}>{d.title}</h3>
-                    <p className="text-xs text-navy/50 mt-1">Vydáno {formatDate(d.publishedAt)} · Platnost od {formatDate(d.validFrom)}</p>
+                    <p className="text-xs text-navy/50 mt-1">Vydáno {formatDate(d.publishedAt)} · Platnost od {formatDate(d.validFrom)}{d.requireESign && <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.06em] bg-navy text-white px-1.5 py-0.5">Podpis DocuSign</span>}</p>
                   </div>
                   {d.mustAcknowledge ? (
                     <div className="flex-shrink-0 w-44">
-                      <p className="text-xs text-navy/60 mb-1.5 text-right"><span className="font-headline text-navy text-[15px]" style={{ fontWeight: 600 }}>{done.length}</span> / {DEMO_TEAM.length} potvrdilo</p>
+                      <p className="text-xs text-navy/60 mb-1.5 text-right"><span className="font-headline text-navy text-[15px]" style={{ fontWeight: 600 }}>{done.length}</span> / {DEMO_TEAM.length} {d.requireESign ? 'podepsalo' : 'potvrdilo'}</p>
                       <div className="h-2 bg-alice"><div className="h-full bg-mint" style={{ width: `${pct}%` }} /></div>
                     </div>
                   ) : (
@@ -136,7 +139,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                                 <li key={m.id} className="flex items-center gap-2.5 text-sm">
                                   <Avatar p={p} size={26} fontSize={10} />
                                   <span className="flex-1 font-semibold text-navy truncate">{p.name}</span>
-                                  {ack ? <span className="text-xs text-navy/50">{formatDate(ack.acknowledgedAt)}</span> : <span className={`text-[10px] font-bold uppercase tracking-[0.06em] px-1.5 py-0.5 ${g.tag}`}>{g.tagText}</span>}
+                                  {ack ? <span className="text-xs text-navy/50" title={ack.envelopeId ? `DocuSign obálka ${ack.envelopeId}` : undefined}>{ack.method === 'ESIGN' ? 'podepsáno · ' : ''}{formatDate(ack.acknowledgedAt)}</span> : <span className={`text-[10px] font-bold uppercase tracking-[0.06em] px-1.5 py-0.5 ${g.tag}`}>{g.tagText}</span>}
                                 </li>
                               )
                             })}
@@ -229,6 +232,15 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                   />
                   <span className="text-sm text-navy">Vyžadovat souhlas od zaměstnanců</span>
                 </label>
+                {mustAck && (
+                  <label className="flex items-start gap-3 cursor-pointer pl-7">
+                    <input type="checkbox" checked={esign} onChange={e => setEsign(e.target.checked)} className="mt-0.5 w-4 h-4 accent-violet" />
+                    <span className="text-sm text-navy">
+                      Vyžadovat elektronický podpis (DocuSign)
+                      <span className="block text-xs text-navy/55">Místo odkliknutí se směrnice podepíše. Hodí se třeba pro BOZP, kde kontrola chce doklad o seznámení.</span>
+                    </span>
+                  </label>
+                )}
 
                 <button
                   onClick={publish}

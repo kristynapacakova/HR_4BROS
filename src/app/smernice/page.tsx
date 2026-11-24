@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_DIRECTIVES, DEMO_USER, DEMO_ADMIN } from '@/lib/mock-data'
+import { DEMO_DIRECTIVES, getDemoUserById } from '@/lib/mock-data'
 import { DirectivesClient } from './DirectivesClient'
 
 export default async function SmernicePage() {
@@ -9,7 +9,8 @@ export default async function SmernicePage() {
   if (!session?.user?.id) redirect('/login')
   const isAdmin = session.user.role === 'ADMIN'
   const isTL = session.user.role === 'TL'
-  const user = isAdmin ? DEMO_ADMIN : DEMO_USER
+  // každý vidí svá potvrzení (dřív TL a OSVČ viděli Janova)
+  const user = getDemoUserById(session.user.id)
   return (
     <AppShell
       title="Interní směrnice"
@@ -19,7 +20,7 @@ export default async function SmernicePage() {
       userEmail={session.user.email}
       employmentType={user.employmentType}
     >
-      <DirectivesClient directives={DEMO_DIRECTIVES} currentEmployeeId={user.id} />
+      <DirectivesClient directives={DEMO_DIRECTIVES} currentEmployeeId={user.id} currentEmployeeName={user.name} currentEmployeeEmail={user.email} />
     </AppShell>
   )
 }

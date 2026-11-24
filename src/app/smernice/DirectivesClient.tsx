@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { X, CheckCircle2, Clock, Download } from 'lucide-react'
+import { X, CheckCircle2, Clock, Download, PenLine } from 'lucide-react'
+import { getESignProvider, type ESignResult } from '@/lib/esign'
 import { LetterheadSheet } from '@/components/Letterhead'
 import { printDirective } from '@/lib/print-directive'
 import type { Directive, DirectiveAcknowledgement } from '@/lib/mock-data'
@@ -11,7 +12,11 @@ import { DirectivesStack } from './DirectivesStack'
 interface DirectivesClientProps {
   directives: Directive[]
   currentEmployeeId: string
+  currentEmployeeName: string
+  currentEmployeeEmail: string
 }
+
+type AckExtra = Pick<DirectiveAcknowledgement, 'method' | 'envelopeId' | 'documentHash'>
 
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(date))
@@ -20,13 +25,66 @@ function formatDate(date: Date): string {
 interface DirectiveModalProps {
   directive: Directive
   isAcknowledged: boolean
+  myAck?: DirectiveAcknowledgement
+  signer: { name: string; email: string }
   onClose: () => void
-  onAcknowledge: (directiveId: string) => void
+  onAcknowledge: (directiveId: string, extra: AckExtra) => void
 }
 
-function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: DirectiveModalProps) {
+const fmtDateTime = (d: Date) => new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(d))
+
+/** Podpisové pole DocuSign — dnes simulace (src/lib/esign.ts), po napojení embedded signing. */
+function SignatureField({ directive, signer, done, onSigned }: {
+  directive: Directive
+  signer: { name: string; email: string }
+  done?: DirectiveAcknowledgement
+  onSigned: (r: ESignResult) => void
+}) {
+  const [state, setState] = useState<'idle' | 'signing'>('idle')
+  const sign = async () => {
+    setState('signing')
+    const r = await getESignProvider().sign({ documentId: directive.id, documentTitle: directive.title, documentHtml: directive.body, signer })
+    onSigned(r)
+  }
+  if (done) {
+    return (
+      <div className="border border-mint bg-mint/15 p-4 flex items-start gap-3">
+        <span className="w-9 h-9 bg-mint flex items-center justify-center flex-shrink-0"><CheckCircle2 className="w-5 h-5 text-navy" /></span>
+        <div className="min-w-0 text-sm">
+          <p className="font-semibold text-navy">Podepsáno elektronicky · DocuSign</p>
+          <p className="text-navy/70">{signer.name} · {fmtDateTime(done.acknowledgedAt)}</p>
+          {done.envelopeId && <p className="text-[11px] text-navy/50 mt-1 break-all">Obálka {done.envelopeId}{done.documentHash ? ` · otisk ${done.documentHash.slice(0, 16)}…` : ''}</p>}
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="border-2 border-dashed border-navy/25 p-4">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex-1 min-w-[220px]">
+          <p className="kicker text-navy/55 mb-1">Podpisové pole</p>
+          <p className="text-sm text-navy">Tuhle směrnici je potřeba <b>podepsat elektronicky</b>.</p>
+          <p className="text-xs text-navy/55 mt-0.5">Podepisuje: {signer.name} · {signer.email}</p>
+        </div>
+        <button
+          type="button"
+          onClick={sign}
+          disabled={state === 'signing'}
+          className="flex items-center gap-2 px-5 py-2.5 bg-navy text-white text-[12px] font-bold uppercase tracking-[0.06em] hover:bg-violet disabled:opacity-70 transition-colors"
+        >
+          <PenLine className="w-4 h-4" />
+          {state === 'signing' ? 'Otevírám DocuSign…' : 'Podepsat přes DocuSign'}
+        </button>
+      </div>
+      <p className="text-[11px] text-navy/45 mt-3">Demo — podpis je zatím simulovaný. Po napojení se otevře podpis DocuSign přímo tady.</p>
+    </div>
+  )
+}
+
+function DirectiveModal({ directive, isAcknowledged, myAck, signer, onClose, onAcknowledge }: DirectiveModalProps) {
   const [checked, setChecked] = useState(false)
   const config = CATEGORY_STYLES[directive.theme]
+  const esign = !!directive.requireESign
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60">
@@ -65,7 +123,17 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
 
         {/* Modal Footer */}
         <div className="border-t border-[rgba(13,33,79,0.14)] px-6 py-4">
-          {directive.mustAcknowledge && !isAcknowledged && (
+          {directive.mustAcknowledge && esign && (
+            <div className="mb-4">
+              <SignatureField
+                directive={directive}
+                signer={signer}
+                done={isAcknowledged ? myAck : undefined}
+                onSigned={r => onAcknowledge(directive.id, { method: 'ESIGN', envelopeId: r.envelopeId, documentHash: r.documentHash })}
+              />
+            </div>
+          )}
+          {directive.mustAcknowledge && !esign && !isAcknowledged && (
             <div className="mb-4">
               <label className="flex items-start gap-3 cursor-pointer group">
                 <input
@@ -80,7 +148,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
               </label>
             </div>
           )}
-          {isAcknowledged && (
+          {isAcknowledged && !esign && (
             <div className="mb-4 inline-flex items-center gap-2 bg-mint text-navy text-xs font-bold uppercase tracking-[0.06em] px-3 py-1.5">
               <CheckCircle2 className="w-4 h-4" />
               <span>Tato směrnice byla odsouhlasena</span>
@@ -93,11 +161,11 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
             >
               Zavřít
             </button>
-            {directive.mustAcknowledge && !isAcknowledged && (
+            {directive.mustAcknowledge && !esign && !isAcknowledged && (
               <button
                 disabled={!checked}
                 onClick={() => {
-                  onAcknowledge(directive.id)
+                  onAcknowledge(directive.id, { method: 'CHECKBOX' })
                   onClose()
                 }}
                 className="btn-pill px-6 py-2.5 bg-gold hover:bg-gold/85 text-navy font-bold uppercase tracking-[0.06em] text-[12px] disabled:bg-gold/40 disabled:text-navy/60 disabled:cursor-not-allowed transition-colors"
@@ -112,7 +180,7 @@ function DirectiveModal({ directive, isAcknowledged, onClose, onAcknowledge }: D
   )
 }
 
-export function DirectivesClient({ directives: initialDirectives, currentEmployeeId }: DirectivesClientProps) {
+export function DirectivesClient({ directives: initialDirectives, currentEmployeeId, currentEmployeeName, currentEmployeeEmail }: DirectivesClientProps) {
   const [directives, setDirectives] = useState<Directive[]>(initialDirectives)
   const [selectedDirective, setSelectedDirective] = useState<Directive | null>(null)
 
@@ -120,11 +188,12 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
     return directive.acknowledgements.some((a) => a.employeeId === currentEmployeeId)
   }
 
-  function handleAcknowledge(directiveId: string) {
+  function handleAcknowledge(directiveId: string, extra: AckExtra) {
     const newAck: DirectiveAcknowledgement = {
       employeeId: currentEmployeeId,
-      employeeName: 'Aktuální uživatel',
+      employeeName: currentEmployeeName,
       acknowledgedAt: new Date(),
+      ...extra,
     }
     setDirectives((prev) =>
       prev.map((d) =>
@@ -230,12 +299,12 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
                   {acked ? (
                     <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy bg-mint px-2.5 py-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      Odsouhlaseno
+                      {directive.requireESign ? 'Podepsáno' : 'Odsouhlaseno'}
                     </span>
                   ) : needsAck ? (
                     <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy bg-gold-tint border border-gold px-2.5 py-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      Vyžaduje souhlas
+                      {directive.requireESign ? <PenLine className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+                      {directive.requireESign ? 'Vyžaduje podpis' : 'Vyžaduje souhlas'}
                     </span>
                   ) : null}
                 </div>
@@ -248,8 +317,10 @@ export function DirectivesClient({ directives: initialDirectives, currentEmploye
       {/* Modal */}
       {selectedDirective && (
         <DirectiveModal
-          directive={selectedDirective}
-          isAcknowledged={isAcknowledged(selectedDirective)}
+          directive={directives.find(d => d.id === selectedDirective.id) ?? selectedDirective}
+          isAcknowledged={isAcknowledged(directives.find(d => d.id === selectedDirective.id) ?? selectedDirective)}
+          myAck={(directives.find(d => d.id === selectedDirective.id) ?? selectedDirective).acknowledgements.find(a => a.employeeId === currentEmployeeId)}
+          signer={{ name: currentEmployeeName, email: currentEmployeeEmail }}
           onClose={() => setSelectedDirective(null)}
           onAcknowledge={handleAcknowledge}
         />

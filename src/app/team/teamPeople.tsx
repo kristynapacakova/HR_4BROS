@@ -110,10 +110,10 @@ export function personView(m: PersonRecord, o?: TeamProfileOverride) {
 }
 export type PersonView = ReturnType<typeof personView>
 
-/** Fotka nebo iniciály na barvě týmu. */
-export function Avatar({ p, size, fontSize }: { p: PersonView; size: number | string; fontSize?: number }) {
+/** Fotka, jinak iniciály na jedné světlé barvě (alice) — ať barevné čtverce neruší, dokud lidé nemají fotky. */
+export function Avatar({ p, size, fontSize, bg = '#f3f0fd' }: { p: PersonView; size: number | string; fontSize?: number; bg?: string }) {
   return (
-    <div className="relative overflow-hidden flex items-center justify-center flex-shrink-0" style={{ width: size, height: size, background: p.color, outline: p.color === '#FFFFFF' ? '1px solid rgba(13,33,79,0.25)' : undefined, outlineOffset: -1 }}>
+    <div className="relative overflow-hidden flex items-center justify-center flex-shrink-0" style={{ width: size, height: size, background: p.photo ? p.color : bg }}>
       {p.photo ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -122,7 +122,7 @@ export function Avatar({ p, size, fontSize }: { p: PersonView; size: number | st
           style={photoImgStyle(p.photoPos)}
         />
       ) : (
-        <span className="font-headline leading-none" style={{ color: p.ink, fontWeight: 600, fontSize: fontSize ?? 16 }}>{initials(p.name)}</span>
+        <span className="font-headline leading-none text-navy/60" style={{ fontWeight: 600, fontSize: fontSize ?? 16 }}>{initials(p.name)}</span>
       )}
     </div>
   )

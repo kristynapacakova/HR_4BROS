@@ -301,7 +301,7 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
             <a href={`mailto:${data.hrContact.email}`} title={`Napsat e-mail: ${data.hrContact.email}`} className="group mt-auto m-4 bg-alice hover:bg-[#ebe5fb] p-4 block">
               <p className="text-[13px] text-navy/70 mb-3">Potřebuješ s něčím pomoct nebo poradit? Obrať se na</p>
               <span className="flex items-center gap-3">
-                <Avatar p={hr} size={44} fontSize={14} />
+                <Avatar p={hr} size={44} fontSize={14} bg="#FFFFFF" />
                 <span className="min-w-0">
                   <span className="block text-sm font-semibold text-navy group-hover:text-violet truncate">{hr.name}</span>
                   <span className="block text-[12px] text-navy/55 truncate">{hr.position}</span>
