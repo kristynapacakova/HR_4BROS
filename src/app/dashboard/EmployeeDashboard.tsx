@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { DEMO_TEAM } from '@/lib/mock-data'
 import { Avatar, personView, plural, useProfiles } from '@/app/team/teamPeople'
 import { toVocativeCz } from '@/lib/cz-vocative'
+import { StairsHop, DoneBurst } from './DashboardAnimations'
 import { computePayNext, loadPaySchedule, PAY_SCHEDULE_CHANGED_EVENT, type PayNext } from '@/lib/pay-schedule'
 
 /**
@@ -149,9 +150,7 @@ export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
               {todos.length === 0 && <span className="bg-mint text-navy px-3 py-1.5 text-sm font-semibold">Všechno vyřízeno ✓</span>}
             </div>
             {/* schody 4B — dekorace */}
-            <div className="hidden lg:flex items-end gap-1 mt-auto pt-8" aria-hidden="true">
-              {[10, 18, 26, 34].map((h, i) => <span key={h} className={i === 3 ? 'bg-gold' : 'bg-white/15'} style={{ width: 14, height: h }} />)}
-            </div>
+            <div className="hidden lg:block mt-auto pt-8"><StairsHop /></div>
           </div>
 
           {/* úkoly — bílý papír na navy */}
@@ -161,7 +160,7 @@ export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
               <span className="text-xs text-navy/50">{todos.length ? `${todos.length} ${plural(todos.length, 'úkol', 'úkoly', 'úkolů')}` : ''}</span>
             </div>
             {todos.length === 0 ? (
-              <p className="flex items-center gap-3 py-2 font-semibold"><span className="w-7 h-7 bg-mint flex items-center justify-center">✓</span>Máš hotovo, díky!</p>
+              <p className="flex items-center gap-3 py-2 font-semibold"><span className="relative w-7 h-7 bg-mint flex items-center justify-center" style={{ animation: 'dash-pop .4s ease-out' }}>✓<DoneBurst /></span>Máš hotovo, díky!</p>
             ) : (
               <ul className="divide-y divide-[rgba(13,33,79,0.08)]">
                 {todos.map((td, i) => (

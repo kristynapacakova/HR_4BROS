@@ -273,3 +273,27 @@
 @media (prefers-reduced-motion: reduce) {
   .dir-anim .dir-page, .dir-anim .dir-line, .dir-anim .dir-stamp, .dir-anim .dir-spark { animation: none; }
 }
+
+/* Dashboard — animace (DashboardAnimations.tsx) */
+@keyframes dash-tear { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(46px) translateX(18px) rotate(28deg); opacity: 0; } }
+@keyframes dash-pop { 0% { transform: scale(.6); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes dash-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes dash-hop {
+  0% { transform: translate(3px, -10px); opacity: 0; }
+  8% { opacity: 1; transform: translate(3px, -10px); }
+  20% { transform: translate(12px, -30px); }
+  30% { transform: translate(21px, -18px); }
+  44% { transform: translate(30px, -38px); }
+  54% { transform: translate(39px, -26px); }
+  68% { transform: translate(48px, -46px); }
+  78% { transform: translate(57px, -34px); }
+  86% { transform: translate(57px, -38px); }
+  100% { transform: translate(57px, -34px); opacity: 1; }
+}
+@keyframes dash-sun { from { transform: translateY(18px); } to { transform: translateY(0); } }
+@keyframes dash-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes dash-ray { 0%, 100% { opacity: .35; transform: scale(.7); } 50% { opacity: 1; transform: scale(1); } }
+@keyframes dash-burst { 0% { transform: translate(0, 0) scale(.4); opacity: 0; } 25% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1) rotate(var(--rot)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .dash-anim, .dash-anim * { animation: none !important; }
+}
