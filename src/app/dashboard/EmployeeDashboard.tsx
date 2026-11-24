@@ -165,12 +165,13 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
             </div>
             <div className="flex flex-wrap gap-2">
               <span className="bg-gold text-navy px-3 py-1.5 text-sm font-semibold">Jsi s námi {data.tenure}</span>
-              {todos.length === 0 && <span className="bg-mint text-navy px-3 py-1.5 text-sm font-semibold">Všechno vyřízeno ✓</span>}
+              {todos.length === 0 && <span className="relative bg-mint text-navy px-3 py-1.5 text-sm font-semibold" style={{ animation: 'dash-pop .4s ease-out' }}>Všechno vyřízeno ✓<DoneBurst /></span>}
             </div>
           </div>
 
           {/* úkoly — bílý papír na navy; ukáže, kolik se vejde do výšky hlavičky, zbytek po rozbalení */}
-          <div className={`bg-white text-navy px-5 pt-3 pb-2 flex flex-col ${showAll ? '' : 'max-h-[168px] overflow-hidden'}`}>
+          {todos.length > 0 && (
+          <div className={`bg-white text-navy px-5 pt-3 pb-2 flex flex-col self-start ${showAll ? '' : 'max-h-[168px] overflow-hidden'}`}>
             <div className="flex items-baseline justify-between mb-0.5">
               <p className="font-headline text-[17px]" style={{ fontWeight: 600 }}>Čeká na tebe</p>
               {todos.length > VISIBLE_TODOS ? (
@@ -181,9 +182,6 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
                 <span className="text-xs text-navy/50">{todos.length ? `${todos.length} ${plural(todos.length, 'úkol', 'úkoly', 'úkolů')}` : ''}</span>
               )}
             </div>
-            {todos.length === 0 ? (
-              <p className="flex items-center gap-3 py-2 font-semibold"><span className="relative w-7 h-7 bg-mint flex items-center justify-center" style={{ animation: 'dash-pop .4s ease-out' }}>✓<DoneBurst /></span>Máš hotovo, díky!</p>
-            ) : (
               <ul className="divide-y divide-[rgba(13,33,79,0.08)]">
                 {(showAll ? todos : todos.slice(0, VISIBLE_TODOS)).map((td, i) => (
                   <li key={td.id}>
@@ -198,19 +196,21 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
                   </li>
                 ))}
               </ul>
-            )}
           </div>
+          )}
         </div>
 
-        {/* odpočet do faktury / výplaty — tenký pruh jako záložky v Můj účet */}
-        <div className="border-t border-white/15 px-7 sm:px-9 py-2 pr-16">
-          <Link href="/payslips" className="group flex items-center gap-3 min-w-0">
-            <span className="bg-gold text-navy h-7 px-2 flex items-center gap-1 leading-none flex-shrink-0">
-              <span className="font-headline text-[16px]" style={{ fontWeight: 600 }}>{pn.inDays}</span>
-              <span className="text-[9px] font-bold uppercase tracking-[0.08em]">{plural(pn.inDays, 'den', 'dny', 'dní')}</span>
+        {/* odpočet do faktury / výplaty */}
+        <div className="border-t border-white/15 px-7 sm:px-9 py-4 pr-16">
+          <Link href="/payslips" className="group flex items-center gap-x-6 gap-y-2">
+            <span className="bg-gold text-navy px-3 py-2 text-center leading-none flex-shrink-0">
+              <span className="block font-headline text-[26px]" style={{ fontWeight: 600 }}>{pn.inDays}</span>
+              <span className="block text-[10px] font-bold uppercase tracking-[0.08em] mt-0.5">{plural(pn.inDays, 'den', 'dny', 'dní')}</span>
             </span>
-            <span className="font-semibold text-[14px] whitespace-nowrap group-hover:text-gold">{pn.title} →</span>
-            <span className="text-[12px] text-white/55 truncate hidden md:block">{pn.sub}</span>
+            <span className="min-w-0">
+              <span className="block font-semibold text-[15px] group-hover:text-gold">{pn.title} <span className="text-white/50 group-hover:text-gold">→</span></span>
+              <span className="block text-[12px] text-white/55">{pn.sub}</span>
+            </span>
           </Link>
         </div>
         <Corner />
