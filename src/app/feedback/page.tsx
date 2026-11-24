@@ -21,14 +21,10 @@ export default async function FeedbackPage() {
         <div className="relative bg-navy overflow-hidden rozky rozky-lg after:z-20 min-h-[256px] flex">
           <div className="relative z-10 flex-1 px-7 sm:px-9 py-7 flex flex-col sm:flex-row sm:items-center gap-6">
             <div className="flex-1 min-w-0">
-              <p className="kicker !text-white/60 mb-2">Bezpečný prostor</p>
+              <p className="kicker text-gold text-[11px] mb-2">Bezpečný prostor</p>
               <h2 className="text-2xl font-headline text-white mb-2" style={{ fontWeight: 600 }}>Schránka důvěry</h2>
               <p className="text-white/70 text-sm leading-relaxed">
                 Tady máš bezpečný prostor říct cokoliv — pochvalu, stížnost, návrh nebo cokoliv, co tě trápí. Můžeš psát anonymně i pod svým jménem, volba je jen na tobě.
-              </p>
-              <p className="mt-4 inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.06em] text-gold">
-                <span className="w-2 h-2 bg-gold" aria-hidden="true" />
-                Zpráva je zamčená — anonymní nelze dohledat
               </p>
             </div>
             <SafeEnvelope className="w-40 sm:w-48 flex-shrink-0 self-center" />
