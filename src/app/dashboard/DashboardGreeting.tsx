@@ -73,8 +73,11 @@ export function DashboardGreeting({ name, initial, teamMemberId, position, depar
             <div>
               <p className="kicker text-gold text-[11px] mb-2">{greeting}</p>
               <h1 className="font-headline text-[32px] sm:text-[38px] leading-[1.05] text-white" style={{ fontWeight: 600 }}>{displayName}</h1>
-              {position && department && (
-                <p className="text-[15px] mt-1.5 text-white/70">{position} · {department}</p>
+              {(position || department) && (
+                <p className="text-[15px] mt-1.5 text-white/70">
+                  {/* tým se nezobrazuje, když se jmenuje stejně jako pozice (Account Manager · Account manager) */}
+                  {position && department && position.toLowerCase() !== department.toLowerCase() ? `${position} · ${department}` : position || department}
+                </p>
               )}
             </div>
           </div>
