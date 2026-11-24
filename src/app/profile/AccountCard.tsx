@@ -66,14 +66,17 @@ export function AccountCard({ info, tabs }: { info: AccountInfo; tabs: Component
   return (
     <div className="w-full">
       <section className="relative bg-navy text-white overflow-hidden mb-6 min-h-[256px] flex flex-col">
-        <div className="relative flex-1 flex flex-col sm:flex-row sm:items-end gap-6 px-7 sm:px-9 pt-8 pb-7">
-          <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={HERO_PHOTO} hideGlow fallback={<Silhouette department={info.department} />} />
-          <div className="flex flex-col justify-end min-w-0 flex-1">
-            <p className="kicker text-gold text-[11px] mb-2">Můj účet</p>
-            <h1 className="font-headline text-[34px] sm:text-[38px] leading-[1.05]" style={{ fontWeight: 600 }}>{info.name}</h1>
-            <p className="text-white/65 text-[15px] mt-1">{info.position}</p>
+        <div className="relative flex-1 flex flex-col sm:flex-row sm:items-start gap-6 px-7 sm:px-9 pt-9 pb-8">
+          {/* fotka + jméno — stejná pozice a velikost jako na Dashboardu, ať přechod neposkočí */}
+          <div className="flex items-end gap-6 flex-1 min-w-0">
+            <AvatarUpload initial={info.name[0] ?? '?'} teamMemberId={info.teamMemberId} size={HERO_PHOTO} hideGlow fallback={<Silhouette department={info.department} />} />
+            <div className="min-w-0">
+              <p className="kicker text-gold text-[11px] mb-2">Můj účet</p>
+              <h1 className="font-headline text-[34px] sm:text-[38px] leading-[1.05]" style={{ fontWeight: 600 }}>{info.name}</h1>
+              <p className="text-white/65 text-[15px] mt-1.5">{info.position}</p>
+            </div>
           </div>
-          <dl className="sm:self-end grid grid-cols-[auto_auto] gap-x-5 gap-y-1.5 text-sm">
+          <dl className="sm:self-end sm:mb-1 grid grid-cols-[auto_auto] gap-x-5 gap-y-1.5 text-sm">
             <dt className="text-white/50">Tým</dt>
             <dd className="font-semibold flex items-center gap-2">
               <span className="w-2.5 h-2.5" style={{ background: departmentColor(info.department) }} />{info.department}
