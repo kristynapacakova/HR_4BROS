@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { DEMO_TEAM } from '@/lib/mock-data'
 import { Avatar, personView, plural, useProfiles } from '@/app/team/teamPeople'
 import { toVocativeCz } from '@/lib/cz-vocative'
-import { StairsHop, DoneBurst } from './DashboardAnimations'
+import { StairsHop, DoneBurst, GiftBox } from './DashboardAnimations'
 import { computePayNext, loadPaySchedule, PAY_SCHEDULE_CHANGED_EVENT, type PayNext } from '@/lib/pay-schedule'
 
 /**
@@ -209,6 +209,7 @@ export function EmployeeDashboard({ data }: { data: EmployeeDashData }) {
               <li key={'b' + b.id}><Link href={`/team/${b.id}`} className="flex items-center gap-3 group">
                 <Avatar p={p} size={40} fontSize={13} />
                 <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-navy group-hover:text-violet truncate">{p.name}</span><span className="block text-[11px] text-navy/55">narozeniny {b.date}</span></span>
+                <GiftBox size={20} />
                 <Tag cls="bg-violet text-white">{b.inDays === 0 ? 'dnes!' : `za ${b.inDays} d`}</Tag>
               </Link></li>
             ) })}

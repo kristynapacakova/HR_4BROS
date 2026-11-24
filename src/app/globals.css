@@ -297,3 +297,7 @@
 @media (prefers-reduced-motion: reduce) {
   .dash-anim, .dash-anim * { animation: none !important; }
 }
+@keyframes dash-lid { 0%, 62%, 100% { transform: translateY(0) rotate(0); } 70% { transform: translateY(-5px) rotate(-10deg); } 78% { transform: translateY(0) rotate(0); } 84% { transform: translateY(-2px) rotate(6deg); } 90% { transform: translateY(0) rotate(0); } }
+@keyframes dash-flip { from { transform: perspective(300px) rotateX(-90deg); opacity: 0; } to { transform: perspective(300px) rotateX(0); opacity: 1; } }
+@keyframes dash-draw { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes dash-ping { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }

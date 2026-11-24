@@ -118,3 +118,50 @@ export function DoneBurst({ run = 0 }: { run?: number }) {
     </span>
   )
 }
+
+/** 5 · Dárek u narozenin — malá krabička (gold + violet stuha), víčko občas poskočí. */
+export function GiftBox({ size = 18 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 18 18" width={size} height={size} className="dash-anim block" aria-hidden="true">
+      <rect x="2" y="8" width="14" height="9" fill="#F0E100" />
+      <rect x="8" y="8" width="2" height="9" fill="#834DFB" />
+      <g style={{ transformBox: 'fill-box', transformOrigin: 'left bottom', animation: 'dash-lid 2.6s ease-in-out infinite' }}>
+        <rect x="1" y="5" width="16" height="3" fill="#F0E100" />
+        <rect x="8" y="5" width="2" height="3" fill="#834DFB" />
+        <rect x="5" y="2" width="3" height="3" fill="#834DFB" />
+        <rect x="10" y="2" width="3" height="3" fill="#834DFB" />
+      </g>
+    </svg>
+  )
+}
+
+/** 6 · Dlaždice s datem — přiklapne se jako trhací kalendář (rotateX), postupně po sobě. */
+export function flipIn(i: number) {
+  return { animation: `dash-flip .55s cubic-bezier(.16,1,.3,1) ${0.15 + i * 0.12}s backwards`, transformOrigin: 'top' }
+}
+
+/** 7 · Linka u novinky se vykreslí shora dolů; nejnovější má pulzující tečku. */
+export function drawDown(i: number) {
+  return { transformOrigin: 'top', animation: `dash-draw .5s cubic-bezier(.16,1,.3,1) ${0.2 + i * 0.12}s backwards` }
+}
+export function Ping({ className = 'bg-violet' }: { className?: string }) {
+  return (
+    <span className="dash-anim relative inline-flex w-2 h-2" aria-hidden="true">
+      <span className={`absolute inset-0 ${className}`} style={{ animation: 'dash-ping 1.6s ease-out infinite' }} />
+      <span className={`relative w-2 h-2 ${className}`} />
+    </span>
+  )
+}
+
+/** 8 · Checkbox úkolu — po najetí se zaplní mint a vykreslí ✓ (jako by se už odškrtával). */
+export function HoverCheck() {
+  return (
+    <span className="relative w-5 h-5 border-2 border-navy/30 group-hover:border-navy flex-shrink-0 overflow-hidden transition-colors">
+      <span className="absolute inset-0 bg-mint origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+      <svg viewBox="0 0 16 16" className="absolute inset-0 w-full h-full" aria-hidden="true">
+        <path d="M3 8.5L6.5 12L13 4.5" fill="none" stroke="#0D214F" strokeWidth="2.4" strokeLinecap="square"
+          className="[stroke-dasharray:20] [stroke-dashoffset:20] group-hover:[stroke-dashoffset:0] transition-[stroke-dashoffset] duration-300 delay-150" />
+      </svg>
+    </span>
+  )
+}
