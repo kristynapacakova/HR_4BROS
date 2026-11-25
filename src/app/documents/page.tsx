@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { FileText, Download, FileCheck, FileSignature, ShieldCheck, FileKey } from 'lucide-react'
+import { FileText, Download, FileCheck, FileSignature, ShieldCheck } from 'lucide-react'
 import { DEMO_DOCUMENTS, DEMO_USER, DEMO_ADMIN, DEMO_CONTRACTS, CONTRACT_TEMPLATES } from '@/lib/mock-data'
 import { PayslipYearPicker } from './PayslipYearPicker'
 import { DocumentsSigningClient } from './DocumentsSigningClient'
@@ -11,10 +11,9 @@ const TAG_CONFIG: Record<string, { label: string; color: string; Icon: React.Ele
   SMLOUVA: { label: 'Smlouva',  color: 'bg-blue-50 text-blue-700',   Icon: FileSignature },
   DODATEK: { label: 'Dodatek',  color: 'bg-violet/10 text-violet',   Icon: FileText },
   GDPR:    { label: 'GDPR',     color: 'bg-green-50 text-green-700', Icon: ShieldCheck },
-  NDA:     { label: 'NDA',      color: 'bg-amber-50 text-amber-700', Icon: FileKey },
 }
 
-const TAG_ORDER = ['SMLOUVA', 'DODATEK', 'GDPR', 'NDA']
+const TAG_ORDER = ['SMLOUVA', 'DODATEK', 'GDPR']
 
 type Doc = typeof DEMO_DOCUMENTS[number]
 

@@ -8,10 +8,9 @@ const TAG_LABEL: Record<string, string> = {
   SMLOUVA: 'Smlouva',
   DODATEK: 'Dodatek',
   GDPR: 'GDPR',
-  NDA: 'NDA',
 }
 
-const TAG_ORDER = ['SMLOUVA', 'DODATEK', 'GDPR', 'NDA']
+const TAG_ORDER = ['SMLOUVA', 'DODATEK', 'GDPR']
 
 type Doc = typeof DEMO_DOCUMENTS[number]
 
