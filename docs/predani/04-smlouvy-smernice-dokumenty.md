@@ -52,7 +52,12 @@ HR: Nová smlouva → šablona → formulář → „Uložit jako návrh“
 
 ### Přehled smluv + nahrání podepsané smlouvy (HR) — `src/app/admin/smlouvy/ContractOverview.tsx`
 - Admin → Smlouvy → **Přehled smluv** (výchozí záložka): všichni lidé a všechny jejich smlouvy v jedné tabulce, souhrn **Podepsané / Čeká na podpis / Lidé bez smlouvy v portálu** (klik filtruje), filtr podle člověka.
-- **„Nahrát smlouvu“** (nebo „Nahrát“ u konkrétního člověka): soubor (PDF nebo sken), člověk, název smlouvy, typ (HPP/DPP/DPČ/IČO/Dodatek/NDA/GDPR/Jiné — předvyplní se podle typu spolupráce), stav (podepsaná / čeká na podpis), datum podpisu, poznámka. Člověk dostane notifikaci.
+- **Povinné dokumenty podle typu spolupráce** (NDA zvlášť nemáme, je součástí smlouvy):
+  - HPP: smlouva na HPP, mzdový výměr, předávací protokol, GDPR.
+  - IČO: smlouva o poskytování služeb, smlouva o nájmu kancelářského místa, zpracovatelská smlouva, předávací protokol, GDPR.
+  - DPP/DPČ: dohoda, předávací protokol, GDPR (zatím odhad, k potvrzení).
+  - Stav uživatele: chybí (nemá některý povinný dokument) → čeká na podpis (nějaký dokument nepodepsaný) → v pořádku.
+- **„Nahrát smlouvu“** (nebo „Nahrát“ u konkrétního člověka): soubor (PDF nebo sken), člověk, název smlouvy, typ (HPP/DPP/DPČ/IČO/Mzdový výměr/Nájem kanceláře/Zpracovatelská/Předávací protokol/GDPR/Dodatek/Jiné — předvyplní se podle typu spolupráce, u chybějícího dokumentu i název), stav (podepsaná / čeká na podpis), datum podpisu, poznámka. Člověk dostane notifikaci.
 - U každé smlouvy: **„Čeká na podpis · označit ✓“** → podepsaná s dnešním datem, „zrušit podpis“, otevřít, stáhnout, smazat.
 - **Zaměstnanec** vidí své smlouvy v Můj účet → Dokumenty → **Moje smlouvy** (otevřít / stáhnout).
 - Data: `StoredContract` (`src/lib/contract-file-client.ts`) — `personId`, `name`, `type`, `status` (SIGNED/UNSIGNED), `signedAt`, `notes`, soubor. Dnes v prohlížeči; po napojení tabulka Contract + soubor v úložišti. K rozhodnutí: počítat nahrané podepsané smlouvy do Přehledu plnění (dnes plnění bere smlouvy z modelu).
@@ -67,7 +72,7 @@ Logo, dekor, barvy, písma, **název firmy, IČO, adresa**. ⚠️ Tisk použív
 Dnes tisk z prohlížeče („Uložit jako PDF“), místo podpisu vždy „V Praze“. → Rozhodnout serverové generování a ukládání: návrh k podpisu (zmrazená verze), podepsané PDF + protokol, archiv. K souborům hash, kdo a kdy; podepsané PDF neměnné.
 
 ## Dokumenty zaměstnance (Můj účet → Dokumenty, `/documents`)
-- Smlouvy k podpisu a podepsané, statický seznam smluv (Smlouva / Dodatek / GDPR / NDA), výplatní pásky (jen HPP).
+- Smlouvy k podpisu a podepsané, statický seznam smluv (Smlouva / Dodatek / GDPR), výplatní pásky (jen HPP).
 - ⚠️ Dokumenty **nemají vlastníka** — všichni vidí stejné; smlouvy k podpisu se filtrují jen podle stavu (vidí je každý).
 - ⚠️ Smlouvy jsou dnes na 4 místech (šablonové smlouvy, syntetické smlouvy pro plnění, statické dokumenty, archiv) → sjednotit na `Contract` + `Document` (soubor s vlastníkem).
 - Všechna stažení jsou atrapy.

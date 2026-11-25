@@ -523,14 +523,13 @@ export const DEMO_NOTIFICATIONS: NotificationSeed[] = [
   { id: "ntf-seed-5", recipientEmail: DEMO_ADMIN.email, title: "Žádosti čekají na schválení", body: "Několik žádostí o dovolenou čeká na tvoje vyřízení.", href: "/admin/leave-requests", createdAt: "2026-08-20T09:00:00.000Z", read: false },
 ]
 
-// tag: SMLOUVA | DODATEK | GDPR | NDA  (for contracts section)
+// tag: SMLOUVA | DODATEK | GDPR  (for contracts section; NDA je součástí smlouvy)
 // type: CONTRACT | PAYSLIP
 export const DEMO_DOCUMENTS = [
   // Smlouvy
   { id: "c1", name: "Pracovní smlouva", type: "CONTRACT", tag: "SMLOUVA", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
   { id: "c2", name: "Dodatek č. 1 — změna pozice", type: "CONTRACT", tag: "DODATEK", createdAt: new Date("2024-06-01"), uploadedAt: new Date("2024-06-01"), signedAt: new Date("2024-06-03"), url: "#" },
   { id: "c3", name: "GDPR souhlas se zpracováním osobních údajů", type: "CONTRACT", tag: "GDPR", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
-  { id: "c4", name: "NDA — dohoda o mlčenlivosti", type: "CONTRACT", tag: "NDA", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
   // Výplatní pásky (HPP only) — stejné měsíce jako proplacené výplaty Jana
   ...payslipsFor('t2').filter(p => !p.planned).map((p, i) => ({
     id: `p${i + 1}`, name: "Výplatní páska", type: "PAYSLIP", tag: null as string | null, month: p.month, year: p.year,

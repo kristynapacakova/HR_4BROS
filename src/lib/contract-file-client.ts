@@ -16,7 +16,7 @@ export interface StoredContract {
   personId: string
   /** název smlouvy, např. „Pracovní smlouva“, „Dodatek č. 1 — změna mzdy“ */
   name: string
-  /** HPP / DPP / DPČ / IČO / Dodatek / NDA / GDPR / Jiné */
+  /** HPP / DPP / DPČ / IČO / Dodatek / GDPR (NDA je součástí smlouvy) / Jiné */
   type: string
   status: StoredContractStatus
   /** kdy byla podepsaná (YYYY-MM-DD) */
@@ -29,7 +29,7 @@ export interface StoredContract {
   dataUrl?: string
 }
 
-export const CONTRACT_DOC_TYPES = ['HPP', 'DPP', 'DPČ', 'IČO', 'Mzdový výměr', 'Nájem kanceláře', 'Zpracovatelská', 'Předávací protokol', 'GDPR', 'Dodatek', 'NDA', 'Jiné'] as const
+export const CONTRACT_DOC_TYPES = ['HPP', 'DPP', 'DPČ', 'IČO', 'Mzdový výměr', 'Nájem kanceláře', 'Zpracovatelská', 'Předávací protokol', 'GDPR', 'Dodatek', 'Jiné'] as const
 
 const KEY = 'fb-contract-files'
 export const CONTRACT_FILES_CHANGED_EVENT = 'fb-contract-files-changed'
