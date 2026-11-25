@@ -14,7 +14,7 @@ export interface ComplianceRow {
   issues: Issue[]
 }
 
-type Filter = 'all' | 'issues' | 'contracts' | 'directives' | 'bozp' | 'photo'
+type Filter = 'all' | 'issues' | 'contracts' | 'directives' | 'bozp'
 
 const fmt = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString('cs-CZ') : '')
 const days = (n: number) => `${n} ${plural(n, 'den', 'dny', 'dní')}`
@@ -52,21 +52,17 @@ export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
   const [filter, setFilter] = useState<Filter>('issues')
   const person = (id: string) => { const m = DEMO_TEAM.find(x => x.id === id)!; return personView(m, profiles[m.id]) }
 
-  const hasPhoto = (id: string) => !!profiles[id]?.photo
   const is = {
     contracts: (r: ComplianceRow) => r.issues.some(i => i.kind.startsWith('CONTRACT')),
     directives: (r: ComplianceRow) => r.directives.missing.length > 0,
     bozp: (r: ComplianceRow) => r.bozp.required && r.bozp.state !== 'OK',
-    photo: (r: ComplianceRow) => !hasPhoto(r.id),
   }
-  // fotka je jen doporučení — do „nesplněného“ se nepočítá
   const anyIssue = (r: ComplianceRow) => r.issues.length > 0
 
   const counts = useMemo(() => ({
     contracts: rows.filter(is.contracts).length,
     directives: rows.filter(is.directives).length,
     bozp: rows.filter(is.bozp).length,
-    photo: rows.filter(is.photo).length,
     issues: rows.filter(anyIssue).length,
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [rows, profiles])
@@ -79,13 +75,12 @@ export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
     { k: 'contracts', label: 'Smlouvy', n: counts.contracts, hint: 'k podpisu nebo končí' },
     { k: 'directives', label: 'Směrnice', n: counts.directives, hint: 'někdo nepotvrdil' },
     { k: 'bozp', label: 'BOZP', n: counts.bozp, hint: 'chybí, propadlé, brzy' },
-    { k: 'photo', label: 'Fotka', n: counts.photo, hint: 'bez fotky v Týmu' },
   ]
 
   return (
     <div className="space-y-5">
       {/* souhrn — kliknutím filtruje */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {tiles.map(t => (
           <button key={t.k} type="button" onClick={() => setFilter(f => (f === t.k ? 'issues' : t.k))}
             className={`text-left p-5 border transition-colors ${filter === t.k ? 'bg-navy text-white border-navy' : 'bg-white text-navy border-[rgba(13,33,79,0.14)] hover:border-navy'}`}>
@@ -107,12 +102,12 @@ export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
         <table className="w-full text-sm min-w-[760px]">
           <thead>
             <tr className="bg-navy text-white text-left">
-              {['Člověk', 'Smlouva', 'Směrnice', 'BOZP', 'Fotka'].map(h => <th key={h} className="px-4 py-3 kicker text-white/70 font-bold">{h}</th>)}
+              {['Člověk', 'Smlouva', 'Směrnice', 'BOZP'].map(h => <th key={h} className="px-4 py-3 kicker text-white/70 font-bold">{h}</th>)}
             </tr>
           </thead>
           <tbody>
             {visible.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-10 text-center text-navy/60">Všechno splněno ✓</td></tr>
+              <tr><td colSpan={4} className="px-4 py-10 text-center text-navy/60">Všechno splněno ✓</td></tr>
             )}
             {visible.map(r => {
               const p = person(r.id)
@@ -134,7 +129,6 @@ export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
                       : <Chip tone="bad" title={`Chybí: ${r.directives.missing.join(', ')}`}>{r.directives.acknowledged}/{r.directives.required} potvrzeno</Chip>}
                   </td>
                   <td className="px-4 py-3"><BozpCell b={r.bozp} /></td>
-                  <td className="px-4 py-3">{hasPhoto(r.id) ? <span className="text-[12px] text-navy/60">✓</span> : <Chip tone="muted">Chybí</Chip>}</td>
                 </tr>
               )
             })}

@@ -49,7 +49,7 @@
 ## TeamProfile — medailonek (`src/lib/team-profile-client.ts`, `fb-team-profiles`)
 | Pole | Význam | Edituje |
 |---|---|---|
-| photo | profilová fotka (jedna pro hlavičku, Můj účet, Tým) | jen vlastník |
+| photo | profilová fotka (jedna pro hlavičku, menu, Dashboard, Můj účet, Tým) — **má se brát z Google Workspace účtu**; nahrání vlastní jen jako doplněk. Proto není úkolem ani položkou plnění | vlastník / Google |
 | photoPos | výřez fotky `{x, y, zoom 100–300}`; po nahrání se otevře editor výřezu | vlastník |
 | bio | „Příběh“ | vlastník |
 | interests | „Věci, které mě baví“ (bez emoji, bez duplicit) | vlastník |

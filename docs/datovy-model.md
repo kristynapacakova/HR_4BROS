@@ -60,7 +60,7 @@ Konstanty jsou v `RULES` v `src/lib/hr/model.ts`.
 | **Směrnice** | každou s `mustAcknowledge` musí potvrdit každý člověk. Chybějící = úkol. | Dashboard (úkol + štítek „potvrdit“), Přehled plnění |
 | **Smlouva k podpisu** | `PENDING_EMPLOYEE` → úkol pro člověka; `PENDING_MANAGEMENT` → úkol pro HR. | Dashboard, Přehled plnění |
 | **Konec smlouvy** | smlouvy na dobu určitou hlídáme **90 dní** předem; po konci „skončila“. | Dashboard HR, Přehled plnění |
-| **Fotka** | doporučení, ne povinnost — v přehledu se ukazuje, do „nesplněného“ se nepočítá. | Dashboard (úkol), Přehled plnění |
+| **Fotka** | bere se z Google Workspace účtu (přihlašovací e-mail) — není to úkol ani položka plnění. | všude, kde je člověk |
 | **Termíny odměn** | OSVČ posílají fakturu do **10.**, výplaty i faktury se proplácí **18.** (HR mění v Přehledu odměn). | Dashboard (odpočet) — `src/lib/pay-schedule.ts` |
 
 ## Co je dnes uložené v prohlížeči (→ budoucí tabulky)

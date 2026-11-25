@@ -99,7 +99,6 @@ Schvalování dovolené se přesunulo do **TrackDecku**, ale **integrace neexist
 | N lidí má něco nesplněné | aspoň jeden problém, který řeší člověk sám | HR |
 | Odsouhlas směrnici / N směrnic | chybí potvrzení povinné směrnice | všichni |
 | Podepiš: {smlouva} | moje smlouva čeká na můj podpis | všichni |
-| Nahraj svou fotku | nemám fotku | všichni |
 | Projdi školení BOZP / vyprší za N dní | BOZP chybí, propadlo, nebo vyprší do 30 dní | všichni |
 
 Kontakt na HR (karta v Novinkách od HR): první člověk s rolí HR, tlačítka **„Napiš na Slacku“** (přímá zpráva — potřebuje Slack ID člověka, bez něj otevře aplikaci Slack) a **„Zavolat“** (telefon HR). Sama HR kartu nevidí.

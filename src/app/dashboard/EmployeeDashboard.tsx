@@ -56,7 +56,7 @@ function useTodos(data: EmployeeDashData) {
   const [extra, setExtra] = useState<EmployeeDashData['todos']>([])
   useEffect(() => {
     const list: EmployeeDashData['todos'] = []
-    if (data.meId && !profiles[data.meId]?.photo) list.push({ id: 'photo', label: 'Nahraj svou fotku', hint: 'Ať tě kolegové poznají v Týmu', href: '/profile' })
+    // fotka se bere z Google Workspace účtu — úkol „nahraj fotku“ není potřeba
     // BOZP: ze zdroje dat + co si člověk odklikl v prohlížeči (dokud není databáze); rozhoduje novější
     let local: string | null = null
     try { local = localStorage.getItem(data.meId ? `fb-bozp-last-done:${data.meId}` : 'fb-bozp-last-done') } catch { /* noop */ }
