@@ -39,6 +39,12 @@ const INSURANCE_COMPANIES = [
   { code: '213', name: 'RBP — Revírní bratrská pokladna' },
 ]
 
+/** Státy bydliště — ve firmě jsou lidé z Česka i Slovenska */
+const COUNTRIES = [
+  { code: 'CZ', name: 'Česko' },
+  { code: 'SK', name: 'Slovensko' },
+]
+
 const BOZP_URL = 'https://www.skolenibozp.cz/'
 const BOZP_KEY = 'fb-bozp-last-done'
 
@@ -53,6 +59,7 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
   const [birthDate, setBirthDate] = useState('')
   const [insurance, setInsurance] = useState('111')
   const [startingSalary, setStartingSalary] = useState('')
+  const [country, setCountry] = useState(user.country || '')
   const [bozpLastDone, setBozpLastDone] = useState<string | null>(null)
   const [personality, setPersonality] = useState<string>('')
 
@@ -199,20 +206,8 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
         {user.employmentType !== 'ICO' && (
           <Field label="Bankovní účet" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
         )}
-        <div className="sm:col-span-2">
-          <Field label="Ulice a číslo" value={formData.address} onChange={(v) => update('address', v)} />
-        </div>
-        <Field label="Město" value={formData.city} onChange={(v) => update('city', v)} />
-        <Field label="Stát" value={user.country || 'CZ'} readOnly />
-        <div className="sm:col-span-2">
-          <Field label="Kontakt pro případ nouze — jméno" value={formData.ecName} onChange={(v) => update('ecName', v)} />
-        </div>
-        <Field label="Telefon na něj" value={formData.ecPhone} onChange={(v) => update('ecPhone', v)} type="tel" />
-        <Field label="Vztah" value={formData.ecRelationship} onChange={(v) => update('ecRelationship', v)} placeholder="Manžel/ka, rodič..." />
-        {/* jen pro HPP/DPP/DPČ — pojišťovna, plat, BOZP */}
         {isEmployee && (
-          <>
-            <div className="sm:col-span-2">
+          <div>
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Zdravotní pojišťovna</label>
               <select
                 value={insurance}
@@ -222,6 +217,30 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
                 {INSURANCE_COMPANIES.map(i => <option key={i.code} value={i.code}>{i.code} · {i.name}</option>)}
               </select>
             </div>
+        )}
+        <div className="sm:col-span-2">
+          <Field label="Ulice a číslo" value={formData.address} onChange={(v) => update('address', v)} />
+        </div>
+        <Field label="Město" value={formData.city} onChange={(v) => update('city', v)} />
+        <div>
+          <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Stát</label>
+          <select
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+          >
+            <option value="">Vyber stát</option>
+            {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+          </select>
+        </div>
+        <div className="sm:col-span-2">
+          <Field label="Kontakt pro případ nouze — jméno" value={formData.ecName} onChange={(v) => update('ecName', v)} />
+        </div>
+        <Field label="Telefon na něj" value={formData.ecPhone} onChange={(v) => update('ecPhone', v)} type="tel" />
+        <Field label="Vztah" value={formData.ecRelationship} onChange={(v) => update('ecRelationship', v)} placeholder="Manžel/ka, rodič..." />
+        {/* jen pro HPP/DPP/DPČ — pojišťovna, plat, BOZP */}
+        {isEmployee && (
+          <>
             {/* nástupní plat upravuje jen HR — zaměstnanec ho vidí jen pro čtení */}
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Nástupní plat (Kč){!isHr && <span className="ml-1.5 normal-case tracking-normal font-normal text-navy/40">· spravuje HR</span>}</label>
