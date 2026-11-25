@@ -1,154 +1,241 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
-import { Upload, Eye, Download, Trash2, X } from 'lucide-react'
-import { DEMO_TEAM } from '@/lib/mock-data'
+import { useRef, useState } from 'react'
+import { Upload, Eye, Download, Trash2, X, Check, PenLine, ChevronDown, Search } from 'lucide-react'
+import { DEMO_TEAM, TEAM_DEPARTMENTS } from '@/lib/mock-data'
 import { Avatar, personView, useProfiles } from '@/app/team/teamPeople'
+import { departmentColor } from '@/lib/team-colors'
 import { pushNotification } from '@/lib/notifications-client'
 import {
   useStoredContracts, addStoredContract, updateStoredContract, removeStoredContract,
-  openStoredContract, downloadStoredContract, CONTRACT_DOC_TYPES, type StoredContractStatus,
+  openStoredContract, downloadStoredContract, CONTRACT_DOC_TYPES, type StoredContract, type StoredContractStatus,
 } from '@/lib/contract-file-client'
 
 const fmtDate = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString('cs-CZ') : '—')
 const TYPE_BY_EMPLOYMENT: Record<string, string> = { HPP: 'HPP', DPP: 'DPP', DPC: 'DPČ', ICO: 'IČO' }
 
-/** Přehled všech smluv všech lidí + nahrání podepsané (naskenované) smlouvy k člověku. */
+/* ── povinné dokumenty podle typu spolupráce (NDA je součástí smlouvy) ── */
+type DocKind = { key: string; label: string; type: string; name: (et: string) => string }
+const MAIN_NAME: Record<string, string> = { HPP: 'Pracovní smlouva (HPP)', DPP: 'Dohoda o provedení práce', DPC: 'Dohoda o pracovní činnosti', ICO: 'Smlouva o poskytování služeb' }
+export const DOC_KINDS: DocKind[] = [
+  { key: 'main', label: 'Smlouva', type: '', name: et => MAIN_NAME[et] ?? 'Smlouva' },
+  { key: 'wage', label: 'Mzdový výměr', type: 'Mzdový výměr', name: () => 'Mzdový výměr' },
+  { key: 'office', label: 'Nájem kanceláře', type: 'Nájem kanceláře', name: () => 'Smlouva o nájmu kancelářského místa' },
+  { key: 'dpa', label: 'Zpracovatelská', type: 'Zpracovatelská', name: () => 'Zpracovatelská smlouva' },
+  { key: 'handover', label: 'Předávací protokol', type: 'Předávací protokol', name: () => 'Předávací protokol' },
+  { key: 'gdpr', label: 'GDPR', type: 'GDPR', name: () => 'Souhlas se zpracováním osobních údajů' },
+]
+/** HPP: smlouva, mzdový výměr, předávací protokol, GDPR · IČO: smlouva o službách, nájem kanceláře, zpracovatelská, předávací protokol, GDPR · DPP/DPČ: dohoda, předávací protokol, GDPR (k potvrzení) */
+export const REQUIRED_BY_TYPE: Record<string, string[]> = {
+  HPP: ['main', 'wage', 'handover', 'gdpr'],
+  ICO: ['main', 'office', 'dpa', 'handover', 'gdpr'],
+  DPP: ['main', 'handover', 'gdpr'],
+  DPC: ['main', 'handover', 'gdpr'],
+}
+const kindType = (k: DocKind, et: string) => (k.key === 'main' ? TYPE_BY_EMPLOYMENT[et] ?? 'Jiné' : k.type)
+const matchKind = (k: DocKind) => (c: StoredContract) => (k.key === 'main' ? ['HPP', 'DPP', 'DPČ', 'IČO'].includes(c.type) : c.type === k.type)
+const requiredFor = (et: string) => DOC_KINDS.filter(k => (REQUIRED_BY_TYPE[et] ?? ['main', 'gdpr']).includes(k.key))
+const isRequiredDoc = (c: StoredContract) => DOC_KINDS.some(k => matchKind(k)(c))
+
+type PState = 'ok' | 'waiting' | 'missing'
+/** chybí povinný dokument → chybí; jinak nějaký nepodepsaný → čeká na podpis; jinak v pořádku */
+function personState(list: StoredContract[], et: string): PState {
+  if (requiredFor(et).some(k => !list.some(matchKind(k)))) return 'missing'
+  return list.some(c => c.status === 'UNSIGNED') ? 'waiting' : 'ok'
+}
+const STATE_UI: Record<PState, { label: string; bar: string }> = {
+  missing: { label: 'Chybí dokument', bar: 'bg-navy' },
+  waiting: { label: 'Čeká na podpis', bar: 'bg-gold' },
+  ok: { label: 'V pořádku', bar: 'bg-[rgba(13,33,79,0.08)]' },
+}
+
+/** značky stavu dokumentu — stejné v buňkách i ve vysvětlivkách */
+function Mark({ kind, small }: { kind: 'ok' | 'sign' | 'missing' | 'na'; small?: boolean }) {
+  const box = small ? 'w-4 h-4' : 'w-7 h-7'
+  const ic = small ? 'w-3 h-3' : 'w-4 h-4'
+  if (kind === 'ok') return <span className={`${box} flex items-center justify-center text-navy/45`}><Check className={ic} /></span>
+  if (kind === 'sign') return <span className={`${box} flex items-center justify-center bg-gold text-navy`}><PenLine className={small ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5'} /></span>
+  if (kind === 'missing') return <span className={`${box} flex items-center justify-center bg-navy text-white`}><X className={ic} /></span>
+  return <span className={`${box} flex items-center justify-center text-navy/20`}>–</span>
+}
+
+const GRID = 'grid grid-cols-[minmax(190px,1.3fr)_repeat(6,104px)_minmax(120px,1fr)_80px] gap-2'
+
+/** Přehled smluv všech uživatelů po týmech — na první pohled vidět, co komu chybí nebo čeká na podpis. */
 export function ContractOverview() {
   const profiles = useProfiles()
   const contracts = useStoredContracts()
   const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'' | StoredContractStatus | 'NONE'>('')
-  const [showUpload, setShowUpload] = useState(false)
-  const [presetPerson, setPresetPerson] = useState('')
+  const [stateFilter, setStateFilter] = useState<PState | ''>('')
+  const [hideOk, setHideOk] = useState(false)
+  const [openId, setOpenId] = useState<string | null>(null)
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  const [upload, setUpload] = useState<{ personId: string; type?: string; name?: string } | null>(null)
 
-  const people = [...DEMO_TEAM].sort((a, b) => a.name.localeCompare(b.name, 'cs'))
+  const of = (id: string) => contracts.filter(c => c.personId === id)
+  const stateOf = (m: typeof DEMO_TEAM[number]) => personState(of(m.id), m.employmentType)
   const person = (id: string) => { const m = DEMO_TEAM.find(x => x.id === id)!; return personView(m, profiles[m.id]) }
+  const counts = { missing: 0, waiting: 0, ok: 0 } as Record<PState, number>
+  DEMO_TEAM.forEach(m => { counts[stateOf(m)]++ })
+  const q = query.trim().toLowerCase()
+  const people = [...DEMO_TEAM]
+    .filter(m => !q || m.name.toLowerCase().includes(q))
+    .filter(m => !stateFilter || stateOf(m) === stateFilter)
+    .filter(m => !hideOk || stateOf(m) !== 'ok')
+    .sort((a, b) => a.name.localeCompare(b.name, 'cs'))
 
-  const rows = useMemo(() => people
-    .filter(m => !query.trim() || m.name.toLowerCase().includes(query.trim().toLowerCase()))
-    .map(m => ({ m, list: contracts.filter(c => c.personId === m.id) }))
-    .filter(({ list }) => statusFilter === '' ? true : statusFilter === 'NONE' ? list.length === 0 : list.some(c => c.status === statusFilter))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  , [contracts, query, statusFilter])
-  // bez výběru se otevře první člověk ze seznamu
-  const selectedId = selected || rows[0]?.m.id || ''
-  const sel = DEMO_TEAM.find(m => m.id === selectedId) ?? null
-  const selList = contracts.filter(c => c.personId === selectedId)
-
-  const signed = contracts.filter(c => c.status === 'SIGNED').length
-  const unsigned = contracts.filter(c => c.status === 'UNSIGNED').length
-  const withNone = people.filter(m => !contracts.some(c => c.personId === m.id)).length
+  /** buňka dokumentu — vždy ve stejném sloupci, ať jsou chybějící vidět pod sebou */
+  const DocCell = ({ m, k }: { m: typeof DEMO_TEAM[number]; k: DocKind }) => {
+    if (!requiredFor(m.employmentType).includes(k)) return <span className="flex justify-center" title="Netýká se"><Mark kind="na" /></span>
+    const items = of(m.id).filter(matchKind(k))
+    if (!items.length) {
+      return (
+        <button type="button" onClick={() => setUpload({ personId: m.id, type: kindType(k, m.employmentType), name: k.name(m.employmentType) })} title={`${k.name(m.employmentType)} chybí — nahrát`} className="flex justify-center hover:opacity-80">
+          <Mark kind="missing" />
+        </button>
+      )
+    }
+    const waiting = items.find(c => c.status === 'UNSIGNED')
+    return waiting
+      ? <button type="button" onClick={() => setOpenId(m.id)} title={`${waiting.name} — čeká na podpis`} className="flex justify-center hover:opacity-80"><Mark kind="sign" /></button>
+      : <span className="flex justify-center" title={`${items.map(c => c.name).join(', ')} — podepsáno`}><Mark kind="ok" /></span>
+  }
 
   return (
-    <div className="space-y-5">
-      {/* souhrn + akce */}
-      <div className="flex flex-wrap items-stretch gap-3">
-        {[
-          { k: 'SIGNED' as const, l: 'Podepsané', n: signed, cls: 'bg-mint' },
-          { k: 'UNSIGNED' as const, l: 'Čeká na podpis', n: unsigned, cls: 'bg-gold' },
-          { k: 'NONE' as const, l: 'Lidé bez smlouvy v portálu', n: withNone, cls: 'bg-alice' },
-        ].map(t => (
-          <button key={t.k} type="button" onClick={() => setStatusFilter(f => (f === t.k ? '' : t.k))}
-            className={`text-left px-5 py-3 border min-w-[170px] transition-colors ${statusFilter === t.k ? 'bg-navy text-white border-navy' : 'bg-white text-navy border-[rgba(13,33,79,0.14)] hover:border-navy'}`}>
-            <span className="flex items-center gap-2 text-xs font-semibold"><span className={`w-2.5 h-2.5 ${t.cls}`} />{t.l}</span>
-            <span className="block font-headline text-[26px] leading-tight mt-1" style={{ fontWeight: 600 }}>{t.n}</span>
+    <div className="space-y-4">
+      {/* souhrn — kliknutím filtruje */}
+      <div className="grid grid-cols-3 gap-3">
+        {(['missing', 'waiting', 'ok'] as PState[]).map(k => (
+          <button key={k} type="button" onClick={() => setStateFilter(f => (f === k ? '' : k))}
+            className={`text-left p-4 border transition-colors ${stateFilter === k ? 'border-navy bg-navy text-white' : 'border-[rgba(13,33,79,0.14)] bg-white text-navy hover:border-navy'}`}>
+            <span className="flex items-center gap-2 text-xs font-semibold"><span className={`w-3 h-3 ${STATE_UI[k].bar}`} />{STATE_UI[k].label}</span>
+            <span className="block font-headline text-[30px] leading-tight mt-1" style={{ fontWeight: 600 }}>{counts[k]}</span>
+            <span className={`text-[11px] ${stateFilter === k ? 'text-white/60' : 'text-navy/50'}`}>{counts[k] === 1 ? 'uživatel' : counts[k] < 5 && counts[k] > 0 ? 'uživatelé' : 'uživatelů'}</span>
           </button>
         ))}
-        <div className="flex-1" />
-        <button type="button" onClick={() => { setPresetPerson(''); setShowUpload(true) }}
-          className="self-center flex items-center gap-2 px-5 py-3 bg-navy text-white text-sm font-semibold hover:bg-violet transition-colors">
-          <Upload className="w-4 h-4" /> Nahrát smlouvu
-        </button>
       </div>
 
-      {/* vlevo lidé, vpravo karta vybraného člověka se všemi smlouvami */}
-      <div className="grid lg:grid-cols-[320px_1fr] gap-5 items-start">
-        <section className="bg-white border border-[rgba(13,33,79,0.14)]">
-          <div className="p-3 border-b border-[rgba(13,33,79,0.08)]">
-            <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Hledat člověka…" className="w-full border border-[rgba(13,33,79,0.25)] px-3 py-2 text-sm text-navy focus:outline-none focus:border-violet" />
-          </div>
-          <ul className="max-h-[560px] overflow-y-auto divide-y divide-[rgba(13,33,79,0.08)]">
-            {rows.length === 0 && <li className="px-4 py-6 text-sm text-navy/55 text-center">Nic neodpovídá filtru.</li>}
-            {rows.map(({ m, list }) => {
-              const p = person(m.id)
-              const nSigned = list.filter(c => c.status === 'SIGNED').length
-              const nWaiting = list.length - nSigned
-              const active = selectedId === m.id
-              return (
-                <li key={m.id}>
-                  <button type="button" onClick={() => setSelected(m.id)} className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${active ? 'bg-alice' : 'hover:bg-alice/50'}`}>
-                    <Avatar p={p} size={34} fontSize={11} />
-                    <span className="flex-1 min-w-0">
-                      <span className={`block text-sm font-semibold truncate ${active ? 'text-violet' : 'text-navy'}`}>{m.name}</span>
-                      <span className="block text-[11px] text-navy/55">{TYPE_BY_EMPLOYMENT[m.employmentType] ?? m.employmentType} · {m.department}</span>
-                    </span>
-                    {list.length === 0
-                      ? <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-navy/40">žádná</span>
-                      : <span className="flex items-center gap-1">
-                          {nSigned > 0 && <span className="text-[10px] font-bold bg-mint text-navy px-1.5 py-0.5" title="Podepsané">{nSigned}</span>}
-                          {nWaiting > 0 && <span className="text-[10px] font-bold bg-gold text-navy px-1.5 py-0.5" title="Čeká na podpis">{nWaiting}</span>}
-                        </span>}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        </section>
+      <div className="flex flex-wrap items-center gap-4">
+        <label className="relative flex-1 min-w-[220px] max-w-sm">
+          <Search className="w-4 h-4 text-navy/40 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Hledat uživatele" className="w-full border border-[rgba(13,33,79,0.25)] bg-white pl-9 pr-3 py-2 text-sm text-navy focus:outline-none focus:border-violet" />
+        </label>
+        <label className="inline-flex items-center gap-2 text-sm text-navy cursor-pointer">
+          <input type="checkbox" checked={hideOk} onChange={e => setHideOk(e.target.checked)} className="w-4 h-4 accent-violet" />
+          Skrýt uživatele, kteří mají vše v pořádku
+        </label>
+        <button type="button" onClick={() => setUpload({ personId: '' })} className="ml-auto inline-flex items-center gap-2 bg-navy text-white px-4 py-2 text-sm font-semibold hover:bg-violet"><Upload className="w-4 h-4" />Nahrát smlouvu</button>
+      </div>
 
-        <section className="bg-white border border-[rgba(13,33,79,0.14)] min-h-[300px]">
-          {!sel ? (
-            <div className="h-full min-h-[300px] flex items-center justify-center text-sm text-navy/50 p-8 text-center">Vyber vlevo člověka — uvidíš všechny jeho smlouvy a můžeš nahrát další.</div>
-          ) : (
-            <>
-              <div className="flex flex-wrap items-center gap-4 px-6 py-5 border-b border-[rgba(13,33,79,0.08)]">
-                <Avatar p={person(sel.id)} size={52} fontSize={16} />
-                <div className="flex-1 min-w-0">
-                  <p className="font-headline text-navy text-[20px] leading-tight" style={{ fontWeight: 600 }}>{sel.name}</p>
-                  <p className="text-sm text-navy/60">{sel.position} · {TYPE_BY_EMPLOYMENT[sel.employmentType] ?? sel.employmentType} · nástup {fmtDate(sel.startDate.toISOString())}</p>
+      {people.length === 0 && <p className="bg-white border border-[rgba(13,33,79,0.14)] px-5 py-6 text-sm text-navy/50 text-center">Nikdo neodpovídá filtru.</p>}
+
+      {TEAM_DEPARTMENTS.map(dept => {
+        const all = DEMO_TEAM.filter(m => m.department === dept)
+        const members = people.filter(m => m.department === dept)
+        if (!members.length) return null
+        const states = all.map(stateOf)
+        const okCount = states.filter(s => s === 'ok').length
+        const problems = all.length - okCount
+        const isCollapsed = collapsed[dept] ?? false
+        return (
+          <section key={dept} className="bg-white border border-[rgba(13,33,79,0.14)]">
+            {/* hlavička týmu se souhrnem */}
+            <button type="button" onClick={() => setCollapsed(c => ({ ...c, [dept]: !isCollapsed }))}
+              className="w-full flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3 text-left hover:bg-alice/40">
+              <span className="w-3 h-3 flex-shrink-0" style={{ background: departmentColor(dept) }} />
+              <span className="font-headline text-navy text-[16px]" style={{ fontWeight: 600 }}>{dept}</span>
+              <span className="text-sm text-navy/55"><b className="text-navy">{okCount}</b> / {all.length} v pořádku</span>
+              {problems > 0
+                ? <span className="text-[10px] font-bold uppercase tracking-[0.06em] bg-navy text-white px-1.5 py-0.5">{problems} řešit</span>
+                : <span className="text-[11px] text-navy/45">✓ vše hotovo</span>}
+              <span className="flex gap-0.5 ml-auto">
+                {states.map((s, i) => <span key={i} className={`w-3 h-3 ${STATE_UI[s].bar}`} />)}
+              </span>
+              <ChevronDown className={`w-4 h-4 text-navy/40 transition-transform ${isCollapsed ? '-rotate-90' : ''}`} />
+            </button>
+
+            {!isCollapsed && (
+              <div className="overflow-x-auto"><div className="min-w-[1100px]">
+                {/* záhlaví sloupců */}
+                <div className={`${GRID} items-center px-5 py-3 border-t border-[rgba(13,33,79,0.08)] text-[11px] font-semibold whitespace-nowrap text-navy/50`}>
+                  <span>Uživatel</span>
+                  {DOC_KINDS.map(k => <span key={k.key} className="text-center">{k.label}</span>)}
+                  <span>Další dokumenty</span>
+                  <span />
                 </div>
-                <button type="button" onClick={() => { setPresetPerson(sel.id); setShowUpload(true) }} className="flex items-center gap-2 px-4 py-2 bg-navy text-white text-sm font-semibold hover:bg-violet transition-colors">
-                  <Upload className="w-4 h-4" /> Nahrát smlouvu
-                </button>
-              </div>
-              {selList.length === 0 ? (
-                <div className="px-6 py-10 text-center text-sm text-navy/55">Zatím tu nemá žádnou smlouvu. Nahraj první — podepsanou nebo naskenovanou.</div>
-              ) : (
-                <ul className="divide-y divide-[rgba(13,33,79,0.08)]">
-                  {selList.map(c => (
-                    <li key={c.id} className="flex flex-wrap items-center gap-4 px-6 py-4">
-                      <span className="flex-1 min-w-[200px]">
-                        <button type="button" onClick={() => openStoredContract(c)} className="block font-semibold text-navy hover:text-violet text-left">{c.name}</button>
-                        <span className="block text-[11px] text-navy/55">{c.type} · nahráno {fmtDate(c.uploadedAt)}{c.notes ? ` · ${c.notes}` : ''}</span>
-                      </span>
-                      {c.status === 'SIGNED' ? (
-                        <span className="flex items-center gap-2">
-                          <span className="text-[10px] font-bold uppercase tracking-[0.06em] bg-mint text-navy px-2 py-1">Podepsaná {fmtDate(c.signedAt)}</span>
-                          <button type="button" onClick={() => updateStoredContract(c.id, { status: 'UNSIGNED', signedAt: null })} className="text-[11px] text-navy/45 hover:text-navy">zrušit podpis</button>
-                        </span>
-                      ) : (
-                        <button type="button" onClick={() => updateStoredContract(c.id, { status: 'SIGNED', signedAt: new Date().toISOString().slice(0, 10) })}
-                          className="text-[11px] font-bold uppercase tracking-[0.06em] bg-gold text-navy px-2.5 py-1.5 hover:bg-navy hover:text-white" title="Označit jako podepsanou">
-                          Čeká na podpis · označit jako podepsanou ✓
-                        </button>
-                      )}
-                      <span className="flex items-center">
-                        <button type="button" onClick={() => openStoredContract(c)} title="Otevřít" className="p-1.5 text-navy/50 hover:text-navy"><Eye className="w-4 h-4" /></button>
-                        <button type="button" onClick={() => downloadStoredContract(c)} title="Stáhnout" className="p-1.5 text-navy/50 hover:text-navy"><Download className="w-4 h-4" /></button>
-                        <button type="button" onClick={() => { if (confirm(`Smazat smlouvu „${c.name}“ (${sel.name})?`)) removeStoredContract(c.id) }} title="Smazat" className="p-1.5 text-navy/50 hover:text-navy"><Trash2 className="w-4 h-4" /></button>
-                      </span>
-                    </li>
-                  ))}
+                <ul>
+                  {members.map(m => {
+                    const list = of(m.id)
+                    const extras = list.filter(c => !isRequiredDoc(c))
+                    const expanded = openId === m.id
+                    const missingKinds = requiredFor(m.employmentType).filter(k => !list.some(matchKind(k)))
+                    return (
+                      <li key={m.id} className="border-t border-[rgba(13,33,79,0.06)]">
+                        <div className={`${GRID} items-center px-5 py-2`}>
+                          <button type="button" onClick={() => setOpenId(expanded ? null : m.id)} className="flex items-center gap-3 text-left group min-w-0">
+                            <Avatar p={person(m.id)} size={32} fontSize={11} />
+                            <span className="min-w-0">
+                              <span className="block text-sm font-semibold text-navy truncate group-hover:text-violet">{m.name}</span>
+                              <span className="block text-[11px] text-navy/50 truncate"><b className="font-semibold text-navy/70">{TYPE_BY_EMPLOYMENT[m.employmentType]}</b> · {m.position}</span>
+                            </span>
+                          </button>
+                          {DOC_KINDS.map(k => <DocCell key={k.key} m={m} k={k} />)}
+                          <span className="flex flex-wrap gap-1.5">
+                            {extras.length === 0 && <span className="text-[11px] text-navy/30">—</span>}
+                            {extras.map(c => (
+                              <button key={c.id} type="button" onClick={() => setOpenId(m.id)} title={c.name}
+                                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 border max-w-[160px] ${c.status === 'SIGNED' ? 'border-[rgba(13,33,79,0.14)] text-navy/65' : 'border-gold bg-gold text-navy'}`}>
+                                {c.status === 'SIGNED' ? <Check className="w-3 h-3 flex-shrink-0" /> : <PenLine className="w-3 h-3 flex-shrink-0" />}
+                                <span className="truncate">{c.name.replace(/ —.*/, '')}</span>
+                              </button>
+                            ))}
+                          </span>
+                          <button type="button" onClick={() => setUpload({ personId: m.id })} title="Nahrát dokument" className="text-xs font-semibold text-navy/55 hover:text-violet inline-flex items-center gap-1"><Upload className="w-3.5 h-3.5" />Nahrát</button>
+                        </div>
+                        {expanded && (
+                          <div className="px-5 pb-4">
+                            <ul className="ml-11 bg-white border border-[rgba(13,33,79,0.1)] divide-y divide-[rgba(13,33,79,0.06)]">
+                              {list.length === 0 && missingKinds.length === 0 && <li className="px-4 py-3 text-sm text-navy/50">Zatím žádné dokumenty.</li>}
+                              {list.map(c => (
+                                <li key={c.id} className="flex flex-wrap items-center gap-3 px-4 py-2.5">
+                                  <span className="flex-1 min-w-[200px] text-sm text-navy"><b className="font-semibold">{c.name}</b> <span className="text-navy/50 text-xs">· {c.type}{c.signedAt ? ` · podepsáno ${fmtDate(c.signedAt)}` : ''} · nahráno {fmtDate(c.uploadedAt)}</span></span>
+                                  {c.status === 'SIGNED'
+                                    ? <span className="inline-flex items-center gap-1 text-[11px] text-navy/55"><Check className="w-3 h-3" />Podepsaná</span>
+                                    : <button type="button" onClick={() => updateStoredContract(c.id, { status: 'SIGNED', signedAt: new Date().toISOString().slice(0, 10) })} title="Označit jako podepsanou" className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.06em] bg-gold text-navy px-1.5 py-0.5 hover:bg-navy hover:text-white"><PenLine className="w-3 h-3" />Čeká na podpis · označit ✓</button>}
+                                  <button type="button" onClick={() => openStoredContract(c)} className="p-1 text-navy/50 hover:text-navy" title="Otevřít"><Eye className="w-4 h-4" /></button>
+                                  <button type="button" onClick={() => downloadStoredContract(c)} className="p-1 text-navy/50 hover:text-navy" title="Stáhnout"><Download className="w-4 h-4" /></button>
+                                  <button type="button" onClick={() => { if (confirm(`Smazat „${c.name}“ u uživatele ${m.name}?\n\nSoubor zmizí i z jeho Dokumentů. Nejde to vrátit.`)) removeStoredContract(c.id) }} className="p-1 text-navy/35 hover:text-navy" title="Smazat (jen HR)"><Trash2 className="w-4 h-4" /></button>
+                                </li>
+                              ))}
+                              {missingKinds.map(k => (
+                                <li key={k.key} className="flex items-center gap-3 px-4 py-2.5 text-sm">
+                                  <Mark kind="missing" small />
+                                  <span className="flex-1 text-navy/60">{k.name(m.employmentType)} — chybí</span>
+                                  <button type="button" onClick={() => setUpload({ personId: m.id, type: kindType(k, m.employmentType), name: k.name(m.employmentType) })} className="text-xs font-semibold bg-navy text-white px-3 py-1.5 hover:bg-violet">Nahrát</button>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
-              )}
-            </>
-          )}
-        </section>
-      </div>
-      <p className="text-xs text-navy/45">Demo — soubory se zatím ukládají jen v tomto prohlížeči. Po napojení se uloží do úložiště a uvidí je i daný člověk v Můj účet → Dokumenty na svém zařízení.</p>
+              </div></div>
+            )}
+          </section>
+        )
+      })}
 
-      {showUpload && <UploadModal people={people} presetPerson={presetPerson} onClose={() => setShowUpload(false)} />}
+      {/* vysvětlivky */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[11px] text-navy/55">
+        <span className="inline-flex items-center gap-1"><Mark kind="ok" small />podepsáno</span>
+        <span className="inline-flex items-center gap-1"><Mark kind="sign" small />čeká na podpis</span>
+        <span className="inline-flex items-center gap-1"><Mark kind="missing" small />chybí povinný dokument — klikni a nahraj</span>
+        <span className="inline-flex items-center gap-1"><Mark kind="na" small />netýká se</span>
+      </div>
+
+      {upload && <UploadModal key={JSON.stringify(upload)} people={[...DEMO_TEAM].sort((a, b) => a.name.localeCompare(b.name, 'cs'))} presetPerson={upload.personId} presetType={upload.type} presetName={upload.name} onClose={() => setUpload(null)} />}
     </div>
   )
 }

@@ -57,6 +57,7 @@ HR: Nová smlouva → šablona → formulář → „Uložit jako návrh“
   - IČO: smlouva o poskytování služeb, smlouva o nájmu kancelářského místa, zpracovatelská smlouva, předávací protokol, GDPR.
   - DPP/DPČ: dohoda, předávací protokol, GDPR (zatím odhad, k potvrzení).
   - Stav uživatele: chybí (nemá některý povinný dokument) → čeká na podpis (nějaký dokument nepodepsaný) → v pořádku.
+- **Kdo co smí se smlouvou:** nahrát, označit jako podepsanou a **smazat** smí jen HR (role ADMIN). Mazání je pro případ, že HR nahraje špatný soubor; po potvrzení zmizí i z Dokumentů uživatele. Uživatel svou smlouvu vidí, otevře a stáhne kdykoliv (Můj účet → Dokumenty → Moje smlouvy), ale nesmaže ji. TL ani nikdo jiný smlouvy nevidí. Na backendu hlídat oprávnění i u API (ne jen skrytím tlačítka) a mazání logovat (kdo, kdy, co).
 - **„Nahrát smlouvu“** (nebo „Nahrát“ u konkrétního člověka): soubor (PDF nebo sken), člověk, název smlouvy, typ (HPP/DPP/DPČ/IČO/Mzdový výměr/Nájem kanceláře/Zpracovatelská/Předávací protokol/GDPR/Dodatek/Jiné — předvyplní se podle typu spolupráce, u chybějícího dokumentu i název), stav (podepsaná / čeká na podpis), datum podpisu, poznámka. Člověk dostane notifikaci.
 - U každé smlouvy: **„Čeká na podpis · označit ✓“** → podepsaná s dnešním datem, „zrušit podpis“, otevřít, stáhnout, smazat.
 - **Zaměstnanec** vidí své smlouvy v Můj účet → Dokumenty → **Moje smlouvy** (otevřít / stáhnout).
