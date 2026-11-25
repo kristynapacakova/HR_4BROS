@@ -1,11 +1,15 @@
 'use client'
 
 import { ContractOverview } from './ContractOverview'
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { Contract, ContractTemplate, ContractStatus, DEMO_TEAM } from '@/lib/mock-data'
 import { ContractDetailModal } from './ContractDetailModal'
 import { ContractDesignerClient } from './ContractDesignerClient'
-import { printContract } from '@/lib/print-contract'
+import { printContract, contractDocModel } from '@/lib/print-contract'
+import { useContractTemplates } from '@/lib/contract-template-client'
+import { placeholderLabel } from '@/lib/contract-doc'
+import { ContractDocPreview } from '@/components/ContractDocPreview'
+import { TemplateEditor } from './TemplateEditor'
 import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft, Upload, Archive, ExternalLink, Trash2, Palette } from 'lucide-react'
 
 interface ArchivedContract {
@@ -75,10 +79,13 @@ type CreateStep = 'pick-template' | 'fill-form'
 
 const CONTRACT_TYPES = ['HPP', 'DPP', 'DPC', 'ICO', 'Dodatek', 'Jiné']
 
-export function ContractsClient({ templates, contracts: initialContracts }: {
+export function ContractsClient({ templates: baseTemplates, contracts: initialContracts }: {
   templates: ContractTemplate[]
   contracts: Contract[]
 }) {
+  // vestavěné šablony + šablony nahrané / upravené HR
+  const templates = useContractTemplates(baseTemplates)
+  const [editing, setEditing] = useState<ContractTemplate | 'new' | null>(null)
   const [tab, setTab] = useState<'prehled' | 'sablony' | 'smlouvy' | 'archiv' | 'vizual'>('prehled')
   const [contracts, setContracts] = useState<Contract[]>(initialContracts)
   const [filter, setFilter] = useState<ContractStatus | 'ALL'>('ALL')
@@ -138,6 +145,12 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
   const [createEmployee, setCreateEmployee] = useState('')
   const [createNotes, setCreateNotes] = useState('')
 
+  const draftModel = useMemo(() => createTemplate ? contractDocModel({
+    id: 'draft', templateId: createTemplate.id, templateName: createTemplate.name, employeeId: 'new', employeeName: createEmployee,
+    status: 'DRAFT', createdAt: new Date(), sentToManagementAt: null, managementSignedAt: null, managementSignedBy: null,
+    sentToEmployeeAt: null, employeeSignedAt: null, values: { ...createValues, JMENO: createValues.JMENO || createEmployee }, notes: null,
+  }, createTemplate) : null, [createTemplate, createEmployee, createValues])
+
   const filtered = filter === 'ALL' ? contracts : contracts.filter(c => c.status === filter)
 
   function advance(id: string) {
@@ -194,7 +207,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
         {([['prehled', 'Přehled smluv'], ['smlouvy', 'Nová ze šablony'], ['sablony', 'Šablony'], ['vizual', 'Vizuál PDF']] as const).map(([id, label]) => (
           <button
             key={id}
-            onClick={() => { setTab(id); setCreateStep(null) }}
+            onClick={() => { setTab(id); setCreateStep(null); setEditing(null) }}
             className={`flex-1 py-2 text-sm font-medium  transition-all ${
               tab === id ? 'bg-navy text-white' : 'text-navy/60 hover:text-navy'
             }`}
@@ -208,32 +221,41 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
       {tab === 'prehled' && <ContractOverview />}
 
       {/* Šablony */}
-      {tab === 'sablony' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {templates.map(tpl => (
-            <div key={tpl.id} className="bg-white border border-[rgba(13,33,79,0.14)] p-5 flex flex-col gap-3">
-              <div className="flex items-start justify-between gap-2">
-                <div className="w-10 h-10 bg-violet/10 flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-5 h-5 text-violet" />
+      {tab === 'sablony' && editing && (
+        <TemplateEditor template={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />
+      )}
+      {tab === 'sablony' && !editing && (
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-sm text-navy/60 flex-1 min-w-[240px]">Šablony smluv, ze kterých vytváříš smlouvy. Nahraj vlastní z Wordu nebo textu — vzhled dodá šablona 4Bros 2026 a vpravo hned uvidíš náhled.</p>
+            <button type="button" onClick={() => setEditing('new')} className="inline-flex items-center gap-2 bg-navy text-white px-4 py-2 text-sm font-semibold hover:bg-violet"><Upload className="w-4 h-4" />Nahrát šablonu</button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {templates.map(tpl => (
+              <div key={tpl.id} className="bg-white border border-[rgba(13,33,79,0.14)] p-5 flex flex-col gap-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="w-10 h-10 bg-alice flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-5 h-5 text-navy" />
+                  </div>
+                  <span className="flex items-center gap-1.5">
+                    {tpl.custom && <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-violet">Vlastní</span>}
+                    <span className={`text-xs px-2 py-0.5 font-medium ${TYPE_COLOR[tpl.type] ?? 'bg-slate-100 text-slate-600'}`}>{tpl.type === 'ICO' ? 'IČO' : tpl.type === 'DPC' ? 'DPČ' : tpl.type}</span>
+                  </span>
                 </div>
-                <span className={`text-xs px-2 py-0.5 font-medium ${TYPE_COLOR[tpl.type] ?? 'bg-slate-100 text-slate-600'}`}>{tpl.type}</span>
+                <div>
+                  <p className="font-headline font-semibold text-navy">{tpl.name}</p>
+                  {tpl.description && <p className="text-xs text-navy/50 mt-1 leading-relaxed">{tpl.description}</p>}
+                </div>
+                <div className="flex items-center justify-between gap-3 mt-auto pt-2 border-t border-[rgba(13,33,79,0.06)]">
+                  <span className="text-xs text-navy/45">{tpl.placeholders.length} polí</span>
+                  <span className="flex items-center gap-3">
+                    <button onClick={() => setEditing(tpl)} className="text-xs font-semibold text-navy/60 hover:text-violet">Upravit · náhled</button>
+                    <button onClick={() => openCreate(tpl)} className="flex items-center gap-1 text-xs font-semibold text-violet hover:text-navy"><Plus className="w-3.5 h-3.5" />Použít šablonu</button>
+                  </span>
+                </div>
               </div>
-              <div>
-                <p className="font-headline font-semibold text-navy">{tpl.name}</p>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{tpl.description}</p>
-              </div>
-              <div className="flex items-center justify-between mt-auto pt-2 border-t border-slate-50">
-                <span className="text-xs text-slate-400">{tpl.placeholders.length} polí</span>
-                <button
-                  onClick={() => openCreate(tpl)}
-                  className="flex items-center gap-1.5 text-xs font-medium text-violet hover:text-violet/80 transition-colors"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  Použít šablonu
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
@@ -412,6 +434,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
             </div>
           </div>
 
+          <div className="grid lg:grid-cols-[minmax(320px,0.9fr)_minmax(0,1.1fr)] gap-5 items-start">
           <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6 space-y-5">
             {/* Employee */}
             <div>
@@ -429,17 +452,18 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
             </div>
 
             {/* Placeholders */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {createTemplate.placeholders.map(key => (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              {/* zaměstnavatele doplní šablona sama, jméno se bere z výběru zaměstnance */}
+              {createTemplate.placeholders.filter(k => k !== 'ZAMESTNAVATEL' && k !== 'JMENO').map(key => (
                 <div key={key}>
                   <label className="block text-xs font-medium text-slate-500 mb-1">
-                    {PLACEHOLDER_LABELS[key] ?? key}
+                    {PLACEHOLDER_LABELS[key] ?? placeholderLabel(key, createTemplate.labels)}
                   </label>
                   <input
                     className="input"
                     value={createValues[key] ?? ''}
                     onChange={e => setCreateValues(v => ({ ...v, [key]: e.target.value }))}
-                    placeholder={`{{${key}}}`}
+                    placeholder={placeholderLabel(key, createTemplate.labels)}
                   />
                 </div>
               ))}
@@ -457,22 +481,19 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
               />
             </div>
 
-            {/* Preview snippet */}
-            <div className="border border-slate-100 overflow-hidden">
-              <div className="bg-slate-50 px-4 py-2 border-b border-slate-100">
-                <p className="text-xs font-medium text-slate-500">Náhled smlouvy</p>
-              </div>
-              <div
-                className="px-5 py-4 prose prose-sm max-w-none text-navy text-sm max-h-48 overflow-y-auto"
-                dangerouslySetInnerHTML={{
-                  __html: createTemplate.body.replace(/\{\{(\w+)\}\}/g, (_, k) =>
-                    createValues[k]
-                      ? `<strong class="text-violet">${createValues[k]}</strong>`
-                      : `<span class="text-slate-300">{{${k}}}</span>`
-                  )
-                }}
-              />
+          </div>
+
+
+          {/* živý náhled — mění se, jak se vyplňuje */}
+          <div className="bg-white border border-[rgba(13,33,79,0.14)] lg:sticky lg:top-4">
+            <div className="px-5 py-3 border-b border-[rgba(13,33,79,0.08)]">
+              <p className="font-headline text-navy text-[15px]" style={{ fontWeight: 600 }}>Náhled smlouvy</p>
+              <p className="text-xs text-navy/55">Takhle bude vypadat · žlutě = ještě nevyplněno</p>
             </div>
+            <div className="bg-[#ebe8f6] lg:max-h-[calc(100vh-140px)] overflow-y-auto">
+              {draftModel && <ContractDocPreview model={draftModel} />}
+            </div>
+          </div>
           </div>
 
           <div className="flex justify-end gap-3">

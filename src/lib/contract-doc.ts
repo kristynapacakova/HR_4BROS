@@ -31,10 +31,13 @@ export interface DocParty {
   rows: [string, string][] // [popisek, údaj]
   alias: string // „Zaměstnavatel“
 }
+export interface DocArticleItem {
+  kind: 'pt' | 'p' | 'li' // pt = číslovaný bod 1.1, p = odstavec bez čísla, li = odrážka ■
+  html: string
+}
 export interface DocArticle {
   title: string
-  intro?: string // úvodní odstavec bez čísla
-  points: string[] // HTML jednotlivých bodů 1.1, 1.2…
+  items: DocArticleItem[]
 }
 export interface DocSignature {
   place: string
@@ -77,8 +80,12 @@ const LABELS: Record<string, string> = {
   DATUM_UCINNOSTI: 'datum účinnosti', NOVA_MZDA: 'nová mzda',
 }
 /** {{KLIC}} → hodnota, prázdné → [popisek k doplnění] (žlutě). */
-export function fillValues(body: string, values: Record<string, string>): string {
-  return body.replace(/\{\{(\w+)\}\}/g, (_, k) => (values[k]?.trim() ? esc(values[k]) : `[${LABELS[k] ?? k.toLowerCase().replace(/_/g, ' ')}]`))
+export function fillValues(body: string, values: Record<string, string>, labels: Record<string, string> = {}): string {
+  return body.replace(/\{\{(\w+)\}\}/g, (_, k) => (values[k]?.trim() ? esc(values[k]) : `[${labels[k] ?? LABELS[k] ?? k.toLowerCase().replace(/^f_/, '').replace(/_/g, ' ')}]`))
+}
+export function placeholderLabel(k: string, labels: Record<string, string> = {}): string {
+  const l = labels[k] ?? LABELS[k] ?? k.toLowerCase().replace(/^f_/, '').replace(/_/g, ' ')
+  return l.charAt(0).toUpperCase() + l.slice(1)
 }
 
 /**
@@ -93,9 +100,12 @@ export function articlesFromTemplate(filledHtml: string): { heading: string; art
     const [titleRaw, rest = ''] = part.split(/<\/h3>/i)
     const title = titleRaw.replace(/<[^>]+>/g, '').trim()
     if (/smluvní strany/i.test(title)) continue
-    const paras = (rest.match(/<p[^>]*>[\s\S]*?<\/p>/gi) ?? []).map(m => m.replace(/^<p[^>]*>|<\/p>$/gi, '').trim())
-      .filter(p => p && !/^V\s.*\sdne\s/.test(p.replace(/<[^>]+>/g, '')))
-    if (paras.length) articles.push({ title, points: paras })
+    const items = (rest.match(/<p[^>]*>[\s\S]*?<\/p>/gi) ?? []).map(m => {
+      const cls = m.match(/^<p[^>]*class="(\w+)"/i)?.[1]
+      const kind: DocArticleItem['kind'] = cls === 'li' ? 'li' : cls === 'p' ? 'p' : 'pt'
+      return { kind, html: m.replace(/^<p[^>]*>|<\/p>$/gi, '').trim() }
+    }).filter(it => it.html && !/^V\s.*\sdne\s/.test(it.html.replace(/<[^>]+>/g, '')))
+    if (items.length) articles.push({ title, items })
   }
   return { heading, articles }
 }
@@ -182,12 +192,25 @@ export function buildContractDocHtml(m: ContractDocModel, opts: { print?: boolea
   const party = (p: DocParty) => `
     <table class="party">${p.rows.map(([l, v]) => `<tr><td>${esc(l)}</td><td>${rich(v)}</td></tr>`).join('')}</table>
     <p class="alias">(dále jen „${esc(p.alias)}“)</p>`
-  const articles = m.articles.map((a, i) => `
+  const articles = m.articles.map((a, i) => {
+    let n = 0
+    let html = ''
+    let list: string[] = []
+    const flush = () => { if (list.length) { html += `<ul class="b">${list.map(l => `<li><span>${rich(l)}</span></li>`).join('')}</ul>`; list = [] } }
+    for (const it of a.items) {
+      if (it.kind === 'li') { list.push(it.html); continue }
+      flush()
+      html += it.kind === 'p'
+        ? `<p class="p">${rich(it.html)}</p>`
+        : `<div class="pt"><span class="n">${i + 1}.${++n}</span><span class="t">${rich(it.html)}</span></div>`
+    }
+    flush()
+    return `
     <section class="art">
-      <h2 class="hd"><span class="n">${i + 1}.</span><span>${rich(esc(a.title))}</span></h2>
-      ${a.intro ? `<p class="p">${rich(a.intro)}</p>` : ''}
-      ${a.points.map((p, j) => `<div class="pt"><span class="n">${i + 1}.${j + 1}</span><span class="t">${rich(p)}</span></div>`).join('')}
-    </section>`).join('')
+      <h2 class="hd"><span class="n">${i + 1}.</span><span>${rich(a.title)}</span></h2>
+      ${html}
+    </section>`
+  }).join('')
   const sigs = m.signatures.map(s => `
     <div class="sig">
       <p>V ${rich(esc(s.place))} dne ${rich(esc(s.date))}</p>

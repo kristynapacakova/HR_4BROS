@@ -147,3 +147,12 @@ Podklad od HR: `HR | 4B smlouvy/4Bros_sablona_dokumentu` (SABLONA_4Bros.md, Vzor
 - Pozadí: `public/brand/doc/bg_cover.png` (titulka), `bg_page.png` (náhled dalších stran). V tisku se logo + slogan opakují jako hlavička tabulky a schody jako `position: fixed`.
 - Ostrá verze: PDF/DOCX pro archiv a e-podpis generovat na serveru stejnou šablonou — buď headless Chrome z tohoto HTML,
   nebo generátorem z `technicka_sablona` (docx 9.6.1 + finalize.py přes LibreOffice). Výstup musí odpovídat Vzor_dokumentu_4Bros.pdf.
+
+## Šablony nahrané HR a živý náhled
+- **Šablony → Nahrát šablonu**: Word (.docx) nebo text (.txt / .md). Z Wordu se převezme jen znění — titulní strana, smluvní strany, věty velkými písmeny a podpisy se vynechají (dělá je šablona 4Bros). Čtení .docx je v prohlížeči bez knihovny (`src/lib/template-text.ts`).
+- Editor: vlevo název, typ, popis a text v jednoduchém formátu (`# název`, `## článek`, `1.1 bod`, `- odrážka`, `**tučně**`, `[pole k doplnění]`), vpravo živý náhled ve vizuálu 4Bros. Vestavěné šablony jde upravit, vlastní i smazat.
+- `[Jméno a příjmení]` v textu = pole k doplnění: uloží se jako `{{F_JMENO_A_PRIJMENI}}` + popisek v `labels`; při vytváření smlouvy se nabídne jako políčko.
+- **Nová ze šablony / Použít šablonu**: vlevo formulář, vpravo živý náhled smlouvy (mění se při psaní, nevyplněné žlutě).
+- Typ šablony určuje smluvní strany: IČO = Objednatel / Poskytovatel (IČO, místo podnikání), ostatní = Zaměstnavatel / Zaměstnanec.
+- Demo ukládá šablony do localStorage (`fb-contract-templates`). Ostrá verze: tabulka ContractTemplate s verzováním — smlouva si drží verzi šablony, ze které vznikla.
+

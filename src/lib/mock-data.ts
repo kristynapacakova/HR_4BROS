@@ -710,6 +710,10 @@ export interface ContractTemplate {
   description: string
   body: string
   placeholders: string[]
+  /** popisky polí k doplnění z nahrané šablony ([Jméno a příjmení] → F_JMENO_A_PRIJMENI) */
+  labels?: Record<string, string>
+  /** vlastní šablona nahraná HR (uložená mimo kód) */
+  custom?: boolean
   createdAt: Date
 }
 
