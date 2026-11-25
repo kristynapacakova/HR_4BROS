@@ -102,6 +102,29 @@ Roční budget na člověka (výchozí 10 000 Kč), žádosti `title`, `amount`,
 - ⚠️ Zaměstnanec nemá kde žádost podat (UI chybí). Budget není vázaný na rok, schválení nehlídá zůstatek.
 - ⚠️ `/admin/benefity` a `/admin/vzdelavani` nejsou v menu.
 
+## Faktury od 4Bros pro OSVČ — nájem a občerstvení (`src/lib/fakturoid.ts`)
+
+Směr: **4Bros → OSVČ** (OSVČ platí 4Bros za kancelářské místo a občerstvení). Neplést s fakturou OSVČ za odměnu (OSVČ → 4Bros).
+
+| pole | význam |
+|---|---|
+| id, personId, month, year | jedna faktura na uživatele a měsíc (unikátní klíč — opakované spuštění nic nezdvojí) |
+| number | číslo z Fakturoidu |
+| issuedOn, dueOn | vystaveno 1. den měsíce, splatnost 14 dní (nastavení) |
+| lines[] | „Nájem kancelářského místa“ (officeAmount) a „Občerstvení“ (refreshAmount), 1 měs; položka s 0 / prázdná se vynechá |
+| total | součet položek (+ DPH podle nastavení účtu ve Fakturoidu — k rozhodnutí) |
+| status | PAID (zaplacena) / UNPAID (nezaplacena) / OVERDUE (po splatnosti) — z Fakturoidu |
+| paidOn | datum úhrady z Fakturoidu (napárovaného na banku) |
+| fakturoidId, pdfUrl | pro otevření / stažení PDF přes server |
+
+Pravidla:
+- Částky zadává HR v **Admin panel → Uživatelé → rozbalit IČaře → Kancelář / Občerstvení**. Platí částka v den vystavení; změna se projeví od další faktury, vystavené se nemění.
+- Každý měsíc 1. den cron v aplikaci vystaví přes API Fakturoidu fakturu všem **aktivním** OSVČ, kteří mají aspoň jednu částku > 0. Fakturoid ji pošle e-mailem.
+- Uživatel vidí své faktury v **Moje odměna → Faktury od 4Bros** (a u měsíce v Přehledu faktur): otevřít, stáhnout PDF, stav zaplacena / nezaplacena / po splatnosti, „K úhradě X Kč“.
+- HR vidí všechny v **Přehled odměn → Faktury za kancelář** (po měsících, kolik vystaveno a nezaplaceno). Ruční přepnutí stavu je jen v demu — v ostré verzi stav přichází z Fakturoidu.
+- Technika napojení (OAuth, endpointy, webhook, idempotence) je popsaná v hlavičce `src/lib/fakturoid.ts`.
+- K rozhodnutí: DPH na položkách; zda se faktura posílá i při nástupu v půlce měsíce (poměrná částka?); co s fakturou po deaktivaci uživatele v průběhu měsíce.
+
 ## Pravidla
 
 | # | Pravidlo | Kdo | Kde |

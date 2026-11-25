@@ -1,7 +1,9 @@
 'use client'
 
+import { MyOfficeInvoices, OfficeInvoiceModal, OfficeInvoiceStatusTag, useOfficeInvoices } from '@/components/OfficeInvoices'
+
 import { useEffect, useRef, useState } from 'react'
-import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell, Receipt, Upload, CheckCircle2, XCircle, Trash2, Pencil, Plane } from 'lucide-react'
+import { Banknote, ChevronDown, TrendingUp, Clock, Download, Stethoscope, Dumbbell, Receipt, Upload, CheckCircle2, XCircle, Trash2, Pencil, Plane, Eye } from 'lucide-react'
 import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
@@ -76,7 +78,8 @@ function InvoiceStatusBadge({ status }: { status: InvoicePaymentStatus }) {
   return <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${style}`}>{INVOICE_STATUS_LABELS[status]}</span>
 }
 
-function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses, icoExpenses }: {
+function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses, icoExpenses, personId }: {
+  personId?: string
   p: Payslip
   benefitType: BenefitType | null
   sportRequests: { employeeId: string; month: number; year: number; status: string }[]
@@ -94,8 +97,12 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
     benefitType === 'SPORT_CONTRIBUTION' && monthSportApproved ? SPORT_CONTRIBUTION_AMOUNT :
     benefitType === 'MULTISPORT' ? -(MULTISPORT_MONTHLY_COST - SPORT_CONTRIBUTION_AMOUNT) :
     0
-  const officeAmount = icoExpenses.find((e) => e.label.includes('kancel'))?.amount ?? 0
-  const refreshAmount = icoExpenses.find((e) => e.label.includes('erstven'))?.amount ?? 0
+  // faktura od 4Bros (Fakturoid) za tento měsíc — částky podle toho, co má HR vyplněné v Admin → Uživatelé
+  const officeInvoice = useOfficeInvoices(personId).find(i => i.month === p.month && i.year === p.year)
+  const [showInvoice, setShowInvoice] = useState(false)
+  const lineOf = (name: string) => officeInvoice?.lines.find(l => l.name.includes(name))?.unitPrice
+  const officeAmount = officeInvoice ? lineOf('kancel') ?? 0 : icoExpenses.find((e) => e.label.includes('kancel'))?.amount ?? 0
+  const refreshAmount = officeInvoice ? lineOf('erstven') ?? 0 : icoExpenses.find((e) => e.label.includes('erstven'))?.amount ?? 0
   const officeInvoiceTotal = officeAmount + refreshAmount
   const otherItems = [
     ...(sportAmount !== 0 ? [{ label: sportAmount > 0 ? 'Příspěvek na sport' : 'Multisport — doplatek', amount: sportAmount }] : []),
@@ -160,15 +167,18 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
               </div>
               <div className="flex items-center justify-between gap-4 pt-2 border-t border-white">
                 <span className="text-slate-500 flex items-center gap-1.5">
-                  Faktura — nájem kancelářského místa a občerstvení
-                  <button type="button" title="Stáhnout fakturu (z Fakturoidu)" className="text-slate-400 hover:text-violet transition-colors">
-                    <Download className="w-3.5 h-3.5" />
-                  </button>
+                  Faktura od 4Bros — nájem kancelářského místa a občerstvení{officeInvoice ? ` · ${officeInvoice.number}` : ''}
+                  {officeInvoice && (
+                    <button type="button" onClick={(e) => { e.stopPropagation(); setShowInvoice(true) }} title="Otevřít fakturu" className="text-slate-400 hover:text-violet transition-colors">
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </span>
                 <span className="flex items-center gap-2 flex-shrink-0">
-                  <span className="font-medium text-green-600">+{fmt(officeInvoiceTotal, 'CZK')}</span>
-                  <InvoiceStatusBadge status={officeStatus} />
+                  <span className="font-medium text-navy">{fmt(officeInvoiceTotal, 'CZK')}</span>
+                  {officeInvoice ? <OfficeInvoiceStatusTag status={officeInvoice.status} /> : <InvoiceStatusBadge status={officeStatus} />}
                 </span>
+                {showInvoice && officeInvoice && <OfficeInvoiceModal inv={officeInvoice} onClose={() => setShowInvoice(false)} />}
               </div>
               {otherItems.length > 0 && (
                 <div className="pt-2 border-t border-white space-y-1.5">
@@ -190,7 +200,8 @@ function IcoMonthRow({ p, benefitType, sportRequests, expenseRequests, employeeI
   )
 }
 
-function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses, icoExpenses }: {
+function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseRequests, employeeId, invoiceStatuses, icoExpenses, personId }: {
+  personId?: string
   year: number
   payslips: Payslip[]
   benefitType: BenefitType | null
@@ -223,7 +234,7 @@ function IcoYearTable({ year, payslips, benefitType, sportRequests, expenseReque
         </thead>
         <tbody className="divide-y divide-slate-50">
           {allMonths.map((p) => (
-            <IcoMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeId={employeeId} invoiceStatuses={invoiceStatuses} icoExpenses={icoExpenses} />
+            <IcoMonthRow key={p.id} p={p} benefitType={benefitType} sportRequests={sportRequests} expenseRequests={expenseRequests} employeeId={employeeId} invoiceStatuses={invoiceStatuses} icoExpenses={icoExpenses} personId={personId} />
           ))}
         </tbody>
       </table>
@@ -1004,6 +1015,7 @@ export function PayslipsClient({
               employeeId={employeeId}
               invoiceStatuses={invoiceStatuses}
               icoExpenses={icoExpenses}
+              personId={personId}
             />
           ) : (
             <HppYearTable
@@ -1021,6 +1033,9 @@ export function PayslipsClient({
           <div className="px-6 py-10 text-center text-slate-400 text-sm">Zatím nejsou k dispozici žádné záznamy.</div>
         )}
       </div>
+
+      {/* faktury od 4Bros za nájem a občerstvení (Fakturoid) */}
+      {isICO && <MyOfficeInvoices personId={personId} />}
 
     </div>
   )

@@ -6,6 +6,8 @@ import { EmployeesListHeader } from './EmployeesListHeader'
 import { TeamLeadCell } from './TeamLeadCell'
 import { RoleCell, IcoFieldsCell } from './PersonFieldsCell'
 import { UserStatusCell, useStatusFilter } from './UserStatusCell'
+import { usePersonOverrides } from '@/components/OfficeInvoices'
+import { officeAmountsOf } from '@/lib/fakturoid'
 import { SENIORITY_LEVELS, DEMO_EMPLOYEES, TEAM_DEPARTMENTS } from '@/lib/mock-data'
 import { departmentColor } from '@/lib/team-colors'
 import { Avatar, personView, useProfiles } from '@/app/team/teamPeople'
@@ -124,6 +126,7 @@ export function EmployeesPanel(_: { employees?: DemoEmployee[] }) {
                         <RoleCell person={emp} />
                       </label>
                       {isICO && <IcoFieldsCell person={emp} />}
+                      {isICO && <InvoiceHint person={emp} />}
                       {active && (
                         <div className="ml-auto self-end">
                           <UserStatusCell person={emp} mode="action" />
@@ -142,5 +145,19 @@ export function EmployeesPanel(_: { employees?: DemoEmployee[] }) {
         )
       })}
     </div>
+  )
+}
+
+/** Kolik bude na faktuře od 4Bros (Fakturoid) — vystavuje se automaticky 1. den v měsíci. */
+function InvoiceHint({ person }: { person: DemoEmployee }) {
+  const overrides = usePersonOverrides()
+  const { office, refresh } = officeAmountsOf(person, overrides[person.id])
+  const total = office + refresh
+  return (
+    <p className="self-end pb-2 text-[11px] text-navy/55 max-w-[220px] leading-snug">
+      {total > 0
+        ? <>Fakturoid každý měsíc 1. vystaví fakturu <b className="text-navy">{new Intl.NumberFormat('cs-CZ').format(total)} Kč</b></>
+        : 'Bez nájmu a občerstvení se faktura nevystaví.'}
+    </p>
   )
 }

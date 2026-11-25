@@ -8,12 +8,14 @@ import { InvoiceOverview } from '../faktury/InvoiceOverview'
 import { ExpenseAdmin } from '../vydaje/ExpenseAdmin'
 import { PayScheduleSettings } from './PayScheduleSettings'
 import { PayslipUploadAdmin } from './PayslipUploadAdmin'
+import { OfficeInvoicesAdmin } from './OfficeInvoicesAdmin'
 import type { IcoInvoiceRecord, ExpenseRequest } from '@/lib/mock-data'
 
 const SUB_TABS = [
   { id: 'odmeny', label: 'Přehled odměn', icon: IconBanknote },
   { id: 'pasky', label: 'Výplatní pásky', icon: IconContract },
   { id: 'faktury', label: 'Přehled faktur OSVČ', icon: IconContract },
+  { id: 'kancelar', label: 'Faktury za kancelář', icon: IconReceipt },
   { id: 'doklady', label: 'Doklady k proplacení', icon: IconReceipt },
 ] as const
 type SubTabId = typeof SUB_TABS[number]['id']
@@ -61,12 +63,13 @@ export function OdmenySection({
 
       {sub === 'pasky' && <PayslipUploadAdmin />}
 
+      {sub === 'kancelar' && <OfficeInvoicesAdmin />}
+
       {sub === 'faktury' && (
         <div className="space-y-4">
           <p className="text-sm text-slate-500">
-            Faktura za nájem kancelářského místa a občerstvení chodí od OSVČ na firemní mail a časem se sem bude tahat
-            automaticky z Fakturoidu (napárovaného na banku), včetně toho, jestli je zaplacená. Zatím je to mock —
-            stav plateb nastavuje HR ručně přímo tady.
+            Faktury OSVČ za odměnu (paušál a další položky). Faktury, které 4Bros vystavuje OSVČ za nájem kancelářského
+            místa a občerstvení, jsou v záložce Faktury za kancelář. Stav plateb zatím nastavuje HR ručně přímo tady.
           </p>
           <PayScheduleSettings />
           <InvoiceOverview employees={icoEmployees} invoices={invoices} isHrReviewer />
