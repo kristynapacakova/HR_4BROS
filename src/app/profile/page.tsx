@@ -105,7 +105,7 @@ export default async function ProfilePage() {
                 monthlySalary={(user as typeof DEMO_USER).monthlySalary ?? null}
               />
             ),
-            documentsPanel: <DocumentsPanel isHPP={user.employmentType === 'HPP'} />,
+            documentsPanel: <DocumentsPanel isHPP={user.employmentType === 'HPP'} personId={teamMember?.id} />,
           }}
         />
       </Suspense>

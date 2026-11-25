@@ -1,6 +1,7 @@
 import { FileText, Download, FileCheck, Clock } from 'lucide-react'
-import { DEMO_DOCUMENTS, DEMO_CONTRACTS, CONTRACT_TEMPLATES } from '@/lib/mock-data'
+import { DEMO_DOCUMENTS, DEMO_CONTRACTS, CONTRACT_TEMPLATES, DEMO_TEAM } from '@/lib/mock-data'
 import { PayslipYearPicker } from '@/app/documents/PayslipYearPicker'
+import { MyContracts } from './MyContracts'
 import { DocumentsSigningClient } from '@/app/documents/DocumentsSigningClient'
 
 const TAG_LABEL: Record<string, string> = {
@@ -42,7 +43,7 @@ function ContractRow({ doc }: { doc: Doc & { pendingSigner?: string } }) {
   )
 }
 
-export function DocumentsPanel({ isHPP }: { isHPP: boolean }) {
+export function DocumentsPanel({ isHPP, personId }: { isHPP: boolean; personId?: string }) {
   const contracts = DEMO_DOCUMENTS
     .filter(d => d.type === 'CONTRACT')
     .sort((a, b) => TAG_ORDER.indexOf(a.tag ?? '') - TAG_ORDER.indexOf(b.tag ?? ''))
@@ -70,24 +71,13 @@ export function DocumentsPanel({ isHPP }: { isHPP: boolean }) {
 
       {/* Smlouvy čekající na podpis zaměstnance */}
       <DocumentsSigningClient
-        contracts={DEMO_CONTRACTS.filter(c => c.status === 'PENDING_EMPLOYEE' || c.status === 'SIGNED')}
+        // jen smlouvy daného člověka (ukázkové smlouvy pro „Ukázkového zaměstnance“ se nikomu neukazují)
+        contracts={DEMO_CONTRACTS.filter(c => (c.status === 'PENDING_EMPLOYEE' || c.status === 'SIGNED') && c.employeeName === DEMO_TEAM.find(m => m.id === personId)?.name)}
         templates={CONTRACT_TEMPLATES}
       />
 
-      {/* Smlouvy */}
-      <div className="bg-white border border-[rgba(13,33,79,0.14)] overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100">
-          <h3 className="font-headline font-semibold text-navy">Smlouvy</h3>
-          <p className="text-xs text-slate-400 mt-0.5">{contracts.length} dokumentů</p>
-        </div>
-        {contracts.length === 0 ? (
-          <div className="px-6 py-10 text-center text-slate-400 text-sm">Žádné dokumenty</div>
-        ) : (
-          <div className="divide-y divide-slate-50">
-            {contracts.map(doc => <ContractRow key={doc.id} doc={doc} />)}
-          </div>
-        )}
-      </div>
+      {/* Moje smlouvy — nahrané HR k tomuto člověku */}
+      <MyContracts personId={personId} />
 
       {/* Výplatní pásky — only HPP */}
       {isHPP && (

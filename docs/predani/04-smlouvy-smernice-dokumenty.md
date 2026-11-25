@@ -50,7 +50,14 @@ HR: Nová smlouva → šablona → formulář → „Uložit jako návrh“
 - Zaměstnanec simuluje podpis **vlastním certifikátem** (.p12/.pfx + PIN). Uloží se jen do obnovení stránky.
 - **K rozhodnutí:** jedna metoda podpisu (Signi / jiný poskytovatel), úroveň podpisu (prostý / zaručený / kvalifikovaný), **kdo podepisuje za firmu** (jednatel vs. HR), zpětná hlášení stavu (webhooky), uložení podepsaného PDF a auditní stopy.
 
-### Archiv PDF (HR)
+### Přehled smluv + nahrání podepsané smlouvy (HR) — `src/app/admin/smlouvy/ContractOverview.tsx`
+- Admin → Smlouvy → **Přehled smluv** (výchozí záložka): všichni lidé a všechny jejich smlouvy v jedné tabulce, souhrn **Podepsané / Čeká na podpis / Lidé bez smlouvy v portálu** (klik filtruje), filtr podle člověka.
+- **„Nahrát smlouvu“** (nebo „Nahrát“ u konkrétního člověka): soubor (PDF nebo sken), člověk, název smlouvy, typ (HPP/DPP/DPČ/IČO/Dodatek/NDA/GDPR/Jiné — předvyplní se podle typu spolupráce), stav (podepsaná / čeká na podpis), datum podpisu, poznámka. Člověk dostane notifikaci.
+- U každé smlouvy: **„Čeká na podpis · označit ✓“** → podepsaná s dnešním datem, „zrušit podpis“, otevřít, stáhnout, smazat.
+- **Zaměstnanec** vidí své smlouvy v Můj účet → Dokumenty → **Moje smlouvy** (otevřít / stáhnout).
+- Data: `StoredContract` (`src/lib/contract-file-client.ts`) — `personId`, `name`, `type`, `status` (SIGNED/UNSIGNED), `signedAt`, `notes`, soubor. Dnes v prohlížeči; po napojení tabulka Contract + soubor v úložišti. K rozhodnutí: počítat nahrané podepsané smlouvy do Přehledu plnění (dnes plnění bere smlouvy z modelu).
+
+### Archiv PDF (HR) — nahrazeno Přehledem smluv
 Nahrání hotové smlouvy: soubor PDF, název, člověk, typ (HPP / DPP / DPČ / OSVČ / Dodatek / Jiné), poznámka. ⚠️ Nic se neukládá. Zaměstnanec archiv nevidí.
 
 ### Vzhled PDF (Vizuál PDF, `fourBros_contractDesign` v prohlížeči)

@@ -1,5 +1,6 @@
 'use client'
 
+import { ContractOverview } from './ContractOverview'
 import { useState, useRef } from 'react'
 import { Contract, ContractTemplate, ContractStatus, DEMO_TEAM } from '@/lib/mock-data'
 import { ContractDetailModal } from './ContractDetailModal'
@@ -78,7 +79,7 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
   templates: ContractTemplate[]
   contracts: Contract[]
 }) {
-  const [tab, setTab] = useState<'sablony' | 'smlouvy' | 'archiv' | 'vizual'>('smlouvy')
+  const [tab, setTab] = useState<'prehled' | 'sablony' | 'smlouvy' | 'archiv' | 'vizual'>('prehled')
   const [contracts, setContracts] = useState<Contract[]>(initialContracts)
   const [filter, setFilter] = useState<ContractStatus | 'ALL'>('ALL')
   const [selected, setSelected] = useState<Contract | null>(null)
@@ -190,21 +191,21 @@ export function ContractsClient({ templates, contracts: initialContracts }: {
     <div className="space-y-5">
       {/* Tab bar */}
       <div className="flex gap-1 bg-white border border-[rgba(13,33,79,0.14)] p-1">
-        {([['smlouvy', 'Smlouvy'], ['sablony', 'Šablony'], ['archiv', 'Archiv PDF'], ['vizual', 'Vizuál PDF']] as const).map(([id, label]) => (
+        {([['prehled', 'Přehled smluv'], ['smlouvy', 'Nová ze šablony'], ['sablony', 'Šablony'], ['vizual', 'Vizuál PDF']] as const).map(([id, label]) => (
           <button
             key={id}
             onClick={() => { setTab(id); setCreateStep(null) }}
             className={`flex-1 py-2 text-sm font-medium  transition-all ${
-              tab === id ? 'bg-violet text-white shadow-sm' : 'text-slate-500 hover:text-navy'
+              tab === id ? 'bg-navy text-white' : 'text-navy/60 hover:text-navy'
             }`}
           >
             {label}
-            {id === 'archiv' && archived.length > 0 && (
-              <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 bg-violet/20 text-violet text-[10px] font-bold">{archived.length}</span>
-            )}
           </button>
         ))}
       </div>
+
+      {/* Přehled všech smluv všech lidí + nahrání podepsané smlouvy */}
+      {tab === 'prehled' && <ContractOverview />}
 
       {/* Šablony */}
       {tab === 'sablony' && (
