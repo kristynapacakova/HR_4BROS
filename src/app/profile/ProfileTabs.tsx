@@ -148,6 +148,7 @@ export function ProfileTabs({
           {stacked && sectionHeader?.('udaje', tabs[0].label, 0)}
           <ProfileForm
             layout={formLayout}
+            isHr={!!isAdmin}
             user={user}
             employment={{
               startDate: (user as { startDate?: Date | null }).startDate,

@@ -46,7 +46,7 @@ function fmtCzk(n: number) {
   return new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(n)
 }
 
-export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormProps & { layout?: 'cards' | 'facts' | 'split' }) {
+export function ProfileForm({ user, employment, layout = 'cards', isHr = false }: ProfileFormProps & { layout?: 'cards' | 'facts' | 'split'; isHr?: boolean }) {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [nickname, setNickname] = useState('')
@@ -222,15 +222,20 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
                 {INSURANCE_COMPANIES.map(i => <option key={i.code} value={i.code}>{i.code} · {i.name}</option>)}
               </select>
             </div>
+            {/* nástupní plat upravuje jen HR — zaměstnanec ho vidí jen pro čtení */}
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Nástupní plat (Kč)</label>
-              <input
-                type="number"
-                value={startingSalary}
-                onChange={(e) => setStartingSalary(e.target.value)}
-                placeholder="např. 45 000"
-                className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-              />
+              <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Nástupní plat (Kč){!isHr && <span className="ml-1.5 normal-case tracking-normal font-normal text-navy/40">· spravuje HR</span>}</label>
+              {isHr ? (
+                <input
+                  type="number"
+                  value={startingSalary}
+                  onChange={(e) => setStartingSalary(e.target.value)}
+                  placeholder="např. 45 000"
+                  className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                />
+              ) : (
+                <p className="py-2 text-sm font-semibold text-navy">{startSalaryNum ? fmtCzk(startSalaryNum) : '—'}</p>
+              )}
             </div>
             <div className="sm:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Aktuální plat</label>
@@ -363,15 +368,20 @@ export function ProfileForm({ user, employment, layout = 'cards' }: ProfileFormP
                 {INSURANCE_COMPANIES.map(i => <option key={i.code} value={i.code}>{i.code} · {i.name}</option>)}
               </select>
             </div>
+            {/* nástupní plat upravuje jen HR — zaměstnanec ho vidí jen pro čtení */}
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Nástupní plat (Kč)</label>
-              <input
-                type="number"
-                value={startingSalary}
-                onChange={(e) => setStartingSalary(e.target.value)}
-                placeholder="např. 45 000"
-                className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-              />
+              <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Nástupní plat (Kč){!isHr && <span className="ml-1.5 normal-case tracking-normal font-normal text-navy/40">· spravuje HR</span>}</label>
+              {isHr ? (
+                <input
+                  type="number"
+                  value={startingSalary}
+                  onChange={(e) => setStartingSalary(e.target.value)}
+                  placeholder="např. 45 000"
+                  className="w-full px-3 py-2 border text-sm bg-white border-slate-200 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
+                />
+              ) : (
+                <p className="py-2 text-sm font-semibold text-navy">{startSalaryNum ? fmtCzk(startSalaryNum) : '—'}</p>
+              )}
             </div>
             <div className="sm:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Aktuální plat</label>

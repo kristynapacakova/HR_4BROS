@@ -35,7 +35,7 @@ Seznam věcí, které dnes aplikace jen simuluje nebo kde chybí rozhodnutí. Vy
 | P8 | Ukládat **verze směrnic** a u potvrzení verzi? (otisk `documentHash` už se ukládá) | |
 | P8b | Které směrnice podepisovat přes DocuSeal (BOZP? všechny?) — volí HR u každé směrnice | |
 | P9 | Změny osobních údajů (bankovní účet, jméno, adresa) — rovnou, nebo **přes schválení HR**? | |
-| P10 | Kdo zadává **nástupní plat** (dnes zaměstnanec) | |
+| P10 | Kdo zadává **nástupní plat**? | ✅ **Jen HR** — zaměstnanec ho v Můj účet vidí jen pro čtení („spravuje HR“) |
 | P11 | **Onboarding** — checklist úkolů na člověka, nebo jen počítané úkoly na Dashboardu? | |
 | P12 | Smlouvy — zavést **storno / zamítnutí / vrácení k úpravě / verze**? | |
 | P13 | Majetek — **historie výpůjček a předávací protokol**? | |

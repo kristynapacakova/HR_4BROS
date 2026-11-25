@@ -72,14 +72,14 @@
 | Telefon | člověk | ne | — |
 | Bankovní účet | člověk | ne | ne pro OSVČ (⚠️ popisek „IBAN“, data `číslo/banka`) |
 | Zdravotní pojišťovna | člověk | ne | HPP/DPP/DPČ |
-| Nástupní plat | člověk ⚠️ | ne | HPP/DPP/DPČ |
+| Nástupní plat | ✅ **jen HR** (zaměstnanec jen čte, „spravuje HR“) | ne | HPP/DPP/DPČ |
 | Aktuální plat + „+X % od nástupu“ | jen čtení | — | HPP/DPP/DPČ |
 | Školení BOZP | „Označit jako splněné“ | ano (prohlížeč) | HPP/DPP/DPČ (⚠️ OSVČ blok nevidí) |
 | Adresa, nouzový kontakt | člověk | ne | — |
 | Karta „Ve 4Bros — spravuje HR“ | jen čtení: e-mail, tým, pozice, typ spolupráce, nástup, smlouva | — | — |
 | HR údaje (seniorita, úvazek, mzda…) | jen HR, jen na vlastním profilu, neukládá se | — | HR |
 
-**K rozhodnutí:** které změny jdou rovnou a které přes schválení HR (bankovní účet, jméno, adresa); kdo zadává nástupní plat (logicky HR).
+**K rozhodnutí:** které změny jdou rovnou a které přes schválení HR (bankovní účet, jméno, adresa). Nástupní plat zadává jen HR (rozhodnuto).
 
 ## Narozeniny, výročí, nováčci
 | | Pravidlo |
