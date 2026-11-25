@@ -118,17 +118,12 @@ export function EmployeesPanel(_: { employees?: DemoEmployee[] }) {
 
                 {open && (
                   <div className="px-5 pb-4">
-                    <div className="ml-12 bg-alice/60 border border-[rgba(13,33,79,0.08)] px-4 py-3 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+                    <div className="ml-12 bg-alice/60 border border-[rgba(13,33,79,0.08)] px-4 py-3 flex flex-wrap items-end gap-x-5 gap-y-3 text-sm">
                       <label className="block">
                         <span className="block text-[10px] font-bold uppercase tracking-[0.06em] text-navy/55 mb-1">Role</span>
                         <RoleCell person={emp} />
                       </label>
-                      {isICO && (
-                        <div>
-                          <span className="block text-[10px] font-bold uppercase tracking-[0.06em] text-navy/55 mb-1">OSVČ — IČO / kancelář / občerstvení</span>
-                          <IcoFieldsCell person={emp} />
-                        </div>
-                      )}
+                      {isICO && <IcoFieldsCell person={emp} />}
                       {active && (
                         <div className="ml-auto self-end">
                           <UserStatusCell person={emp} mode="action" />

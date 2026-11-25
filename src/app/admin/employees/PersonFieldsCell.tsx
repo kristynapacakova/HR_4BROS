@@ -27,7 +27,7 @@ export function RoleCell({ person }: { person: PersonRecord }) {
     <select
       value={current}
       onChange={(e) => savePersonOverride(person.id, { role: e.target.value as PersonRecord['role'] })}
-      className="text-xs border border-slate-200 px-2 py-1.5 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent bg-white"
+      className="h-9 text-sm border border-[rgba(13,33,79,0.2)] bg-white px-3 text-navy focus:outline-none focus:border-violet"
     >
       {Object.entries(PERSON_ROLE_LABELS).map(([value, label]) => (
         <option key={value} value={value}>{label}</option>
@@ -72,38 +72,30 @@ export function IcoFieldsCell({ person }: { person: PersonRecord }) {
   useEffect(() => { setOffice(officeAmount ?? '') }, [officeAmount])
   useEffect(() => { setRefresh(refreshAmount ?? '') }, [refreshAmount])
 
+  // IČO, kancelář a občerstvení vedle sebe — každé pole s vlastním popiskem
   return (
-    <div className="flex flex-col gap-1">
-      <input
-        type="text"
-        value={ico}
-        placeholder="IČO"
-        onChange={(e) => setIco(e.target.value)}
-        onBlur={() => savePersonOverride(person.id, { icoNumber: ico || null })}
-        className="w-28 text-xs border border-slate-200 px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-      />
-      <div className="flex items-center gap-1">
-        <input
-          type="number"
-          min={0}
-          value={office}
-          placeholder="kancelář Kč"
-          title="Nájem kancelářského místa (Kč/měsíc)"
+    <>
+      <label className="block">
+        <span className="block text-[10px] font-bold uppercase tracking-[0.06em] text-navy/55 mb-1">IČO</span>
+        <input type="text" inputMode="numeric" value={ico} placeholder="12345678"
+          onChange={(e) => setIco(e.target.value)}
+          onBlur={() => savePersonOverride(person.id, { icoNumber: ico || null })}
+          className="w-32 h-9 text-sm border border-[rgba(13,33,79,0.2)] bg-white px-3 text-navy focus:outline-none focus:border-violet" />
+      </label>
+      <label className="block">
+        <span className="block text-[10px] font-bold uppercase tracking-[0.06em] text-navy/55 mb-1">Kancelář (Kč / měs)</span>
+        <input type="number" min={0} value={office} placeholder="0"
           onChange={(e) => setOffice(e.target.value === '' ? '' : Number(e.target.value))}
           onBlur={() => savePersonOverride(person.id, { officeAmount: office === '' ? null : Number(office) })}
-          className="w-20 text-xs border border-slate-200 px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-        />
-        <input
-          type="number"
-          min={0}
-          value={refresh}
-          placeholder="obč. Kč"
-          title="Občerstvení (Kč/měsíc)"
+          className="w-32 h-9 text-sm border border-[rgba(13,33,79,0.2)] bg-white px-3 text-navy focus:outline-none focus:border-violet" />
+      </label>
+      <label className="block">
+        <span className="block text-[10px] font-bold uppercase tracking-[0.06em] text-navy/55 mb-1">Občerstvení (Kč / měs)</span>
+        <input type="number" min={0} value={refresh} placeholder="0"
           onChange={(e) => setRefresh(e.target.value === '' ? '' : Number(e.target.value))}
           onBlur={() => savePersonOverride(person.id, { refreshAmount: refresh === '' ? null : Number(refresh) })}
-          className="w-16 text-xs border border-slate-200 px-2 py-1 text-navy focus:outline-none focus:ring-2 focus:ring-violet focus:border-transparent"
-        />
-      </div>
-    </div>
+          className="w-32 h-9 text-sm border border-[rgba(13,33,79,0.2)] bg-white px-3 text-navy focus:outline-none focus:border-violet" />
+      </label>
+    </>
   )
 }
