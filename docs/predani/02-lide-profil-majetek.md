@@ -23,7 +23,7 @@
 | annualLeaveDays | dny | nárok na dovolenou (OSVČ null) | HR |
 | contractTermType, contractEndDate | URCITA / NEURCITA, datum | smlouva | HR (⚠️ patří spíš ke smlouvě) |
 
-**Pole, která v záznamu člověka chybí a je potřeba je doplnit:** telefon, adresa, město, stát, bankovní účet, DIČ, nouzový kontakt (jméno, telefon, vztah), zdravotní pojišťovna, nástupní plat (⚠️ dnes ho zadává sám zaměstnanec), přezdívka, **datum odchodu / stav aktivní** (bez toho nejde spočítat fluktuace).
+**Pole, která v záznamu člověka chybí a je potřeba je doplnit:** **Slack ID** (pro tlačítko „Napiš na Slacku“ u kontaktu na HR — odkaz `https://<workspace>.slack.com/team/<ID>`; jde načíst ze Slacku podle e-mailu), telefon, adresa, město, stát, bankovní účet, DIČ, nouzový kontakt (jméno, telefon, vztah), zdravotní pojišťovna, nástupní plat (⚠️ dnes ho zadává sám zaměstnanec), přezdívka, **datum odchodu / stav aktivní** (bez toho nejde spočítat fluktuace).
 
 ### Odvozené hodnoty
 | Hodnota | Výpočet | Kde |

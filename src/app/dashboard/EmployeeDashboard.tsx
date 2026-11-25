@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, type ReactNode } from 'react'
-import { Mail, Phone } from 'lucide-react'
+import { MessageSquare, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { DEMO_TEAM } from '@/lib/mock-data'
 import { Avatar, personView, plural, useProfiles } from '@/app/team/teamPeople'
@@ -26,7 +26,8 @@ export interface EmployeeDashData {
   anniversaries: { id: string; years: number; inDays: number; date: string }[]
   newcomers: { id: string; since: string }[]
   news: { id: string; title: string; category: string; date: string; mine: boolean }[]
-  hrContact?: { id: string; email: string; phone?: string }
+  /** slackUrl = odkaz na přímou zprávu (https://<workspace>.slack.com/team/<ID> nebo slack://user?team=…&id=…) */
+  hrContact?: { id: string; email: string; phone?: string; slackUrl?: string }
   payNext: PayNext
   /** poslední BOZP ze zdroje dat (YYYY-MM-DD) */
   bozpCompletedAt: string | null
@@ -312,8 +313,9 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
                 </span>
               </div>
               <div className={`grid gap-2 mt-3 ${data.hrContact.phone ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                <a href={`mailto:${data.hrContact.email}`} title={data.hrContact.email} className="flex items-center justify-center gap-2 bg-white hover:bg-navy hover:text-white text-navy text-[13px] font-semibold py-2 transition-colors">
-                  <Mail className="w-4 h-4" /> Napsat e-mail
+                {/* bez Slack ID otevře aspoň aplikaci Slack; ID se doplní v údajích člověka */}
+                <a href={data.hrContact.slackUrl ?? 'slack://open'} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-white hover:bg-navy hover:text-white text-navy text-[13px] font-semibold py-2 transition-colors">
+                  <MessageSquare className="w-4 h-4" /> Napiš na Slacku
                 </a>
                 {data.hrContact.phone && (
                   <a href={`tel:${data.hrContact.phone.replace(/\s/g, '')}`} title={data.hrContact.phone} className="flex items-center justify-center gap-2 bg-white hover:bg-navy hover:text-white text-navy text-[13px] font-semibold py-2 transition-colors">

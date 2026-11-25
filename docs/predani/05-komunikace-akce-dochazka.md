@@ -102,6 +102,8 @@ Schvalování dovolené se přesunulo do **TrackDecku**, ale **integrace neexist
 | Nahraj svou fotku | nemám fotku | všichni |
 | Projdi školení BOZP / vyprší za N dní | BOZP chybí, propadlo, nebo vyprší do 30 dní | všichni |
 
+Kontakt na HR (karta v Novinkách od HR): první člověk s rolí HR, tlačítka **„Napiš na Slacku“** (přímá zpráva — potřebuje Slack ID člověka, bez něj otevře aplikaci Slack) a **„Zavolat“** (telefon HR). Sama HR kartu nevidí.
+
 Další prvky: pozdrav podle denní doby, oslovení přezdívkou nebo 5. pádem, „Jsi s námi X“, odpočet faktury/výplaty, karty Lidé / Kalendář akcí / Novinky od HR + kontakt na HR. Bez částek peněz (lze otevřít před kýmkoli).
 ⚠️ Úkoly HR „doklady“ a „zprávy“ čtou ukázková data, ne aktuální stav — po vyřízení nezmizí.
 
