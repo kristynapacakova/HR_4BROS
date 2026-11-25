@@ -24,6 +24,8 @@ export interface ContractDesign {
   companyName: string
   companyAddress: string
   companyIco: string
+  /** kdo za firmu podepisuje smlouvy (jednatel) */
+  signatoryName?: string
   typo: {
     heading: TypographyStyle
     subheading: TypographyStyle
@@ -47,6 +49,7 @@ export const DEFAULT_DESIGN: ContractDesign = {
   companyName: 'Four Bros s.r.o.',
   companyAddress: 'Křídlovická 371/68, 603 00 Brno',
   companyIco: '05834252',
+  signatoryName: '',
   typo: {
     heading: DEFAULT_HEADING,
     subheading: DEFAULT_SUBHEADING,
@@ -126,10 +129,10 @@ export function ContractDesignerClient() {
         <div className="bg-white border border-[rgba(13,33,79,0.14)] p-5 space-y-3">
           <h3 className="font-headline text-navy text-[15px]" style={{ fontWeight: 600 }}>Údaje firmy</h3>
           <p className="text-xs text-navy/55 -mt-2">Propíšou se do smluvních stran a patičky každé strany.</p>
-          {([['companyName', 'Obchodní firma'], ['companyIco', 'IČO'], ['companyAddress', 'Sídlo']] as const).map(([k, l]) => (
+          {([['companyName', 'Obchodní firma'], ['companyIco', 'IČO'], ['companyAddress', 'Sídlo'], ['signatoryName', 'Za firmu podepisuje (jednatel)']] as const).map(([k, l]) => (
             <label key={k} className="block">
               <span className="block text-[11px] font-bold uppercase tracking-[0.06em] text-navy/60 mb-1">{l}</span>
-              <input value={design[k]} onChange={e => update({ [k]: e.target.value } as Partial<ContractDesign>)} className={input} />
+              <input value={design[k] ?? ''} placeholder={k === 'signatoryName' ? 'jméno jednatele' : undefined} onChange={e => update({ [k]: e.target.value } as Partial<ContractDesign>)} className={input} />
             </label>
           ))}
           <div className="flex items-center gap-3 pt-1">

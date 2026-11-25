@@ -10,7 +10,7 @@ const sentence = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1).toLo
 
 export function companyFromDesign(): DocCompany {
   const d = loadDesign()
-  return { ...DOC_COMPANY_DEFAULT, name: d.companyName || DOC_COMPANY_DEFAULT.name, ico: d.companyIco || DOC_COMPANY_DEFAULT.ico, address: d.companyAddress || DOC_COMPANY_DEFAULT.address }
+  return { ...DOC_COMPANY_DEFAULT, name: d.companyName || DOC_COMPANY_DEFAULT.name, ico: d.companyIco || DOC_COMPANY_DEFAULT.ico, address: d.companyAddress || DOC_COMPANY_DEFAULT.address, signatory: d.signatoryName?.trim() || '' }
 }
 
 /** Smlouva (šablona + vyplněné hodnoty) → model dokumentu ve vzhledu šablony 4Bros 2026. */
@@ -32,18 +32,18 @@ export function contractDocModel(contract: Contract, template: ContractTemplate 
     intro: `${docName}${isAddendum && v.CISLO_DODATKU ? ` č. ${v.CISLO_DODATKU}` : ''} uzavřená mezi těmito smluvními stranami`,
     parties: isIco
       ? [
-          { rows: [['Obchodní firma:', company.name], ['IČO:', company.ico], ['Sídlo:', company.address], ['Zastoupená:', contract.managementSignedBy ?? '[jméno jednatele]']], alias: 'Objednatel' },
+          { rows: [['Obchodní firma:', company.name], ['IČO:', company.ico], ['Sídlo:', company.address], ['Zastoupená:', contract.managementSignedBy ?? (company.signatory || '[jméno jednatele]')]], alias: 'Objednatel' },
           { rows: [['Jméno a příjmení:', contract.employeeName || '[Jméno a příjmení]'], ['IČO:', v.ICO?.trim() || '[IČO]'], ['Místo podnikání:', v.MISTO_PODNIKANI?.trim() || '[místo podnikání]']], alias: 'Poskytovatel' },
         ]
       : [
-          { rows: [['Obchodní firma:', company.name], ['IČO:', company.ico], ['Sídlo:', company.address], ['Zastoupená:', contract.managementSignedBy ?? '[jméno jednatele]']], alias: 'Zaměstnavatel' },
+          { rows: [['Obchodní firma:', company.name], ['IČO:', company.ico], ['Sídlo:', company.address], ['Zastoupená:', contract.managementSignedBy ?? (company.signatory || '[jméno jednatele]')]], alias: 'Zaměstnavatel' },
           { rows: [['Jméno a příjmení:', contract.employeeName || '[Jméno a příjmení]'], ['Datum narození:', '[datum narození]'], ['Bydliště:', '[adresa]'], ...(v.POZICE ? [['Pozice:', v.POZICE] as [string, string]] : [])], alias: 'Zaměstnanec' },
         ],
     lead: isAddendum ? 'Smluvní strany uzavírají tento dodatek:' : 'Smluvní strany uzavírají tuto smlouvu:',
     articles,
     closing: 'Smluvní strany prohlašují, že si dokument přečetly, souhlasí s ním a na důkaz toho připojují své podpisy.',
     signatures: [
-      { place, date, party: isIco ? 'Objednatel' : 'Zaměstnavatel', name: contract.managementSignedBy ?? '[Jméno a příjmení]', note: mgmt ? `Podepsáno elektronicky ${mgmt}` : undefined },
+      { place, date, party: isIco ? 'Objednatel' : 'Zaměstnavatel', name: contract.managementSignedBy ?? (company.signatory || '[Jméno a příjmení]'), note: mgmt ? `Podepsáno elektronicky ${mgmt}` : undefined },
       { place, date, party: isIco ? 'Poskytovatel' : 'Zaměstnanec', name: contract.employeeName || '[Jméno a příjmení]', note: emp ? `Podepsáno elektronicky ${emp}` : undefined },
     ],
     company,
@@ -53,4 +53,14 @@ export function contractDocModel(contract: Contract, template: ContractTemplate 
 /** Otevře smlouvu ve vzhledu šablony 4Bros 2026 a vyvolá tisk (odtud „Uložit jako PDF“). */
 export function printContract(contract: Contract, template: ContractTemplate | undefined): void {
   openContractDocPrint(contractDocModel(contract, template))
+}
+
+/** Smlouva ze šablony (Smlouvy → Nová ze šablony) — vždy ze zmrazeného znění a údajů firmy, pokud jsou uložené. */
+export function flowDocModel(c: Contract & { snapshot?: Omit<ContractTemplate, 'createdAt'>; company?: DocCompany }, templates: ContractTemplate[]): ContractDocModel {
+  const tpl = c.snapshot ? { ...c.snapshot, createdAt: new Date(0) } : templates.find(t => t.id === c.templateId)
+  return contractDocModel(c, tpl, c.company ?? companyFromDesign())
+}
+/** Stáhnout PDF (otevře tisk → Uložit jako PDF). */
+export function printFlowContract(c: Contract & { snapshot?: Omit<ContractTemplate, 'createdAt'>; company?: DocCompany }, templates: ContractTemplate[]) {
+  openContractDocPrint(flowDocModel(c, templates))
 }

@@ -2,7 +2,9 @@
 
 import { useState, useRef, useMemo } from 'react'
 import { Contract, ContractTemplate } from '@/lib/mock-data'
-import { printContract, contractDocModel } from '@/lib/print-contract'
+import { flowDocModel, printFlowContract } from '@/lib/print-contract'
+import { useFlowContracts, signAsEmployee } from '@/lib/contract-flow-client'
+import { useContractTemplates } from '@/lib/contract-template-client'
 import { ContractDocPreview } from '@/components/ContractDocPreview'
 import { Pen, X, CheckCircle2, FileText, Download, ShieldCheck, Upload, KeyRound, Loader2, BadgeCheck, AlertCircle } from 'lucide-react'
 
@@ -47,7 +49,7 @@ function SignModal({ contract, template, onSign, onClose }: {
   const [pin, setPin] = useState('')
   const [pinError, setPinError] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
-  const docModel = useMemo(() => contractDocModel(contract, template), [contract, template])
+  const docModel = useMemo(() => flowDocModel(contract, template ? [template] : []), [contract, template])
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -269,21 +271,28 @@ function SignModal({ contract, template, onSign, onClose }: {
   )
 }
 
-export function DocumentsSigningClient({ contracts, templates }: {
-  contracts: Contract[]
+export function DocumentsSigningClient({ contracts = [], templates: baseTemplates, personId }: {
+  contracts?: Contract[]
   templates: ContractTemplate[]
+  /** uživatel — smlouvy, které mu HR vytvořila a jednatel podepsal */
+  personId?: string
 }) {
-  const [list, setList] = useState(contracts)
+  const templates = useContractTemplates(baseTemplates)
+  const flow = useFlowContracts()
+  const [local, setLocal] = useState(contracts)
+  // jen čekající — podepsané jsou níž v Moje smlouvy (PDF ke stažení)
+  const mine = personId ? flow.filter(c => c.personId === personId && c.status === 'PENDING_EMPLOYEE') : []
+  const list: Contract[] = [...mine, ...local]
   const [signing, setSigning] = useState<Contract | null>(null)
 
   const pending = list.filter(c => c.status === 'PENDING_EMPLOYEE')
   const signed = list.filter(c => c.status === 'SIGNED')
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function doSign(id: string, certInfo: CertInfo) {
-    setList(prev => prev.map(c => c.id === id
-      ? { ...c, status: 'SIGNED' as const, employeeSignedAt: new Date() }
-      : c
-    ))
+    const f = mine.find(c => c.id === id)
+    if (f) { signAsEmployee(f); return }
+    setLocal(prev => prev.map(c => c.id === id ? { ...c, status: 'SIGNED' as const, employeeSignedAt: new Date() } : c))
   }
 
   if (pending.length === 0 && signed.length === 0) return null
@@ -309,7 +318,7 @@ export function DocumentsSigningClient({ contracts, templates }: {
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-navy">{c.templateName}</p>
               <p className="text-xs text-slate-400 mt-0.5">
-                Podepsáno vedením {c.managementSignedAt ? `(${new Date(c.managementSignedAt).toLocaleDateString('cs-CZ')})` : ''} · Čeká na váš kvalifikovaný podpis
+                Podepsáno jednatelem {c.managementSignedAt ? `(${new Date(c.managementSignedAt).toLocaleDateString('cs-CZ')})` : ''} · Čeká na váš kvalifikovaný podpis
               </p>
             </div>
             <button
@@ -335,7 +344,7 @@ export function DocumentsSigningClient({ contracts, templates }: {
               </p>
             </div>
             <button
-              onClick={() => printContract(c, templates.find(t => t.id === c.templateId))}
+              onClick={() => printFlowContract(c, templates)}
               className="flex-shrink-0 p-2 text-slate-300 hover:text-navy transition-colors"
               title="Stáhnout PDF"
             >

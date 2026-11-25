@@ -156,3 +156,14 @@ Podklad od HR: `HR | 4B smlouvy/4Bros_sablona_dokumentu` (SABLONA_4Bros.md, Vzor
 - Typ šablony určuje smluvní strany: IČO = Objednatel / Poskytovatel (IČO, místo podnikání), ostatní = Zaměstnavatel / Zaměstnanec.
 - Demo ukládá šablony do localStorage (`fb-contract-templates`). Ostrá verze: tabulka ContractTemplate s verzováním — smlouva si drží verzi šablony, ze které vznikla.
 
+## Cesta smlouvy k podpisu (`src/lib/contract-flow-client.ts`)
+1. HR: **Nová ze šablony** → vybere uživatele, druh dokumentu (= sloupec v Přehledu smluv) a vyplní pole → **Uložit jako návrh** (DRAFT).
+   Při vytvoření se **zmrazí znění šablony a údaje firmy** (`snapshot`, `company`) — pozdější úprava šablony smlouvu nezmění.
+2. **Odeslat jednateli** (PENDING_MANAGEMENT). HR za firmu nepodepisuje; jednatel je nastavený v Vizuál PDF → Údaje firmy → „Za firmu podepisuje“.
+3. **Jednatel podepíše** (v demu tlačítko) → PENDING_EMPLOYEE: smlouva přijde uživateli do **Můj účet → Dokumenty → Smlouvy k podpisu** + notifikace „Máš smlouvu k podpisu“.
+4. **Uživatel podepíše** → SIGNED: HR dostane notifikaci, smlouva je v **Přehledu smluv** (✓ ve svém sloupci) a u uživatele v **Moje smlouvy**.
+- Od kroku 2 je smlouva v Přehledu smluv jako „čeká na podpis jednatele / uživatele“ (tužka).
+- **PDF ke stažení** má HR i uživatel (Přehled smluv, Moje smlouvy, detail smlouvy) — v demu přes tisk → Uložit jako PDF; v ostré verzi PDF z e-podpisu (DocuSeal) uložené v úložišti.
+- **Po podpisu je smlouva zamčená**: nejde upravit ani smazat (v UI zámek, v kódu `isLocked`; na backendu hlídat i v API). Nepodepsanou může HR zrušit.
+- K rozhodnutí: e-podpis uživatele je v demu „kvalifikovaný certifikát“ (simulace) — sjednotit s DocuSeal jako u směrnic; jak podepisuje jednatel (DocuSeal, pořadí podpisů).
+

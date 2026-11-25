@@ -24,6 +24,8 @@ export const DOC_COMPANY_DEFAULT = {
   address: 'Křídlovická 371/68, 603 00 Brno',
   web: 'fourbros.cz',
   signPlace: 'Brně',
+  /** jednatel, který za firmu podepisuje */
+  signatory: '',
 }
 export type DocCompany = typeof DOC_COMPANY_DEFAULT
 

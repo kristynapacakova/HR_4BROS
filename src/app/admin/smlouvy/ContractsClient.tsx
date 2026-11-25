@@ -5,11 +5,17 @@ import { useState, useRef, useMemo } from 'react'
 import { Contract, ContractTemplate, ContractStatus, DEMO_TEAM } from '@/lib/mock-data'
 import { ContractDetailModal } from './ContractDetailModal'
 import { ContractDesignerClient } from './ContractDesignerClient'
-import { printContract, contractDocModel } from '@/lib/print-contract'
+import { contractDocModel, companyFromDesign, printFlowContract } from '@/lib/print-contract'
 import { useContractTemplates } from '@/lib/contract-template-client'
 import { placeholderLabel } from '@/lib/contract-doc'
 import { ContractDocPreview } from '@/components/ContractDocPreview'
 import { TemplateEditor } from './TemplateEditor'
+import { useFlowContracts, addFlowContract, sendToManagement, signAsManagement, signAsEmployee, type FlowContract } from '@/lib/contract-flow-client'
+import { CONTRACT_DOC_TYPES } from '@/lib/contract-file-client'
+import { loadDesign } from './ContractDesignerClient'
+
+/** výchozí druh dokumentu (sloupec v Přehledu smluv) podle typu šablony */
+const DOC_TYPE_BY_TEMPLATE: Record<string, string> = { HPP: 'HPP', DPP: 'DPP', DPC: 'DPČ', ICO: 'IČO', OBECNA: 'Dodatek' }
 import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft, Upload, Archive, ExternalLink, Trash2, Palette } from 'lucide-react'
 
 interface ArchivedContract {
@@ -25,8 +31,8 @@ interface ArchivedContract {
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
   DRAFT: 'Návrh',
-  PENDING_MANAGEMENT: 'Čeká na vedení',
-  PENDING_EMPLOYEE: 'Čeká na zaměstnance',
+  PENDING_MANAGEMENT: 'Čeká na jednatele',
+  PENDING_EMPLOYEE: 'Čeká na uživatele',
   SIGNED: 'Podepsáno',
 }
 
@@ -48,8 +54,8 @@ const TYPE_COLOR: Record<string, string> = {
 const FILTER_OPTIONS: { value: ContractStatus | 'ALL'; label: string }[] = [
   { value: 'ALL', label: 'Všechny' },
   { value: 'DRAFT', label: 'Návrh' },
-  { value: 'PENDING_MANAGEMENT', label: 'Čeká na vedení' },
-  { value: 'PENDING_EMPLOYEE', label: 'Čeká na zaměstnance' },
+  { value: 'PENDING_MANAGEMENT', label: 'Čeká na jednatele' },
+  { value: 'PENDING_EMPLOYEE', label: 'Čeká na uživatele' },
   { value: 'SIGNED', label: 'Podepsáno' },
 ]
 
@@ -87,7 +93,9 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
   const templates = useContractTemplates(baseTemplates)
   const [editing, setEditing] = useState<ContractTemplate | 'new' | null>(null)
   const [tab, setTab] = useState<'prehled' | 'sablony' | 'smlouvy' | 'archiv' | 'vizual'>('prehled')
-  const [contracts, setContracts] = useState<Contract[]>(initialContracts)
+  // smlouvy vytvořené ze šablony se ukládají (ukázkové jen jako náhled)
+  const seed = useMemo<FlowContract[]>(() => initialContracts.map(c => ({ ...c, personId: '', docType: 'HPP' })), [initialContracts])
+  const contracts = useFlowContracts(seed)
   const [filter, setFilter] = useState<ContractStatus | 'ALL'>('ALL')
   const [selected, setSelected] = useState<Contract | null>(null)
 
@@ -142,34 +150,30 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
   const [createStep, setCreateStep] = useState<CreateStep | null>(null)
   const [createTemplate, setCreateTemplate] = useState<ContractTemplate | null>(null)
   const [createValues, setCreateValues] = useState<Record<string, string>>({})
-  const [createEmployee, setCreateEmployee] = useState('')
+  const [createEmployee, setCreateEmployee] = useState('') // id uživatele
+  const [createDocType, setCreateDocType] = useState('HPP')
+  const createPerson = DEMO_TEAM.find(m => m.id === createEmployee)
   const [createNotes, setCreateNotes] = useState('')
 
   const draftModel = useMemo(() => createTemplate ? contractDocModel({
-    id: 'draft', templateId: createTemplate.id, templateName: createTemplate.name, employeeId: 'new', employeeName: createEmployee,
+    id: 'draft', templateId: createTemplate.id, templateName: createTemplate.name, employeeId: 'new', employeeName: createPerson?.name ?? '',
     status: 'DRAFT', createdAt: new Date(), sentToManagementAt: null, managementSignedAt: null, managementSignedBy: null,
-    sentToEmployeeAt: null, employeeSignedAt: null, values: { ...createValues, JMENO: createValues.JMENO || createEmployee }, notes: null,
-  }, createTemplate) : null, [createTemplate, createEmployee, createValues])
+    sentToEmployeeAt: null, employeeSignedAt: null, values: { ...createValues, JMENO: createValues.JMENO || createPerson?.name || '' }, notes: null,
+  }, createTemplate) : null, [createTemplate, createPerson, createValues])
 
   const filtered = filter === 'ALL' ? contracts : contracts.filter(c => c.status === filter)
 
   function advance(id: string) {
-    const now = new Date()
-    setContracts(prev => prev.map(c => {
-      if (c.id !== id) return c
-      if (c.status === 'DRAFT') return { ...c, status: 'PENDING_MANAGEMENT', sentToManagementAt: now }
-      if (c.status === 'PENDING_MANAGEMENT') return {
-        ...c, status: 'PENDING_EMPLOYEE',
-        managementSignedAt: now, managementSignedBy: 'Petra Nováková',
-        sentToEmployeeAt: now,
-      }
-      if (c.status === 'PENDING_EMPLOYEE') return { ...c, status: 'SIGNED', employeeSignedAt: now }
-      return c
-    }))
+    const c = contracts.find(x => x.id === id)
+    if (!c) return
+    if (c.status === 'DRAFT') sendToManagement(c)
+    else if (c.status === 'PENDING_MANAGEMENT') signAsManagement(c, loadDesign().signatoryName?.trim() || 'Jednatel Four Bros s.r.o.')
+    else if (c.status === 'PENDING_EMPLOYEE') signAsEmployee(c)
   }
 
   function openCreate(tpl?: ContractTemplate) {
     setCreateTemplate(tpl ?? null)
+    setCreateDocType(DOC_TYPE_BY_TEMPLATE[tpl?.type ?? ''] ?? 'Jiné')
     setCreateValues({})
     setCreateEmployee('')
     setCreateNotes('')
@@ -178,13 +182,15 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
   }
 
   function submitCreate() {
-    if (!createTemplate || !createEmployee) return
-    const newContract: Contract = {
+    if (!createTemplate || !createPerson) return
+    addFlowContract({
       id: `c-${Date.now()}`,
       templateId: createTemplate.id,
       templateName: createTemplate.name,
-      employeeId: 'new',
-      employeeName: createEmployee,
+      employeeId: createPerson.id,
+      employeeName: createPerson.name,
+      personId: createPerson.id,
+      docType: createDocType,
       status: 'DRAFT',
       createdAt: new Date(),
       sentToManagementAt: null,
@@ -192,10 +198,12 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
       managementSignedBy: null,
       sentToEmployeeAt: null,
       employeeSignedAt: null,
-      values: createValues,
+      values: { ...createValues, JMENO: createValues.JMENO || createPerson.name },
       notes: createNotes || null,
-    }
-    setContracts(prev => [newContract, ...prev])
+      // zmrazit znění šablony a údaje firmy
+      snapshot: { ...createTemplate, createdAt: undefined } as unknown as FlowContract['snapshot'],
+      company: companyFromDesign(),
+    })
     setCreateStep(null)
     setFilter('DRAFT')
   }
@@ -335,7 +343,7 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
                               className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gold-tint text-gold-dark text-xs font-medium hover:bg-gold/20 transition-colors"
                             >
                               <Send className="w-3 h-3" />
-                              Odeslat vedení
+                              Odeslat jednateli
                             </button>
                           )}
                           {c.status === 'PENDING_MANAGEMENT' && (
@@ -344,22 +352,22 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
                               className="flex items-center gap-1.5 px-2.5 py-1.5 bg-violet text-white text-xs font-medium hover:bg-violet/90 transition-colors"
                             >
                               <Pen className="w-3 h-3" />
-                              Podepsat
+                              Podepsat za jednatele (demo)
                             </button>
                           )}
                           {c.status === 'PENDING_EMPLOYEE' && (
                             <button
                               onClick={() => advance(c.id)}
                               className="flex items-center gap-1.5 px-2.5 py-1.5 bg-violet/10 text-violet text-xs font-medium hover:bg-violet/20 transition-colors"
-                              title="Simulovat podpis zaměstnance (demo)"
+                              title="Uživatel podepisuje u sebe v Můj účet → Dokumenty. Tady jen simulace."
                             >
                               <Pen className="w-3 h-3" />
-                              Podepsat (zaměstnanec)
+                              Simulovat podpis uživatele
                             </button>
                           )}
                           {c.status === 'SIGNED' && (
                             <button
-                              onClick={() => printContract(c, templates.find(t => t.id === c.templateId))}
+                              onClick={() => printFlowContract(c, templates)}
                               className="flex items-center gap-1.5 px-2.5 py-1.5 bg-mint-tint text-mint-dark text-xs font-medium hover:bg-mint/20 transition-colors"
                             >
                               <CheckCircle2 className="w-3 h-3" />
@@ -402,7 +410,7 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
             {templates.map(tpl => (
               <button
                 key={tpl.id}
-                onClick={() => { setCreateTemplate(tpl); setCreateValues({}); setCreateStep('fill-form') }}
+                onClick={() => { setCreateTemplate(tpl); setCreateDocType(DOC_TYPE_BY_TEMPLATE[tpl.type] ?? 'Jiné'); setCreateValues({}); setCreateStep('fill-form') }}
                 className="bg-white border border-[rgba(13,33,79,0.14)] p-5 flex flex-col gap-3 text-left hover:border-violet/40 hover:shadow-md transition-all group"
               >
                 <div className="flex items-start justify-between gap-2">
@@ -430,7 +438,7 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
             </button>
             <div>
               <h3 className="font-headline font-semibold text-navy">Nová smlouva — {createTemplate.name}</h3>
-              <p className="text-xs text-slate-400">Vyplňte pole níže. Smlouva bude uložena jako návrh.</p>
+              <p className="text-xs text-slate-400">Vyplňte pole níže. Smlouva se uloží jako návrh. Pak ji odešleš jednateli k podpisu a po jeho podpisu přijde uživateli do Můj účet → Dokumenty.</p>
             </div>
           </div>
 
@@ -438,16 +446,22 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
           <div className="bg-white border border-[rgba(13,33,79,0.14)] p-6 space-y-5">
             {/* Employee */}
             <div>
-              <label className="block text-xs font-medium text-slate-500 mb-1">Zaměstnanec *</label>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Uživatel *</label>
               <select
                 value={createEmployee}
                 onChange={e => setCreateEmployee(e.target.value)}
                 className="input"
               >
-                <option value="">— vyberte zaměstnance —</option>
+                <option value="">— vyberte uživatele —</option>
                 {DEMO_TEAM.map(m => (
-                  <option key={m.id} value={m.name}>{m.name} — {m.position}</option>
+                  <option key={m.id} value={m.id}>{m.name} — {m.position}</option>
                 ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Druh dokumentu (sloupec v Přehledu smluv)</label>
+              <select value={createDocType} onChange={e => setCreateDocType(e.target.value)} className="input">
+                {CONTRACT_DOC_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
 

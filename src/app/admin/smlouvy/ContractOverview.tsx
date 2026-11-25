@@ -1,8 +1,11 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Upload, Eye, Download, Trash2, X, Check, PenLine, ChevronDown, Search } from 'lucide-react'
-import { DEMO_TEAM, TEAM_DEPARTMENTS } from '@/lib/mock-data'
+import { Upload, Eye, Download, Trash2, X, Check, PenLine, ChevronDown, Search, Lock } from 'lucide-react'
+import { DEMO_TEAM, TEAM_DEPARTMENTS, CONTRACT_TEMPLATES } from '@/lib/mock-data'
+import { useFlowContracts, flowAsStored, isFlowItem, flowIdOf, removeFlowContract } from '@/lib/contract-flow-client'
+import { useContractTemplates } from '@/lib/contract-template-client'
+import { printFlowContract } from '@/lib/print-contract'
 import { Avatar, personView, useProfiles } from '@/app/team/teamPeople'
 import { departmentColor } from '@/lib/team-colors'
 import { pushNotification } from '@/lib/notifications-client'
@@ -65,7 +68,14 @@ const GRID = 'grid grid-cols-[minmax(190px,1.3fr)_repeat(6,104px)_minmax(120px,1
 /** Přehled smluv všech uživatelů po týmech — na první pohled vidět, co komu chybí nebo čeká na podpis. */
 export function ContractOverview() {
   const profiles = useProfiles()
-  const contracts = useStoredContracts()
+  const uploaded = useStoredContracts()
+  // + smlouvy vytvořené ze šablony (od odeslání jednateli; podepsané uživatelem = podepsáno)
+  const flow = useFlowContracts()
+  const templates = useContractTemplates(CONTRACT_TEMPLATES)
+  const contracts = [...uploaded, ...flow.map(flowAsStored).filter((x): x is StoredContract => !!x)]
+  const flowOf = (c: StoredContract) => flow.find(f => f.id === flowIdOf(c))
+  const openDoc = (c: StoredContract) => { const f = isFlowItem(c) ? flowOf(c) : null; if (f) printFlowContract(f, templates); else openStoredContract(c) }
+  const downloadDoc = (c: StoredContract) => { const f = isFlowItem(c) ? flowOf(c) : null; if (f) printFlowContract(f, templates); else downloadStoredContract(c) }
   const [query, setQuery] = useState('')
   const [stateFilter, setStateFilter] = useState<PState | ''>('')
   const [hideOk, setHideOk] = useState(false)
@@ -203,12 +213,18 @@ export function ContractOverview() {
                               {list.map(c => (
                                 <li key={c.id} className="flex flex-wrap items-center gap-3 px-4 py-2.5">
                                   <span className="flex-1 min-w-[200px] text-sm text-navy"><b className="font-semibold">{c.name}</b> <span className="text-navy/50 text-xs">· {c.type}{c.signedAt ? ` · podepsáno ${fmtDate(c.signedAt)}` : ''} · nahráno {fmtDate(c.uploadedAt)}</span></span>
-                                  {c.status === 'SIGNED'
+                                  {c.status !== 'SIGNED' && isFlowItem(c)
+                                    ? <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.06em] bg-gold text-navy px-1.5 py-0.5"><PenLine className="w-3 h-3" />{c.notes}</span>
+                                    : c.status === 'SIGNED'
                                     ? <span className="inline-flex items-center gap-1 text-[11px] text-navy/55"><Check className="w-3 h-3" />Podepsaná</span>
                                     : <button type="button" onClick={() => updateStoredContract(c.id, { status: 'SIGNED', signedAt: new Date().toISOString().slice(0, 10) })} title="Označit jako podepsanou" className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.06em] bg-gold text-navy px-1.5 py-0.5 hover:bg-navy hover:text-white"><PenLine className="w-3 h-3" />Čeká na podpis · označit ✓</button>}
-                                  <button type="button" onClick={() => openStoredContract(c)} className="p-1 text-navy/50 hover:text-navy" title="Otevřít"><Eye className="w-4 h-4" /></button>
-                                  <button type="button" onClick={() => downloadStoredContract(c)} className="p-1 text-navy/50 hover:text-navy" title="Stáhnout"><Download className="w-4 h-4" /></button>
-                                  <button type="button" onClick={() => { if (confirm(`Smazat „${c.name}“ u uživatele ${m.name}?\n\nSoubor zmizí i z jeho Dokumentů. Nejde to vrátit.`)) removeStoredContract(c.id) }} className="p-1 text-navy/35 hover:text-navy" title="Smazat (jen HR)"><Trash2 className="w-4 h-4" /></button>
+                                  <button type="button" onClick={() => openDoc(c)} className="p-1 text-navy/50 hover:text-navy" title="Otevřít"><Eye className="w-4 h-4" /></button>
+                                  <button type="button" onClick={() => downloadDoc(c)} className="p-1 text-navy/50 hover:text-navy" title={isFlowItem(c) ? 'Stáhnout PDF' : 'Stáhnout'}><Download className="w-4 h-4" /></button>
+                                  {isFlowItem(c)
+                                    ? (c.status === 'SIGNED'
+                                        ? <span className="p-1 text-navy/30" title="Podepsanou smlouvu nejde upravit ani smazat"><Lock className="w-4 h-4" /></span>
+                                        : <button type="button" onClick={() => { if (confirm(`Zrušit nepodepsanou smlouvu „${c.name}“ u uživatele ${m.name}?`)) removeFlowContract(flowIdOf(c)) }} className="p-1 text-navy/35 hover:text-navy" title="Zrušit (jen HR, dokud není podepsaná)"><Trash2 className="w-4 h-4" /></button>)
+                                    : <button type="button" onClick={() => { if (confirm(`Smazat „${c.name}“ u uživatele ${m.name}?\n\nSoubor zmizí i z jeho Dokumentů. Nejde to vrátit.`)) removeStoredContract(c.id) }} className="p-1 text-navy/35 hover:text-navy" title="Smazat (jen HR)"><Trash2 className="w-4 h-4" /></button>}
                                 </li>
                               ))}
                               {missingKinds.map(k => (

@@ -73,6 +73,7 @@ export function DocumentsPanel({ isHPP, personId }: { isHPP: boolean; personId?:
         // jen smlouvy daného člověka (ukázkové smlouvy pro „Ukázkového zaměstnance“ se nikomu neukazují)
         contracts={DEMO_CONTRACTS.filter(c => (c.status === 'PENDING_EMPLOYEE' || c.status === 'SIGNED') && c.employeeName === DEMO_TEAM.find(m => m.id === personId)?.name)}
         templates={CONTRACT_TEMPLATES}
+        personId={personId}
       />
 
       {/* Moje smlouvy — nahrané HR k tomuto člověku */}

@@ -1,19 +1,18 @@
 'use client'
 
 import { Contract, ContractStatus, ContractTemplate } from '@/lib/mock-data'
-import { printContract } from '@/lib/print-contract'
+import { flowDocModel, printFlowContract } from '@/lib/print-contract'
 import { loadDesign, fontStack } from '@/app/admin/smlouvy/ContractDesignerClient'
 import { X, CheckCircle2, User, Building2, Download, Pen, Clock, Send } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
 import { SigniSimulationModal } from './SigniSimulationModal'
 import { ContractDocPreview } from '@/components/ContractDocPreview'
-import { contractDocModel } from '@/lib/print-contract'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
   DRAFT: 'Návrh',
-  PENDING_MANAGEMENT: 'Čeká na vedení',
-  PENDING_EMPLOYEE: 'Čeká na zaměstnance',
+  PENDING_MANAGEMENT: 'Čeká na jednatele',
+  PENDING_EMPLOYEE: 'Čeká na uživatele',
   SIGNED: 'Podepsáno',
 }
 
@@ -41,7 +40,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
   const [design, setDesign] = useState<ContractDesign | null>(null)
   const [showSigni, setShowSigni] = useState(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const docModel = useMemo(() => contractDocModel(contract, template), [contract, template, design])
+  const docModel = useMemo(() => flowDocModel(contract, template ? [template] : []), [contract, template, design])
   useEffect(() => { setDesign(loadDesign()) }, [])
   const d = design
   const pc  = d?.primaryColor ?? '#0d214f'
@@ -54,11 +53,11 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
 
   const timeline = [
     { label: 'Vytvořeno',              date: contract.createdAt,           done: true,                          icon: Building2 },
-    { label: 'Odesláno vedení',        date: contract.sentToManagementAt,  done: !!contract.sentToManagementAt, icon: Building2 },
-    { label: contract.managementSignedBy ? `Podepsáno (${contract.managementSignedBy})` : 'Podpis vedení',
+    { label: 'Odesláno jednateli',        date: contract.sentToManagementAt,  done: !!contract.sentToManagementAt, icon: Building2 },
+    { label: contract.managementSignedBy ? `Podepsáno (${contract.managementSignedBy})` : 'Podpis jednatele',
                                         date: contract.managementSignedAt,  done: !!contract.managementSignedAt, icon: Pen },
-    { label: 'Odesláno zaměstnanci',   date: contract.sentToEmployeeAt,    done: !!contract.sentToEmployeeAt,   icon: User },
-    { label: 'Podepsáno zaměstnancem', date: contract.employeeSignedAt,    done: !!contract.employeeSignedAt,   icon: CheckCircle2 },
+    { label: 'Odesláno uživateli',   date: contract.sentToEmployeeAt,    done: !!contract.sentToEmployeeAt,   icon: User },
+    { label: 'Podepsáno uživatelem', date: contract.employeeSignedAt,    done: !!contract.employeeSignedAt,   icon: CheckCircle2 },
   ]
 
   const signedAt    = contract.employeeSignedAt   ? new Date(contract.employeeSignedAt).toLocaleDateString('cs-CZ')   : null
@@ -141,7 +140,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                 style={{ background: ac }}
               >
                 <Pen className="w-3.5 h-3.5" />
-                Podepsat jako vedení
+                Podepsat za jednatele (demo)
               </button>
             )}
             {(contract.status === 'PENDING_EMPLOYEE' || contract.status === 'DRAFT') && (
@@ -155,7 +154,7 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
               </button>
             )}
             <button
-              onClick={() => printContract(contract, template)}
+              onClick={() => printFlowContract(contract, template ? [template] : [])}
               className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
               style={{ background: pc }}
             >
