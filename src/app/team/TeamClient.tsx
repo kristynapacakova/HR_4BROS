@@ -4,6 +4,7 @@ import type { PersonRecord } from '@/lib/mock-data'
 import { TeamHero } from './TeamHero'
 import { TeamRows } from './TeamRows'
 import { personView, useProfiles } from './teamPeople'
+import { useIsActive } from '@/lib/user-status-client'
 
 export function formatBirthday(raw: string | null): string {
   if (!raw) return '—'
@@ -28,7 +29,9 @@ export function TeamClient({ members, departments }: {
   viewerEmail?: string | null
 }) {
   const profiles = useProfiles()
-  const people = members.map(m => personView(m, profiles[m.id]))
+  const isActive = useIsActive()
+  // neaktivní (deaktivovaní v Admin → Uživatelé) se v Týmu neukazují
+  const people = members.filter(m => isActive(m.id)).map(m => personView(m, profiles[m.id]))
   const deptOrder = ['Head office', ...departments.filter(d => d !== 'Head office')]
 
   return (

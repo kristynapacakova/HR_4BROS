@@ -38,6 +38,24 @@
 
 ⚠️ Tři různé vzorce měsíční ceny OSVČ (tabulka Uživatelé `sazba × klientské hodiny`, analytika `sazba × hodiny + nájem + občerstvení`, profil `sazba × klientské hodiny`) — sjednotit.
 
+## Aktivní / neaktivní uživatel (`src/lib/user-status-client.ts`, `fb-user-status`)
+
+Uživatele **nemažeme**. Když skončí, HR ho v Admin panel → Uživatelé **deaktivuje**; když se vrátí, **znovu ho aktivuje** — stejný účet, stejný e-mail, žádné nové zakládání.
+
+| pole | význam |
+|---|---|
+| `active` | `true` / `false` (v DB např. `User.status = ACTIVE / INACTIVE`) |
+| `periods[]` | období spolupráce `{ start, end, endReason }`; poslední s `end = null` = trvá. Deaktivace doplní `end` (+ nepovinný důvod, vidí jen HR), aktivace přidá nové období od data návratu. |
+
+Pravidla:
+- Deaktivovat / aktivovat smí jen HR (role ADMIN). Akce se loguje (kdo, kdy).
+- **Neaktivní se nepřihlásí** — backend odmítne přihlášení (Google SSO) i platnou session; v demu je jen zašedlý v přepínači rolí.
+- Neaktivní se **nezobrazuje** v Týmu, na Dashboardu (narozeniny, výročí, nováčci, ani na Slack), v Přehledu plnění, Přehledu smluv ani v počtech „X / N potvrdilo“ u směrnic. Nedostává notifikace, úkoly ani nové směrnice.
+- **Data zůstávají**: smlouvy, dokumenty, výplatní pásky, faktury, majetek, historie. HR je vidí v Admin → Uživatelé → Neaktivní. Doba uchování podle GDPR / zákona (např. mzdové doklady), pak anonymizace — k rozhodnutí.
+- Návrat: nové období spolupráce; **délka „Jsi s námi“ a výročí** se počítají od posledního návratu (nebo součtem období — k rozhodnutí). Typ spolupráce, plat, team lead se při návratu zkontrolují; ke každému návratu obvykle patří nová smlouva.
+- Majetek: při deaktivaci upozornit HR, pokud má uživatel vypůjčený majetek (k doplnění).
+- Analytika (fluktuace, vývoj počtu lidí) bere odchody z `periods[].end`.
+
 ## Týmy a barvy
 `Head office` gold `#F0E100` · `Creative` violet `#834DFB` · `Performance` mint `#4DE791` · `Account manager` světle modrá `#b9cbf3`. Na stránce Tým jde Head office první. → **Číselník týmů s barvou** (dnes natvrdo, při zakládání člověka je tým volný text).
 

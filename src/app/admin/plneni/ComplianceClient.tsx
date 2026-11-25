@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { DEMO_TEAM } from '@/lib/mock-data'
 import { Avatar, personView, plural, useProfiles } from '@/app/team/teamPeople'
 import type { BozpState, ContractState, Issue } from '@/lib/hr/model'
+import { useIsActive } from '@/lib/user-status-client'
 
 export interface ComplianceRow {
   id: string
@@ -47,8 +48,11 @@ function BozpCell({ b }: { b: ComplianceRow['bozp'] }) {
   }
 }
 
-export function ComplianceClient({ rows }: { rows: ComplianceRow[] }) {
+export function ComplianceClient({ rows: allRows }: { rows: ComplianceRow[] }) {
   const profiles = useProfiles()
+  const isActive = useIsActive()
+  // neaktivní uživatelé nemají co plnit
+  const rows = allRows.filter(r => isActive(r.id))
   const [filter, setFilter] = useState<Filter>('issues')
   const person = (id: string) => { const m = DEMO_TEAM.find(x => x.id === id)!; return personView(m, profiles[m.id]) }
 

@@ -9,6 +9,7 @@ import { toVocativeCz } from '@/lib/cz-vocative'
 import { DoneBurst, GiftBox } from './DashboardAnimations'
 import { bozpStatus } from '@/lib/hr/model'
 import { computePayNext, loadPaySchedule, PAY_SCHEDULE_CHANGED_EVENT, type PayNext } from '@/lib/pay-schedule'
+import { useIsActive } from '@/lib/user-status-client'
 
 /**
  * Dashboard pro zaměstnance a OSVČ: navy hlavička s úkoly a odpočtem do faktury/výplaty,
@@ -144,10 +145,11 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
   const [showAll, setShowAll] = useState(false)
   // narozeniny včetně data, které si člověk upravil v Můj účet (stejně jako medailonek a Tým)
   const profiles = useProfiles()
+  const isActive = useIsActive()
   const birthdays = (() => {
     const today = new Date(); today.setHours(0, 0, 0, 0)
     const MG = ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince']
-    const list = DEMO_TEAM.flatMap(m => {
+    const list = DEMO_TEAM.filter(m => isActive(m.id)).flatMap(m => {
       const raw = profiles[m.id]?.birthday !== undefined ? profiles[m.id]?.birthday : m.birthday
       if (!raw) return []
       const [, mo, d] = raw.split('-').map(Number)
@@ -156,7 +158,7 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
       const inDays = Math.round((next.getTime() - today.getTime()) / 86400000)
       return inDays <= 30 ? [{ id: m.id, inDays, date: `${d}. ${MG[mo - 1]}` }] : []
     }).sort((a, b) => a.inDays - b.inDays)
-    return list.length || Object.keys(profiles).length ? list : data.birthdays
+    return list.length || Object.keys(profiles).length ? list : data.birthdays.filter(b => isActive(b.id))
   })()
   // HR sama sobě kontakt neukazuje
   const hr = data.hrContact && data.hrContact.id !== data.meId ? person(data.hrContact.id) : null
@@ -253,14 +255,14 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
                 <Tag cls="bg-violet text-white">{b.inDays === 0 ? 'dnes!' : b.inDays === 1 ? 'zítra' : `za ${b.inDays} ${plural(b.inDays, 'den', 'dny', 'dní')}`}</Tag>
               </Link></li>
             ) })}
-            {data.anniversaries.slice(0, 2).map(a => { const p = person(a.id); return (
+            {data.anniversaries.filter(a => isActive(a.id)).slice(0, 2).map(a => { const p = person(a.id); return (
               <li key={'a' + a.id}><Link href={`/team/${a.id}`} className="flex items-center gap-3 group">
                 <Avatar p={p} size={40} fontSize={13} />
                 <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-navy group-hover:text-violet truncate">{p.name}</span><span className="block text-[11px] text-navy/55">pracovní výročí {a.date}</span></span>
                 <Tag cls="bg-gold text-navy">{a.years} {plural(a.years, 'rok', 'roky', 'let')} u nás</Tag>
               </Link></li>
             ) })}
-            {data.newcomers.slice(0, 2).map(n => { const p = person(n.id); return (
+            {data.newcomers.filter(n => isActive(n.id)).slice(0, 2).map(n => { const p = person(n.id); return (
               <li key={'n' + n.id}><Link href={`/team/${n.id}`} className="flex items-center gap-3 group">
                 <Avatar p={p} size={40} fontSize={13} />
                 <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-navy group-hover:text-violet truncate">{p.name}</span><span className="block text-[11px] text-navy/55 truncate">{p.position}</span></span>

@@ -7,6 +7,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { DEMO_TEAM, PERSONA_EMAIL_BY_ID } from '@/lib/mock-data'
 import { CATEGORY_STYLES, CategoryTile } from '@/app/smernice/DirectiveIcons'
 import { Avatar, personView, useProfiles } from '@/app/team/teamPeople'
+import { useIsActive } from '@/lib/user-status-client'
 
 /** Potvrzení jsou v ukázce vedená pod přihlašovacím id nebo id člověka — sjednotit na člověka. */
 const personIdOf = (id: string) => DEMO_TEAM.some(m => m.id === id) ? id : DEMO_TEAM.find(m => m.email === PERSONA_EMAIL_BY_ID[id])?.id ?? id
@@ -72,6 +73,8 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
   }
 
   const profiles = useProfiles()
+  const isActive = useIsActive()
+  const team = DEMO_TEAM.filter(m => isActive(m.id))
   const person = (id: string) => { const m = DEMO_TEAM.find(x => x.id === id); return m ? personView(m, profiles[m.id]) : null }
 
   const previewHtml = selectedTemplate ? fillBody(selectedTemplate.body, values) : ''
@@ -97,9 +100,9 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
           {directives.map(d => {
             const isOpen = expandedId === d.id
             const ackedIds = new Set(d.acknowledgements.map(a => personIdOf(a.employeeId)))
-            const done = DEMO_TEAM.filter(m => ackedIds.has(m.id))
-            const missing = DEMO_TEAM.filter(m => !ackedIds.has(m.id))
-            const pct = Math.round((done.length / DEMO_TEAM.length) * 100)
+            const done = team.filter(m => ackedIds.has(m.id))
+            const missing = team.filter(m => !ackedIds.has(m.id))
+            const pct = Math.round((done.length / team.length) * 100)
             return (
               <div key={d.id} className="bg-white border border-[rgba(13,33,79,0.14)]">
                 <button
@@ -114,7 +117,7 @@ export function DirectivesAdminClient({ directives: initial, templates }: {
                   </div>
                   {d.mustAcknowledge ? (
                     <div className="flex-shrink-0 w-44">
-                      <p className="text-xs text-navy/60 mb-1.5 text-right"><span className="font-headline text-navy text-[15px]" style={{ fontWeight: 600 }}>{done.length}</span> / {DEMO_TEAM.length} {d.requireESign ? 'podepsalo' : 'potvrdilo'}</p>
+                      <p className="text-xs text-navy/60 mb-1.5 text-right"><span className="font-headline text-navy text-[15px]" style={{ fontWeight: 600 }}>{done.length}</span> / {team.length} {d.requireESign ? 'podepsalo' : 'potvrdilo'}</p>
                       <div className="h-2 bg-alice"><div className="h-full bg-mint" style={{ width: `${pct}%` }} /></div>
                     </div>
                   ) : (

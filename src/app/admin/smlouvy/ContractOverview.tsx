@@ -6,6 +6,7 @@ import { DEMO_TEAM, TEAM_DEPARTMENTS } from '@/lib/mock-data'
 import { Avatar, personView, useProfiles } from '@/app/team/teamPeople'
 import { departmentColor } from '@/lib/team-colors'
 import { pushNotification } from '@/lib/notifications-client'
+import { useIsActive } from '@/lib/user-status-client'
 import {
   useStoredContracts, addStoredContract, updateStoredContract, removeStoredContract,
   openStoredContract, downloadStoredContract, CONTRACT_DOC_TYPES, type StoredContract, type StoredContractStatus,
@@ -72,13 +73,16 @@ export function ContractOverview() {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [upload, setUpload] = useState<{ personId: string; type?: string; name?: string } | null>(null)
 
+  const isActive = useIsActive()
+  // neaktivní uživatelé (Admin → Uživatelé) se v přehledu neukazují; jejich smlouvy zůstávají uložené
+  const TEAM = DEMO_TEAM.filter(m => isActive(m.id))
   const of = (id: string) => contracts.filter(c => c.personId === id)
   const stateOf = (m: typeof DEMO_TEAM[number]) => personState(of(m.id), m.employmentType)
   const person = (id: string) => { const m = DEMO_TEAM.find(x => x.id === id)!; return personView(m, profiles[m.id]) }
   const counts = { missing: 0, waiting: 0, ok: 0 } as Record<PState, number>
-  DEMO_TEAM.forEach(m => { counts[stateOf(m)]++ })
+  TEAM.forEach(m => { counts[stateOf(m)]++ })
   const q = query.trim().toLowerCase()
-  const people = [...DEMO_TEAM]
+  const people = [...TEAM]
     .filter(m => !q || m.name.toLowerCase().includes(q))
     .filter(m => !stateFilter || stateOf(m) === stateFilter)
     .filter(m => !hideOk || stateOf(m) !== 'ok')
@@ -130,7 +134,7 @@ export function ContractOverview() {
       {people.length === 0 && <p className="bg-white border border-[rgba(13,33,79,0.14)] px-5 py-6 text-sm text-navy/50 text-center">Nikdo neodpovídá filtru.</p>}
 
       {TEAM_DEPARTMENTS.map(dept => {
-        const all = DEMO_TEAM.filter(m => m.department === dept)
+        const all = TEAM.filter(m => m.department === dept)
         const members = people.filter(m => m.department === dept)
         if (!members.length) return null
         const states = all.map(stateOf)

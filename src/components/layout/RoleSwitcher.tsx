@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { ChevronDown } from 'lucide-react'
 import { IconUser } from '@/components/BrandIcons'
+import { DEMO_TEAM } from '@/lib/mock-data'
+import { useIsActive } from '@/lib/user-status-client'
 
 const DEMO_ROLES = [
   { email: 'admin@fourbros.cz', label: 'Admin & HR' },
@@ -17,6 +19,9 @@ export function RoleSwitcher({ currentEmail }: { currentEmail?: string | null })
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const pathname = usePathname()
+  const isActive = useIsActive()
+  // deaktivovaný uživatel se nepřihlásí (v ostré verzi hlídá backend při přihlášení)
+  const blocked = (email: string) => { const m = DEMO_TEAM.find(x => x.email.toLowerCase() === email.toLowerCase()); return !!m && !isActive(m.id) }
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -54,13 +59,14 @@ export function RoleSwitcher({ currentEmail }: { currentEmail?: string | null })
             return (
               <button
                 key={r.email}
-                onClick={() => !active && switchTo(r.email)}
-                disabled={loading}
+                onClick={() => !active && !blocked(r.email) && switchTo(r.email)}
+                disabled={loading || blocked(r.email)}
+                title={blocked(r.email) ? 'Uživatel je deaktivovaný — nepřihlásí se' : undefined}
                 className={`w-full text-left px-3 py-2 text-sm transition-colors ${
                   active ? 'text-violet font-medium bg-violet/5' : 'text-slate-600 hover:bg-slate-50 hover:text-navy'
                 } disabled:opacity-50`}
               >
-                {r.label}
+                {r.label}{blocked(r.email) && <span className="ml-1 text-[10px] text-slate-400">· deaktivovaný</span>}
               </button>
             )
           })}
