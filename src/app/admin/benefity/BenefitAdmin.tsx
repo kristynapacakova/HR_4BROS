@@ -1,5 +1,6 @@
 'use client'
 
+import { ReceiptLink } from '@/components/ReceiptLink'
 import { useEffect, useState } from 'react'
 import { Dumbbell, HeartPulse, CheckCircle2, XCircle, Clock, FileText } from 'lucide-react'
 import type { BenefitType, SportBenefitRequest } from '@/lib/mock-data'
@@ -122,7 +123,7 @@ export function BenefitAdmin({ employees, seedRequests }: { employees: Employee[
                   <p className="text-sm font-medium text-navy">{r.employeeName}</p>
                   <p className="text-sm text-slate-600 flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5 text-slate-400" />
-                    {r.receiptName} — {MONTH_NAMES_CZ[r.month - 1]} {r.year}
+                    <ReceiptLink requestId={r.id} fileName={r.receiptName} /> — {MONTH_NAMES_CZ[r.month - 1]} {r.year}
                   </p>
                   <p className="text-xs text-slate-400">{new Date(r.requestedAt).toLocaleDateString('cs-CZ')}</p>
                 </div>
@@ -158,7 +159,7 @@ export function BenefitAdmin({ employees, seedRequests }: { employees: Employee[
               <div key={r.id} className="px-6 py-3 flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm text-navy">{r.employeeName} — {MONTH_NAMES_CZ[r.month - 1]} {r.year}</p>
-                  <p className="text-xs text-slate-400">{r.receiptName}</p>
+                  <p className="text-xs text-slate-400"><ReceiptLink requestId={r.id} fileName={r.receiptName} /></p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <span className="text-sm font-semibold text-navy">{fmt(SPORT_CONTRIBUTION_AMOUNT)}</span>

@@ -11,6 +11,8 @@ import {
 import { loadBenefitSelections, loadSportRequests, saveSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
 import { loadInvoiceStatuses, invoiceStatusKey, INVOICE_STATUS_CHANGED_EVENT } from '@/lib/invoice-status-client'
+import { saveReceiptFile } from '@/lib/receipt-file-client'
+import { ReceiptLink } from '@/components/ReceiptLink'
 import { loadPayslipFiles, openPayslipFile, payslipKey, PAYSLIP_FILES_CHANGED_EVENT, type PayslipFile } from '@/lib/payslip-file-client'
 
 /** Výplatní pásky nahrané HR (Přehled odměn → Výplatní pásky) */
@@ -534,6 +536,7 @@ export function PayslipsClient({
         receiptName: file ? file.name : existing.receiptName,
       }
       saveExpenseRequests(expenseRequests.map((r) => (r.id === editingExpenseId ? updated : r)))
+      if (file) void saveReceiptFile(editingExpenseId, file)
       resetExpenseForm()
       return
     }
@@ -553,6 +556,7 @@ export function PayslipsClient({
         requestedAt: now.toISOString().slice(0, 10),
       }
       saveSportRequests([newSportReq, ...allSportRequests])
+      void saveReceiptFile(newSportReq.id, file)
     } else {
       const newReq: ExpenseRequest = {
         id: `exp-${Date.now()}`,
@@ -570,6 +574,7 @@ export function PayslipsClient({
         requestedAt: now.toISOString().slice(0, 10),
       }
       saveExpenseRequests([newReq, ...expenseRequests])
+      void saveReceiptFile(newReq.id, file)
     }
     resetExpenseForm()
   }
@@ -665,7 +670,7 @@ export function PayslipsClient({
                     <div key={exp.id} className="py-3 flex items-center justify-between gap-3">
                       <div className="min-w-0">
                         <p className="text-sm text-navy truncate">{exp.title}</p>
-                        <p className="text-[11px] text-slate-400">{exp.receiptName} · {MONTH_NAMES[exp.month - 1]} {exp.year}</p>
+                        <p className="text-[11px] text-slate-400"><ReceiptLink requestId={exp.id} fileName={exp.receiptName} /> · {MONTH_NAMES[exp.month - 1]} {exp.year}</p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <span className={`text-sm font-semibold ${exp.sign === 'MINUS' ? 'text-red-500' : 'text-navy'}`}>

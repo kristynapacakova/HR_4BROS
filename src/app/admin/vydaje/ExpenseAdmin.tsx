@@ -1,5 +1,6 @@
 'use client'
 
+import { ReceiptLink } from '@/components/ReceiptLink'
 import { useEffect, useState } from 'react'
 import { CheckCircle2, XCircle, Clock, FileText, Pencil, Trash2 } from 'lucide-react'
 import { EXPENSE_CATEGORIES, PERSONA_EMAIL_BY_ID, type ExpenseRequest } from '@/lib/mock-data'
@@ -191,7 +192,7 @@ export function ExpenseAdmin({ seedRequests }: { seedRequests: ExpenseRequest[] 
                       {r.title} — <span className={r.sign === 'MINUS' ? 'text-red-500 font-medium' : 'font-medium'}>{r.sign === 'MINUS' ? '−' : '+'}{fmt(r.amount)}</span>
                     </p>
                     <p className="text-xs text-slate-400">
-                      {CATEGORY_LABEL[r.category] ?? r.category} · {r.receiptName} · {MONTH_NAMES_CZ[r.month - 1]} {r.year}
+                      {CATEGORY_LABEL[r.category] ?? r.category} · <ReceiptLink requestId={r.id} fileName={r.receiptName} /> · {MONTH_NAMES_CZ[r.month - 1]} {r.year}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -244,7 +245,7 @@ export function ExpenseAdmin({ seedRequests }: { seedRequests: ExpenseRequest[] 
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-sm text-navy">{r.employeeName} — {r.title}</p>
-                    <p className="text-xs text-slate-400">{MONTH_NAMES_CZ[r.month - 1]} {r.year} · {r.receiptName}</p>
+                    <p className="text-xs text-slate-400">{MONTH_NAMES_CZ[r.month - 1]} {r.year} · <ReceiptLink requestId={r.id} fileName={r.receiptName} /></p>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <span className={`text-sm font-semibold ${r.sign === 'MINUS' ? 'text-red-500' : 'text-navy'}`}>

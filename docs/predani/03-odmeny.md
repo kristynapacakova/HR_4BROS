@@ -77,7 +77,7 @@ TL navrhne (jen pro OSVČ ze svého týmu) → notifikace HR → HR schválí/za
 | title, amount > 0 | |
 | sign | PLUS = proplatit (+), MINUS = strhnout z faktury/odměny (−) |
 | category | SPORT / REPREZENTACE / CESTOVNÉ / VZDĚLÁVÁNÍ / JINE (⚠️ diakritika v klíčích) |
-| receiptName | jen název souboru — soubor se nikam neukládá |
+| receiptName | název souboru; **soubor se ukládá k dokladu** (`src/lib/receipt-file-client.ts`, demo v prohlížeči) — HR ho v Dokladech k proplacení a v Benefitech **otevře a stáhne**, zaměstnanec vidí svůj. Po napojení: úložiště souborů (Document, kind = RECEIPT) |
 | month, year | do kterého měsíce se propíše (volí člověk) |
 | status | PENDING / APPROVED / REJECTED |
 
