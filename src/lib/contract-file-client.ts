@@ -29,7 +29,7 @@ export interface StoredContract {
   dataUrl?: string
 }
 
-export const CONTRACT_DOC_TYPES = ['HPP', 'DPP', 'DPČ', 'IČO', 'Dodatek', 'NDA', 'GDPR', 'Jiné'] as const
+export const CONTRACT_DOC_TYPES = ['HPP', 'DPP', 'DPČ', 'IČO', 'Mzdový výměr', 'Nájem kanceláře', 'Zpracovatelská', 'Předávací protokol', 'GDPR', 'Dodatek', 'NDA', 'Jiné'] as const
 
 const KEY = 'fb-contract-files'
 export const CONTRACT_FILES_CHANGED_EVENT = 'fb-contract-files-changed'

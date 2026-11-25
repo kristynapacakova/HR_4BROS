@@ -153,11 +153,12 @@ export function ContractOverview() {
   )
 }
 
-function UploadModal({ people, presetPerson, onClose }: { people: typeof DEMO_TEAM; presetPerson: string; onClose: () => void }) {
+export function UploadModal({ people, presetPerson, presetType, presetName, onClose }: { people: typeof DEMO_TEAM; presetPerson: string; presetType?: string; presetName?: string; onClose: () => void }) {
   const [file, setFile] = useState<File | null>(null)
   const [personId, setPersonId] = useState(presetPerson)
-  const [name, setName] = useState('')
+  const [name, setName] = useState(presetName ?? '')
   const [type, setType] = useState<string>(() => {
+    if (presetType) return presetType
     const m = people.find(x => x.id === presetPerson)
     return m ? (TYPE_BY_EMPLOYMENT[m.employmentType] ?? 'Jiné') : 'HPP'
   })
@@ -213,9 +214,9 @@ function UploadModal({ people, presetPerson, onClose }: { people: typeof DEMO_TE
             <p className="text-sm text-navy mt-1">{file ? <b>{file.name}</b> : 'Přetáhni PDF nebo sken sem, nebo klikni'}</p>
           </div>
           <div>
-            <label className={label}>Člověk</label>
+            <label className={label}>Uživatel</label>
             <select value={personId} onChange={e => choosePerson(e.target.value)} className={input}>
-              <option value="">Vyber člověka</option>
+              <option value="">Vyber uživatele</option>
               {people.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
             </select>
           </div>
