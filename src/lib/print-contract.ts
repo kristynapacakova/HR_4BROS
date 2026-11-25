@@ -1,67 +1,56 @@
 import type { Contract, ContractTemplate } from './mock-data'
 import { loadDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
-import { escapeHtml, openLetterheadPrint } from './letterhead'
+import {
+  articlesFromTemplate, fillValues, openContractDocPrint, DOC_COMPANY_DEFAULT,
+  type ContractDocModel, type DocCompany,
+} from './contract-doc'
 
-function fillPlaceholders(body: string, values: Record<string, string>): string {
-  return body.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] ?? `{{${key}}}`)
+const fmt = (d: Date | null) => (d ? new Date(d).toLocaleDateString('cs-CZ') : null)
+const sentence = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s)
+
+export function companyFromDesign(): DocCompany {
+  const d = loadDesign()
+  return { ...DOC_COMPANY_DEFAULT, name: d.companyName || DOC_COMPANY_DEFAULT.name, ico: d.companyIco || DOC_COMPANY_DEFAULT.ico, address: d.companyAddress || DOC_COMPANY_DEFAULT.address }
 }
 
-function sigBox(role: string, name: string, signedDate: string | null): string {
-  return `
-  <div>
-    <p class="sig-role">${escapeHtml(role)}</p>
-    <p class="sig-meta">V Praze, dne ${signedDate ?? '____________________'}</p>
-    <div class="sig-line"></div>
-    <p class="sig-name">${escapeHtml(name)}</p>
-    ${signedDate
-      ? `<p class="sig-meta sig-ok">✓ Podepsáno elektronicky ${signedDate}</p>`
-      : `<p class="sig-meta">Čeká na podpis</p>`}
-  </div>`
-}
-
-/** Smlouva na hlavičkovém papíře 4Bros (Brand 2026) — otevře tisk / uložení do PDF. */
-export function printContract(contract: Contract, template: ContractTemplate | undefined): void {
-  const design = loadDesign()
-  const body = fillPlaceholders(template?.body ?? '', contract.values)
-  const signedAt = contract.employeeSignedAt   ? new Date(contract.employeeSignedAt).toLocaleDateString('cs-CZ')   : null
-  const mgmtAt   = contract.managementSignedAt ? new Date(contract.managementSignedAt).toLocaleDateString('cs-CZ') : null
+/** Smlouva (šablona + vyplněné hodnoty) → model dokumentu ve vzhledu šablony 4Bros 2026. */
+export function contractDocModel(contract: Contract, template: ContractTemplate | undefined, company: DocCompany = companyFromDesign()): ContractDocModel {
   const v = contract.values
-  const row = (label: string, value?: string) => (value ? `<tr><td>${label}</td><td>${escapeHtml(value)}</td></tr>` : '')
-
-  const bodyHtml = `
-    <p class="kicker">Smluvní strany</p>
-    <table class="parties">
-      <tr><td><strong>Zaměstnavatel</strong></td><td><strong>${escapeHtml(design.companyName)}</strong>, IČO ${escapeHtml(design.companyIco)}, ${escapeHtml(design.companyAddress)}</td></tr>
-      <tr><td><strong>Zaměstnanec</strong></td><td><strong>${escapeHtml(contract.employeeName)}</strong></td></tr>
-      ${row('Pracovní pozice', v.POZICE)}
-      ${row('Datum nástupu', v.DATUM_NASTUPU)}
-      ${row('Mzda', v.MZDA)}
-      ${row('Hodinová sazba', v.HODINOVA_SAZBA)}
-      ${row('Max. hodin ročně', v.MAX_HODIN)}
-      ${v.TYDENNI_UVAZEK ? row('Týdenní úvazek', `${v.TYDENNI_UVAZEK} hod`) : ''}
-    </table>
-    <p class="kicker">Smluvní strany ujednávají následující</p>
-    ${body}
-    <div class="sigs">
-      ${sigBox(`Za zaměstnavatele`, contract.managementSignedBy ?? design.companyName, mgmtAt)}
-      ${sigBox('Zaměstnanec', contract.employeeName, signedAt)}
-    </div>`
-
-  openLetterheadPrint({
-    docTitle: `${contract.templateName} — ${contract.employeeName}`,
-    left: [
-      `<strong>${escapeHtml(design.companyName)}</strong>`,
-      `IČO ${escapeHtml(design.companyIco)}`,
-      escapeHtml(design.companyAddress),
+  const filled = fillValues(template?.body ?? '', v)
+  const { heading, articles } = articlesFromTemplate(filled)
+  const isAddendum = template?.type === 'OBECNA'
+  const docName = sentence(heading.replace(/<[^>]+>/g, '')) || contract.templateName
+  const mgmt = fmt(contract.managementSignedAt)
+  const emp = fmt(contract.employeeSignedAt)
+  const place = v.MISTO_PODPISU?.trim() || '[místo]'
+  const date = v.DATUM_PODPISU?.trim() || '[datum]'
+  return {
+    title: docName,
+    preparedFor: contract.employeeName || '[Jméno a příjmení]',
+    preparedBy: company.name,
+    intro: `${docName}${isAddendum && v.CISLO_DODATKU ? ` č. ${v.CISLO_DODATKU}` : ''} uzavřená mezi těmito smluvními stranami`,
+    parties: [
+      {
+        rows: [['Obchodní firma:', company.name], ['IČO:', company.ico], ['Sídlo:', company.address], ['Zastoupená:', contract.managementSignedBy ?? '[jméno jednatele]']],
+        alias: 'Zaměstnavatel',
+      },
+      {
+        rows: [['Jméno a příjmení:', contract.employeeName || '[Jméno a příjmení]'], ['Datum narození:', '[datum narození]'], ['Bydliště:', '[adresa]'], ...(v.POZICE ? [['Pozice:', v.POZICE] as [string, string]] : [])],
+        alias: 'Zaměstnanec',
+      },
     ],
-    right: [
-      `<strong>${escapeHtml(contract.employeeName)}</strong>`,
-      v.POZICE ? escapeHtml(v.POZICE) : '',
-      `Vystaveno ${contract.createdAt.toLocaleDateString('cs-CZ')}`,
-    ].filter(Boolean),
-    title: escapeHtml(contract.templateName),
-    subtitle: `Uzavřená mezi ${escapeHtml(design.companyName)} a ${escapeHtml(contract.employeeName)}`,
-    bodyHtml,
-    footerHtml: `<strong>${escapeHtml(design.companyName)}</strong> · IČO ${escapeHtml(design.companyIco)} · ${escapeHtml(design.companyAddress)}`,
-  })
+    lead: isAddendum ? 'Smluvní strany uzavírají tento dodatek:' : 'Smluvní strany uzavírají tuto smlouvu:',
+    articles,
+    closing: 'Smluvní strany prohlašují, že si dokument přečetly, souhlasí s ním a na důkaz toho připojují své podpisy.',
+    signatures: [
+      { place, date, party: 'Zaměstnavatel', name: contract.managementSignedBy ?? '[Jméno a příjmení]', note: mgmt ? `Podepsáno elektronicky ${mgmt}` : undefined },
+      { place, date, party: 'Zaměstnanec', name: contract.employeeName || '[Jméno a příjmení]', note: emp ? `Podepsáno elektronicky ${emp}` : undefined },
+    ],
+    company,
+  }
+}
+
+/** Otevře smlouvu ve vzhledu šablony 4Bros 2026 a vyvolá tisk (odtud „Uložit jako PDF“). */
+export function printContract(contract: Contract, template: ContractTemplate | undefined): void {
+  openContractDocPrint(contractDocModel(contract, template))
 }

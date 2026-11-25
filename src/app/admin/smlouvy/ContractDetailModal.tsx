@@ -4,10 +4,11 @@ import { Contract, ContractStatus, ContractTemplate } from '@/lib/mock-data'
 import { printContract } from '@/lib/print-contract'
 import { loadDesign, fontStack } from '@/app/admin/smlouvy/ContractDesignerClient'
 import { X, CheckCircle2, User, Building2, Download, Pen, Clock, Send } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
 import { SigniSimulationModal } from './SigniSimulationModal'
-import { LetterheadSheet } from '@/components/Letterhead'
+import { ContractDocPreview } from '@/components/ContractDocPreview'
+import { contractDocModel } from '@/lib/print-contract'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
   DRAFT: 'Návrh',
@@ -39,6 +40,8 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
   const filledBody = fillPlaceholders(template?.body ?? '', contract.values)
   const [design, setDesign] = useState<ContractDesign | null>(null)
   const [showSigni, setShowSigni] = useState(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const docModel = useMemo(() => contractDocModel(contract, template), [contract, template, design])
   useEffect(() => { setDesign(loadDesign()) }, [])
   const d = design
   const pc  = d?.primaryColor ?? '#0d214f'
@@ -119,52 +122,9 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
             </div>
           </div>
 
-          {/* ── Dokument na hlavičkovém papíře 4Bros (stejně jako PDF) ── */}
-          <div className="p-6">
-            <LetterheadSheet
-              left={[<strong key="n">{d?.companyName ?? 'Four Bros s.r.o.'}</strong>, d?.companyIco ? `IČO ${d.companyIco}` : '', d?.companyAddress ?? ''].filter(Boolean)}
-              right={[<strong key="n">{contract.employeeName}</strong>, contract.values.POZICE ?? '', `Vystaveno ${contract.createdAt.toLocaleDateString('cs-CZ')}`].filter(Boolean)}
-              title={contract.templateName}
-              subtitle={<>Uzavřená mezi {d?.companyName ?? 'Four Bros s.r.o.'} a {contract.employeeName}</>}
-              footer={<><strong className="text-navy">{d?.companyName ?? 'Four Bros s.r.o.'}</strong>{d?.companyIco && <> · IČO {d.companyIco}</>}{d?.companyAddress && <> · {d.companyAddress}</>}</>}
-            >
-              <p className="kicker text-navy mt-2 mb-2">Smluvní strany</p>
-              <table className="w-full mb-6">
-                <tbody>
-                  <tr><td className="py-0.5 pr-4 align-top text-navy/60 w-40"><strong className="text-navy">Zaměstnavatel</strong></td><td><strong>{d?.companyName ?? 'Four Bros s.r.o.'}</strong>{d?.companyIco && `, IČO ${d.companyIco}`}{d?.companyAddress && `, ${d.companyAddress}`}</td></tr>
-                  <tr><td className="py-0.5 pr-4 align-top text-navy/60"><strong className="text-navy">Zaměstnanec</strong></td><td><strong>{contract.employeeName}</strong></td></tr>
-                  {([
-                    ['Pracovní pozice', contract.values.POZICE],
-                    ['Datum nástupu', contract.values.DATUM_NASTUPU],
-                    ['Mzda', contract.values.MZDA],
-                    ['Hodinová sazba', contract.values.HODINOVA_SAZBA],
-                    ['Max. hodin ročně', contract.values.MAX_HODIN],
-                    ['Týdenní úvazek', contract.values.TYDENNI_UVAZEK ? `${contract.values.TYDENNI_UVAZEK} hod` : undefined],
-                  ] as const).filter(([, v]) => v).map(([l, v]) => (
-                    <tr key={l}><td className="py-0.5 pr-4 align-top text-navy/60">{l}</td><td>{v}</td></tr>
-                  ))}
-                </tbody>
-              </table>
-              <p className="kicker text-navy mb-2">Smluvní strany ujednávají následující</p>
-              <div className="contract-body" dangerouslySetInnerHTML={{ __html: filledBody }} />
-
-              <div className="grid grid-cols-2 gap-8 mt-10">
-                {[
-                  { role: 'Za zaměstnavatele', name: contract.managementSignedBy ?? d?.companyName ?? 'Four Bros s.r.o.', date: mgmtSignedAt },
-                  { role: 'Zaměstnanec', name: contract.employeeName, date: signedAt },
-                ].map(({ role, name, date }) => (
-                  <div key={role}>
-                    <p className="kicker text-navy mb-6">{role}</p>
-                    <p className="text-[11px] text-navy/60">V Praze, dne {date ?? '______________'}</p>
-                    <div className="h-8 border-b border-navy" />
-                    <p className="font-semibold mt-1.5">{name}</p>
-                    {date
-                      ? <p className="text-[11px] font-bold text-mint-dark">✓ Podepsáno elektronicky {date}</p>
-                      : <p className="text-[11px] text-navy/50 flex items-center gap-1"><Clock className="w-3 h-3" /> Čeká na podpis</p>}
-                  </div>
-                ))}
-              </div>
-            </LetterheadSheet>
+          {/* ── Dokument ve vzhledu šablony 4Bros 2026 (stejně jako PDF) ── */}
+          <div className="bg-[#ebe8f6]">
+            <ContractDocPreview model={docModel} />
           </div>
         </div>
 

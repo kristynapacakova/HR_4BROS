@@ -131,3 +131,19 @@ Obecná (Obecné), GDPR, BOZP, Benefity a odměňování, Onboardingová příru
 
 ## Úložiště souborů (souhrn)
 Smlouvy (návrh / podepsané / archiv), logo a dekor, výplatní pásky, faktury OSVČ, účtenky k dokladům, neschopenky, kopie OP, certifikáty BOZP, profilové fotky a galerie. → Entita `StoredFile` / `Document`: vlastník, druh, typ souboru, velikost, hash, kdo nahrál, kdy, doba uchování.
+
+## Vizuál smluv — šablona dokumentů Four Bros, brand 2026 (`src/lib/contract-doc.ts`)
+
+Podklad od HR: `HR | 4B smlouvy/4Bros_sablona_dokumentu` (SABLONA_4Bros.md, Vzor_dokumentu_4Bros.pdf/.docx, technicka_sablona).
+
+- Všechny smlouvy, dohody a dodatky (náhled v aplikaci, podepisování, tisk do PDF) se generují v jednom vzhledu:
+  titulní strana (název, Připraveno pro / kým, schody, rožky) → úvodní věta → smluvní strany (tabulka bez linek, „(dále jen …)“, „a“) →
+  uvozující věta → články „1.“ (fialově) + body „1.1“ → závěrečná věta → podpisy vedle sebe; patička „Four Bros s.r.o. · IČO · adresa · fourbros.cz“ a „X z Y“.
+- Písma a barvy jsou dané brandem (Funnel Sans / Funnel Display, navy, fialová; žlutě JEN pole k doplnění „[…]“) — v aplikaci se nenastavují.
+  V Admin → Smlouvy → Vizuál PDF se nastavují jen údaje firmy (obchodní firma, IČO, sídlo) a je tam náhled.
+- Šablona smlouvy v aplikaci = HTML: `h2` název, `h3` = článek, `p` = bod (1.1, 1.2…). Sekce „Smluvní strany“ a řádek „V … dne …“ se z těla vynechají (generují se zvlášť).
+  Prázdná proměnná `{{KLIC}}` se vypíše jako žluté pole „[popis]“.
+- Údaje zaměstnance, které aplikace zatím nemá (datum narození, bydliště), jsou ve smluvních stranách jako pole k doplnění — po napojení DB doplnit z profilu.
+- Pozadí: `public/brand/doc/bg_cover.png` (titulka), `bg_page.png` (náhled dalších stran). V tisku se logo + slogan opakují jako hlavička tabulky a schody jako `position: fixed`.
+- Ostrá verze: PDF/DOCX pro archiv a e-podpis generovat na serveru stejnou šablonou — buď headless Chrome z tohoto HTML,
+  nebo generátorem z `technicka_sablona` (docx 9.6.1 + finalize.py přes LibreOffice). Výstup musí odpovídat Vzor_dokumentu_4Bros.pdf.
