@@ -6,7 +6,7 @@ import { computeSickPay } from '@/app/profile/panels/SickPayCard'
 import {
   DEMO_BENEFIT_SELECTION, DEMO_SPORT_REQUESTS, SPORT_CONTRIBUTION_AMOUNT, MULTISPORT_MONTHLY_COST, ICO_MONTHLY_EXPENSES,
   DEMO_EXPENSE_REQUESTS, EXPENSE_CATEGORIES, INVOICE_STATUS_LABELS, DEMO_TEAM_LEAVES, DEMO_TEAM, PERSONA_EMAIL_BY_ID,
-  type BenefitType, type ExpenseRequest, type SportBenefitRequest, type InvoicePaymentStatus,
+  type BenefitType, type ExpenseRequest, type SalaryInfo as MockSalaryInfo, type SportBenefitRequest, type InvoicePaymentStatus,
 } from '@/lib/mock-data'
 import { loadBenefitSelections, loadSportRequests, saveSportRequests, BENEFIT_CHANGED_EVENT } from '@/lib/benefit-client'
 import { loadExpenseRequests, saveExpenseRequests, EXPENSE_CHANGED_EVENT } from '@/lib/expense-client'
@@ -63,13 +63,8 @@ interface Payslip {
   planned?: boolean
 }
 
-interface SalaryInfo {
-  currentSalary: number
-  currency: string
-  nextRaiseDate: Date
-  nextRaiseAmount: number
-  lastRaiseDate: Date
-}
+type SalaryInfo = MockSalaryInfo
+const MONTHS_GEN = ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince']
 
 function InvoiceStatusBadge({ status }: { status: InvoicePaymentStatus }) {
   const style =
@@ -616,18 +611,20 @@ export function PayslipsClient({
               </div>
             </div>
 
-            {/* Next raise info */}
-            <div className="mt-4 flex items-center gap-2 bg-white/10 px-4 py-2.5 w-fit">
-              <TrendingUp className="w-4 h-4 text-violet-light flex-shrink-0" />
-              <p className="text-sm text-white/80">
-                Další navýšení:{' '}
-                <span className="font-semibold text-white">+{fmt(salaryInfo.nextRaiseAmount, salaryInfo.currency)}</span>
-                {' '}od{' '}
-                <span className="font-semibold text-white">
-                  {salaryInfo.nextRaiseDate.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' })}
-                </span>
-              </p>
-            </div>
+            {/* Poslední navýšení (jen u zaměstnanců s historií mezd) */}
+            {!isICO && salaryInfo.lastRaiseDate && salaryInfo.lastRaiseAmount ? (
+              <div className="mt-4 flex items-center gap-2 bg-white/10 px-4 py-2.5 w-fit">
+                <TrendingUp className="w-4 h-4 text-violet-light flex-shrink-0" />
+                <p className="text-sm text-white/80">
+                  Poslední navýšení:{' '}
+                  <span className="font-semibold text-white">+{fmt(salaryInfo.lastRaiseAmount, salaryInfo.currency)}</span>
+                  {' '}od{' '}
+                  <span className="font-semibold text-white">
+                    {MONTHS_GEN[new Date(salaryInfo.lastRaiseDate).getMonth()]} {new Date(salaryInfo.lastRaiseDate).getFullYear()}
+                  </span>
+                </p>
+              </div>
+            ) : null}
           </div>
         </div>
       )}

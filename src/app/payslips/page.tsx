@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_TEAM_LEAVES, ICO_MONTHLY_EXPENSES, getDemoUserById } from '@/lib/mock-data'
+import { payslipsFor, salaryInfoFor, demoTeamIdFor, DEMO_TEAM_LEAVES, ICO_MONTHLY_EXPENSES, getDemoUserById } from '@/lib/mock-data'
 import { PayslipsClient } from './PayslipsClient'
 
 function daysThisMonth(userName: string, type: string): number {
@@ -25,6 +25,8 @@ export default async function PayslipsPage() {
   const isAdmin = session.user.role === 'ADMIN'
   const isTL = session.user.role === 'TL'
   const user = getDemoUserById(session.user.id)
+  // výplaty / faktury přihlášeného člověka (ne ukázkové Janovy)
+  const myTeamId = demoTeamIdFor(session.user.email ?? '') ?? ''
   const pageTitle = 'Moje odměna'
 
   // Nájem kancelářského místa a občerstvení se liší člověk od člověka — bere se z jeho profilu.
@@ -48,11 +50,12 @@ export default async function PayslipsPage() {
       employmentType={user.employmentType}
     >
       <PayslipsClient
-        payslips={DEMO_PAYSLIPS}
-        salaryInfo={DEMO_SALARY_INFO}
+        payslips={payslipsFor(myTeamId)}
+        salaryInfo={salaryInfoFor(myTeamId)}
         employmentType={user.employmentType ?? 'HPP'}
         pageTitle={pageTitle}
         employeeId={user.id}
+        employeeName={user.name}
         icoExpenses={icoExpenses}
         sickDays={sickDays}
         vacationDays={vacationDays}

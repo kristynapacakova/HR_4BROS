@@ -5,6 +5,14 @@ Zkratky souborů: `MD` = `src/lib/mock-data.ts`, `PC` = `src/app/payslips/Paysli
 
 > Všechno níže dnes žije v `mock-data.ts`, v prohlížeči (localStorage) a přímo v komponentách. V `src/lib/hr/model.ts` zatím peníze nejsou.
 
+## Ukázková data odměn — jak jsou postavená (demo pro prezentaci)
+Všechny obrazovky (Moje odměna, Dokumenty, Přehled odměn v adminu, faktury OSVČ) berou čísla z **jednoho generátoru** v `src/lib/mock-data.ts` (`payslipsFor`, `salaryInfoFor`, `grossFor`), takže si nikde neodporují:
+- **HPP / DPP / DPČ:** hrubá mzda podle historie mezd (`SALARY_HISTORY`), jinak `monthlySalary` člověka; čistá z pevné tabulky (HPP) nebo poměrem (DPP 0,85, DPČ 0,8). Jan Novák: nástup 1/2024 na 55 000 Kč, **každý říjen +5 000 Kč** → dnes 70 000 Kč (čistá 51 200 Kč).
+- **OSVČ:** měsíční odměna (paušál) = **hodinová sazba × měsíční hodiny** (Tomáš 450 Kč × 140 h = 63 000 Kč) + nájem místa a občerstvení z profilu (1 500 + 300 Kč). Faktury Tomáše = posledních 12 proplacených měsíců.
+- **Proplaceno vs. plán:** měsíc je proplacený, když minul **18. den následujícího měsíce**; zbytek roku je „plán“.
+- Výplaty se vedou od nástupu, nejdřív od 1/2024.
+- Po napojení se generátor nahradí skutečnými páskami (mzdová účetní) a fakturami (Fakturoid) — vzorce výše jsou jen pro demo.
+
 ## Entity
 
 ### Payslip — výplata / měsíční odměna (`MD:574-627`)
@@ -18,7 +26,7 @@ Zkratky souborů: `MD` = `src/lib/mock-data.ts`, `PC` = `src/app/payslips/Paysli
 | fileUrl | string\|null | PDF pásky (dnes vždy null, stažení je atrapa) |
 | planned | boolean | budoucí plánovaná mzda, páska ještě není |
 
-- ⚠️ **Chybí vazba na člověka** — stejné (Janovy) pásky vidí každý, i OSVČ. V DB: `personId`.
+- Vazba na člověka: v demu `payslipsFor(personId)`; v DB `personId`.
 
 ### PayslipFile — nahraná výplatní páska (PDF) (`src/lib/payslip-file-client.ts`, `fb-payslip-files`)
 `personId`, `month`, `year`, `fileName`, `size`, `uploadedAt` (+ v demu obsah jako data URL).
@@ -27,7 +35,6 @@ Zkratky souborů: `MD` = `src/lib/mock-data.ts`, `PC` = `src/app/payslips/Paysli
 - **Zaměstnanec stahuje** v Moje odměna → rozbalený měsíc → „Výplatní páska · PDF“; když chybí: „HR ji zatím nenahrálo“.
 - Jen PDF. Napojení: soubor do úložiště (`Document`, kind = PAYSLIP) — dnes jen v prohlížeči (větší soubory jen jménem).
 - **K rozhodnutí:** nahrává HR ručně, nebo přijdou rovnou od mzdové účetní / ze mzdového systému?
-- ⚠️ 2026 má všech 12 měsíců `planned: true`, i když je listopad.
 
 ### SalaryInfo — plat a navýšení (`MD:61-67`)
 `currentSalary` 65 000, `nextRaiseDate`, `nextRaiseAmount` +5000, `lastRaiseDate` (nepoužito). ⚠️ Bez vazby na člověka; zobrazuje se i OSVČ. Je základem výpočtu nemoci místo `monthlySalary` člověka.
@@ -120,7 +127,7 @@ Roční budget na člověka (výchozí 10 000 Kč), žádosti `title`, `amount`,
 5. **Úložiště souborů** pro doklady (dnes jen název souboru).
 6. **MultiSport u HPP** — strhává se mimo aplikaci; má být v aplikaci?
 7. **Export pro mzdovou účetní** — schválené doklady, sport, TL úpravy a změny odměn za měsíc nikam neodcházejí.
-8. **Admin Přehled odměn** běží na vymyšlených datech (`admin/odmeny/page.tsx`: koeficienty, prosincová odměna ×1,25, poměr čistá/hrubá) — v produkci odstranit.
+8. ~~Admin Přehled odměn běží na vymyšlených datech~~ ✅ teď ze stejného generátoru jako Moje odměna.
 9. Výpočet nemoci je orientační — reálně mzdová účetní.
 
 ## Natvrdo → mají být nastavení

@@ -153,6 +153,7 @@ export function ProfileTabs({
             employment={{
               startDate: (user as { startDate?: Date | null }).startDate,
               currentSalary: hrData?.monthlySalary ?? null,
+              startingSalary: (user as { startingSalary?: number | null }).startingSalary ?? null,
               contractTermType: (user as { contractTermType?: 'URCITA' | 'NEURCITA' }).contractTermType ?? null,
               contractEndDate: (user as { contractEndDate?: Date | null }).contractEndDate ?? null,
             }}
@@ -227,8 +228,8 @@ export function ProfileTabs({
                     {hrData.monthlySalary && hrData.clientHours && (
                       <div><p className="text-xs text-slate-400">Náklad / kl. hodinu</p><p className="font-semibold text-navy">{fmt(Math.round(hrData.monthlySalary / hrData.clientHours))}</p></div>
                     )}
-                    {hrData.hourlyRate && hrData.clientHours && (
-                      <div><p className="text-xs text-slate-400">Měs. fakturace (odhad)</p><p className="font-semibold text-navy">{fmt(hrData.hourlyRate * hrData.clientHours)}</p></div>
+                    {hrData.hourlyRate && hrData.monthlyHours && (
+                      <div><p className="text-xs text-slate-400">Měsíční odměna</p><p className="font-semibold text-navy">{fmt(hrData.hourlyRate * hrData.monthlyHours)}</p></div>
                     )}
                   </div>
                 )}

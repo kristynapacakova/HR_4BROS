@@ -58,13 +58,6 @@ export const EXPENSE_CATEGORIES = [
 
 // ── Salary Raise Info ─────────────────────────────────────────────────────
 
-export const DEMO_SALARY_INFO = {
-  currentSalary: 65000,
-  currency: "CZK",
-  nextRaiseDate: new Date("2026-10-01"),
-  nextRaiseAmount: 5000,
-  lastRaiseDate: new Date("2025-10-01"),
-}
 
 // ── Trust Mailbox ──────────────────────────────────────────────────────────
 
@@ -188,7 +181,7 @@ export const DEMO_USER = {
   seniority: "MEDIOR",
   monthlyHours: 168,
   clientHours: 120,
-  monthlySalary: 65000,
+  monthlySalary: 70000,
   hourlyRate: null as number | null,
   contractTermType: "URCITA" as "URCITA" | "NEURCITA",
   contractEndDate: new Date("2027-01-31") as Date | null,
@@ -261,7 +254,7 @@ export const DEMO_USER_ICO = {
   monthlyHours: 140,
   clientHours: 110,
   monthlySalary: null as number | null,
-  hourlyRate: 1200,
+  hourlyRate: 450,
   contractTermType: "NEURCITA" as "URCITA" | "NEURCITA",
   contractEndDate: null as Date | null,
   icoNumber: "01234567",
@@ -377,20 +370,20 @@ export interface PersonRecord {
 
 export const DEMO_TEAM: PersonRecord[] = [
   { id: "t1",  name: "Petra Nováková",    email: DEMO_ADMIN.email,     position: "HR Manager",           department: "Head office",          seniority: "SENIOR", employmentType: "HPP", birthday: "1988-03-15", bio: "Mám ráda lidi, kávu a pořádek.", emoji: "🌿", teamLeadId: null, role: "ADMIN", startDate: new Date("2022-01-01"), monthlyHours: 160, clientHours: null, monthlySalary: 58000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t2",  name: "Jan Novák",          email: DEMO_USER.email,      position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2024-01-15"), monthlyHours: 168, clientHours: 120, monthlySalary: 65000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "URCITA", contractEndDate: new Date("2027-01-31") },
+  { id: "t2",  name: "Jan Novák",          email: DEMO_USER.email,      position: "Frontend Developer",   department: "Creative",    seniority: "MEDIOR", employmentType: "HPP", birthday: "1990-05-20", bio: "React, TypeScript a dobrý coffee.", emoji: "💻", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2024-01-15"), monthlyHours: 168, clientHours: 120, monthlySalary: 70000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "URCITA", contractEndDate: new Date("2027-01-31") },
   { id: "t3",  name: "Marie Svobodová",    email: "marie.svobodova@fourbros.cz", position: "Social Media Manager", department: "Performance", seniority: "JUNIOR", employmentType: "DPP", birthday: "1997-11-03", bio: "Tvořím obsah, který lidi zastaví při scrollování.", emoji: "📱", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-06-01"), monthlyHours: 80, clientHours: 60, monthlySalary: 28000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 20, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t4",  name: "Tomáš Dvořák",       email: DEMO_USER_ICO.email,  position: "Account Manager",      department: "Account manager",     seniority: "SENIOR", employmentType: "ICO", birthday: "1985-07-22", bio: "Klienti jsou základ. Rád řeším výzvy.", emoji: "🤝", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2022-03-15"), monthlyHours: 140, clientHours: 110, monthlySalary: null, hourlyRate: 1200, icoNumber: "01234567", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t5",  name: "Lucie Kratochvílová",email: "lucie.kratochvilova@fourbros.cz", position: "Art Director",         department: "Creative",    seniority: "SENIOR", employmentType: "ICO", birthday: "1991-02-08", bio: "Vizuál je moje řeč. Pixely jsou moji přátelé.", emoji: "🎨", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-09-01"), monthlyHours: 150, clientHours: 120, monthlySalary: null, hourlyRate: 1100, icoNumber: "87654321", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t6",  name: "Ondřej Mašek",       email: "ondrej.masek@fourbros.cz", position: "Performance Specialist",department:"Performance", seniority: "MEDIOR", employmentType: "ICO", birthday: "1993-09-14", bio: "PPC, data a ROAS. Čísla mě baví.", emoji: "📊", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-11-01"), monthlyHours: 150, clientHours: 115, monthlySalary: null, hourlyRate: 950, icoNumber: "11223344", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t7",  name: "Klára Horáková",     email: "klara.horakova@fourbros.cz", position: "Copywriter",           department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "1999-04-01", bio: "Slova jsou moje superschopnost.", emoji: "✍️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-08-01"), monthlyHours: 140, clientHours: 100, monthlySalary: null, hourlyRate: 750, icoNumber: "22334455", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t8",  name: "Martin Beneš",       email: "martin.benes@fourbros.cz", position: "Sales Manager",        department: "Head office",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2019-05-01"), monthlyHours: 160, clientHours: 130, monthlySalary: null, hourlyRate: 1300, icoNumber: "33445566", officeAmount: 1800, refreshAmount: 400, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t9",  name: "Veronika Jelínková", email: "veronika.jelinkova@fourbros.cz", position: "Project Manager",      department: "Account manager",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-02-01"), monthlyHours: 150, clientHours: 100, monthlySalary: null, hourlyRate: 1000, icoNumber: "44556677", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t10", name: "Pavel Šimánek",      email: "pavel.simanek@fourbros.cz", position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-04-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1000, icoNumber: "55667788", officeAmount: 1300, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-03-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "66778899", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "URCITA", contractEndDate: new Date("2026-12-31") },
-  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-06-01"), monthlyHours: 140, clientHours: 90, monthlySalary: null, hourlyRate: 750, icoNumber: "77889900", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "URCITA", contractEndDate: new Date("2027-05-31") },
+  { id: "t4",  name: "Tomáš Dvořák",       email: DEMO_USER_ICO.email,  position: "Account Manager",      department: "Account manager",     seniority: "SENIOR", employmentType: "ICO", birthday: "1985-07-22", bio: "Klienti jsou základ. Rád řeším výzvy.", emoji: "🤝", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2022-03-15"), monthlyHours: 140, clientHours: 110, monthlySalary: null, hourlyRate: 450, icoNumber: "01234567", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t5",  name: "Lucie Kratochvílová",email: "lucie.kratochvilova@fourbros.cz", position: "Art Director",         department: "Creative",    seniority: "SENIOR", employmentType: "ICO", birthday: "1991-02-08", bio: "Vizuál je moje řeč. Pixely jsou moji přátelé.", emoji: "🎨", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-09-01"), monthlyHours: 150, clientHours: 120, monthlySalary: null, hourlyRate: 500, icoNumber: "87654321", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t6",  name: "Ondřej Mašek",       email: "ondrej.masek@fourbros.cz", position: "Performance Specialist",department:"Performance", seniority: "MEDIOR", employmentType: "ICO", birthday: "1993-09-14", bio: "PPC, data a ROAS. Čísla mě baví.", emoji: "📊", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-11-01"), monthlyHours: 150, clientHours: 115, monthlySalary: null, hourlyRate: 420, icoNumber: "11223344", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t7",  name: "Klára Horáková",     email: "klara.horakova@fourbros.cz", position: "Copywriter",           department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "1999-04-01", bio: "Slova jsou moje superschopnost.", emoji: "✍️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2023-08-01"), monthlyHours: 140, clientHours: 100, monthlySalary: null, hourlyRate: 380, icoNumber: "22334455", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t8",  name: "Martin Beneš",       email: "martin.benes@fourbros.cz", position: "Sales Manager",        department: "Head office",       seniority: "SENIOR", employmentType: "ICO", birthday: "1984-12-19", bio: "Obchod mi jde přirozeně. Rád poznávám nové lidi.", emoji: "🚀", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2019-05-01"), monthlyHours: 160, clientHours: 130, monthlySalary: null, hourlyRate: 550, icoNumber: "33445566", officeAmount: 1800, refreshAmount: 400, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t9",  name: "Veronika Jelínková", email: "veronika.jelinkova@fourbros.cz", position: "Project Manager",      department: "Account manager",     seniority: "MEDIOR", employmentType: "ICO", birthday: "1994-06-30", bio: "Deadline je pro mě výzva, ne hrozba.", emoji: "📋", teamLeadId: "t16", role: "EMPLOYEE", startDate: new Date("2021-02-01"), monthlyHours: 150, clientHours: 100, monthlySalary: null, hourlyRate: 450, icoNumber: "44556677", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t10", name: "Pavel Šimánek",      email: "pavel.simanek@fourbros.cz", position: "Motion Designer",      department: "Creative",    seniority: "MEDIOR", employmentType: "ICO", birthday: "1992-08-11", bio: "Video a animace. After Effects je můj hřiště.", emoji: "🎬", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-04-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 430, icoNumber: "55667788", officeAmount: 1300, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t11", name: "Adéla Procházková",  email: "adela.prochazkova@fourbros.cz", position: "SEO Specialist",       department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1998-01-25", bio: "Google mě nezklame — já ho taky ne.", emoji: "🔍", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-03-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 350, icoNumber: "66778899", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "URCITA", contractEndDate: new Date("2026-12-31") },
+  { id: "t12", name: "Jakub Veselý",       email: "jakub.vesely@fourbros.cz", position: "Graphic Designer",     department: "Creative",    seniority: "JUNIOR", employmentType: "ICO", birthday: "2000-05-05", bio: "Figma, Illustrator a dobrá muzika v pozadí.", emoji: "🖌️", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2026-06-01"), monthlyHours: 140, clientHours: 90, monthlySalary: null, hourlyRate: 330, icoNumber: "77889900", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "URCITA", contractEndDate: new Date("2027-05-31") },
   { id: "t13", name: "Michaela Červenková",email: "michaela.cervenkova@fourbros.cz", position: "Office Manager",       department: "Head office",  seniority: "MEDIOR", employmentType: "HPP", birthday: "1989-10-17", bio: "Kancelář šlape díky mně. A já to miluju.", emoji: "🏠", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2020-06-01"), monthlyHours: 160, clientHours: null, monthlySalary: 42000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t14", name: "Radek Pospíšil",     email: "radek.pospisil@fourbros.cz", position: "Business Developer",   department: "Head office",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-07-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 1050, icoNumber: "88990011", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
-  { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2025-12-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 800, icoNumber: "99001122", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t14", name: "Radek Pospíšil",     email: "radek.pospisil@fourbros.cz", position: "Business Developer",   department: "Head office",       seniority: "MEDIOR", employmentType: "ICO", birthday: "1991-03-28", bio: "Nové příležitosti a partnerství jsou moje parketa.", emoji: "💼", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2022-07-01"), monthlyHours: 150, clientHours: 110, monthlySalary: null, hourlyRate: 450, icoNumber: "88990011", officeAmount: 1500, refreshAmount: 300, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
+  { id: "t15", name: "Tereza Müllerová",   email: "tereza.mullerova@fourbros.cz", position: "Email Marketing Spec.",department: "Performance", seniority: "JUNIOR", employmentType: "ICO", birthday: "1996-07-09", bio: "Každý e-mail je příběh. Otevírací rate mi to potvrdí.", emoji: "📧", teamLeadId: null, role: "EMPLOYEE", startDate: new Date("2025-12-01"), monthlyHours: 140, clientHours: 95, monthlySalary: null, hourlyRate: 360, icoNumber: "99001122", officeAmount: 1200, refreshAmount: 250, annualLeaveDays: null, contractTermType: "NEURCITA", contractEndDate: null },
   { id: "t16", name: "Eva Horáková",       email: DEMO_TL.email,        position: "Team Lead",            department: "Creative",       seniority: "LEAD",   employmentType: "HPP", birthday: "1987-11-02", bio: "Vedu tým vývojářů a mám ráda, když věci dávají smysl.", emoji: "🧭", teamLeadId: null, role: "TL", startDate: new Date("2021-04-01"), monthlyHours: 168, clientHours: 100, monthlySalary: 85000, hourlyRate: null, icoNumber: null, officeAmount: null, refreshAmount: null, annualLeaveDays: 25, contractTermType: "NEURCITA", contractEndDate: null },
 ]
 
@@ -406,6 +399,95 @@ export const PERSON_ROLE_LABELS: Record<PersonRecord["role"], string> = {
 // Kompletní seznam lidí ve firmě pro adminskou sekci Uživatelé — DEMO_TEAM je zdroj pravdy,
 // tohle jméno se v appce používá tam, kde dřív existoval samostatný (a neúplný) seznam zaměstnanců.
 export const DEMO_EMPLOYEES: PersonRecord[] = DEMO_TEAM
+
+// ── Odměny: JEDNA konzistentní historie pro všechny obrazovky ───────────────
+// Moje odměna, Dokumenty, Přehled odměn (admin) i faktury OSVČ se počítají odsud,
+// ze stejných údajů člověka — čísla si nikde neodporují. Po napojení se nahradí
+// skutečnými páskami (mzdová účetní) a fakturami (Fakturoid).
+
+/** Den výplaty (a proplacení faktur) — viz Termíny v Přehledu odměn */
+const DEMO_PAY_DAY = 18
+/** Odkdy portál vede výplaty (starší historie se do portálu nepřenáší) */
+const PAYROLL_SINCE = { year: 2024, month: 1 }
+
+/** Historie mezd (od kdy platí). Jan: nástup 55 000 Kč, každý říjen +5 000 Kč. Ostatní mají celou dobu monthlySalary. */
+export const SALARY_HISTORY: Record<string, { from: string; gross: number }[]> = {
+  t2: [
+    { from: '2024-01', gross: 55000 },
+    { from: '2024-10', gross: 60000 },
+    { from: '2025-10', gross: 65000 },
+    { from: '2026-10', gross: 70000 },
+  ],
+}
+
+/** Čistá mzda k hrubé (HPP, sleva na poplatníka) — pevné hodnoty, ať jsou čísla všude stejná */
+const NET_TABLE: Record<number, number> = { 28000: 23800, 42000: 32600, 55000: 40500, 58000: 42600, 60000: 44200, 65000: 47800, 70000: 51200, 85000: 61400 }
+const NET_RATIO: Record<string, number> = { HPP: 0.735, DPC: 0.8, DPP: 0.85, STAZ: 0.85 }
+function netOf(employmentType: string, gross: number) {
+  if (employmentType === 'ICO') return gross
+  if (employmentType === 'HPP' && NET_TABLE[gross]) return NET_TABLE[gross]
+  return Math.round((gross * (NET_RATIO[employmentType] ?? 0.75)) / 100) * 100
+}
+
+export interface PayslipRecord {
+  id: string; month: number; year: number
+  grossAmount: number; netAmount: number; currency: string
+  fileUrl: string | null
+  /** výplata/faktura za měsíc ještě neproběhla (proplácí se 18. dne následujícího měsíce) */
+  planned: boolean
+}
+
+/** Měsíční odměna člověka v daném měsíci: OSVČ = sazba × měsíční hodiny, ostatní podle historie mezd. */
+export function grossFor(m: PersonRecord, year: number, month: number): number {
+  if (m.employmentType === 'ICO') return Math.round(((m.hourlyRate ?? 0) * (m.monthlyHours ?? 0)) / 100) * 100
+  const key = `${year}-${String(month).padStart(2, '0')}`
+  const hist = SALARY_HISTORY[m.id]
+  if (hist) return [...hist].reverse().find(h => h.from <= key)?.gross ?? hist[0].gross
+  return m.monthlySalary ?? 0
+}
+
+/** Výplaty / faktury člověka od nástupu (nejdřív 1/2024) do konce letošního roku, nejnovější první. */
+export function payslipsFor(personId: string, now = new Date()): PayslipRecord[] {
+  const m = DEMO_TEAM.find(x => x.id === personId)
+  if (!m) return []
+  const startKey = Math.max(m.startDate.getFullYear() * 12 + m.startDate.getMonth(), PAYROLL_SINCE.year * 12 + PAYROLL_SINCE.month - 1)
+  const endKey = now.getFullYear() * 12 + 11
+  const out: PayslipRecord[] = []
+  for (let k = endKey; k >= startKey; k--) {
+    const year = Math.floor(k / 12), month = (k % 12) + 1
+    const gross = grossFor(m, year, month)
+    if (!gross) continue
+    const paid = new Date(year, month, DEMO_PAY_DAY) <= now // 18. den následujícího měsíce
+    out.push({ id: `${m.id}-${year}-${month}`, month, year, grossAmount: gross, netAmount: netOf(m.employmentType, gross), currency: 'CZK', fileUrl: null, planned: !paid })
+  }
+  return out
+}
+
+/** Aktuální odměna a poslední navýšení (pro hlavičku Moje odměna a profil). */
+export function salaryInfoFor(personId: string, now = new Date()) {
+  const m = DEMO_TEAM.find(x => x.id === personId)
+  const real = payslipsFor(personId, now).filter(p => !p.planned)
+  const current = real[0]?.grossAmount ?? (m ? grossFor(m, now.getFullYear(), now.getMonth() + 1) : 0)
+  const hist = SALARY_HISTORY[personId]
+  let lastRaise: { date: Date; amount: number } | null = null
+  if (hist && hist.length > 1) {
+    const nowKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    const idx = hist.map(h => h.from <= nowKey).lastIndexOf(true)
+    if (idx > 0) {
+      const [y, mo] = hist[idx].from.split('-').map(Number)
+      lastRaise = { date: new Date(y, mo - 1, 1), amount: hist[idx].gross - hist[idx - 1].gross }
+    }
+  }
+  return {
+    currentSalary: current,
+    currency: 'CZK',
+    /** nástupní mzda (HR) */
+    startingSalary: hist ? hist[0].gross : (m?.monthlySalary ?? null),
+    lastRaiseDate: lastRaise?.date ?? null,
+    lastRaiseAmount: lastRaise?.amount ?? null,
+  }
+}
+export type SalaryInfo = ReturnType<typeof salaryInfoFor>
 
 // teamLeadId v DEMO_TEAM odkazuje na DEMO_TEAM.id (např. "t16"), ne na přihlašovací id
 // demo účtu (DEMO_TL.id = "demo-tl-1") — tohle převádí jedno na druhé podle e-mailu.
@@ -449,31 +531,11 @@ export const DEMO_DOCUMENTS = [
   { id: "c2", name: "Dodatek č. 1 — změna pozice", type: "CONTRACT", tag: "DODATEK", createdAt: new Date("2024-06-01"), uploadedAt: new Date("2024-06-01"), signedAt: new Date("2024-06-03"), url: "#" },
   { id: "c3", name: "GDPR souhlas se zpracováním osobních údajů", type: "CONTRACT", tag: "GDPR", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
   { id: "c4", name: "NDA — dohoda o mlčenlivosti", type: "CONTRACT", tag: "NDA", createdAt: new Date("2024-01-10"), uploadedAt: new Date("2024-01-10"), signedAt: new Date("2024-01-12"), url: "#" },
-  // Výplatní pásky (HPP only)
-  { id: "p1",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 12, year: 2025, createdAt: new Date("2026-01-05"), uploadedAt: new Date("2026-01-05"), signedAt: null, url: "#" },
-  { id: "p2",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 11, year: 2025, createdAt: new Date("2025-12-05"), uploadedAt: new Date("2025-12-05"), signedAt: null, url: "#" },
-  { id: "p3",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 10, year: 2025, createdAt: new Date("2025-11-05"), uploadedAt: new Date("2025-11-05"), signedAt: null, url: "#" },
-  { id: "p4",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 9,  year: 2025, createdAt: new Date("2025-10-05"), uploadedAt: new Date("2025-10-05"), signedAt: null, url: "#" },
-  { id: "p5",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 8,  year: 2025, createdAt: new Date("2025-09-05"), uploadedAt: new Date("2025-09-05"), signedAt: null, url: "#" },
-  { id: "p6",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 7,  year: 2025, createdAt: new Date("2025-08-05"), uploadedAt: new Date("2025-08-05"), signedAt: null, url: "#" },
-  { id: "p7",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 6,  year: 2025, createdAt: new Date("2025-07-05"), uploadedAt: new Date("2025-07-05"), signedAt: null, url: "#" },
-  { id: "p8",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 5,  year: 2025, createdAt: new Date("2025-06-05"), uploadedAt: new Date("2025-06-05"), signedAt: null, url: "#" },
-  { id: "p9",  name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 4,  year: 2025, createdAt: new Date("2025-05-05"), uploadedAt: new Date("2025-05-05"), signedAt: null, url: "#" },
-  { id: "p10", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 3,  year: 2025, createdAt: new Date("2025-04-05"), uploadedAt: new Date("2025-04-05"), signedAt: null, url: "#" },
-  { id: "p11", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 2,  year: 2025, createdAt: new Date("2025-03-05"), uploadedAt: new Date("2025-03-05"), signedAt: null, url: "#" },
-  { id: "p12", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 1,  year: 2025, createdAt: new Date("2025-02-05"), uploadedAt: new Date("2025-02-05"), signedAt: null, url: "#" },
-  { id: "p13", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 12, year: 2024, createdAt: new Date("2025-01-05"), uploadedAt: new Date("2025-01-05"), signedAt: null, url: "#" },
-  { id: "p14", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 11, year: 2024, createdAt: new Date("2024-12-05"), uploadedAt: new Date("2024-12-05"), signedAt: null, url: "#" },
-  { id: "p15", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 10, year: 2024, createdAt: new Date("2024-11-05"), uploadedAt: new Date("2024-11-05"), signedAt: null, url: "#" },
-  { id: "p16", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 9,  year: 2024, createdAt: new Date("2024-10-05"), uploadedAt: new Date("2024-10-05"), signedAt: null, url: "#" },
-  { id: "p17", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 8,  year: 2024, createdAt: new Date("2024-09-05"), uploadedAt: new Date("2024-09-05"), signedAt: null, url: "#" },
-  { id: "p18", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 7,  year: 2024, createdAt: new Date("2024-08-05"), uploadedAt: new Date("2024-08-05"), signedAt: null, url: "#" },
-  { id: "p19", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 6,  year: 2024, createdAt: new Date("2024-07-05"), uploadedAt: new Date("2024-07-05"), signedAt: null, url: "#" },
-  { id: "p20", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 5,  year: 2024, createdAt: new Date("2024-06-05"), uploadedAt: new Date("2024-06-05"), signedAt: null, url: "#" },
-  { id: "p21", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 4,  year: 2024, createdAt: new Date("2024-05-05"), uploadedAt: new Date("2024-05-05"), signedAt: null, url: "#" },
-  { id: "p22", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 3,  year: 2024, createdAt: new Date("2024-04-05"), uploadedAt: new Date("2024-04-05"), signedAt: null, url: "#" },
-  { id: "p23", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 2,  year: 2024, createdAt: new Date("2024-03-05"), uploadedAt: new Date("2024-03-05"), signedAt: null, url: "#" },
-  { id: "p24", name: "Výplatní páska", type: "PAYSLIP", tag: null, month: 1,  year: 2024, createdAt: new Date("2024-02-05"), uploadedAt: new Date("2024-02-05"), signedAt: null, url: "#" },
+  // Výplatní pásky (HPP only) — stejné měsíce jako proplacené výplaty Jana
+  ...payslipsFor('t2').filter(p => !p.planned).map((p, i) => ({
+    id: `p${i + 1}`, name: "Výplatní páska", type: "PAYSLIP", tag: null as string | null, month: p.month, year: p.year,
+    createdAt: new Date(p.year, p.month, 18), uploadedAt: new Date(p.year, p.month, 18), signedAt: null as Date | null, url: "#",
+  })),
 ]
 
 export const DEMO_LEAVE_BALANCE = {
@@ -519,17 +581,21 @@ export interface IcoInvoiceRecord {
   otherAmount: number
 }
 
-export const DEMO_ICO_INVOICES: IcoInvoiceRecord[] = [
-  { id: "inv-2026-08", employeeId: DEMO_USER_ICO.id, month: 8, year: 2026, invoiceNumber: "2026-0180", salaryAmount: 0,     officeAmount: 2000, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
-  { id: "inv-2026-07", employeeId: DEMO_USER_ICO.id, month: 7, year: 2026, invoiceNumber: "2026-0150", salaryAmount: 60000, officeAmount: 500,  refreshAmount: 800, otherLabel: null, otherAmount: 0 },
-  { id: "inv-2026-06", employeeId: DEMO_USER_ICO.id, month: 6, year: 2026, invoiceNumber: "2026-0120", salaryAmount: 0,     officeAmount: 2000, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
-  { id: "inv-2026-05", employeeId: DEMO_USER_ICO.id, month: 5, year: 2026, invoiceNumber: "2026-0090", salaryAmount: 65000, officeAmount: 3800, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
-  { id: "inv-2026-04", employeeId: DEMO_USER_ICO.id, month: 4, year: 2026, invoiceNumber: "2026-0060", salaryAmount: 48000, officeAmount: 500,  refreshAmount: 800, otherLabel: null, otherAmount: 0 },
-  { id: "inv-2026-02", employeeId: DEMO_USER_ICO.id, month: 2, year: 2026, invoiceNumber: "2026-0105", salaryAmount: 65000, officeAmount: 3800, refreshAmount: 800, otherLabel: "Sport", otherAmount: 600 },
-  { id: "inv-2026-01", employeeId: DEMO_USER_ICO.id, month: 1, year: 2026, invoiceNumber: "2026-0050", salaryAmount: 65000, officeAmount: 3800, refreshAmount: 800, otherLabel: null, otherAmount: 0 },
-  { id: "inv-2025-12", employeeId: DEMO_USER_ICO.id, month: 12, year: 2025, invoiceNumber: "2026-0016", salaryAmount: 4865, officeAmount: 2000, refreshAmount: 400, otherLabel: null, otherAmount: 0 },
-  { id: "inv-2025-11", employeeId: DEMO_USER_ICO.id, month: 11, year: 2025, invoiceNumber: "2025-0558", salaryAmount: 0,    officeAmount: 2000, refreshAmount: 400, otherLabel: null, otherAmount: 0 },
-]
+/** Faktury Tomáše Dvořáka (OSVČ) za posledních 12 proplacených měsíců — paušál = sazba × hodiny, nájem a občerstvení z jeho profilu */
+export const DEMO_ICO_INVOICES: IcoInvoiceRecord[] = payslipsFor('t4')
+  .filter(p => !p.planned)
+  .slice(0, 12)
+  .map((p, i, arr) => ({
+    id: `inv-${p.year}-${String(p.month).padStart(2, '0')}`,
+    employeeId: DEMO_USER_ICO.id,
+    month: p.month, year: p.year,
+    invoiceNumber: `${p.year}-${String(100 + arr.length - i).padStart(4, '0')}`,
+    salaryAmount: p.grossAmount,
+    officeAmount: DEMO_USER_ICO.officeAmount,
+    refreshAmount: DEMO_USER_ICO.refreshAmount,
+    otherLabel: null,
+    otherAmount: 0,
+  }))
 
 // ── Úpravy odměny navržené team leadem ──────────────────────────────────────
 // TL může u lidí ve svém týmu navrhnout přirážku/srážku/prémii k jejich faktuře — musí to ale schválit HR,
@@ -571,60 +637,9 @@ export interface SalaryChangeRequest {
 
 export const DEMO_SALARY_CHANGES: SalaryChangeRequest[] = []
 
-export const DEMO_PAYSLIPS = [
-  // 2026 — future (planned salary, no payslip yet)
-  { id: "f12", month: 12, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f11", month: 11, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f10", month: 10, year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f9",  month: 9,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f8",  month: 8,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f7",  month: 7,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f6",  month: 6,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f5",  month: 5,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f4",  month: 4,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f3",  month: 3,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f2",  month: 2,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  { id: "f1",  month: 1,  year: 2026, grossAmount: 70000, netAmount: 51200, currency: "CZK", fileUrl: null, planned: true },
-  // 2025 — current year
-  { id: "25-12", month: 12, year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-11", month: 11, year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-10", month: 10, year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-9",  month: 9,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-8",  month: 8,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-7",  month: 7,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-6",  month: 6,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-5",  month: 5,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-4",  month: 4,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-3",  month: 3,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-2",  month: 2,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  { id: "25-1",  month: 1,  year: 2025, grossAmount: 65000, netAmount: 47800, currency: "CZK", fileUrl: null, planned: false },
-  // 2024 — previous year
-  { id: "24-12", month: 12, year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-11", month: 11, year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-10", month: 10, year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-9",  month: 9,  year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-8",  month: 8,  year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-7",  month: 7,  year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-6",  month: 6,  year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-5",  month: 5,  year: 2024, grossAmount: 62000, netAmount: 45500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-4",  month: 4,  year: 2024, grossAmount: 60000, netAmount: 44200, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-3",  month: 3,  year: 2024, grossAmount: 60000, netAmount: 44200, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-2",  month: 2,  year: 2024, grossAmount: 60000, netAmount: 44200, currency: "CZK", fileUrl: null, planned: false },
-  { id: "24-1",  month: 1,  year: 2024, grossAmount: 60000, netAmount: 44200, currency: "CZK", fileUrl: null, planned: false },
-  // 2023
-  { id: "23-12", month: 12, year: 2023, grossAmount: 58000, netAmount: 42600, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-11", month: 11, year: 2023, grossAmount: 58000, netAmount: 42600, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-10", month: 10, year: 2023, grossAmount: 58000, netAmount: 42600, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-9",  month: 9,  year: 2023, grossAmount: 58000, netAmount: 42600, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-8",  month: 8,  year: 2023, grossAmount: 58000, netAmount: 42600, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-7",  month: 7,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-6",  month: 6,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-5",  month: 5,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-4",  month: 4,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-3",  month: 3,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-2",  month: 2,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-  { id: "23-1",  month: 1,  year: 2023, grossAmount: 55000, netAmount: 40500, currency: "CZK", fileUrl: null, planned: false },
-]
+/** Výplaty Jana Nováka (HPP) — generované z historie mezd výše */
+export const DEMO_PAYSLIPS = payslipsFor('t2')
+export const DEMO_SALARY_INFO = salaryInfoFor('t2')
 
 // All leave requests for admin view (with user info)
 export const DEMO_ALL_LEAVE_REQUESTS = [

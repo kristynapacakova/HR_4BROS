@@ -10,7 +10,7 @@ Seřazeno podle dopadu. Většinu vyřeší napojení databáze s **jedním ID �
 2. **TL a OSVČ vidí Janova data** na stránkách Směrnice, Schránka důvěry, Pravidla, Dokumenty (OSVČ tam vidí i výplatní pásky). Směrnice potvrzené na `/smernice` se pak neshodují s Dashboardem. 🔧
 3. **Schránka důvěry zprávy neukládá** — odeslání je jen simulace.
 4. **Firemní akce a napojení Google Kalendáře jsou jen v prohlížeči HR** — zaměstnanci vidí jen ukázkové akce.
-5. **Výplatní pásky a info o platu nejsou vázané na člověka** — všichni vidí stejné částky (i OSVČ jako paušál).
+5. ~~Výplatní pásky a info o platu nejsou vázané na člověka~~ ✅ opraveno — každý vidí své výplaty / faktury, admin stejná čísla.
 6. **Smlouvy k podpisu vidí každý** (filtr jen podle stavu, ne osoby). 🔧
 7. **Neošetřené HTML** z formulářů smluv a směrnic se zobrazuje všem (riziko XSS) — při napojení sanitizovat.
 8. Přihlásit se dá **libovolným e-mailem bez hesla**; neznámý e-mail = Jan.

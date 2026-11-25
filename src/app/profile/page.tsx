@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppShell } from '@/components/layout/AppShell'
-import { DEMO_USER, DEMO_TEAM, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, DEMO_PAYSLIPS, DEMO_SALARY_INFO, DEMO_LEAVE_REQUESTS, getDemoUserById } from '@/lib/mock-data'
+import { DEMO_USER, DEMO_TEAM, DEMO_ASSETS, ASSET_TYPES, ASSET_CONDITIONS, SENIORITY_LEVELS, EMPLOYMENT_TYPES, payslipsFor, salaryInfoFor, demoTeamIdFor, DEMO_LEAVE_REQUESTS, getDemoUserById } from '@/lib/mock-data'
 import { PayslipsClient } from '@/app/payslips/PayslipsClient'
 import { TimeOffPanel } from './panels/TimeOffPanel'
 import { DocumentsPanel } from './panels/DocumentsPanel'
@@ -17,6 +17,8 @@ export default async function ProfilePage() {
   const isAdmin = session.user.role === 'ADMIN'
   const isTL = session.user.role === 'TL'
   const user = getDemoUserById(session.user.id)
+  // výplaty / faktury přihlášeného člověka (ne ukázkové Janovy)
+  const myTeamId = demoTeamIdFor(session.user.email ?? '') ?? ''
 
   const myAssets = DEMO_ASSETS.filter((a) => a.assignedTo === user.id)
   const teamMember = DEMO_TEAM.find((m) => m.email.toLowerCase() === user.email.toLowerCase())
@@ -27,7 +29,12 @@ export default async function ProfilePage() {
   const src = getHrSource()
   const me = await src.personForLogin(session.user.id, session.user.email)
   const bozpLast = me ? latestBozp(await src.bozpTrainings(me.id)) : null
-  const userWithBozp = { ...user, bozpCompletedAt: bozpLast ? bozpLast.toISOString().slice(0, 10) : null }
+  const userWithBozp = { ...user, bozpCompletedAt: bozpLast ? bozpLast.toISOString().slice(0, 10) : null, startingSalary: salaryInfoFor(myTeamId).startingSalary }
+  // nájem místa a občerstvení OSVČ — z údajů člověka (stejně jako na faktuře)
+  const icoExpenses = teamMember?.officeAmount != null ? [
+    { label: 'Nájem kancelářského místa', amount: teamMember.officeAmount },
+    { label: 'Občerstvení', amount: teamMember.refreshAmount ?? 0 },
+  ] : undefined
 
   // Dny nemoci v aktuálním měsíci → rozpis srážky v Moje odměna
   const now = new Date()
@@ -80,12 +87,14 @@ export default async function ProfilePage() {
             payslipsLabel,
             payslipsPanel: (
               <PayslipsClient
-                payslips={DEMO_PAYSLIPS}
-                salaryInfo={DEMO_SALARY_INFO}
+                payslips={payslipsFor(myTeamId)}
+                salaryInfo={salaryInfoFor(myTeamId)}
                 employmentType={user.employmentType ?? 'HPP'}
                 pageTitle={payslipsLabel}
+                icoExpenses={icoExpenses}
                 sickDays={sickDaysThisMonth}
                 employeeId={user.id}
+                employeeName={user.name}
               />
             ),
             timeOffPanel: (

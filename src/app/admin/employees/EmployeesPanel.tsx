@@ -99,7 +99,7 @@ export function EmployeesPanel({ employees }: { employees: DemoEmployee[] }) {
                       {isICO && emp.hourlyRate ? (
                         <div>
                           <p className="text-navy font-medium">{fmt(emp.hourlyRate)}/h</p>
-                          {emp.clientHours && <p className="text-xs text-slate-400">{fmt(emp.hourlyRate * emp.clientHours)}/měs</p>}
+                          {emp.monthlyHours && <p className="text-xs text-slate-400">{fmt(emp.hourlyRate * emp.monthlyHours)}/měs</p>}
                         </div>
                       ) : emp.monthlySalary ? (
                         <p className="text-navy font-medium">{fmt(emp.monthlySalary)}</p>

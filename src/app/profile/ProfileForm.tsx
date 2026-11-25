@@ -25,6 +25,7 @@ interface ProfileFormProps {
   employment?: {
     startDate?: Date | null
     currentSalary?: number | null
+    startingSalary?: number | null
     contractTermType?: 'URCITA' | 'NEURCITA' | null
     contractEndDate?: Date | null
   }
@@ -58,7 +59,7 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
   const [nickname, setNickname] = useState('')
   const [birthDate, setBirthDate] = useState('')
   const [insurance, setInsurance] = useState('111')
-  const [startingSalary, setStartingSalary] = useState('')
+  const [startingSalary, setStartingSalary] = useState(employment?.startingSalary ? String(employment.startingSalary) : '')
   const [country, setCountry] = useState(user.country || '')
   const [bozpLastDone, setBozpLastDone] = useState<string | null>(null)
   const [personality, setPersonality] = useState<string>('')
