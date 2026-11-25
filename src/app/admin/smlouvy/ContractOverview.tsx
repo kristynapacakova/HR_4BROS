@@ -17,7 +17,8 @@ const TYPE_BY_EMPLOYMENT: Record<string, string> = { HPP: 'HPP', DPP: 'DPP', DPC
 export function ContractOverview() {
   const profiles = useProfiles()
   const contracts = useStoredContracts()
-  const [personFilter, setPersonFilter] = useState('')
+  const [query, setQuery] = useState('')
+  const [selected, setSelected] = useState('')
   const [statusFilter, setStatusFilter] = useState<'' | StoredContractStatus | 'NONE'>('')
   const [showUpload, setShowUpload] = useState(false)
   const [presetPerson, setPresetPerson] = useState('')
@@ -26,11 +27,15 @@ export function ContractOverview() {
   const person = (id: string) => { const m = DEMO_TEAM.find(x => x.id === id)!; return personView(m, profiles[m.id]) }
 
   const rows = useMemo(() => people
-    .filter(m => !personFilter || m.id === personFilter)
+    .filter(m => !query.trim() || m.name.toLowerCase().includes(query.trim().toLowerCase()))
     .map(m => ({ m, list: contracts.filter(c => c.personId === m.id) }))
     .filter(({ list }) => statusFilter === '' ? true : statusFilter === 'NONE' ? list.length === 0 : list.some(c => c.status === statusFilter))
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  , [contracts, personFilter, statusFilter])
+  , [contracts, query, statusFilter])
+  // bez výběru se otevře první člověk ze seznamu
+  const selectedId = selected || rows[0]?.m.id || ''
+  const sel = DEMO_TEAM.find(m => m.id === selectedId) ?? null
+  const selList = contracts.filter(c => c.personId === selectedId)
 
   const signed = contracts.filter(c => c.status === 'SIGNED').length
   const unsigned = contracts.filter(c => c.status === 'UNSIGNED').length
@@ -58,79 +63,89 @@ export function ContractOverview() {
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 text-sm">
-        <select value={personFilter} onChange={e => setPersonFilter(e.target.value)} className="border border-[rgba(13,33,79,0.25)] px-3 py-2 text-navy bg-white">
-          <option value="">Všichni lidé ({people.length})</option>
-          {people.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
-        </select>
-        {(personFilter || statusFilter) && <button type="button" onClick={() => { setPersonFilter(''); setStatusFilter('') }} className="text-navy/60 underline">zrušit filtr</button>}
-      </div>
-
-      {/* přehled po lidech */}
-      <section className="bg-white border border-[rgba(13,33,79,0.14)] overflow-x-auto">
-        <table className="w-full text-sm min-w-[820px]">
-          <thead>
-            <tr className="bg-navy text-left">
-              {['Člověk', 'Smlouva', 'Typ', 'Stav', 'Podepsáno', ''].map(h => <th key={h} className="px-4 py-3 kicker text-white/70 font-bold">{h}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length === 0 && <tr><td colSpan={6} className="px-4 py-10 text-center text-navy/55">Nic neodpovídá filtru.</td></tr>}
-            {rows.flatMap(({ m, list }) => {
+      {/* vlevo lidé, vpravo karta vybraného člověka se všemi smlouvami */}
+      <div className="grid lg:grid-cols-[320px_1fr] gap-5 items-start">
+        <section className="bg-white border border-[rgba(13,33,79,0.14)]">
+          <div className="p-3 border-b border-[rgba(13,33,79,0.08)]">
+            <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Hledat člověka…" className="w-full border border-[rgba(13,33,79,0.25)] px-3 py-2 text-sm text-navy focus:outline-none focus:border-violet" />
+          </div>
+          <ul className="max-h-[560px] overflow-y-auto divide-y divide-[rgba(13,33,79,0.08)]">
+            {rows.length === 0 && <li className="px-4 py-6 text-sm text-navy/55 text-center">Nic neodpovídá filtru.</li>}
+            {rows.map(({ m, list }) => {
               const p = person(m.id)
-              const who = (
-                <span className="flex items-center gap-3">
-                  <Avatar p={p} size={32} fontSize={11} />
-                  <span className="min-w-0">
-                    <span className="block font-semibold text-navy truncate">{m.name}</span>
-                    <span className="block text-[11px] text-navy/55">{TYPE_BY_EMPLOYMENT[m.employmentType] ?? m.employmentType} · {m.department}</span>
-                  </span>
-                </span>
+              const nSigned = list.filter(c => c.status === 'SIGNED').length
+              const nWaiting = list.length - nSigned
+              const active = selectedId === m.id
+              return (
+                <li key={m.id}>
+                  <button type="button" onClick={() => setSelected(m.id)} className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${active ? 'bg-alice' : 'hover:bg-alice/50'}`}>
+                    <Avatar p={p} size={34} fontSize={11} />
+                    <span className="flex-1 min-w-0">
+                      <span className={`block text-sm font-semibold truncate ${active ? 'text-violet' : 'text-navy'}`}>{m.name}</span>
+                      <span className="block text-[11px] text-navy/55">{TYPE_BY_EMPLOYMENT[m.employmentType] ?? m.employmentType} · {m.department}</span>
+                    </span>
+                    {list.length === 0
+                      ? <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-navy/40">žádná</span>
+                      : <span className="flex items-center gap-1">
+                          {nSigned > 0 && <span className="text-[10px] font-bold bg-mint text-navy px-1.5 py-0.5" title="Podepsané">{nSigned}</span>}
+                          {nWaiting > 0 && <span className="text-[10px] font-bold bg-gold text-navy px-1.5 py-0.5" title="Čeká na podpis">{nWaiting}</span>}
+                        </span>}
+                  </button>
+                </li>
               )
-              if (list.length === 0) {
-                return [(
-                  <tr key={m.id} className="border-t border-[rgba(13,33,79,0.08)]">
-                    <td className="px-4 py-3">{who}</td>
-                    <td className="px-4 py-3 text-navy/45" colSpan={4}>Zatím žádná smlouva v portálu</td>
-                    <td className="px-4 py-3 text-right">
-                      <button type="button" onClick={() => { setPresetPerson(m.id); setShowUpload(true) }} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-[rgba(13,33,79,0.2)] hover:border-navy text-navy">
-                        <Upload className="w-3.5 h-3.5" /> Nahrát
-                      </button>
-                    </td>
-                  </tr>
-                )]
-              }
-              return list.map((c, i) => (
-                <tr key={c.id} className="border-t border-[rgba(13,33,79,0.08)] align-middle">
-                  <td className="px-4 py-3">{i === 0 ? who : null}</td>
-                  <td className="px-4 py-3">
-                    <button type="button" onClick={() => openStoredContract(c)} className="font-semibold text-navy hover:text-violet text-left">{c.name}</button>
-                    {c.notes && <span className="block text-[11px] text-navy/50">{c.notes}</span>}
-                  </td>
-                  <td className="px-4 py-3 text-navy/70">{c.type}</td>
-                  <td className="px-4 py-3">
-                    {c.status === 'SIGNED'
-                      ? <span className="text-[10px] font-bold uppercase tracking-[0.06em] bg-mint text-navy px-2 py-1">Podepsaná</span>
-                      : <button type="button" onClick={() => updateStoredContract(c.id, { status: 'SIGNED', signedAt: new Date().toISOString().slice(0, 10) })}
-                          className="text-[10px] font-bold uppercase tracking-[0.06em] bg-gold text-navy px-2 py-1 hover:bg-navy hover:text-white" title="Označit jako podepsanou">
-                          Čeká na podpis · označit ✓
-                        </button>}
-                  </td>
-                  <td className="px-4 py-3 text-navy/70">{fmtDate(c.signedAt)}</td>
-                  <td className="px-4 py-3 text-right whitespace-nowrap">
-                    <button type="button" onClick={() => openStoredContract(c)} title="Otevřít" className="p-1.5 text-navy/50 hover:text-navy"><Eye className="w-4 h-4" /></button>
-                    <button type="button" onClick={() => downloadStoredContract(c)} title="Stáhnout" className="p-1.5 text-navy/50 hover:text-navy"><Download className="w-4 h-4" /></button>
-                    {c.status === 'SIGNED' && (
-                      <button type="button" onClick={() => updateStoredContract(c.id, { status: 'UNSIGNED', signedAt: null })} title="Vrátit na „čeká na podpis“" className="px-1.5 text-[11px] text-navy/45 hover:text-navy">zrušit podpis</button>
-                    )}
-                    <button type="button" onClick={() => { if (confirm(`Smazat smlouvu „${c.name}“ (${m.name})?`)) removeStoredContract(c.id) }} title="Smazat" className="p-1.5 text-navy/50 hover:text-navy"><Trash2 className="w-4 h-4" /></button>
-                  </td>
-                </tr>
-              ))
             })}
-          </tbody>
-        </table>
-      </section>
+          </ul>
+        </section>
+
+        <section className="bg-white border border-[rgba(13,33,79,0.14)] min-h-[300px]">
+          {!sel ? (
+            <div className="h-full min-h-[300px] flex items-center justify-center text-sm text-navy/50 p-8 text-center">Vyber vlevo člověka — uvidíš všechny jeho smlouvy a můžeš nahrát další.</div>
+          ) : (
+            <>
+              <div className="flex flex-wrap items-center gap-4 px-6 py-5 border-b border-[rgba(13,33,79,0.08)]">
+                <Avatar p={person(sel.id)} size={52} fontSize={16} />
+                <div className="flex-1 min-w-0">
+                  <p className="font-headline text-navy text-[20px] leading-tight" style={{ fontWeight: 600 }}>{sel.name}</p>
+                  <p className="text-sm text-navy/60">{sel.position} · {TYPE_BY_EMPLOYMENT[sel.employmentType] ?? sel.employmentType} · nástup {fmtDate(sel.startDate.toISOString())}</p>
+                </div>
+                <button type="button" onClick={() => { setPresetPerson(sel.id); setShowUpload(true) }} className="flex items-center gap-2 px-4 py-2 bg-navy text-white text-sm font-semibold hover:bg-violet transition-colors">
+                  <Upload className="w-4 h-4" /> Nahrát smlouvu
+                </button>
+              </div>
+              {selList.length === 0 ? (
+                <div className="px-6 py-10 text-center text-sm text-navy/55">Zatím tu nemá žádnou smlouvu. Nahraj první — podepsanou nebo naskenovanou.</div>
+              ) : (
+                <ul className="divide-y divide-[rgba(13,33,79,0.08)]">
+                  {selList.map(c => (
+                    <li key={c.id} className="flex flex-wrap items-center gap-4 px-6 py-4">
+                      <span className="flex-1 min-w-[200px]">
+                        <button type="button" onClick={() => openStoredContract(c)} className="block font-semibold text-navy hover:text-violet text-left">{c.name}</button>
+                        <span className="block text-[11px] text-navy/55">{c.type} · nahráno {fmtDate(c.uploadedAt)}{c.notes ? ` · ${c.notes}` : ''}</span>
+                      </span>
+                      {c.status === 'SIGNED' ? (
+                        <span className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.06em] bg-mint text-navy px-2 py-1">Podepsaná {fmtDate(c.signedAt)}</span>
+                          <button type="button" onClick={() => updateStoredContract(c.id, { status: 'UNSIGNED', signedAt: null })} className="text-[11px] text-navy/45 hover:text-navy">zrušit podpis</button>
+                        </span>
+                      ) : (
+                        <button type="button" onClick={() => updateStoredContract(c.id, { status: 'SIGNED', signedAt: new Date().toISOString().slice(0, 10) })}
+                          className="text-[11px] font-bold uppercase tracking-[0.06em] bg-gold text-navy px-2.5 py-1.5 hover:bg-navy hover:text-white" title="Označit jako podepsanou">
+                          Čeká na podpis · označit jako podepsanou ✓
+                        </button>
+                      )}
+                      <span className="flex items-center">
+                        <button type="button" onClick={() => openStoredContract(c)} title="Otevřít" className="p-1.5 text-navy/50 hover:text-navy"><Eye className="w-4 h-4" /></button>
+                        <button type="button" onClick={() => downloadStoredContract(c)} title="Stáhnout" className="p-1.5 text-navy/50 hover:text-navy"><Download className="w-4 h-4" /></button>
+                        <button type="button" onClick={() => { if (confirm(`Smazat smlouvu „${c.name}“ (${sel.name})?`)) removeStoredContract(c.id) }} title="Smazat" className="p-1.5 text-navy/50 hover:text-navy"><Trash2 className="w-4 h-4" /></button>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </section>
+      </div>
       <p className="text-xs text-navy/45">Demo — soubory se zatím ukládají jen v tomto prohlížeči. Po napojení se uloží do úložiště a uvidí je i daný člověk v Můj účet → Dokumenty na svém zařízení.</p>
 
       {showUpload && <UploadModal people={people} presetPerson={presetPerson} onClose={() => setShowUpload(false)} />}
