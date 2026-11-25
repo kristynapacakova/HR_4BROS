@@ -50,7 +50,7 @@ export interface Directive {
   category: string
   publishedAt: Date
   mustAcknowledge: boolean
-  /** souhlas vyžaduje elektronický podpis (DocuSign) */
+  /** souhlas vyžaduje elektronický podpis (DocuSeal) */
   requireESign: boolean
 }
 
@@ -61,8 +61,8 @@ export interface Acknowledgement {
   acknowledgedAt: Date
   /** odkliknutí v portálu (přihlášení přes Google Workspace), nebo elektronický podpis */
   method: 'CHECKBOX' | 'ESIGN'
-  /** ID obálky u poskytovatele e-podpisu (DocuSign envelopeId) */
-  envelopeId?: string
+  /** ID podpisu (submission) u poskytovatele e-podpisu (DocuSeal submission id) */
+  submissionId?: string
   /** SHA-256 otisk textu směrnice — prokazuje, se kterou verzí člověk souhlasil */
   documentHash?: string
 }

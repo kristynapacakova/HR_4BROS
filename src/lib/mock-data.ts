@@ -878,10 +878,10 @@ export interface DirectiveAcknowledgement {
   employeeId: string
   employeeName: string
   acknowledgedAt: Date
-  /** jak člověk souhlas dal: odkliknutím, nebo elektronickým podpisem (DocuSign) */
+  /** jak člověk souhlas dal: odkliknutím, nebo elektronickým podpisem (DocuSeal) */
   method?: 'CHECKBOX' | 'ESIGN'
-  /** ID podpisové obálky u poskytovatele (DocuSign envelopeId) */
-  envelopeId?: string
+  /** ID podpisu u poskytovatele (DocuSeal submission id) */
+  submissionId?: string
   /** otisk (SHA-256) přesného textu směrnice, se kterým člověk souhlasil */
   documentHash?: string
 }
@@ -896,7 +896,7 @@ export interface Directive {
   publishedAt: Date
   validFrom: Date
   mustAcknowledge: boolean
-  /** souhlas se dává elektronickým podpisem (DocuSign), ne jen odkliknutím */
+  /** souhlas se dává elektronickým podpisem (DocuSeal), ne jen odkliknutím */
   requireESign?: boolean
   acknowledgements: DirectiveAcknowledgement[]
   createdBy: string

@@ -16,7 +16,7 @@ interface DirectivesClientProps {
   currentEmployeeEmail: string
 }
 
-type AckExtra = Pick<DirectiveAcknowledgement, 'method' | 'envelopeId' | 'documentHash'>
+type AckExtra = Pick<DirectiveAcknowledgement, 'method' | 'submissionId' | 'documentHash'>
 
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(date))
@@ -33,7 +33,7 @@ interface DirectiveModalProps {
 
 const fmtDateTime = (d: Date) => new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(d))
 
-/** Podpisové pole DocuSign — dnes simulace (src/lib/esign.ts), po napojení embedded signing. */
+/** Podpisové pole DocuSeal — dnes simulace (src/lib/esign.ts), po napojení embedded signing. */
 function SignatureField({ directive, signer, done, onSigned }: {
   directive: Directive
   signer: { name: string; email: string }
@@ -51,9 +51,9 @@ function SignatureField({ directive, signer, done, onSigned }: {
       <div className="border border-mint bg-mint/15 p-4 flex items-start gap-3">
         <span className="w-9 h-9 bg-mint flex items-center justify-center flex-shrink-0"><CheckCircle2 className="w-5 h-5 text-navy" /></span>
         <div className="min-w-0 text-sm">
-          <p className="font-semibold text-navy">Podepsáno elektronicky · DocuSign</p>
+          <p className="font-semibold text-navy">Podepsáno elektronicky · DocuSeal</p>
           <p className="text-navy/70">{signer.name} · {fmtDateTime(done.acknowledgedAt)}</p>
-          {done.envelopeId && <p className="text-[11px] text-navy/50 mt-1 break-all">Obálka {done.envelopeId}{done.documentHash ? ` · otisk ${done.documentHash.slice(0, 16)}…` : ''}</p>}
+          {done.submissionId && <p className="text-[11px] text-navy/50 mt-1 break-all">Podpis č. {done.submissionId}{done.documentHash ? ` · otisk ${done.documentHash.slice(0, 16)}…` : ''}</p>}
         </div>
       </div>
     )
@@ -73,10 +73,10 @@ function SignatureField({ directive, signer, done, onSigned }: {
           className="flex items-center gap-2 px-5 py-2.5 bg-navy text-white text-[12px] font-bold uppercase tracking-[0.06em] hover:bg-violet disabled:opacity-70 transition-colors"
         >
           <PenLine className="w-4 h-4" />
-          {state === 'signing' ? 'Otevírám DocuSign…' : 'Podepsat přes DocuSign'}
+          {state === 'signing' ? 'Otevírám DocuSeal…' : 'Podepsat přes DocuSeal'}
         </button>
       </div>
-      <p className="text-[11px] text-navy/45 mt-3">Demo — podpis je zatím simulovaný. Po napojení se otevře podpis DocuSign přímo tady.</p>
+      <p className="text-[11px] text-navy/45 mt-3">Demo — podpis je zatím simulovaný. Po napojení se otevře podpis DocuSeal přímo tady.</p>
     </div>
   )
 }
@@ -129,7 +129,7 @@ function DirectiveModal({ directive, isAcknowledged, myAck, signer, onClose, onA
                 directive={directive}
                 signer={signer}
                 done={isAcknowledged ? myAck : undefined}
-                onSigned={r => onAcknowledge(directive.id, { method: 'ESIGN', envelopeId: r.envelopeId, documentHash: r.documentHash })}
+                onSigned={r => onAcknowledge(directive.id, { method: 'ESIGN', submissionId: r.submissionId, documentHash: r.documentHash })}
               />
             </div>
           )}

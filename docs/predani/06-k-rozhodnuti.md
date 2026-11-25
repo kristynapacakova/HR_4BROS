@@ -8,7 +8,7 @@ Seznam věcí, které dnes aplikace jen simuluje nebo kde chybí rozhodnutí. Vy
 | I1 | **Databáze** — jaká (vyberou majitelé) | celé | |
 | I2 | **Přihlášení** — Google Workspace s omezením na `fourbros.cz`? Délka relace (12 h?) | [01](01-identita-a-opravneni.md) | |
 | I3 | **Profilové fotky** — z Google Workspace účtu, kterým se člověk přihlašuje (Directory API / profil Google), s možností nahrát vlastní? Fotka se dnes ukazuje na Dashboardu, v Můj účet, v hlavičce, v menu a v Týmu z jednoho zdroje (`TeamProfile.photo`) | [02](02-lide-profil-majetek.md) | Z Google Workspace (přihlašovací e-mail) |
-| I4 | **E-podpis** — u směrnic připraven **DocuSign** (`src/lib/esign.ts`). Použít DocuSign i pro smlouvy (dnes simulace Signi)? Úroveň podpisu, účet DocuSign | [04](04-smlouvy-smernice-dokumenty.md) | DocuSign pro směrnice |
+| I4 | **E-podpis** — u směrnic připraven **DocuSeal** (`src/lib/esign.ts`). Použít DocuSeal i pro smlouvy (dnes simulace Signi)? Úroveň podpisu, účet DocuSeal | [04](04-smlouvy-smernice-dokumenty.md) | DocuSeal pro směrnice |
 | I5 | **Fakturoid** — faktury OSVČ, čísla, PDF, stav úhrady | [03](03-odmeny.md) | |
 | I6 | **Banka** — zdroj stavu úhrady (Fakturoid / banka), smí HR přepsat ručně? | [03](03-odmeny.md) | |
 | I7 | **Faktury z e-mailu** `invoice@fourbros.cz` | [03](03-odmeny.md) | |
@@ -33,7 +33,7 @@ Seznam věcí, které dnes aplikace jen simuluje nebo kde chybí rozhodnutí. Vy
 | P6 | Týká se **BOZP i OSVČ**? | ✅ **Ne** — BOZP mají jen HPP, DPP a DPČ (`RULES.bozpRequiredFor`) |
 | P7 | Na koho se vztahují **povinné směrnice** — všichni / jen zaměstnanci / i OSVČ? Lidé nastoupivší po platnosti? Potvrzení před platností? | |
 | P8 | Ukládat **verze směrnic** a u potvrzení verzi? (otisk `documentHash` už se ukládá) | |
-| P8b | Které směrnice podepisovat přes DocuSign (BOZP? všechny?) — volí HR u každé směrnice | |
+| P8b | Které směrnice podepisovat přes DocuSeal (BOZP? všechny?) — volí HR u každé směrnice | |
 | P9 | Změny osobních údajů (bankovní účet, jméno, adresa) — rovnou, nebo **přes schválení HR**? | |
 | P10 | Kdo zadává **nástupní plat** (dnes zaměstnanec) | |
 | P11 | **Onboarding** — checklist úkolů na člověka, nebo jen počítané úkoly na Dashboardu? | |

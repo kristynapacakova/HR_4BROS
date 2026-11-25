@@ -72,7 +72,7 @@ export const demoSource: HrDataSource = {
     return DEMO_DIRECTIVES.map(d => ({ id: d.id, title: d.title, category: d.category, publishedAt: d.publishedAt, mustAcknowledge: d.mustAcknowledge, requireESign: !!d.requireESign }))
   },
   async acknowledgements(personId) {
-    const all = DEMO_DIRECTIVES.flatMap(d => d.acknowledgements.map(a => ({ directiveId: d.id, personId: normalizeId(a.employeeId), acknowledgedAt: a.acknowledgedAt, method: a.method ?? 'CHECKBOX', envelopeId: a.envelopeId, documentHash: a.documentHash })))
+    const all = DEMO_DIRECTIVES.flatMap(d => d.acknowledgements.map(a => ({ directiveId: d.id, personId: normalizeId(a.employeeId), acknowledgedAt: a.acknowledgedAt, method: a.method ?? 'CHECKBOX', submissionId: a.submissionId, documentHash: a.documentHash })))
     return personId ? all.filter(a => a.personId === personId) : all
   },
   async bozpTrainings(personId) {

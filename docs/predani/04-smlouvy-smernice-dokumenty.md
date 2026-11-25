@@ -81,12 +81,12 @@ Obecná (Obecné), GDPR, BOZP, Benefity a odměňování, Onboardingová příru
 | createdBy | ⚠️ natvrdo „Petra Nováková“ → přihlášený člověk |
 
 ### Acknowledgement — potvrzení = doklad o seznámení
-`directiveId`, `personId`, `acknowledgedAt`, **`method`** (`CHECKBOX` = odkliknutí v portálu po přihlášení Google Workspace / `ESIGN` = elektronický podpis), **`envelopeId`** (ID obálky DocuSign), **`documentHash`** (SHA-256 otisk přesného textu směrnice). Jednou, bez odvolání.
+`directiveId`, `personId`, `acknowledgedAt`, **`method`** (`CHECKBOX` = odkliknutí v portálu po přihlášení Google Workspace / `ESIGN` = elektronický podpis), **`submissionId`** (ID podpisu v DocuSeal), **`documentHash`** (SHA-256 otisk přesného textu směrnice). Jednou, bez odvolání.
 
-### Elektronický podpis směrnic — DocuSign (připraveno, zatím simulace)
-- U každé směrnice HR při vydání volí **„Vyžadovat elektronický podpis (DocuSign)“** (`Directive.requireESign`). V ukázce zapnuto u BOZP.
-- Člověk v detailu směrnice vidí **podpisové pole** → „Podepsat přes DocuSign“ → po podpisu zelený blok „Podepsáno elektronicky · DocuSign“ s datem, číslem obálky a otiskem dokumentu. V seznamu „Vyžaduje podpis“ / „Podepsáno“; v adminu štítek „Podpis DocuSign“ a „X / 16 podepsalo“.
-- Kód: `src/lib/esign.ts` — rozhraní `ESignProvider`, dnes `demoESign`. **Napojení:** serverová implementace přes DocuSign eSignature REST API — vytvořit obálku s PDF směrnice a podepisujícím (embedded signing → podpis přímo v portálu), DocuSign Connect (webhook) po dokončení uloží `Acknowledgement` s `method: 'ESIGN'`, `envelopeId`, `documentHash` a do úložiště podepsané PDF + certifikát o dokončení. Klíče DocuSign jen na serveru.
+### Elektronický podpis směrnic — DocuSeal (připraveno, zatím simulace)
+- U každé směrnice HR při vydání volí **„Vyžadovat elektronický podpis (DocuSeal)“** (`Directive.requireESign`). V ukázce zapnuto u BOZP.
+- Člověk v detailu směrnice vidí **podpisové pole** → „Podepsat přes DocuSeal“ → po podpisu zelený blok „Podepsáno elektronicky · DocuSeal“ s datem, číslem podpisu a otiskem dokumentu. V seznamu „Vyžaduje podpis“ / „Podepsáno“; v adminu štítek „Podpis DocuSeal“ a „X / 16 podepsalo“.
+- Kód: `src/lib/esign.ts` — rozhraní `ESignProvider`, dnes `demoESign`. **Napojení na DocuSeal** (open source, cloud docuseal.com/.eu nebo vlastní instalace): šablona ze směrnice `POST /api/templates/html` (jednou za verzi), podpis `POST /api/submissions` (podepisující = člověk, `external_id` = personId, bez e-mailu) → podpisový formulář vložený přímo v portálu (`@docuseal/react`, `<DocusealForm>`), webhook `form.completed` uloží `Acknowledgement` s `method: 'ESIGN'`, `submissionId`, `documentHash` a do úložiště podepsané PDF + auditní záznam DocuSeal. API klíč (`X-Auth-Token`) jen na serveru.
 - Odkliknuté směrnice (`CHECKBOX`) se dokládají záznamem: kdo (přihlášení přes Google), kdy, otisk verze. Pro úřady/účetní: PDF „Protokol o seznámení“ (k doplnění).
 
 ### Pravidla směrnic
