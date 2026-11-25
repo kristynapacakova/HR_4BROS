@@ -10,13 +10,13 @@ import { useContractTemplates } from '@/lib/contract-template-client'
 import { placeholderLabel } from '@/lib/contract-doc'
 import { ContractDocPreview } from '@/components/ContractDocPreview'
 import { TemplateEditor } from './TemplateEditor'
-import { useFlowContracts, addFlowContract, sendToManagement, signAsManagement, signAsEmployee, type FlowContract } from '@/lib/contract-flow-client'
+import { useFlowContracts, addFlowContract, editFlowContract, removeFlowContract, isLocked, sendToManagement, signAsManagement, signAsEmployee, type FlowContract } from '@/lib/contract-flow-client'
 import { CONTRACT_DOC_TYPES } from '@/lib/contract-file-client'
 import { loadDesign } from './ContractDesignerClient'
 
 /** výchozí druh dokumentu (sloupec v Přehledu smluv) podle typu šablony */
 const DOC_TYPE_BY_TEMPLATE: Record<string, string> = { HPP: 'HPP', DPP: 'DPP', DPC: 'DPČ', ICO: 'IČO', OBECNA: 'Dodatek' }
-import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft, Upload, Archive, ExternalLink, Trash2, Palette } from 'lucide-react'
+import { FilePen, FileText, Clock, CheckCircle2, ChevronRight, Plus, Send, Pen, X, ArrowLeft, Upload, Archive, ExternalLink, Trash2, Palette, Pencil } from 'lucide-react'
 
 interface ArchivedContract {
   id: string
@@ -177,12 +177,44 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
     setCreateValues({})
     setCreateEmployee('')
     setCreateNotes('')
+    setEditingId(null)
     setCreateStep(tpl ? 'fill-form' : 'pick-template')
     setTab('smlouvy')
   }
 
+  // úprava existující smlouvy (jen HR, jen nepodepsaná)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  function openEdit(c: FlowContract) {
+    const tpl = c.snapshot ? { ...c.snapshot, createdAt: new Date(0) } as ContractTemplate : templates.find(t => t.id === c.templateId)
+    if (!tpl) return
+    if (c.status !== 'DRAFT' && !confirm('Smlouva už je odeslaná k podpisu. Po úpravě se podpisy zruší a smlouva se vrátí do návrhu. Pokračovat?')) return
+    setEditingId(c.id)
+    setCreateTemplate(tpl)
+    setCreateDocType(c.docType)
+    setCreateValues(c.values)
+    setCreateEmployee(c.personId)
+    setCreateNotes(c.notes ?? '')
+    setCreateStep('fill-form')
+  }
+  function deleteContract(c: FlowContract) {
+    const msg = isLocked(c)
+      ? `Smazat PODEPSANOU smlouvu „${c.templateName}“ (${c.employeeName})?\n\nZmizí z Přehledu smluv i z jeho Dokumentů. Nejde to vrátit.`
+      : `Smazat smlouvu „${c.templateName}“ (${c.employeeName})?`
+    if (confirm(msg)) removeFlowContract(c.id)
+  }
+
   function submitCreate() {
     if (!createTemplate || !createPerson) return
+    if (editingId) {
+      editFlowContract(editingId, {
+        employeeId: createPerson.id, employeeName: createPerson.name, personId: createPerson.id, docType: createDocType,
+        values: { ...createValues, JMENO: createValues.JMENO || createPerson.name }, notes: createNotes || null,
+      })
+      setEditingId(null)
+      setCreateStep(null)
+      setFilter('DRAFT')
+      return
+    }
     addFlowContract({
       id: `c-${Date.now()}`,
       templateId: createTemplate.id,
@@ -374,6 +406,12 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
                               PDF
                             </button>
                           )}
+                          {c.personId && !isLocked(c) && (
+                            <button onClick={() => openEdit(c)} title="Upravit (jen HR)" className="p-1.5 text-slate-400 hover:text-navy hover:bg-slate-100 transition-colors"><Pencil className="w-4 h-4" /></button>
+                          )}
+                          {c.personId && (
+                            <button onClick={() => deleteContract(c)} title={isLocked(c) ? 'Smazat podepsanou smlouvu (jen HR)' : 'Smazat (jen HR)'} className="p-1.5 text-slate-400 hover:text-navy hover:bg-slate-100 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                          )}
                           <button
                             onClick={() => setSelected(c)}
                             className="p-1.5 text-slate-400 hover:text-navy hover:bg-slate-100 transition-colors"
@@ -437,7 +475,7 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
               <ArrowLeft className="w-4 h-4" />
             </button>
             <div>
-              <h3 className="font-headline font-semibold text-navy">Nová smlouva — {createTemplate.name}</h3>
+              <h3 className="font-headline font-semibold text-navy">{editingId ? 'Upravit smlouvu' : 'Nová smlouva'} — {createTemplate.name}</h3>
               <p className="text-xs text-slate-400">Vyplňte pole níže. Smlouva se uloží jako návrh. Pak ji odešleš jednateli k podpisu a po jeho podpisu přijde uživateli do Můj účet → Dokumenty.</p>
             </div>
           </div>
@@ -523,7 +561,7 @@ export function ContractsClient({ templates: baseTemplates, contracts: initialCo
               className="flex items-center gap-2 px-5 py-2 bg-violet text-white text-sm font-medium hover:bg-violet/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <FilePen className="w-4 h-4" />
-              Uložit jako návrh
+              {editingId ? 'Uložit změny' : 'Uložit jako návrh'}
             </button>
           </div>
         </div>

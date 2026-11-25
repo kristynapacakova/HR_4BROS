@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Upload, Eye, Download, Trash2, X, Check, PenLine, ChevronDown, Search, Lock } from 'lucide-react'
+import { Upload, Eye, Download, Trash2, X, Check, PenLine, ChevronDown, Search } from 'lucide-react'
 import { DEMO_TEAM, TEAM_DEPARTMENTS, CONTRACT_TEMPLATES } from '@/lib/mock-data'
 import { useFlowContracts, flowAsStored, isFlowItem, flowIdOf, removeFlowContract } from '@/lib/contract-flow-client'
 import { useContractTemplates } from '@/lib/contract-template-client'
@@ -221,9 +221,7 @@ export function ContractOverview() {
                                   <button type="button" onClick={() => openDoc(c)} className="p-1 text-navy/50 hover:text-navy" title="Otevřít"><Eye className="w-4 h-4" /></button>
                                   <button type="button" onClick={() => downloadDoc(c)} className="p-1 text-navy/50 hover:text-navy" title={isFlowItem(c) ? 'Stáhnout PDF' : 'Stáhnout'}><Download className="w-4 h-4" /></button>
                                   {isFlowItem(c)
-                                    ? (c.status === 'SIGNED'
-                                        ? <span className="p-1 text-navy/30" title="Podepsanou smlouvu nejde upravit ani smazat"><Lock className="w-4 h-4" /></span>
-                                        : <button type="button" onClick={() => { if (confirm(`Zrušit nepodepsanou smlouvu „${c.name}“ u uživatele ${m.name}?`)) removeFlowContract(flowIdOf(c)) }} className="p-1 text-navy/35 hover:text-navy" title="Zrušit (jen HR, dokud není podepsaná)"><Trash2 className="w-4 h-4" /></button>)
+                                    ? <button type="button" onClick={() => { if (confirm(c.status === 'SIGNED' ? `Smazat PODEPSANOU smlouvu „${c.name}“ u uživatele ${m.name}?\n\nZmizí i z jeho Dokumentů. Nejde to vrátit.` : `Smazat nepodepsanou smlouvu „${c.name}“ u uživatele ${m.name}?`)) removeFlowContract(flowIdOf(c)) }} className="p-1 text-navy/35 hover:text-navy" title="Smazat (jen HR)"><Trash2 className="w-4 h-4" /></button>
                                     : <button type="button" onClick={() => { if (confirm(`Smazat „${c.name}“ u uživatele ${m.name}?\n\nSoubor zmizí i z jeho Dokumentů. Nejde to vrátit.`)) removeStoredContract(c.id) }} className="p-1 text-navy/35 hover:text-navy" title="Smazat (jen HR)"><Trash2 className="w-4 h-4" /></button>}
                                 </li>
                               ))}

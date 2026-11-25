@@ -24,7 +24,10 @@ export interface FlowContract extends Contract {
   company?: DocCompany
 }
 
-/** Podepsanou smlouvu nejde upravit ani smazat. */
+/**
+ * Oprávnění: upravit a smazat smlouvu smí JEN HR (role ADMIN) — jednatel ani uživatel ne.
+ * Podepsanou smlouvu nejde upravit (podpisy by přestaly platit — změna = dodatek); smazat ji HR může po potvrzení.
+ */
 export const isLocked = (c: Pick<Contract, 'status'>) => c.status === 'SIGNED'
 
 const KEY = 'fb-flow-contracts'
@@ -47,7 +50,19 @@ function write(list: FlowContract[]) {
 }
 
 export function addFlowContract(c: FlowContract) { write([c, ...load()]) }
-export function removeFlowContract(id: string) { write(load().filter(c => c.id !== id || isLocked(c))) }
+/** Smazat (jen HR) — i podepsanou, UI vždy chce potvrzení. */
+export function removeFlowContract(id: string) { write(load().filter(c => c.id !== id)) }
+
+/** Úprava obsahu (jen HR, jen nepodepsaná): podpisy se zruší a smlouva se vrátí do návrhu. */
+export function editFlowContract(id: string, patch: Partial<FlowContract>) {
+  const list = load()
+  const cur = list.find(c => c.id === id)
+  if (!cur || isLocked(cur)) return
+  write(list.map(c => (c.id === id ? {
+    ...c, ...patch, status: 'DRAFT' as const,
+    sentToManagementAt: null, managementSignedAt: null, managementSignedBy: null, sentToEmployeeAt: null,
+  } : c)))
+}
 
 /** Úprava — u ukázkové smlouvy (seed) se při první změně uloží celá. */
 export function updateFlowContract(id: string, patch: Partial<FlowContract>, seed?: FlowContract) {
