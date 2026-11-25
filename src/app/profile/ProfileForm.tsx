@@ -212,7 +212,7 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
         {/* jen pro HPP/DPP/DPČ — pojišťovna, plat, BOZP */}
         {isEmployee && (
           <>
-            <div>
+            <div className="sm:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Zdravotní pojišťovna</label>
               <select
                 value={insurance}
@@ -237,7 +237,7 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
                 <p className="py-2 text-sm font-semibold text-navy">{startSalaryNum ? fmtCzk(startSalaryNum) : '—'}</p>
               )}
             </div>
-            <div className="sm:col-span-2">
+            <div>
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Aktuální plat</label>
               <div className="flex items-center gap-3">
                 <p className="text-lg font-headline font-bold text-navy">{currentSalary ? fmtCzk(currentSalary) : '—'}</p>
@@ -358,7 +358,7 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
       {isEmployee && (
         <Section title="Zaměstnanecké údaje">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+            <div className="sm:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Zdravotní pojišťovna</label>
               <select
                 value={insurance}
@@ -383,7 +383,7 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
                 <p className="py-2 text-sm font-semibold text-navy">{startSalaryNum ? fmtCzk(startSalaryNum) : '—'}</p>
               )}
             </div>
-            <div className="sm:col-span-2">
+            <div>
               <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-navy/45 mb-1">Aktuální plat</label>
               <div className="flex items-center gap-3">
                 <p className="text-lg font-headline font-bold text-navy">{currentSalary ? fmtCzk(currentSalary) : '—'}</p>
