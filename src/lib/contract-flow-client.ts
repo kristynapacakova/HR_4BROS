@@ -22,6 +22,8 @@ export interface FlowContract extends Contract {
   /** znění šablony a údaje firmy zmrazené při vytvoření — pozdější úprava šablony podepsanou smlouvu nezmění */
   snapshot?: Omit<ContractTemplate, 'createdAt'>
   company?: DocCompany
+  /** důkaz podpisu uživatele z DocuSeal */
+  employeeSignature?: { submissionId: string; documentHash: string; provider: string }
 }
 
 /**
@@ -87,8 +89,11 @@ export function signAsManagement(c: FlowContract, signer: string) {
 }
 
 /** Uživatel podepsal → hotovo, HR dostane notifikaci. */
-export function signAsEmployee(c: FlowContract) {
-  updateFlowContract(c.id, { status: 'SIGNED', employeeSignedAt: new Date() }, c)
+export function signAsEmployee(c: FlowContract, r?: { submissionId: string; documentHash: string; provider: string; signedAt?: Date }) {
+  updateFlowContract(c.id, {
+    status: 'SIGNED', employeeSignedAt: r?.signedAt ?? new Date(),
+    ...(r ? { employeeSignature: { submissionId: r.submissionId, documentHash: r.documentHash, provider: r.provider } } : {}),
+  }, c)
   pushNotification({ recipientEmail: DEMO_ADMIN.email, title: 'Smlouva podepsána', body: `${c.employeeName} podepsal(a): ${c.templateName}.`, href: '/admin/smlouvy' })
 }
 

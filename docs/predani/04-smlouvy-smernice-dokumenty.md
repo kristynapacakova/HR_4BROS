@@ -165,5 +165,6 @@ Podklad od HR: `HR | 4B smlouvy/4Bros_sablona_dokumentu` (SABLONA_4Bros.md, Vzor
 - Od kroku 2 je smlouva v Přehledu smluv jako „čeká na podpis jednatele / uživatele“ (tužka).
 - **PDF ke stažení** má HR i uživatel (Přehled smluv, Moje smlouvy, detail smlouvy) — v demu přes tisk → Uložit jako PDF; v ostré verzi PDF z e-podpisu (DocuSeal) uložené v úložišti.
 - **Upravit a smazat smlouvu smí jen HR** (role ADMIN), jednatel ani uživatel ne. Upravit jde jen nepodepsanou — po úpravě se zruší podpisy a smlouva je znovu návrh. **Podepsanou nejde upravit** (změna = dodatek, v kódu `isLocked`); smazat ji HR může po potvrzení. Na backendu hlídat i v API a mazání logovat.
-- K rozhodnutí: e-podpis uživatele je v demu „kvalifikovaný certifikát“ (simulace) — sjednotit s DocuSeal jako u směrnic; jak podepisuje jednatel (DocuSeal, pořadí podpisů).
+- ✅ Uživatel podepisuje smlouvu **přes DocuSeal** stejným podpisovým polem jako směrnice (`src/components/ESignField.tsx`); ke smlouvě se uloží `employeeSignature { submissionId, documentHash, provider }`. Simulace „kvalifikovaný certifikát“ a „Odeslat k e-podpisu (Signi)“ jsou pryč.
+- K rozhodnutí: jak podepisuje jednatel (v DocuSeal jako první podepisující v jedné submission → pak uživatel; v demu tlačítko).
 

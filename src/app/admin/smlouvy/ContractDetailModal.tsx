@@ -6,7 +6,6 @@ import { loadDesign, fontStack } from '@/app/admin/smlouvy/ContractDesignerClien
 import { X, CheckCircle2, User, Building2, Download, Pen, Clock, Send } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { ContractDesign } from '@/app/admin/smlouvy/ContractDesignerClient'
-import { SigniSimulationModal } from './SigniSimulationModal'
 import { ContractDocPreview } from '@/components/ContractDocPreview'
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
@@ -38,7 +37,6 @@ interface Props {
 export function ContractDetailModal({ contract, template, onClose, onSign }: Props) {
   const filledBody = fillPlaceholders(template?.body ?? '', contract.values)
   const [design, setDesign] = useState<ContractDesign | null>(null)
-  const [showSigni, setShowSigni] = useState(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const docModel = useMemo(() => flowDocModel(contract, template ? [template] : []), [contract, template, design])
   useEffect(() => { setDesign(loadDesign()) }, [])
@@ -143,16 +141,6 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
                 Podepsat za jednatele (demo)
               </button>
             )}
-            {(contract.status === 'PENDING_EMPLOYEE' || contract.status === 'DRAFT') && (
-              <button
-                onClick={() => setShowSigni(true)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold border transition-colors"
-                style={{ borderColor: '#0EA5A4', color: '#0EA5A4', background: '#0EA5A410' }}
-              >
-                <Send className="w-3.5 h-3.5" />
-                Odeslat k e-podpisu
-              </button>
-            )}
             <button
               onClick={() => printFlowContract(contract, template ? [template] : [])}
               className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
@@ -203,7 +191,6 @@ export function ContractDetailModal({ contract, template, onClose, onSign }: Pro
         .contract-body strong { font-weight: 700; }
       `}</style>
 
-      {showSigni && <SigniSimulationModal contract={contract} onClose={() => setShowSigni(false)} />}
     </div>
   )
 }
