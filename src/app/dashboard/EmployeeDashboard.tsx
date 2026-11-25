@@ -142,6 +142,22 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
   const upcoming = useUpcomingEvents()
   const meP = data.meId ? person(data.meId) : null
   const [showAll, setShowAll] = useState(false)
+  // narozeniny včetně data, které si člověk upravil v Můj účet (stejně jako medailonek a Tým)
+  const profiles = useProfiles()
+  const birthdays = (() => {
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const MG = ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince']
+    const list = DEMO_TEAM.flatMap(m => {
+      const raw = profiles[m.id]?.birthday !== undefined ? profiles[m.id]?.birthday : m.birthday
+      if (!raw) return []
+      const [, mo, d] = raw.split('-').map(Number)
+      let next = new Date(today.getFullYear(), mo - 1, d)
+      if (next < today) next = new Date(today.getFullYear() + 1, mo - 1, d)
+      const inDays = Math.round((next.getTime() - today.getTime()) / 86400000)
+      return inDays <= 30 ? [{ id: m.id, inDays, date: `${d}. ${MG[mo - 1]}` }] : []
+    }).sort((a, b) => a.inDays - b.inDays)
+    return list.length || Object.keys(profiles).length ? list : data.birthdays
+  })()
   // HR sama sobě kontakt neukazuje
   const hr = data.hrContact && data.hrContact.id !== data.meId ? person(data.hrContact.id) : null
 
@@ -229,7 +245,7 @@ export function EmployeeDashboard({ data, footer }: { data: EmployeeDashData; fo
             <Link href="/team" className="text-sm font-semibold text-navy/60 hover:text-violet">Tým →</Link>
           </div>
           <ul className="space-y-3">
-            {data.birthdays.slice(0, 2).map(b => { const p = person(b.id); return (
+            {birthdays.slice(0, 2).map(b => { const p = person(b.id); return (
               <li key={'b' + b.id}><Link href={`/team/${b.id}`} className="flex items-center gap-3 group">
                 <Avatar p={p} size={40} fontSize={13} />
                 <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-navy group-hover:text-violet truncate">{p.name}</span><span className="block text-[11px] text-navy/55">narozeniny {b.date}</span></span>

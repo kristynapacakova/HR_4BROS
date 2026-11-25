@@ -55,7 +55,7 @@
 | interests | „Věci, které mě baví“ (bez emoji, bez duplicit) | vlastník |
 | helpWith | „S čím se na mě můžeš obrátit“ (při ≥2 krátkých částech se zobrazí jako štítky) | vlastník |
 | gallery | „Fotky, které mě vystihují“ | vlastník |
-| birthday | přebije narozeniny ze záznamu člověka | vlastník (ukládá se hned) |
+| birthday | datum narození z Můj účet — **propisuje se do medailonku, Týmu, karty Lidé na Dashboardu a má jít i na Slack** (narozeninové přání v kanálu) | vlastník (ukládá se hned) |
 | nickname | oslovení na Dashboardu (`fb-nickname:<id>`) | vlastník |
 | personality | 16Personalities — ⚠️ data existují, UI odebráno (rozhodnout smazat) | — |
 
@@ -70,7 +70,8 @@
 | Přezdívka | člověk | ano (prohlížeč) | — |
 | Datum narození | člověk | ano (prohlížeč) | — |
 | Telefon | člověk | ne | — |
-| Bankovní účet | člověk | ne | ne pro OSVČ (⚠️ popisek „IBAN“, data `číslo/banka`) |
+| Bankovní účet | člověk | ne | HPP/DPP/DPČ |
+| IČO, Místo podnikání | člověk | ne | **jen OSVČ** — místo bankovního účtu a pojišťovny |
 | Zdravotní pojišťovna | člověk | ne | HPP/DPP/DPČ |
 | Nástupní plat | ✅ **jen HR** (zaměstnanec jen čte, „spravuje HR“) | ne | HPP/DPP/DPČ |
 | Aktuální plat + „+X % od nástupu“ | jen čtení | — | HPP/DPP/DPČ |

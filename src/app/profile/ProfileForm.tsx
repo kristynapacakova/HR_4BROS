@@ -17,6 +17,9 @@ interface UserData {
   employmentType?: string | null
   /** poslední BOZP ze zdroje dat (YYYY-MM-DD) */
   bozpCompletedAt?: string | null
+  /** OSVČ */
+  icoNumber?: string | null
+  businessAddress?: string | null
 }
 
 interface ProfileFormProps {
@@ -61,6 +64,8 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
   const [insurance, setInsurance] = useState('111')
   const [startingSalary, setStartingSalary] = useState(employment?.startingSalary ? String(employment.startingSalary) : '')
   const [country, setCountry] = useState(user.country || '')
+  const [icoNumber, setIcoNumber] = useState(user.icoNumber ?? '')
+  const [businessAddress, setBusinessAddress] = useState(user.businessAddress ?? '')
   const [bozpLastDone, setBozpLastDone] = useState<string | null>(null)
   const [personality, setPersonality] = useState<string>('')
 
@@ -206,6 +211,13 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
         <Field label="Telefon" value={formData.phone} onChange={(v) => update('phone', v)} type="tel" />
         {user.employmentType !== 'ICO' && (
           <Field label="Bankovní účet" value={formData.bankAccount} onChange={(v) => update('bankAccount', v)} />
+        )}
+        {/* OSVČ — místo bankovního účtu a pojišťovny IČO a místo podnikání */}
+        {user.employmentType === 'ICO' && (
+          <>
+            <Field label="IČO" value={icoNumber} onChange={setIcoNumber} />
+            <Field label="Místo podnikání" value={businessAddress} onChange={setBusinessAddress} placeholder="Ulice, číslo, město" />
+          </>
         )}
         {isEmployee && (
           <div>

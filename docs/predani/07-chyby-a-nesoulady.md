@@ -35,7 +35,7 @@ Seřazeno podle dopadu. Většinu vyřeší napojení databáze s **jedním ID �
 25. Vzhled PDF: logo a písma z nastavení se do tisku nepropíšou; firemní údaje natvrdo na 5 místech.
 
 ## Nízký dopad / úklid
-26. Narozeniny na Dashboardu ignorují úpravu v profilu (Tým ji respektuje). 🔧
+26. ~~Narozeniny na Dashboardu ignorují úpravu v profilu~~ ✅ opraveno.
 27. Výchozí záliby se zobrazí ve výpisu Tým, ale ne v detailu medailonku. 🔧
 28. Pole Bankovní účet má popisek „IBAN“, data jsou `číslo/banka`. 🔧
 29. Login slibuje relaci 12 h, platí 30 dní. 🔧

@@ -16,6 +16,7 @@ Seznam věcí, které dnes aplikace jen simuluje nebo kde chybí rozhodnutí. Vy
 | I9 | **Export pro mzdovou účetní** — kam tečou schválené doklady, sport, prémie | [03](03-odmeny.md) | |
 | I10 | **TrackDeck** — (a) portál jen importuje schválené absence, nebo (b) portál žádosti vlastní? Zdroj pravdy pro zůstatek dovolené | [05](05-komunikace-akce-dochazka.md) | |
 | I11 | **Google Kalendář** — napojení uložit na serveru (dnes jen v prohlížeči HR) | [05](05-komunikace-akce-dochazka.md) | |
+| I12b | **Narozeniny → Slack** — datum narození z Můj účet se má propsat do medailonku (✅ funguje) a **na Slack** (např. bot ráno pošle do kanálu „Dnes slaví…“, případně pole v Slack profilu). Jakým kanálem a v kolik? | [05](05-komunikace-akce-dochazka.md) | Ano, propisovat |
 | I12 | **E-mail / Slack** — které události posílat i mimo aplikaci | [05](05-komunikace-akce-dochazka.md) | |
 | I13 | **Úložiště souborů** — kde (smlouvy, pásky, faktury, účtenky, neschopenky, fotky, certifikáty) | [04](04-smlouvy-smernice-dokumenty.md) | |
 | I14 | **Generování PDF** na serveru (dnes tisk z prohlížeče) | [04](04-smlouvy-smernice-dokumenty.md) | |
