@@ -66,6 +66,8 @@ export default async function ProfilePage() {
             department: teamMember?.department ?? (user.department || ''),
             employmentType: user.employmentType ?? 'HPP',
             startDate: user.startDate ? new Date(user.startDate).toISOString() : null,
+            contractTermType: teamMember?.contractTermType ?? null,
+            contractEndDate: teamMember?.contractEndDate ? teamMember.contractEndDate.toISOString() : null,
             teamMemberId: teamMember?.id,
             assetCount: myAssets.length,
           }}

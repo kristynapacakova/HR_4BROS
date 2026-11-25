@@ -483,12 +483,8 @@ export function ProfileForm({ user, employment, layout = 'cards', isHr = false }
           {editable}
         </>
       )}
-      {layout === 'split' && (
-        <div className="grid lg:grid-cols-[1fr_260px] gap-6 items-start">
-          <div className="space-y-6 min-w-0 order-2 lg:order-1">{editable}</div>
-          <div className="lg:sticky lg:top-20 order-1 lg:order-2">{factsCard}</div>
-        </div>
-      )}
+      {/* boční panel „Ve 4Bros“ odebrán — pozice a tým jsou v hlavičce, typ spolupráce, nástup a smlouva ve štítcích pod jménem */}
+      {layout === 'split' && <div className="space-y-6">{editable}</div>}
       <div className="flex items-center gap-3">
         <button
           type="submit"

@@ -20,6 +20,9 @@ export interface AccountInfo {
   department: string
   employmentType: string
   startDate: string | null
+  /** smlouva na dobu určitou / neurčitou a případný konec */
+  contractTermType?: 'URCITA' | 'NEURCITA' | null
+  contractEndDate?: string | null
   teamMemberId?: string
   assetCount: number
 }
@@ -33,19 +36,9 @@ const SECTIONS = [
 
 
 
-/** „4 roky a 8 měsíců“ — stejně jako na Dashboardu */
-function tenureText(raw: string | null): string | null {
-  if (!raw) return null
-  const start = new Date(raw)
-  const now = new Date()
-  const months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth())
-  if (months < 1) return 'méně než měsíc'
-  if (months < 12) return `${months} ${months === 1 ? 'měsíc' : months < 5 ? 'měsíce' : 'měsíců'}`
-  const years = Math.floor(months / 12)
-  const rem = months % 12
-  const yr = `${years} ${years === 1 ? 'rok' : years < 5 ? 'roky' : 'let'}`
-  return rem === 0 ? yr : `${yr} a ${rem} ${rem === 1 ? 'měsíc' : rem < 5 ? 'měsíce' : 'měsíců'}`
-}
+const EMPLOYMENT_LABEL: Record<string, string> = { HPP: 'HPP', DPP: 'DPP', DPC: 'DPČ', ICO: 'IČO', STAZ: 'Stáž' }
+const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('cs-CZ')
+
 
 function Silhouette({ department }: { department: string }) {
   const c = departmentColor(department)
@@ -85,9 +78,21 @@ export function AccountCard({ info, tabs }: { info: AccountInfo; tabs: Component
                 </p>
               </div>
             </div>
-            {tenureText(info.startDate) && (
-              <div><span className="inline-block bg-gold text-navy px-3 py-1.5 text-sm font-semibold">Jsi s námi {tenureText(info.startDate)}</span></div>
-            )}
+            {/* typ spolupráce, nástup a smlouva — místo bočního panelu */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { k: 'Spolupráce', v: EMPLOYMENT_LABEL[info.employmentType] ?? info.employmentType },
+                info.startDate ? { k: 'Nástup', v: fmtDate(info.startDate) } : null,
+                info.contractTermType === 'URCITA' && info.contractEndDate
+                  ? { k: 'Smlouva', v: `do ${fmtDate(info.contractEndDate)}` }
+                  : info.contractTermType ? { k: 'Smlouva', v: 'na dobu neurčitou' } : null,
+              ].filter(Boolean).map((c, i) => (
+                <span key={c!.k} className={`px-3 py-1.5 text-sm ${i === 0 ? 'bg-gold text-navy font-semibold' : 'bg-white/10 text-white'}`}>
+                  {i > 0 && <span className="text-white/55 mr-1.5">{c!.k}</span>}
+                  <span className={i > 0 ? 'font-semibold' : ''}>{c!.v}</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
